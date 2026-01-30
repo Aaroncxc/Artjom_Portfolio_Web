@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mask Sculpture - 3D Viewer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+      overflow: hidden;
+    }
+    
+    #container {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+    
+    #canvas-container {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    #canvas-container canvas {
+      display: block;
+    }
+    
+    /* During resize animation, fade slightly to hide transition */
+    #canvas-container.resizing canvas {
+      transition: opacity 0.15s ease-out;
+    }
+    
+    /* Top bar with stats */
+    .top-bar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      z-index: 10;
+    }
+    
+    .stats {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      font-size: 11px;
+      color: rgba(28, 28, 28, 0.6);
+      border: 1px solid rgba(28, 28, 28, 0.06);
+    }
+    
+    .stat-item .label {
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+    }
+    
+    .stat-item .value {
+      color: rgba(28, 28, 28, 0.9);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    
+    .top-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .controls {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+    
+    .controls-left {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 50px;
+      border: 1px solid rgba(28, 28, 28, 0.1);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: rgba(28, 28, 28, 0.7);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.95);
+      color: rgba(28, 28, 28, 0.9);
+    }
+    
+    .btn.active {
+      background: #14B8A6;
+      color: white;
+      border-color: #14B8A6;
+    }
+    
+    .btn svg {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .btn-icon {
+      padding: 10px;
+    }
+    
+  
+    
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: rgba(28, 28, 28, 0.6);
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(20, 184, 166, 0.2);
+      border-top-color: #14B8A6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .loading.hidden {
+      display: none;
+    }
+    
+    /* Accent button style */
+    .btn-accent {
+      background: rgba(20, 184, 166, 0.15) !important;
+      border-color: rgba(20, 184, 166, 0.4) !important;
+      color: #0d9488 !important;
+    }
+    
+    .btn-accent:hover {
+      background: rgba(20, 184, 166, 0.25) !important;
+      border-color: rgba(20, 184, 166, 0.6) !important;
+    }
+    
+    .btn-accent.playing {
+      background: rgba(239, 68, 68, 0.15) !important;
+      border-color: rgba(239, 68, 68, 0.4) !important;
+      color: #dc2626 !important;
+    }
+    
+    .btn-accent.playing:hover {
+      background: rgba(239, 68, 68, 0.25) !important;
+      border-color: rgba(239, 68, 68, 0.6) !important;
+    }
+    
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="canvas-container"></div>
+    
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Loading 3D Model...</p>
+      <p id="progress" style="font-size: 12px; margin-top: 8px; opacity: 0.7;"></p>
+    </div>
+    
+    <!-- Top Bar with Stats -->
+    <div class="top-bar">
+      <div class="stats" id="stats">
+        <div class="stat-item">
+          <span class="label">Vertices</span>
+          <span class="value" id="vertex-count">—</span>
+        </div>
+        <div class="stat-item">
+          <span class="label">Triangles</span>
+          <span class="value" id="triangle-count">—</span>
+        </div>
+      </div>
+      
+      <div class="top-actions">
+        <button class="btn btn-icon" id="fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">
+          <svg id="fullscreen-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <div class="controls-left">
+        <button class="btn" id="wireframe-btn" onclick="toggleWireframe()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+          </svg>
+          Wireframe
+        </button>
+        
+        <button class="btn" id="grid-btn" onclick="toggleGrid()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16M8 4v16M12 4v16M16 4v16"/>
+          </svg>
+          Grid
+        </button>
+        
+        <button class="btn btn-accent" id="animation-btn" onclick="toggleMaskAnimation()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span id="animation-text">Open Mask</span>
+        </button>
+      </div>
+      
+      
+    </div>
+  </div>
+
+  <!-- Import Maps for ES Modules -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.162.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.162.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+
+    let scene, camera, renderer, controls;
+    let model, wireframeGroup, gridHelper;
+    let mixer, animationAction, clock;
+    let showWireframe = false;
+    let showGrid = true;
+    let isFullscreen = false;
+    let isMaskOpen = false;
+    let isAnimating = false;
+
+    const container = document.getElementById('canvas-container');
+    const containerParent = document.getElementById('container');
+    const loadingEl = document.getElementById('loading');
+    const progressEl = document.getElementById('progress');
+    const wireframeBtn = document.getElementById('wireframe-btn');
+    const gridBtn = document.getElementById('grid-btn');
+    const animationBtn = document.getElementById('animation-btn');
+    const animationText = document.getElementById('animation-text');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const fullscreenIcon = document.getElementById('fullscreen-icon');
+    const vertexCountEl = document.getElementById('vertex-count');
+    const triangleCountEl = document.getElementById('triangle-count');
+    
+    clock = new THREE.Clock();
+
+    function init() {
+      // Scene
+      scene = new THREE.Scene();
+      scene.background = null; // Transparent
+
+      // Camera
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.set(0, 1.5, 5);
+
+      // Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.2;
+      container.appendChild(renderer.domElement);
+
+      // Controls
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.5;
+      controls.enablePan = false;
+      controls.minDistance = 2;
+      controls.maxDistance = 15;
+      controls.target.set(0, 0.5, 0);
+
+      // Grid Helper (subtle)
+      gridHelper = new THREE.GridHelper(10, 20, 0x14B8A6, 0xcccccc);
+      gridHelper.material.opacity = 0.15;
+      gridHelper.material.transparent = true;
+      gridHelper.position.y = -1.2;
+      scene.add(gridHelper);
+      
+      // Update grid button state
+      gridBtn.classList.add('active');
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      scene.add(ambientLight);
+
+      const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
+      mainLight.position.set(5, 10, 7);
+      mainLight.castShadow = true;
+      scene.add(mainLight);
+
+      const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+      fillLight.position.set(-5, 5, -5);
+      scene.add(fillLight);
+
+      const rimLight = new THREE.DirectionalLight(0x88ccff, 0.3);
+      rimLight.position.set(0, -5, -10);
+      scene.add(rimLight);
+
+      // Load Model
+      loadModel();
+
+      // Handle resize
+      window.addEventListener('resize', onResize);
+
+      // Start animation
+      animate();
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000000) {
+        return (num / 1000000).toFixed(2) + 'M';
+      } else if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'K';
+      }
+      return num.toLocaleString();
+    }
+
+    function countGeometry(object) {
+      let vertices = 0;
+      let triangles = 0;
+      
+      object.traverse((child) => {
+        if (child.isMesh && child.geometry) {
+          const geo = child.geometry;
+          
+          if (geo.index) {
+            triangles += geo.index.count / 3;
+          } else if (geo.attributes.position) {
+            triangles += geo.attributes.position.count / 3;
+          }
+          
+          if (geo.attributes.position) {
+            vertices += geo.attributes.position.count;
+          }
+        }
+      });
+      
+      return { vertices, triangles: Math.floor(triangles) };
+    }
+
+    function loadModel() {
+      const loader = new FBXLoader();
+      
+      loader.load(
+        './model.fbx',
+        (fbx) => {
+          // 1) Initial bounding box (unrotated) for scale
+          const box0 = new THREE.Box3().setFromObject(fbx);
+          const size0 = box0.getSize(new THREE.Vector3());
+          const maxDim = Math.max(size0.x, size0.y, size0.z);
+          const scale = 2.5 / maxDim;
+          
+          // 2) Apply rotation first, then scale (position still 0)
+          fbx.rotation.x = -Math.PI / 2;
+          fbx.scale.setScalar(scale);
+          fbx.position.set(0, 0, 0);
+          fbx.updateMatrixWorld(true);
+          
+          // 3) Bounding box after rotation + scale → center so camera orbits around object
+          const boxRotated = new THREE.Box3().setFromObject(fbx);
+          const centerRotated = boxRotated.getCenter(new THREE.Vector3());
+          fbx.position.set(-centerRotated.x, -centerRotated.y + 0.5, -centerRotated.z);
+
+          // Materials & shadows + transparency for specific plastic material
+          fbx.traverse((child) => {
+            if (child.isMesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+              
+              if (child.material) {
+                const mats = Array.isArray(child.material) ? child.material : [child.material];
+                mats.forEach(mat => {
+                  // Default material settings
+                  mat.metalness = 0.1;
+                  mat.roughness = 0.6;
+                  
+                  // Check if this is the transparent plastic material by name
+                  const isPlasticMaterial = mat.name && (
+                    mat.name.toLowerCase().includes('plastic') ||
+                    mat.name.toLowerCase().includes('transparent')
+                  );
+                  
+                  if (isPlasticMaterial) {
+                    // ========== PLASTIC MATERIAL SETTINGS ==========
+                    // Change these values to customize the plastic look:
+                    const plasticColor = '#FF0000';  // Hex color (light blue plastic)
+                    const plasticOpacity = 0.35;     // 0 = fully transparent, 1 = solid
+                    const plasticTransmission = 0.6; // 0 = opaque, 1 = fully see-through
+                    const plasticRoughness = 0.05;   // 0 = glossy, 1 = matte
+                    const plasticThickness = 0.5;    // Affects refraction
+                    // ================================================
+                    
+                    // Create transparent plastic material
+                    const newMat = new THREE.MeshPhysicalMaterial({
+                      color: new THREE.Color(plasticColor),
+                      transparent: true,
+                      opacity: plasticOpacity,
+                      roughness: plasticRoughness,
+                      metalness: 0.0,
+                      transmission: plasticTransmission,
+                      thickness: plasticThickness,
+                      side: THREE.DoubleSide,
+                      depthWrite: false,
+                      envMapIntensity: 1.0,
+                    });
+                    
+                    // Replace the material on this mesh
+                    child.material = newMat;
+                    console.log('Applied plastic material with color:', plasticColor);
+                  }
+                  
+                  // Ensure texture is updated
+                  if (mat.map) {
+                    mat.map.needsUpdate = true;
+                  }
+                });
+              }
+            }
+          });
+
+          scene.add(fbx);
+          model = fbx;
+
+          // Setup animation if available
+          if (fbx.animations && fbx.animations.length > 0) {
+            mixer = new THREE.AnimationMixer(fbx);
+            const clip = fbx.animations[0];
+            animationAction = mixer.clipAction(clip);
+            animationAction.setLoop(THREE.LoopOnce, 1);
+            animationAction.clampWhenFinished = true;
+            animationAction.enabled = true;
+            
+            // Start in closed state: play, pause at time 0 to show initial pose
+            animationAction.play();
+            animationAction.paused = true;
+            animationAction.time = 0;
+            
+            mixer.addEventListener('finished', (e) => {
+              isAnimating = false;
+            });
+            
+            console.log('Animation loaded:', clip.name, 'Duration:', clip.duration + 's', 'Tracks:', clip.tracks.length);
+          } else {
+            // Hide animation button if no animations
+            animationBtn.style.display = 'none';
+            console.log('No animations found in model');
+          }
+
+          // Count and display geometry stats
+          const stats = countGeometry(fbx);
+          vertexCountEl.textContent = formatNumber(stats.vertices);
+          triangleCountEl.textContent = formatNumber(stats.triangles);
+
+          // Create wireframe
+          wireframeGroup = new THREE.Group();
+          fbx.traverse((child) => {
+            if (child.isMesh) {
+              const wireGeo = new THREE.WireframeGeometry(child.geometry);
+              const wireMat = new THREE.LineBasicMaterial({ 
+                color: 0x14B8A6,
+                transparent: true,
+                opacity: 0.7,
+              });
+              const wire = new THREE.LineSegments(wireGeo, wireMat);
+              wire.position.copy(child.position);
+              wire.rotation.copy(child.rotation);
+              wire.scale.copy(child.scale);
+              wireframeGroup.add(wire);
+            }
+          });
+          wireframeGroup.scale.copy(fbx.scale);
+          wireframeGroup.position.copy(fbx.position);
+          wireframeGroup.visible = false;
+          scene.add(wireframeGroup);
+
+          // Hide loading
+          loadingEl.classList.add('hidden');
+        },
+        (progress) => {
+          if (progress.total > 0) {
+            const pct = Math.round((progress.loaded / progress.total) * 100);
+            progressEl.textContent = pct + '%';
+          }
+        },
+        (error) => {
+          console.error('Error loading model:', error);
+          progressEl.textContent = 'Failed to load model';
+        }
+      );
+    }
+
+    let isResizing = false;
+    let lastResizeTime = 0;
+    const RESIZE_THROTTLE = 50; // ms between resizes during animation
+    
+    function onResize() {
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      
+      if (width === 0 || height === 0) return;
+      
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+    
+    // Throttled resize for smooth animation
+    function throttledResize() {
+      const now = performance.now();
+      if (now - lastResizeTime > RESIZE_THROTTLE) {
+        lastResizeTime = now;
+        onResize();
+      }
+    }
+    
+    function finalizeResize() {
+      isResizing = false;
+      container.classList.remove('resizing');
+      onResize();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      // Clamp delta to prevent animation jump (first frame or tab resume can return huge value)
+      let delta = clock.getDelta();
+      if (delta > 0.1) delta = 0.016; // Cap at ~60fps frame time
+      
+      // Update animation mixer
+      if (mixer) {
+        mixer.update(delta);
+      }
+      
+      controls.update();
+      
+      // Sync wireframe rotation with model
+      if (model && wireframeGroup) {
+        wireframeGroup.rotation.copy(model.rotation);
+        wireframeGroup.position.copy(model.position);
+      }
+      
+      renderer.render(scene, camera);
+    }
+    
+    // Toggle mask animation - exposed globally
+    window.toggleMaskAnimation = function() {
+      if (!animationAction) return;
+      if (isAnimating) return;
+      
+      const clip = animationAction.getClip();
+      const duration = clip.duration;
+      
+      if (duration <= 0) {
+        console.warn('Animation has zero or negative duration');
+        return;
+      }
+      
+      // Reset clock so next getDelta() is small (avoids jump on first frame)
+      clock = new THREE.Clock();
+      
+      isAnimating = true;
+      
+      if (isMaskOpen) {
+        // Play REVERSE - close mask (from end to start)
+        animationAction.stop();
+        animationAction.time = duration;
+        animationAction.timeScale = -1;
+        animationAction.paused = false;
+        animationAction.play();
+        
+        isMaskOpen = false;
+        animationText.textContent = 'Open Mask';
+        animationBtn.classList.remove('playing');
+        
+        // Fallback: if mixer "finished" doesn't fire for reverse, unlock after duration
+        setTimeout(() => { isAnimating = false; }, (duration * 1000) + 200);
+        
+      } else {
+        // Play FORWARD - open mask (from start to end)
+        animationAction.stop();
+        animationAction.reset();
+        animationAction.time = 0;
+        animationAction.timeScale = 1;
+        animationAction.paused = false;
+        animationAction.play();
+        
+        isMaskOpen = true;
+        animationText.textContent = 'Close Mask';
+        animationBtn.classList.add('playing');
+        
+        setTimeout(() => { isAnimating = false; }, (duration * 1000) + 200);
+      }
+    };
+
+    // Toggle wireframe - exposed globally
+    window.toggleWireframe = function() {
+      showWireframe = !showWireframe;
+      if (wireframeGroup) {
+        wireframeGroup.visible = showWireframe;
+      }
+      wireframeBtn.classList.toggle('active', showWireframe);
+    };
+
+    // Toggle grid - exposed globally
+    window.toggleGrid = function() {
+      showGrid = !showGrid;
+      if (gridHelper) {
+        gridHelper.visible = showGrid;
+      }
+      gridBtn.classList.toggle('active', showGrid);
+    };
+
+    // Toggle enlarge - communicates with parent window
+    window.toggleFullscreen = function() {
+      isFullscreen = !isFullscreen;
+      
+      // Update icon
+      if (isFullscreen) {
+        fullscreenIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 9L4 4m0 0v4m0-4h4m6 0l5-5m0 0v4m0-4h-4m-6 11l-5 5m0 0v-4m0 4h4m6 0l5 5m0 0v-4m0 4h-4"/>';
+      } else {
+        fullscreenIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>';
+      }
+      
+      // Send message to parent window to enlarge/shrink the iframe
+      if (window.parent !== window) {
+        window.parent.postMessage({ 
+          type: 'toggle-enlarge', 
+          enlarged: isFullscreen 
+        }, '*');
+      }
+      
+      // Mark as resizing
+      isResizing = true;
+      container.classList.add('resizing');
+      
+      const animationDuration = 550; // Match parent CSS animation
+      const startTime = performance.now();
+      
+      // Continuously resize during animation for proper proportions
+      function updateDuringAnimation() {
+        const elapsed = performance.now() - startTime;
+        
+        if (elapsed < animationDuration) {
+          // Resize at throttled intervals to prevent flicker but keep proportions
+          throttledResize();
+          requestAnimationFrame(updateDuringAnimation);
+        } else {
+          // Animation done - finalize with exact size
+          finalizeResize();
+        }
+      }
+      
+      requestAnimationFrame(updateDuringAnimation);
+    };
+
+    // Listen for messages from parent
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'set-enlarged') {
+        isFullscreen = event.data.enlarged;
+        if (isFullscreen) {
+          fullscreenIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 9L4 4m0 0v4m0-4h4m6 0l5-5m0 0v4m0-4h-4m-6 11l-5 5m0 0v-4m0 4h4m6 0l5 5m0 0v-4m0 4h-4"/>';
+        } else {
+          fullscreenIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>';
+        }
+        setTimeout(onResize, 50);
+      }
+    });
+
+    // Initialize
+    init();
+  </script>
+</body>
+</html>

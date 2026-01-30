@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "slug": "echo-chamber",
+  "items": [
+    {
+      "id": "item_demo_1",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=600&q=80",
+      "fileName": "studio-reference.jpg",
+      "x": 50,
+      "y": 50,
+      "width": 280,
+      "height": 180,
+      "zIndex": 1
+    },
+    {
+      "id": "item_demo_2",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80",
+      "fileName": "sound-waves.jpg",
+      "x": 360,
+      "y": 80,
+      "width": 250,
+      "height": 160,
+      "zIndex": 2
+    },
+    {
+      "id": "item_demo_3",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&q=80",
+      "fileName": "audio-setup.jpg",
+      "x": 150,
+      "y": 260,
+      "width": 320,
+      "height": 200,
+      "zIndex": 3
+    }
+  ],
+  "lastModified": "2025-01-29T12:00:00Z"
+}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Echo Chamber</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      color: rgba(255,255,255,0.9);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Animated gradient background */
+    .gradient-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(-45deg, #0B0F1A, #1a0a2e, #0d1f3c, #15112A, #0a1628);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* Floating orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.4;
+      animation: float 8s ease-in-out infinite;
+    }
+    
+    .orb-1 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, #5EEAD4 0%, transparent 70%);
+      top: -10%;
+      left: -5%;
+      animation-delay: 0s;
+    }
+    
+    .orb-2 {
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, #A78BFA 0%, transparent 70%);
+      bottom: -10%;
+      right: -5%;
+      animation-delay: -4s;
+    }
+    
+    .orb-3 {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, #FB7185 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: -2s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.05); }
+    }
+    
+    .container { 
+      text-align: center; 
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, #5EEAD4, #A78BFA, #FB7185);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textGradient 5s ease infinite;
+    }
+    
+    @keyframes textGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    p { color: rgba(255,255,255,0.6); margin-bottom: 2rem; font-size: 0.9rem; }
+    
+    .visualizer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 4px;
+      height: 120px;
+      margin-bottom: 2rem;
+    }
+    
+    .bar {
+      width: 6px;
+      background: linear-gradient(to top, #5EEAD4, #A78BFA);
+      border-radius: 3px;
+      transition: height 0.1s ease-out;
+      box-shadow: 0 0 10px rgba(94, 234, 212, 0.3);
+    }
+    
+    .ripple {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      border: 2px solid rgba(94, 234, 212, 0.5);
+      animation: rippleExpand 1.5s ease-out forwards;
+    }
+    
+    @keyframes rippleExpand {
+      0% { width: 0; height: 0; opacity: 1; transform: translate(-50%, -50%); }
+      100% { width: 300px; height: 300px; opacity: 0; transform: translate(-50%, -50%); }
+    }
+    
+    .instructions { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+  </style>
+</head>
+<body>
+  <div class="gradient-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  
+  <div class="container">
+    <h1>Echo Chamber</h1>
+    <p>Move your cursor or tap to create ripples</p>
+    <div class="visualizer" id="visualizer"></div>
+    <p class="instructions">Interactive sound installation</p>
+  </div>
+
+  <script>
+    const visualizer = document.getElementById('visualizer');
+    const bars = [];
+    
+    for (let i = 0; i < 32; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.style.height = '15px';
+      visualizer.appendChild(bar);
+      bars.push(bar);
+    }
+    
+    function animateBars() {
+      bars.forEach((bar, i) => {
+        const height = 15 + Math.sin(Date.now() / 180 + i * 0.35) * 35 + Math.random() * 12;
+        bar.style.height = height + 'px';
+      });
+      requestAnimationFrame(animateBars);
+    }
+    animateBars();
+    
+    function createRipple(x, y) {
+      const ripple = document.createElement('div');
+      ripple.className = 'ripple';
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+      document.body.appendChild(ripple);
+      
+      bars.forEach(bar => {
+        bar.style.height = Math.min(parseFloat(bar.style.height) + 35, 100) + 'px';
+      });
+      
+      setTimeout(() => ripple.remove(), 1500);
+    }
+    
+    document.addEventListener('click', e => createRipple(e.clientX, e.clientY));
+    document.addEventListener('mousemove', e => {
+      const x = e.clientX / window.innerWidth;
+      const index = Math.floor(x * bars.length);
+      if (bars[index]) {
+        bars[index].style.height = Math.min(parseFloat(bars[index].style.height) + 10, 100) + 'px';
+      }
+    });
+  </script>
+</body>
+</html>

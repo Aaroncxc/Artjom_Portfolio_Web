@@ -1,0 +1,14 @@
+{
+  "components\\Project3DPreview.tsx -> three": {
+    "id": "components\\Project3DPreview.tsx -> three",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_three_build_three_module_js.js"
+    ]
+  },
+  "components\\Project3DPreview.tsx -> three/examples/jsm/loaders/FBXLoader.js": {
+    "id": "components\\Project3DPreview.tsx -> three/examples/jsm/loaders/FBXLoader.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_three_examples_jsm_loaders_FBXLoader_js.js"
+    ]
+  }
+}

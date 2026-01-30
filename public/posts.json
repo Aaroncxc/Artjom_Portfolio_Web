@@ -1,0 +1,127 @@
+{
+  "posts": [
+    {
+      "id": "9",
+      "slug": "mask-sculpture",
+      "title": "Mask Sculpture",
+      "description": "An interactive 3D visualization of a sculptural mask form. Explore the intricate geometry through rotation and wireframe overlay, revealing the mathematical beauty hidden within organic shapes.",
+      "date": "2026-01-29",
+      "tags": ["3D", "sculpture", "interactive", "webgl"],
+      "type": "html",
+      "thumbnail": "https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=800&q=80",
+      "htmlPath": "/projects/mask-sculpture/index.html",
+      "model3dPath": "/projects/mask-sculpture/model-preview.fbx",
+      "author": "multikunst",
+      "featured": true
+    },
+    {
+      "id": "1",
+      "slug": "echo-chamber",
+      "title": "Echo Chamber",
+      "description": "An interactive sound installation exploring the relationship between space, sound, and human presence. Visitors' movements trigger evolving soundscapes that blend ambient textures with generative compositions.",
+      "date": "2025-11-15",
+      "tags": ["installation", "sound", "interactive"],
+      "type": "html",
+      "thumbnail": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
+      "htmlPath": "/projects/echo-chamber/index.html",
+      "author": "Sofia Andersson",
+      "featured": true
+    },
+    {
+      "id": "2",
+      "slug": "chromatic-drift",
+      "title": "Chromatic Drift",
+      "description": "A meditative video piece capturing the slow transformation of light through prismatic glass over the course of a single day. The work invites contemplation on the passage of time and the beauty of gradual change.",
+      "date": "2025-10-22",
+      "tags": ["video", "light", "meditation"],
+      "type": "video",
+      "thumbnail": "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&q=80",
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      "author": "Luna Park",
+      "featured": true
+    },
+    {
+      "id": "3",
+      "slug": "neural-pathways",
+      "title": "Neural Pathways",
+      "description": "A WebGL experience visualizing the firing patterns of neural networks. Users can interact with simulated synapses and watch emergent patterns form in real-time, exploring the beauty of computational neuroscience.",
+      "date": "2025-09-08",
+      "tags": ["webgl", "generative", "science"],
+      "type": "html",
+      "thumbnail": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80",
+      "htmlPath": "/projects/neural-pathways/index.html",
+      "author": "Marcus Chen",
+      "featured": true
+    },
+    {
+      "id": "4",
+      "slug": "field-recordings-tokyo",
+      "title": "Field Recordings: Tokyo",
+      "description": "A sonic journey through Tokyo's diverse soundscapes, from the quiet meditation gardens of Meiji Shrine to the overwhelming energy of Shibuya crossing. An auditory exploration of urban Japan.",
+      "date": "2025-08-14",
+      "tags": ["audio", "field recording", "documentary"],
+      "type": "audio",
+      "thumbnail": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      "author": "Sofia Andersson"
+    },
+    {
+      "id": "5",
+      "slug": "between-worlds",
+      "title": "Between Worlds",
+      "description": "A photo series documenting liminal spaces—airports, train stations, hotel lobbies—where people exist in transition, neither here nor there. These images capture the quiet poetry of in-between moments.",
+      "date": "2025-07-20",
+      "tags": ["photography", "documentary", "urban"],
+      "type": "image",
+      "thumbnail": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&q=80",
+        "https://images.unsplash.com/photo-1517400508447-f8dd518b86db?w=1200&q=80",
+        "https://images.unsplash.com/photo-1495562569060-2eec283d3391?w=1200&q=80"
+      ],
+      "author": "Luna Park"
+    },
+    {
+      "id": "6",
+      "slug": "data-portraits",
+      "title": "Data Portraits",
+      "description": "Personalized visualizations that transform individual social media data into unique abstract compositions, questioning digital identity and data ownership in the age of surveillance capitalism.",
+      "date": "2025-06-05",
+      "tags": ["data viz", "interactive", "identity"],
+      "type": "html",
+      "thumbnail": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+      "htmlPath": "/projects/data-portraits/index.html",
+      "author": "Alex Rivera"
+    },
+    {
+      "id": "7",
+      "slug": "kinetic-assembly",
+      "title": "Kinetic Assembly",
+      "description": "A motion study exploring the choreography of industrial robots, finding unexpected beauty in the precise, repetitive movements of manufacturing automation. Art emerges from the mechanical.",
+      "date": "2025-05-18",
+      "tags": ["video", "motion", "industrial"],
+      "type": "video",
+      "thumbnail": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80",
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "author": "James Okonkwo"
+    },
+    {
+      "id": "8",
+      "slug": "ephemeral-forms",
+      "title": "Ephemeral Forms",
+      "description": "Documentation of large-scale environmental installations that exist only briefly before being reclaimed by nature. These works celebrate impermanence and the dialogue between human creation and natural forces.",
+      "date": "2025-04-02",
+      "tags": ["installation", "nature", "photography"],
+      "type": "image",
+      "thumbnail": "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&q=80",
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
+        "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1200&q=80"
+      ],
+      "author": "Yuki Tanaka",
+      "featured": true
+    }
+  ],
+  "lastUpdated": "2025-11-15T12:00:00Z"
+}

@@ -1,0 +1,75 @@
+'use client';
+
+import { useCallback } from 'react';
+import { GlassPanel } from './GlassPanel';
+
+interface NavigationProps {
+  visible: boolean;
+  currentSection?: string;
+}
+
+export function Navigation({ visible, currentSection }: NavigationProps) {
+  const scrollToSection = useCallback((sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
+
+  const navItems = [
+    { id: 'about', label: 'About' },
+    { id: 'projects', label: 'Projects' },
+  ];
+
+  return (
+    <nav
+      className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${
+        visible
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 -translate-y-4 pointer-events-none'
+      }`}
+    >
+      <GlassPanel 
+        variant="heavy" 
+        padding="none" 
+        rounded="full"
+        className="px-2 py-2 flex items-center gap-1"
+      >
+        {/* Logo */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="px-4 py-2 text-sm font-semibold tracking-tight text-mk-text hover:text-accent-cyan transition-colors duration-175"
+        >
+          multikunst
+        </button>
+
+        <div className="w-px h-5 bg-[rgba(28,28,28,0.12)] mx-1" />
+
+        {/* Nav items */}
+        {navItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => scrollToSection(item.id)}
+            className={`px-4 py-2 text-sm rounded-full transition-all duration-175 ${
+              currentSection === item.id
+                ? 'text-accent-cyan bg-[rgba(20,184,166,0.12)]'
+                : 'text-mk-text-secondary hover:text-mk-text hover:bg-[rgba(28,28,28,0.06)]'
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
+
+        <div className="w-px h-5 bg-[rgba(28,28,28,0.12)] mx-1" />
+
+        {/* Contact */}
+        <a
+          href="mailto:hello@multikunst.com"
+          className="px-4 py-2 text-sm text-white bg-[#1C1C1C] rounded-full hover:bg-accent-cyan transition-colors duration-175"
+        >
+          Contact
+        </a>
+      </GlassPanel>
+    </nav>
+  );
+}

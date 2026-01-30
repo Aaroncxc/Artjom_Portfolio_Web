@@ -1,0 +1,25 @@
+{
+  "name": "multikunst-ingest",
+  "version": "1.0.0",
+  "description": "Google Drive to website content pipeline for multikunst",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "googleapis": "^130.0.0",
+    "dotenv": "^16.3.0",
+    "adm-zip": "^0.5.10",
+    "mime-types": "^2.1.35"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/adm-zip": "^0.5.5",
+    "@types/mime-types": "^2.1.4",
+    "typescript": "^5.3.0",
+    "ts-node": "^10.9.0"
+  }
+}
