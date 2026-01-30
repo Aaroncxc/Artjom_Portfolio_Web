@@ -276,6 +276,7 @@
     let scene, camera, renderer, controls;
     let model, wireframeGroup, gridHelper;
     let mixer, animationAction, clock;
+    let shadowLight;
     let showWireframe = false;
     let showGrid = true;
     let isFullscreen = false;
@@ -313,7 +314,7 @@
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.shadowMap.type = THREE.VSMShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.2;
       container.appendChild(renderer.domElement);
@@ -339,22 +340,51 @@
       // Update grid button state
       gridBtn.classList.add('active');
 
-      // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      // Lighting (main light first so we can use it for shadow-only plane)
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
       scene.add(ambientLight);
 
-      const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
-      mainLight.position.set(5, 10, 7);
+      const mainLight = new THREE.DirectionalLight(0xffffff, 1.4);
+      // Light from above and slightly front - shadow falls below the mask
+      mainLight.position.set(2, 12, 4);
+      mainLight.target.position.set(0, 0, 0);
       mainLight.castShadow = true;
+      mainLight.shadow.mapSize.width = 2048;
+      mainLight.shadow.mapSize.height = 2048;
+      mainLight.shadow.camera.near = 1;
+      mainLight.shadow.camera.far = 30;
+      mainLight.shadow.camera.left = -6;
+      mainLight.shadow.camera.right = 6;
+      mainLight.shadow.camera.top = 6;
+      mainLight.shadow.camera.bottom = -6;
+      mainLight.shadow.bias = -0.0005;
+      mainLight.shadow.normalBias = 0.02;
+      // Soft shadow edges
+      mainLight.shadow.radius = 4;
       scene.add(mainLight);
+      scene.add(mainLight.target);
+      shadowLight = mainLight;
 
-      const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+      const fillLight = new THREE.DirectionalLight(0xffffff, 0.35);
       fillLight.position.set(-5, 5, -5);
       scene.add(fillLight);
 
-      const rimLight = new THREE.DirectionalLight(0x88ccff, 0.3);
+      const rimLight = new THREE.DirectionalLight(0x88ccff, 0.25);
       rimLight.position.set(0, -5, -10);
       scene.add(rimLight);
+
+      // Ground plane: invisible, only shows shadow (using Three.js ShadowMaterial)
+      const groundSize = 16;
+      const groundGeo = new THREE.PlaneGeometry(groundSize, groundSize);
+      const shadowMat = new THREE.ShadowMaterial({
+        opacity: 0.35,
+        color: 0x000000,
+      });
+      const groundPlane = new THREE.Mesh(groundGeo, shadowMat);
+      groundPlane.rotation.x = -Math.PI / 2;
+      groundPlane.position.y = -1.2;
+      groundPlane.receiveShadow = true;
+      scene.add(groundPlane);
 
       // Load Model
       loadModel();
