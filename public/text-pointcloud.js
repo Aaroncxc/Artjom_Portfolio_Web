@@ -145,6 +145,7 @@ class TextPointcloud extends HTMLElement{
   }
 
   _bindMouse(){
+    // Mouse events
     this._onMove = (e)=>this.updateMouse(e);
     this._onEnter = (e)=>{ this.state.mouse.inside=true; this.updateMouse(e); };
     this._onLeave = ()=>{ this.state.mouse.inside=false; };
@@ -161,6 +162,33 @@ class TextPointcloud extends HTMLElement{
     this.canvas.addEventListener("mouseleave", this._onLeave);
     this.canvas.addEventListener("mousedown", this._onDown);
     window.addEventListener("mouseup", this._onUp);
+
+    // Touch events - translate to mouse-like coordinates
+    this._onTouchStart = (e)=>{
+      if(e.touches.length > 0){
+        this.state.mouse.inside = true;
+        this.state.mouse.down = true;
+        this.updateTouch(e.touches[0]);
+      }
+    };
+    this._onTouchMove = (e)=>{
+      if(e.touches.length > 0){
+        this.updateTouch(e.touches[0]);
+        // Prevent scroll while interacting
+        e.preventDefault();
+      }
+    };
+    this._onTouchEnd = (e)=>{
+      this.state.mouse.down = false;
+      // Keep inside=true briefly to allow effect to settle
+      setTimeout(()=>{
+        if(!this.state.mouse.down) this.state.mouse.inside = false;
+      }, 100);
+    };
+    this.canvas.addEventListener("touchstart", this._onTouchStart, {passive: false});
+    this.canvas.addEventListener("touchmove", this._onTouchMove, {passive: false});
+    this.canvas.addEventListener("touchend", this._onTouchEnd);
+    this.canvas.addEventListener("touchcancel", this._onTouchEnd);
   }
   _unbindMouse(){
     this.canvas.removeEventListener("mousemove", this._onMove);
@@ -168,6 +196,11 @@ class TextPointcloud extends HTMLElement{
     this.canvas.removeEventListener("mouseleave", this._onLeave);
     this.canvas.removeEventListener("mousedown", this._onDown);
     window.removeEventListener("mouseup", this._onUp);
+    // Touch events
+    this.canvas.removeEventListener("touchstart", this._onTouchStart);
+    this.canvas.removeEventListener("touchmove", this._onTouchMove);
+    this.canvas.removeEventListener("touchend", this._onTouchEnd);
+    this.canvas.removeEventListener("touchcancel", this._onTouchEnd);
   }
 
   makeFontCSS(){
@@ -317,6 +350,19 @@ class TextPointcloud extends HTMLElement{
     const r = this.canvas.getBoundingClientRect();
     const mx = (e.clientX - r.left) * this.state.dpr;
     const my = (e.clientY - r.top) * this.state.dpr;
+    const m = this.state.mouse;
+    m.inside = (mx>=0 && mx<=this.state.W && my>=0 && my<=this.state.H);
+    m.px = m.x; m.py = m.y;
+    m.x = mx; m.y = my;
+    const vx = (m.x - m.px), vy = (m.y - m.py);
+    m.vx = lerp(m.vx, vx, 0.35);
+    m.vy = lerp(m.vy, vy, 0.35);
+  }
+
+  updateTouch(touch){
+    const r = this.canvas.getBoundingClientRect();
+    const mx = (touch.clientX - r.left) * this.state.dpr;
+    const my = (touch.clientY - r.top) * this.state.dpr;
     const m = this.state.mouse;
     m.inside = (mx>=0 && mx<=this.state.W && my>=0 && my<=this.state.H);
     m.px = m.x; m.py = m.y;

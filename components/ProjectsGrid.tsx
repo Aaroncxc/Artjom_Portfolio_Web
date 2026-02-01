@@ -20,6 +20,12 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState<Record<string, { x: number; y: number }>>({});
   const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
+  const [showSwipeHint, setShowSwipeHint] = useState(true);
+  
+  // Touch swipe state
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // Fetch projects
   useEffect(() => {
@@ -94,7 +100,33 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     setSlideDirection(direction === 'next' ? 'right' : 'left');
     setSelectedProject(filteredProjects[newIndex]);
     setSelectedIndex(newIndex);
+    setShowSwipeHint(false); // Hide hint after first navigation
   }, [selectedIndex, filteredProjects]);
+
+  // Touch swipe handlers for mobile navigation
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    const diff = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+    
+    if (Math.abs(diff) > minSwipeDistance) {
+      if (diff > 0) {
+        // Swiped left -> next
+        navigateProject('next');
+      } else {
+        // Swiped right -> prev
+        navigateProject('prev');
+      }
+    }
+  }, [navigateProject]);
 
   // Handle mouse move on tile for 3D rotation
   const handleTileMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>, projectId: string) => {
@@ -102,6 +134,29 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top) / rect.height;
     setMousePos(prev => ({ ...prev, [projectId]: { x, y } }));
+  }, []);
+
+  // Handle touch move on tile for 3D rotation (mobile)
+  const handleTileTouchMove = useCallback((e: React.TouchEvent<HTMLDivElement>, projectId: string) => {
+    if (e.touches.length > 0) {
+      const touch = e.touches[0];
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = (touch.clientX - rect.left) / rect.width;
+      const y = (touch.clientY - rect.top) / rect.height;
+      setMousePos(prev => ({ ...prev, [projectId]: { x, y } }));
+      setHoveredProject(projectId);
+    }
+  }, []);
+
+  const handleTileTouchStart = useCallback((projectId: string) => {
+    setHoveredProject(projectId);
+  }, []);
+
+  const handleTileTouchEnd = useCallback(() => {
+    // Small delay to allow effect to be visible before hover ends
+    setTimeout(() => {
+      setHoveredProject(null);
+    }, 300);
   }, []);
 
   // Close modal on escape, arrow keys for navigation
@@ -226,6 +281,9 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   onMouseEnter={() => setHoveredProject(project.id)}
                   onMouseLeave={() => setHoveredProject(null)}
                   onMouseMove={(e) => project.model3dPath && handleTileMouseMove(e, project.id)}
+                  onTouchStart={() => project.model3dPath && handleTileTouchStart(project.id)}
+                  onTouchMove={(e) => project.model3dPath && handleTileTouchMove(e, project.id)}
+                  onTouchEnd={() => project.model3dPath && handleTileTouchEnd()}
                 >
                   {/* Video Preview for video projects */}
                   {project.type === 'video' && project.videoUrl && (
@@ -302,12 +360,16 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
       <AnimatePresence>
         {selectedProject && (
           <motion.div
+            ref={modalRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto"
+            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto touch-pan-y"
             onClick={() => { setSelectedProject(null); setSelectedIndex(-1); }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             {/* Backdrop */}
             <div className="fixed inset-0 bg-[rgba(250,250,255,0.85)] backdrop-blur-md" />
@@ -315,18 +377,18 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
             {/* Close Button */}
             <button
               onClick={() => { setSelectedProject(null); setSelectedIndex(-1); }}
-              className="fixed top-6 right-6 z-[60] w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+              className="fixed top-4 right-4 md:top-6 md:right-6 z-[60] w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] flex items-center justify-center hover:bg-white transition-colors shadow-lg"
               aria-label="Close project"
             >
-              <svg className="w-6 h-6 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 md:w-6 md:h-6 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
-            {/* Previous Project Button */}
+            {/* Previous Project Button - hidden on mobile */}
             <button
               onClick={(e) => { e.stopPropagation(); navigateProject('prev'); }}
-              className="fixed left-4 md:left-8 top-1/2 -translate-y-1/2 z-[60] w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] flex items-center justify-center hover:bg-white hover:scale-110 transition-all shadow-lg group"
+              className="hidden md:flex fixed left-8 top-1/2 -translate-y-1/2 z-[60] w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] items-center justify-center hover:bg-white hover:scale-110 transition-all shadow-lg group"
               aria-label="Previous project"
             >
               <svg className="w-6 h-6 text-mk-text group-hover:text-accent-cyan transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -334,10 +396,10 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
               </svg>
             </button>
 
-            {/* Next Project Button */}
+            {/* Next Project Button - hidden on mobile */}
             <button
               onClick={(e) => { e.stopPropagation(); navigateProject('next'); }}
-              className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-[60] w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] flex items-center justify-center hover:bg-white hover:scale-110 transition-all shadow-lg group"
+              className="hidden md:flex fixed right-8 top-1/2 -translate-y-1/2 z-[60] w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] items-center justify-center hover:bg-white hover:scale-110 transition-all shadow-lg group"
               aria-label="Next project"
             >
               <svg className="w-6 h-6 text-mk-text group-hover:text-accent-cyan transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -345,11 +407,30 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
               </svg>
             </button>
 
-            {/* Project Counter */}
-            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] shadow-lg">
-              <span className="text-sm font-medium text-mk-text">
-                {selectedIndex + 1} / {filteredProjects.length}
-              </span>
+            {/* Project Counter with Swipe Hint on mobile */}
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center gap-2">
+              {/* Swipe hint - only on mobile, disappears after first swipe */}
+              <AnimatePresence>
+                {showSwipeHint && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="md:hidden flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan text-xs font-medium"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m-12 5h12m-12 5h12M4 7h.01M4 12h.01M4 17h.01" />
+                    </svg>
+                    Wischen zum Wechseln
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              
+              <div className="px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] shadow-lg">
+                <span className="text-sm font-medium text-mk-text">
+                  {selectedIndex + 1} / {filteredProjects.length}
+                </span>
+              </div>
             </div>
 
             {/* Modal Content with Slide Animation */}
@@ -369,7 +450,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   x: slideDirection === 'right' ? -100 : 100 
                 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="relative z-[55] w-full max-w-7xl mx-auto my-8 md:my-16 px-16 md:px-24"
+                className="relative z-[55] w-full max-w-7xl mx-auto my-4 md:my-16 px-4 md:px-24"
                 onClick={(e) => e.stopPropagation()}
               >
                 <ProjectSlide project={selectedProject} isActive={true} />
