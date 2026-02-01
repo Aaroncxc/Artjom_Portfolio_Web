@@ -238,14 +238,7 @@
           Wireframe
         </button>
         
-        <button class="btn" id="grid-btn" onclick="toggleGrid()">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16M8 4v16M12 4v16M16 4v16"/>
-          </svg>
-          Grid
-        </button>
-        
-        <button class="btn btn-accent" id="animation-btn" onclick="toggleMaskAnimation()">
+<button class="btn btn-accent" id="animation-btn" onclick="toggleMaskAnimation()">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -288,7 +281,6 @@
     const loadingEl = document.getElementById('loading');
     const progressEl = document.getElementById('progress');
     const wireframeBtn = document.getElementById('wireframe-btn');
-    const gridBtn = document.getElementById('grid-btn');
     const animationBtn = document.getElementById('animation-btn');
     const animationText = document.getElementById('animation-text');
     const fullscreenBtn = document.getElementById('fullscreen-btn');
@@ -337,8 +329,6 @@
       gridHelper.position.y = -1.2;
       scene.add(gridHelper);
       
-      // Update grid button state
-      gridBtn.classList.add('active');
 
       // Lighting (main light first so we can use it for shadow-only plane)
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
@@ -689,15 +679,6 @@
         wireframeGroup.visible = showWireframe;
       }
       wireframeBtn.classList.toggle('active', showWireframe);
-    };
-
-    // Toggle grid - exposed globally
-    window.toggleGrid = function() {
-      showGrid = !showGrid;
-      if (gridHelper) {
-        gridHelper.visible = showGrid;
-      }
-      gridBtn.classList.toggle('active', showGrid);
     };
 
     // Toggle enlarge - communicates with parent window

@@ -1,6 +1,19 @@
 {
   "posts": [
     {
+      "id": "10",
+      "slug": "the-house",
+      "title": "The House",
+      "description": "A cinematic exploration of architectural spaces, light, and shadow. This video piece captures the essence of domestic environments through careful composition and atmospheric visuals.",
+      "date": "2026-01-31",
+      "tags": ["video", "architecture", "cinematic"],
+      "type": "video",
+      "thumbnail": "/videos/thehouse.mp4",
+      "videoUrl": "/videos/thehouse.mp4",
+      "author": "multikunst",
+      "featured": true
+    },
+    {
       "id": "9",
       "slug": "mask-sculpture",
       "title": "Mask Sculpture",
@@ -123,5 +136,5 @@
       "featured": true
     }
   ],
-  "lastUpdated": "2025-11-15T12:00:00Z"
+  "lastUpdated": "2026-01-31T02:10:00Z"
 }

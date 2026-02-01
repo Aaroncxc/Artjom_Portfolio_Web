@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiltersBar } from './FiltersBar';
 import { ProjectSlide } from './ProjectSlide';
 import { Project3DPreview } from './Project3DPreview';
 import { Project, ProjectType } from '@/lib/types';
@@ -228,8 +227,20 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   onMouseLeave={() => setHoveredProject(null)}
                   onMouseMove={(e) => project.model3dPath && handleTileMouseMove(e, project.id)}
                 >
-                  {/* Thumbnail - hide for 3D projects */}
-                  {!project.model3dPath && (
+                  {/* Video Preview for video projects */}
+                  {project.type === 'video' && project.videoUrl && (
+                    <video
+                      src={project.videoUrl}
+                      muted
+                      loop
+                      playsInline
+                      autoPlay
+                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                    />
+                  )}
+
+                  {/* Thumbnail - hide for 3D and video projects */}
+                  {!project.model3dPath && project.type !== 'video' && (
                     <img
                       src={project.thumbnail}
                       alt={project.title}

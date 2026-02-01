@@ -12,7 +12,10 @@ const nextConfig = {
   },
 
   images: {
-    domains: ['storage.googleapis.com', 'cdn.multikunst.com'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'storage.googleapis.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'cdn.multikunst.com', pathname: '/**' },
+    ],
     unoptimized: false,
   },
 

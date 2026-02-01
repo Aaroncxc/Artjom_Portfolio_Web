@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { GlobalBackgroundAurora } from '@/components/GlobalBackgroundAurora';
 import LightLeaksBackground from '@/components/LightLeaksBackground';
 import { Navigation } from '@/components/Navigation';

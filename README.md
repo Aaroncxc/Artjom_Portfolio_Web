@@ -6,7 +6,7 @@ A production-ready landing site for the multikunst art collective featuring a gl
 
 - **Interactive 3D Hero**: Pointcloud logo with scrub-to-reveal interaction
 - **Glassmorphism Design**: Modern "milk glass" aesthetic with aurora gradients
-- **Scroll-Snap Gallery**: Projects displayed as fullscreen cards, one per scroll
+- **Projects Grid**: Filterable grid with modal slides for project details
 - **Reference Boards**: PureRef-inspired infinite canvas per project for mood boards
 - **Multiple Media Types**: HTML/interactive, video, audio, and image projects
 - **Accessibility**: Focus states, keyboard navigation, reduced motion support
@@ -44,14 +44,15 @@ Open [http://localhost:3000](http://localhost:3000)
 │   └── globals.css         # Global styles
 ├── components/
 │   ├── GlobalBackgroundAurora.tsx  # Animated gradient blobs
+│   ├── LightLeaksBackground.tsx    # Pearl gradient background
 │   ├── GlassPanel.tsx      # Reusable glass container
-│   ├── HeroPointCloud.tsx  # 3D hero with scrub interaction
+│   ├── TextPointCloudHero.tsx  # 3D text pointcloud hero
 │   ├── Navigation.tsx      # Glass navigation bar
 │   ├── AboutSection.tsx    # About + member cards
-│   ├── ProjectsSnapGallery.tsx  # Scroll-snap container
-│   ├── ProjectSlide.tsx    # Individual project slide
+│   ├── ProjectsGrid.tsx    # Project grid + filters + modal
+│   ├── ProjectSlide.tsx    # Individual project slide (modal)
+│   ├── Project3DPreview.tsx # 3D model preview in grid
 │   ├── ProjectBoardAccordion.tsx  # Board accordion wrapper
-│   ├── FiltersBar.tsx      # Type/tag filters
 │   └── board/
 │       ├── BoardCanvas.tsx # Infinite canvas with pan/zoom
 │       ├── BoardItem.tsx   # Individual board item
