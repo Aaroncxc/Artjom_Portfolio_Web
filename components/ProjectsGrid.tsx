@@ -175,15 +175,18 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedProject, navigateProject]);
 
-  // Lock body scroll when modal is open
+  // Lock body scroll and hide navigation when modal is open
   useEffect(() => {
     if (selectedProject) {
       document.body.style.overflow = 'hidden';
+      document.body.setAttribute('data-modal-open', 'true');
     } else {
       document.body.style.overflow = '';
+      document.body.removeAttribute('data-modal-open');
     }
     return () => {
       document.body.style.overflow = '';
+      document.body.removeAttribute('data-modal-open');
     };
   }, [selectedProject]);
 
@@ -285,14 +288,20 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   onTouchMove={(e) => project.model3dPath && handleTileTouchMove(e, project.id)}
                   onTouchEnd={() => project.model3dPath && handleTileTouchEnd()}
                 >
-                  {/* Video Preview for video projects */}
+                  {/* Video Preview for video projects - starts at 10 seconds */}
                   {project.type === 'video' && project.videoUrl && (
                     <video
-                      src={project.videoUrl}
+                      src={`${project.videoUrl}#t=10`}
                       muted
                       loop
                       playsInline
                       autoPlay
+                      onLoadedMetadata={(e) => {
+                        const video = e.currentTarget;
+                        if (video.currentTime < 10) {
+                          video.currentTime = 10;
+                        }
+                      }}
                       className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                     />
                   )}

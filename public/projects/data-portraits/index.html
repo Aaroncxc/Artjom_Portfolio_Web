@@ -3,188 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Data Portraits</title>
+  <title>Data Portraits – Coming soon</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
     body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-family: -apple-system, sans-serif;
-      overflow: hidden;
+      background: linear-gradient(135deg, #fafaff 0%, #eef0f2 100%);
+      color: rgba(28, 28, 28, 0.6);
     }
-    
-    /* Animated mesh gradient */
-    .gradient-bg {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background: 
-        radial-gradient(ellipse at 20% 20%, rgba(94, 234, 212, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(167, 139, 250, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(251, 113, 133, 0.1) 0%, transparent 50%),
-        linear-gradient(135deg, #0B0F1A 0%, #15112A 100%);
-      animation: meshMove 12s ease-in-out infinite;
-    }
-    
-    @keyframes meshMove {
-      0%, 100% { 
-        background-position: 0% 0%, 100% 100%, 50% 50%, 0 0;
-      }
-      33% { 
-        background-position: 30% 70%, 70% 30%, 80% 20%, 0 0;
-      }
-      66% { 
-        background-position: 70% 30%, 30% 70%, 20% 80%, 0 0;
-      }
-    }
-    
-    .container {
+    .placeholder {
       text-align: center;
       padding: 2rem;
-      position: relative;
-      z-index: 1;
     }
-    
-    .title {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #5EEAD4, #A78BFA, #FB7185, #5EEAD4);
-      background-size: 300% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: rainbowText 6s linear infinite;
-      margin-bottom: 1rem;
+    .placeholder img {
+      max-width: 280px;
+      width: 80%;
+      height: auto;
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
     }
-    
-    @keyframes rainbowText {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 300% 50%; }
-    }
-    
-    .subtitle {
-      color: rgba(255,255,255,0.6);
-      font-size: 0.9rem;
-      margin-bottom: 2rem;
-    }
-    
-    .portrait {
-      width: 320px;
-      height: 320px;
-      margin: 0 auto;
-      position: relative;
-      perspective: 1000px;
-    }
-    
-    .ring {
-      position: absolute;
-      border-radius: 50%;
-      border: 2px solid;
-      left: 50%;
-      top: 50%;
-      animation: rotate 20s linear infinite;
-    }
-    
-    @keyframes rotate {
-      from { transform: translate(-50%, -50%) rotate(0deg); }
-      to { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-    
-    .dot {
-      position: absolute;
-      border-radius: 50%;
-      animation: pulse 2s ease-in-out infinite;
-    }
-    
-    @keyframes pulse {
-      0%, 100% { opacity: 0.4; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.3); }
-    }
-    
-    .core {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #5EEAD4, #A78BFA);
-      animation: corePulse 3s ease-in-out infinite;
-      box-shadow: 
-        0 0 30px rgba(94, 234, 212, 0.4),
-        0 0 60px rgba(167, 139, 250, 0.2);
-    }
-    
-    @keyframes corePulse {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.1); }
-    }
-    
-    .instruction {
-      margin-top: 2rem;
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.4);
+    .placeholder p {
+      font-size: 1rem;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
-  <div class="gradient-bg"></div>
-  
-  <div class="container">
-    <h1 class="title">Data Portraits</h1>
-    <p class="subtitle">Your digital identity, visualized</p>
-    
-    <div class="portrait" id="portrait">
-      <div class="core"></div>
-    </div>
-    
-    <p class="instruction">Each portrait is unique, generated from interaction patterns</p>
+  <div class="placeholder">
+    <img src="/multikunst.png" alt="multikunst" />
+    <p>Coming soon.</p>
   </div>
-
-  <script>
-    const portrait = document.getElementById('portrait');
-    const colors = ['#5EEAD4', '#A78BFA', '#FB7185'];
-    
-    // Create rings
-    for (let i = 0; i < 6; i++) {
-      const ring = document.createElement('div');
-      ring.className = 'ring';
-      const size = 100 + i * 45;
-      ring.style.width = size + 'px';
-      ring.style.height = size + 'px';
-      ring.style.borderColor = colors[i % 3];
-      ring.style.opacity = 0.2 + (i * 0.08);
-      ring.style.animationDuration = (18 + i * 4) + 's';
-      ring.style.animationDirection = i % 2 ? 'reverse' : 'normal';
-      portrait.appendChild(ring);
-    }
-    
-    // Create dots
-    for (let i = 0; i < 40; i++) {
-      const dot = document.createElement('div');
-      dot.className = 'dot';
-      const angle = (i / 40) * Math.PI * 2;
-      const radius = 60 + Math.random() * 100;
-      dot.style.left = (160 + Math.cos(angle) * radius) + 'px';
-      dot.style.top = (160 + Math.sin(angle) * radius) + 'px';
-      dot.style.width = (4 + Math.random() * 6) + 'px';
-      dot.style.height = dot.style.width;
-      dot.style.backgroundColor = colors[Math.floor(Math.random() * 3)];
-      dot.style.animationDelay = (Math.random() * 2) + 's';
-      dot.style.animationDuration = (1.5 + Math.random()) + 's';
-      portrait.appendChild(dot);
-    }
-    
-    // Interactive tilt
-    document.addEventListener('mousemove', (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 25;
-      const y = (e.clientY / window.innerHeight - 0.5) * 25;
-      portrait.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
-    });
-  </script>
 </body>
 </html>

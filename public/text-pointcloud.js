@@ -61,6 +61,7 @@ class TextPointcloud extends HTMLElement{
       lastKey: "",
       mouse: {x:0,y:0,px:0,py:0,vx:0,vy:0,down:false,inside:false},
       pointsOpacity: 0,  // 0 = solid text, 1 = points visible
+      touch: { startTime:0, startX:0, startY:0, moved:false },
     };
 
     this.preset = {...DEFAULTS};
@@ -163,27 +164,48 @@ class TextPointcloud extends HTMLElement{
     this.canvas.addEventListener("mousedown", this._onDown);
     window.addEventListener("mouseup", this._onUp);
 
-    // Touch events - translate to mouse-like coordinates
+    // Touch: drag = push points (like hover), tap = explode (gravity)
     this._onTouchStart = (e)=>{
       if(e.touches.length > 0){
+        const t = e.touches[0];
         this.state.mouse.inside = true;
-        this.state.mouse.down = true;
-        this.updateTouch(e.touches[0]);
+        this.state.mouse.down = false; // don't explode on touch – only on tap
+        this.updateTouch(t);
+        this.state.touch.startTime = Date.now();
+        this.state.touch.startX = this.state.mouse.x;
+        this.state.touch.startY = this.state.mouse.y;
+        this.state.touch.moved = false;
       }
     };
     this._onTouchMove = (e)=>{
       if(e.touches.length > 0){
-        this.updateTouch(e.touches[0]);
-        // Prevent scroll while interacting
+        const t = e.touches[0];
+        const r = this.canvas.getBoundingClientRect();
+        const x = (t.clientX - r.left) * this.state.dpr;
+        const y = (t.clientY - r.top) * this.state.dpr;
+        const dx = x - this.state.touch.startX, dy = y - this.state.touch.startY;
+        if(Math.hypot(dx, dy) > 15 * this.state.dpr) this.state.touch.moved = true;
+        this.state.mouse.down = false; // drag = push only, no explode
+        this.updateTouch(t);
         e.preventDefault();
       }
     };
     this._onTouchEnd = (e)=>{
-      this.state.mouse.down = false;
-      // Keep inside=true briefly to allow effect to settle
+      const touch = this.state.touch;
+      const elapsed = Date.now() - touch.startTime;
+      const isTap = !touch.moved && elapsed < 350;
+      if(isTap){
+        this.state.mouse.down = true; // trigger explode
+        const self = this;
+        setTimeout(()=>{
+          self.state.mouse.down = false;
+        }, 80);
+      } else {
+        this.state.mouse.down = false;
+      }
       setTimeout(()=>{
         if(!this.state.mouse.down) this.state.mouse.inside = false;
-      }, 100);
+      }, 120);
     };
     this.canvas.addEventListener("touchstart", this._onTouchStart, {passive: false});
     this.canvas.addEventListener("touchmove", this._onTouchMove, {passive: false});

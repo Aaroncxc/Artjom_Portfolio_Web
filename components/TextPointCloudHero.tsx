@@ -1,39 +1,76 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
 
 interface TextPointCloudHeroProps {
   onReady?: () => void;
 }
 
+// Scale text to 92% of viewport width: "multikunst" width ~ fontSize * 5.5
+function getResponsivePreset() {
+  if (typeof window === 'undefined') {
+    return { fontSize: 260, letterSpacing: -9, radius: 90, pointSize: 1, strength: 9 };
+  }
+  const w = window.innerWidth;
+  const maxFontSize = Math.min(240, (w * 0.92) / 5.5);
+  const fontSize = Math.max(48, Math.round(maxFontSize));
+  const letterSpacing = Math.round(-fontSize * 0.065);
+  const radius = Math.max(50, Math.round(fontSize * 0.65));
+  const pointSize = w < 400 ? 0.75 : 1;
+  const strength = w < 640 ? 8 : 9;
+  return { fontSize, letterSpacing, radius, pointSize, strength };
+}
+
 export function TextPointCloudHero({ onReady }: TextPointCloudHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const scriptLoaded = useRef(false);
+  const [presetOverrides, setPresetOverrides] = useState(() => getResponsivePreset());
 
   useEffect(() => {
-    // Call onReady after a short delay to ensure component is visible
-    const timer = setTimeout(() => {
-      onReady?.();
-    }, 100);
+    const timer = setTimeout(() => onReady?.(), 100);
     return () => clearTimeout(timer);
   }, [onReady]);
+
+  useEffect(() => {
+    const update = () => setPresetOverrides(getResponsivePreset());
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  const preset = {
+    text: "multikunst",
+    ...presetOverrides,
+    weight: 700,
+    spacing: 2,
+    color: "#1C1C1C",
+    bg: "transparent",
+    centerMode: "center",
+    drag: 2,
+    noise: 0.5,
+    returnForce: 0.02,
+    damping: 0.80,
+    pressOnly: false,
+    gravityStrength: 0.8,
+    gravityOnClick: true,
+    showSolidWhenIdle: true,
+    transitionSpeed: 0.2,
+    burstStrength: 70,
+  };
 
   return (
     <>
       <Script 
         src="/text-pointcloud.js" 
         strategy="afterInteractive"
-        onLoad={() => {
-          scriptLoaded.current = true;
-        }}
+        onLoad={() => { scriptLoaded.current = true; }}
       />
       
       <section 
         ref={containerRef}
         className="relative z-[1] w-full h-screen flex items-center justify-center overflow-hidden"
       >
-        {/* The text pointcloud web component */}
         <text-pointcloud
           style={{
             width: '100%',
@@ -41,29 +78,7 @@ export function TextPointCloudHero({ onReady }: TextPointCloudHeroProps) {
             position: 'absolute',
             inset: 0,
           }}
-          preset={JSON.stringify({
-            text: "multikunst",
-            fontSize: 300,
-            letterSpacing: -20,
-            weight: 700,
-            spacing: 2,
-            pointSize: 1,
-            color: "#1C1C1C",
-            bg: "transparent",
-            centerMode: "center",
-            radius: 200,
-            strength: 10.0,
-            drag: 2,
-            noise: 0.5,
-            returnForce: 0.02,
-            damping: 0.80,
-            pressOnly: false,
-            gravityStrength: 0.8,
-            gravityOnClick: true,
-            showSolidWhenIdle: true,
-            transitionSpeed: 0.2,
-            burstStrength: 70,
-          })}
+          preset={JSON.stringify(preset)}
         />
         
         {/* Scroll indicator */}

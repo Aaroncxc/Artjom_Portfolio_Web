@@ -3,175 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neural Pathways</title>
+  <title>Neural Pathways – Coming soon</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
     body {
-      overflow: hidden;
-      font-family: -apple-system, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #fafaff 0%, #eef0f2 100%);
+      color: rgba(28, 28, 28, 0.6);
     }
-    
-    /* Animated gradient background */
-    .gradient-bg {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background: linear-gradient(-45deg, #0B0F1A, #1a0033, #001a33, #0d002b, #0B0F1A);
-      background-size: 400% 400%;
-      animation: gradientFlow 20s ease infinite;
-    }
-    
-    @keyframes gradientFlow {
-      0% { background-position: 0% 50%; }
-      25% { background-position: 50% 100%; }
-      50% { background-position: 100% 50%; }
-      75% { background-position: 50% 0%; }
-      100% { background-position: 0% 50%; }
-    }
-    
-    canvas {
-      display: block;
-      width: 100vw;
-      height: 100vh;
-    }
-    
-    .overlay {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
+    .placeholder {
       text-align: center;
-      color: rgba(255,255,255,0.6);
-      font-size: 0.75rem;
-      pointer-events: none;
-      z-index: 10;
+      padding: 2rem;
     }
-    
-    .title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      background: linear-gradient(90deg, #5EEAD4, #A78BFA);
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: textShimmer 4s ease infinite;
-      margin-bottom: 4px;
+    .placeholder img {
+      max-width: 280px;
+      width: 80%;
+      height: auto;
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
     }
-    
-    @keyframes textShimmer {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    .placeholder p {
+      font-size: 1rem;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
-  <div class="gradient-bg"></div>
-  <canvas id="canvas"></canvas>
-  <div class="overlay">
-    <div class="title">Neural Pathways</div>
-    <div>Move cursor to stimulate neurons</div>
+  <div class="placeholder">
+    <img src="/multikunst.png" alt="multikunst" />
+    <p>Coming soon.</p>
   </div>
-
-  <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    let width, height;
-    const neurons = [];
-    let mouse = { x: 0, y: 0 };
-    
-    function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-    
-    // Create neurons
-    for (let i = 0; i < 100; i++) {
-      neurons.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        radius: 2 + Math.random() * 4,
-        activation: 0,
-        hue: Math.random() > 0.5 ? 168 : 263 // cyan or violet
-      });
-    }
-    
-    document.addEventListener('mousemove', e => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
-    
-    function animate() {
-      // Semi-transparent clear for trails
-      ctx.fillStyle = 'rgba(11, 15, 26, 0.08)';
-      ctx.fillRect(0, 0, width, height);
-      
-      neurons.forEach((n, i) => {
-        // Move
-        n.x += n.vx;
-        n.y += n.vy;
-        
-        // Bounce
-        if (n.x < 0 || n.x > width) n.vx *= -1;
-        if (n.y < 0 || n.y > height) n.vy *= -1;
-        
-        // Mouse activation
-        const dx = mouse.x - n.x;
-        const dy = mouse.y - n.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 180) {
-          n.activation = Math.min(1, n.activation + 0.12);
-        } else {
-          n.activation *= 0.96;
-        }
-        
-        // Draw connections
-        neurons.forEach((other, j) => {
-          if (i >= j) return;
-          const dx2 = other.x - n.x;
-          const dy2 = other.y - n.y;
-          const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-          
-          if (dist2 < 140) {
-            const alpha = (1 - dist2 / 140) * 0.35 * (n.activation + other.activation);
-            ctx.beginPath();
-            ctx.moveTo(n.x, n.y);
-            ctx.lineTo(other.x, other.y);
-            ctx.strokeStyle = `hsla(${n.hue}, 80%, 70%, ${alpha})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        });
-        
-        // Draw glow
-        if (n.activation > 0.1) {
-          const gradient = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.radius + n.activation * 25);
-          gradient.addColorStop(0, `hsla(${n.hue}, 80%, 70%, ${n.activation * 0.5})`);
-          gradient.addColorStop(1, 'transparent');
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, n.radius + n.activation * 25, 0, Math.PI * 2);
-          ctx.fillStyle = gradient;
-          ctx.fill();
-        }
-        
-        // Draw neuron
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${n.hue}, 80%, 70%, ${0.4 + n.activation * 0.6})`;
-        ctx.fill();
-      });
-      
-      requestAnimationFrame(animate);
-    }
-    
-    animate();
-  </script>
 </body>
 </html>

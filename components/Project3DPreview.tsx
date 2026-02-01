@@ -40,38 +40,44 @@ export function Project3DPreview({ modelPath, isHovered, mousePosition }: Projec
         scene.background = null;
         sceneRef.current = scene;
 
-        // Camera
+        // Camera - closer for better zoom
         const width = containerRef.current.clientWidth;
         const height = containerRef.current.clientHeight;
-        const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
-        camera.position.set(0, 0, 5);
+        const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 1000);
+        camera.position.set(0, 0.2, 3.5); // Closer and slightly up
         camera.lookAt(0, 0, 0);
         cameraRef.current = camera;
 
-        // Renderer
+        // Renderer - EXACT same settings as 3D viewer for transmission to work
         const renderer = new THREE.WebGLRenderer({ 
           antialias: true, 
           alpha: true,
           powerPreference: 'high-performance'
         });
         renderer.setSize(width, height);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // Lower for performance
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.1;
+        renderer.toneMappingExposure = 1.2;
+        // These are important for MeshPhysicalMaterial with transmission
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
         containerRef.current.appendChild(renderer.domElement);
         rendererRef.current = renderer;
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        // Lighting - EXACT same as 3D viewer (index.html)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
         scene.add(ambientLight);
 
-        const mainLight = new THREE.DirectionalLight(0xffffff, 1.0);
-        mainLight.position.set(3, 5, 4);
+        const mainLight = new THREE.DirectionalLight(0xffffff, 1.4);
+        mainLight.position.set(2, 12, 4);  // Light from above
         scene.add(mainLight);
 
-        const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
-        fillLight.position.set(-3, 2, -2);
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.35);
+        fillLight.position.set(-5, 5, -5);
         scene.add(fillLight);
+
+        const rimLight = new THREE.DirectionalLight(0x88ccff, 0.25);
+        rimLight.position.set(0, -5, -10);
+        scene.add(rimLight);
 
         // Load model
         const loader = new FBXLoader();
@@ -80,46 +86,106 @@ export function Project3DPreview({ modelPath, isHovered, mousePosition }: Projec
           (fbx) => {
             if (!mounted) return;
 
-            // First, calculate bounding box BEFORE any transforms
+            // 1) First, calculate bounding box BEFORE any transforms
             const box = new THREE.Box3().setFromObject(fbx);
-            const center = box.getCenter(new THREE.Vector3());
             const size = box.getSize(new THREE.Vector3());
             const maxDim = Math.max(size.x, size.y, size.z);
             
-            // Scale to fit nicely in view (target size ~2 units)
-            const targetSize = 1.8;
+            // 2) Scale to fit nicely in view
+            const targetSize = 2.4;
             const scale = targetSize / maxDim;
+            
+            // 3) Apply rotation first (same as 3D viewer), then scale
+            fbx.rotation.x = -Math.PI / 2;  // Rotate to stand upright like in viewer
             fbx.scale.setScalar(scale);
+            fbx.position.set(0, 0, 0);
+            fbx.updateMatrixWorld(true);
             
-            // Now center the model at origin
-            // After scaling, we need to recalculate or just move by scaled center
-            fbx.position.set(
-              -center.x * scale,
-              -center.y * scale,
-              -center.z * scale
-            );
+            // 4) Recalculate bounding box after rotation + scale, then center
+            const boxRotated = new THREE.Box3().setFromObject(fbx);
+            const centerRotated = boxRotated.getCenter(new THREE.Vector3());
+            fbx.position.set(-centerRotated.x, -centerRotated.y + 0.3, -centerRotated.z);
             
-            // Handle materials for plastic - match the red transparent look from project viewer
+            // Handle materials - apply red transparent look to plastic/transparent parts (same as viewer)
             fbx.traverse((child: any) => {
               if (child.isMesh && child.material) {
-                const mat = child.material;
-                if (mat.name && (mat.name.toLowerCase().includes('plastic') || mat.name.toLowerCase().includes('transparent'))) {
-                  const newMat = new THREE.MeshPhysicalMaterial({
-                    color: new THREE.Color('#FF0000'),  // Red like in project viewer
-                    transparent: true,
-                    opacity: 0.35,
-                    roughness: 0.05,
-                    metalness: 0.0,
-                    transmission: 0.6,
-                    thickness: 0.5,
-                    side: THREE.DoubleSide,
-                    depthWrite: false,
-                    envMapIntensity: 1.0,
-                  });
-                  child.material = newMat;
+                const mats = Array.isArray(child.material) ? child.material : [child.material];
+                let hasPlasticMaterial = false;
+
+                const newMats = mats.map((mat: any, idx: number) => {
+                  const matName = (mat.name || '').toLowerCase();
+                  
+                  const hasPlasticName = 
+                    matName.includes('plastic') ||
+                    matName.includes('transparent') ||
+                    matName.includes('clear') ||
+                    matName.includes('glass') ||
+                    matName.includes('visor');
+                  
+                  const isTransparentProps = 
+                    mat.transparent === true ||
+                    (mat.opacity !== undefined && mat.opacity < 0.99);
+                  
+                  let isLightColor = false;
+                  if (mat.color) {
+                    const r = mat.color.r || 0;
+                    const g = mat.color.g || 0;
+                    const b = mat.color.b || 0;
+                    isLightColor = (r > 0.9 && g > 0.9 && b > 0.9);
+                  }
+                  
+                  const isPlasticMaterial = hasPlasticName || isTransparentProps || isLightColor;
+                  
+                  if (isPlasticMaterial) {
+                    hasPlasticMaterial = true;
+                    // ========== PLASTIC MATERIAL - EXACT same as 3D viewer ==========
+                    const plasticColor = '#FF0000';
+                    const plasticOpacity = 0.35;
+                    const plasticTransmission = 0.6;
+                    const plasticRoughness = 0.05;
+                    const plasticThickness = 0.5;
+                    // ==============================================================
+                    
+                    const plasticMat = new THREE.MeshPhysicalMaterial({
+                      color: new THREE.Color(plasticColor),
+                      transparent: true,
+                      opacity: plasticOpacity,
+                      roughness: plasticRoughness,
+                      metalness: 0.0,
+                      transmission: plasticTransmission,
+                      thickness: plasticThickness,
+                      side: THREE.DoubleSide,
+                      depthWrite: false,
+                      envMapIntensity: 1.0,
+                    });
+                    (plasticMat as any).renderOrder = 1;
+                    return plasticMat;
+                  }
+                  
+                  mat.metalness = 0.1;
+                  mat.roughness = 0.6;
+                  return mat;
+                });
+                
+                child.material = Array.isArray(child.material) ? newMats : newMats[0];
+                if (hasPlasticMaterial) {
+                  child.renderOrder = 1;
                 }
               }
             });
+
+            // Setup animation - set to initial pose (time 0, closed state)
+            if (fbx.animations && fbx.animations.length > 0) {
+              const mixer = new THREE.AnimationMixer(fbx);
+              const clip = fbx.animations[0];
+              const action = mixer.clipAction(clip);
+              action.setLoop(THREE.LoopOnce, 1);
+              action.clampWhenFinished = true;
+              action.play();
+              action.paused = true;
+              action.time = 0;  // Start at beginning (closed pose)
+              mixer.update(0);  // Apply the pose
+            }
 
             // Create a pivot group to rotate around center
             const pivotGroup = new THREE.Group();
@@ -130,7 +196,6 @@ export function Project3DPreview({ modelPath, isHovered, mousePosition }: Projec
             console.log('3D Preview loaded:', { 
               originalSize: size, 
               scale, 
-              center,
               finalPos: fbx.position 
             });
             
