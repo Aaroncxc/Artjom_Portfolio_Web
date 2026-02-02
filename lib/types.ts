@@ -1,5 +1,11 @@
 export type ProjectType = 'html' | 'video' | 'audio' | 'image';
 
+export interface ProjectMedia {
+  type: 'video' | 'image';
+  src: string;
+  title?: string;
+}
+
 export interface Project {
   id: string;
   slug: string;
@@ -16,6 +22,8 @@ export interface Project {
   author?: string;
   featured?: boolean;
   model3dPath?: string;
+  // Additional media gallery for projects with multiple assets
+  gallery?: ProjectMedia[];
 }
 
 export interface PostsData {

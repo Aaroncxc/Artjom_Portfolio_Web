@@ -305,6 +305,46 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
               </video>
             </div>
 
+            {/* Gallery - additional media */}
+            {project.gallery && project.gallery.length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-lg font-medium text-mk-text mb-4">Weitere Ansichten</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {project.gallery.map((media, index) => (
+                    <div 
+                      key={index}
+                      className="relative rounded-2xl overflow-hidden bg-black/5 group"
+                    >
+                      {media.type === 'video' ? (
+                        <video
+                          src={media.src}
+                          controls
+                          muted
+                          playsInline
+                          loop
+                          className="w-full h-full object-contain"
+                          style={{ aspectRatio: '16/9' }}
+                        >
+                          Your browser does not support the video tag.
+                        </video>
+                      ) : (
+                        <img
+                          src={media.src}
+                          alt={media.title || `Gallery image ${index + 1}`}
+                          className="w-full h-auto object-contain"
+                        />
+                      )}
+                      {media.title && (
+                        <div className="absolute bottom-0 left-0 right-0 px-4 py-2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="text-white text-sm font-medium">{media.title}</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Board / References Accordion - same width as info box */}
             <div className="mt-6">
               <ProjectBoardAccordion slug={project.slug} />

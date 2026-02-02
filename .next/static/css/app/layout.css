@@ -949,6 +949,9 @@ video {
 .h-1 {
   height: 0.25rem;
 }
+.h-auto {
+  height: auto;
+}
 .min-h-\[300px\] {
   min-height: 300px;
 }
@@ -1179,6 +1182,9 @@ video {
 }
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 .flex-col {
   flex-direction: column;
@@ -1524,6 +1530,11 @@ video {
 .from-violet-50 {
   --tw-gradient-from: #f5f3ff var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(245 243 255 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+.from-black\/60 {
+  --tw-gradient-from: rgb(0 0 0 / 0.6) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 .via-\[rgba\(28\2c 28\2c 28\2c 0\.2\)\] {

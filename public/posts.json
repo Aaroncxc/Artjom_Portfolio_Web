@@ -1,6 +1,25 @@
 {
   "posts": [
     {
+      "id": "11",
+      "slug": "pocket-multipass",
+      "title": "Pocket Multipass",
+      "description": "A conceptual hardware device design exploring the intersection of retro gaming aesthetics and modern technology. The Pocket Multipass features a distinctive form factor with premium materials and tactile interface elements.",
+      "date": "2026-02-02",
+      "tags": ["3D", "product design", "concept", "hardware"],
+      "type": "video",
+      "thumbnail": "/projects/pocket-multipass/preview.mp4",
+      "videoUrl": "/projects/pocket-multipass/preview.mp4",
+      "author": "multikunst",
+      "featured": true,
+      "gallery": [
+        { "type": "video", "src": "/projects/pocket-multipass/detail.mp4", "title": "Detail Animation" },
+        { "type": "image", "src": "/projects/pocket-multipass/front_top.png", "title": "Front View" },
+        { "type": "image", "src": "/projects/pocket-multipass/front_top_2.png", "title": "Front View with Cartridge" },
+        { "type": "image", "src": "/projects/pocket-multipass/perspective.png", "title": "Perspective View" }
+      ]
+    },
+    {
       "id": "10",
       "slug": "the-house",
       "title": "The House",

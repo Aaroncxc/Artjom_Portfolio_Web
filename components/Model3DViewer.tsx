@@ -56,17 +56,19 @@ export function Model3DViewer({
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     camera.position.set(0, 0, cameraDistance);
 
-    // Renderer
+    // Renderer - with settings for MeshPhysicalMaterial transmission
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true, 
       alpha: backgroundColor === 'transparent',
+      powerPreference: 'high-performance',
     });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1;
+    renderer.toneMappingExposure = 1.2;
+    renderer.outputColorSpace = THREE.SRGBColorSpace; // Important for transmission
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
@@ -119,20 +121,80 @@ export function Model3DViewer({
         fbx.rotation.y = initialRotation.y;
         fbx.rotation.z = initialRotation.z;
 
-        // Enable shadows and set materials
+        // Enable shadows and set materials - with red plastic for transparent parts
         fbx.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             child.castShadow = true;
             child.receiveShadow = true;
             
-            // Improve material if it's basic
+            // Handle materials - apply red transparent look to plastic/transparent parts
             if (child.material) {
-              const materials = Array.isArray(child.material) ? child.material : [child.material];
-              materials.forEach((mat) => {
-                if (mat instanceof THREE.MeshPhongMaterial || mat instanceof THREE.MeshLambertMaterial) {
-                  mat.shininess = 30;
+              const mats = Array.isArray(child.material) ? child.material : [child.material];
+              let hasPlasticMaterial = false;
+
+              const newMats = mats.map((mat: THREE.Material) => {
+                const matName = (mat.name || '').toLowerCase();
+                
+                const hasPlasticName = 
+                  matName.includes('plastic') ||
+                  matName.includes('transparent') ||
+                  matName.includes('clear') ||
+                  matName.includes('glass') ||
+                  matName.includes('visor');
+                
+                const isTransparentProps = 
+                  (mat as any).transparent === true ||
+                  ((mat as any).opacity !== undefined && (mat as any).opacity < 0.99);
+                
+                let isLightColor = false;
+                if ((mat as any).color) {
+                  const r = (mat as any).color.r || 0;
+                  const g = (mat as any).color.g || 0;
+                  const b = (mat as any).color.b || 0;
+                  isLightColor = (r > 0.9 && g > 0.9 && b > 0.9);
                 }
+                
+                const isPlasticMaterial = hasPlasticName || isTransparentProps || isLightColor;
+                
+                if (isPlasticMaterial) {
+                  hasPlasticMaterial = true;
+                  // ========== PLASTIC MATERIAL - Red transparent plastic ==========
+                  const plasticColor = '#FF0000';
+                  const plasticOpacity = 0.35;
+                  const plasticTransmission = 0.6;
+                  const plasticRoughness = 0.05;
+                  const plasticThickness = 0.5;
+                  // ==============================================================
+                  
+                  const plasticMat = new THREE.MeshPhysicalMaterial({
+                    color: new THREE.Color(plasticColor),
+                    transparent: true,
+                    opacity: plasticOpacity,
+                    roughness: plasticRoughness,
+                    metalness: 0.0,
+                    transmission: plasticTransmission,
+                    thickness: plasticThickness,
+                    side: THREE.DoubleSide,
+                    depthWrite: false,
+                    envMapIntensity: 1.0,
+                  });
+                  (plasticMat as any).renderOrder = 1;
+                  return plasticMat;
+                }
+                
+                // Improve non-plastic materials
+                if (mat instanceof THREE.MeshPhongMaterial || mat instanceof THREE.MeshLambertMaterial) {
+                  (mat as any).shininess = 30;
+                }
+                (mat as any).metalness = 0.1;
+                (mat as any).roughness = 0.6;
+                return mat;
               });
+              
+              child.material = Array.isArray(child.material) ? newMats : newMats[0];
+              if (hasPlasticMaterial) {
+                child.renderOrder = 1;
+              }
             }
           }
         });
