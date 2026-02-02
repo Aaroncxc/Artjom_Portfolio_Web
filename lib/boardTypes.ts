@@ -1,4 +1,11 @@
-export type BoardItemType = 'image' | 'video' | 'audio';
+export type BoardItemType = 'image' | 'video' | 'audio' | 'text';
+
+export interface ImageCrop {
+  x: number;      // left offset %
+  y: number;      // top offset %
+  width: number;  // crop width % (100 = full width)
+  height: number; // crop height % (100 = full height)
+}
 
 export interface BoardItem {
   id: string;
@@ -10,7 +17,24 @@ export interface BoardItem {
   width: number;
   height: number;
   zIndex: number;
-  // For audio, width/height are fixed card dimensions
+  
+  // Image-specific properties
+  naturalWidth?: number;   // Original image width
+  naturalHeight?: number;  // Original image height
+  rotation?: number;       // Rotation in degrees (0, 90, 180, 270)
+  flipX?: boolean;         // Horizontal flip
+  flipY?: boolean;         // Vertical flip
+  borderRadius?: number;   // Corner radius in pixels (0 = sharp corners)
+  aspectRatioLocked?: boolean; // Lock aspect ratio during resize
+  crop?: ImageCrop;        // Crop settings
+  
+  // Text-specific properties
+  text?: string;           // Text content
+  fontSize?: number;       // Font size in pixels
+  fontWeight?: 'normal' | 'medium' | 'semibold' | 'bold';
+  textAlign?: 'left' | 'center' | 'right';
+  textColor?: string;      // Text color (hex or rgba)
+  backgroundColor?: string; // Background color (optional)
 }
 
 export interface BoardData {
@@ -41,6 +65,7 @@ export const DEFAULT_ITEM_SIZES: Record<BoardItemType, { width: number; height: 
   image: { width: 300, height: 200 },
   video: { width: 400, height: 225 },
   audio: { width: 280, height: 80 },
+  text: { width: 200, height: 60 },
 };
 
 export function createEmptyBoard(slug: string): BoardData {

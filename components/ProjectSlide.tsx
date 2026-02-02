@@ -315,7 +315,78 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
     );
   }
 
-  // Default layout for other project types
+  // Layout for HTML/3D projects - similar to video but with side-by-side boxes
+  if (project.type === 'html') {
+    return (
+      <div className="snap-section flex flex-col justify-center px-6 py-8 lg:py-16 min-h-screen">
+        <div className="max-w-6xl w-full mx-auto">
+          <motion.div
+            style={{ opacity: isActive ? 1 : 0.3 }}
+            animate={{ opacity: isActive ? 1 : 0.3 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Two equal columns: Info and 3D */}
+            <div className="grid gap-6 lg:grid-cols-2 mb-6">
+              {/* Info Panel */}
+              <GlassPanel variant="default" padding="lg" className="h-full">
+                {/* Header row */}
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgba(167,139,250,0.15)] border border-[rgba(167,139,250,0.3)] text-accent-violet text-xs font-medium">
+                    {typeIcons[project.type]}
+                    <span className="capitalize">Interactive</span>
+                  </span>
+                  <span className="text-xs text-mk-text-muted">
+                    {formatDate(project.date)}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight mb-3 text-mk-text">
+                  {project.title}
+                </h2>
+
+                {/* Description */}
+                <p className="text-mk-text-secondary text-sm leading-relaxed mb-4">
+                  {project.description}
+                </p>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2 py-0.5 rounded-full text-xs bg-[rgba(28,28,28,0.04)] border border-[rgba(28,28,28,0.08)] text-mk-text-muted"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Author */}
+                {project.author && (
+                  <div className="pt-3 border-t border-[rgba(28,28,28,0.08)]">
+                    <p className="text-sm text-mk-text-muted">
+                      Created by <span className="text-mk-text">{project.author}</span>
+                    </p>
+                  </div>
+                )}
+              </GlassPanel>
+
+              {/* 3D/Interactive Preview */}
+              <div className="h-full min-h-[350px] lg:min-h-[400px]">
+                {renderMedia()}
+              </div>
+            </div>
+
+            {/* Board / References - Full Width */}
+            <ProjectBoardAccordion slug={project.slug} />
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  // Default layout for other project types (audio, image)
   return (
     <div className="snap-section flex flex-col justify-center px-6 py-8 lg:py-24 min-h-screen">
       <div className="max-w-7xl w-full mx-auto">
@@ -340,7 +411,7 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
                 <div className="flex items-center gap-2 mb-6">
                   <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgba(167,139,250,0.15)] border border-[rgba(167,139,250,0.3)] text-accent-violet text-xs font-medium">
                     {typeIcons[project.type]}
-                    <span className="capitalize">{project.type === 'html' ? 'Interactive' : project.type}</span>
+                    <span className="capitalize">{project.type}</span>
                   </span>
                   <span className="text-xs text-mk-text-muted">
                     {formatDate(project.date)}

@@ -1,10 +1,32 @@
 import { BoardData, createEmptyBoard } from './boardTypes';
 
+const STORAGE_KEY_PREFIX = 'multikunst-board-';
+
 /**
- * Load board data from /public/boards/<slug>.json
+ * Get localStorage key for a board
+ */
+function getStorageKey(slug: string): string {
+  return `${STORAGE_KEY_PREFIX}${slug}`;
+}
+
+/**
+ * Load board data from localStorage first, then fallback to /public/boards/<slug>.json
  * Returns empty board if not found
  */
 export async function loadBoard(slug: string): Promise<BoardData> {
+  // First, try to load from localStorage
+  try {
+    const stored = localStorage.getItem(getStorageKey(slug));
+    if (stored) {
+      const data = JSON.parse(stored) as BoardData;
+      console.log(`Board loaded from localStorage for ${slug}`);
+      return data;
+    }
+  } catch (error) {
+    console.warn('Failed to load board from localStorage:', error);
+  }
+
+  // Fallback to fetching from /public/boards/
   try {
     const response = await fetch(`/boards/${slug}.json`, {
       cache: 'no-store',
@@ -20,6 +42,23 @@ export async function loadBoard(slug: string): Promise<BoardData> {
   } catch (error) {
     console.error(`Failed to load board for ${slug}:`, error);
     return createEmptyBoard(slug);
+  }
+}
+
+/**
+ * Save board data to localStorage
+ */
+export function saveBoard(board: BoardData): void {
+  try {
+    const key = getStorageKey(board.slug);
+    localStorage.setItem(key, JSON.stringify(board));
+    console.log(`Board saved to localStorage for ${board.slug}`);
+  } catch (error) {
+    console.error('Failed to save board to localStorage:', error);
+    // localStorage might be full, try to notify user
+    if (error instanceof Error && error.name === 'QuotaExceededError') {
+      alert('Speicher voll! Einige Bilder könnten nicht gespeichert werden.');
+    }
   }
 }
 
@@ -79,4 +118,53 @@ export function fileToDataUrl(file: File): Promise<string> {
     reader.onerror = () => reject(new Error('Failed to read file'));
     reader.readAsDataURL(file);
   });
+}
+
+/**
+ * Get natural dimensions of an image from a data URL
+ */
+export function getImageDimensions(dataUrl: string): Promise<{ width: number; height: number }> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    };
+    img.onerror = () => reject(new Error('Failed to load image'));
+    img.src = dataUrl;
+  });
+}
+
+/**
+ * Calculate display dimensions while preserving aspect ratio
+ * Fits the image within maxWidth/maxHeight bounds
+ */
+export function fitImageDimensions(
+  naturalWidth: number,
+  naturalHeight: number,
+  maxWidth: number = 400,
+  maxHeight: number = 400
+): { width: number; height: number } {
+  const aspectRatio = naturalWidth / naturalHeight;
+  
+  let width = naturalWidth;
+  let height = naturalHeight;
+  
+  // Scale down if larger than max bounds
+  if (width > maxWidth) {
+    width = maxWidth;
+    height = width / aspectRatio;
+  }
+  
+  if (height > maxHeight) {
+    height = maxHeight;
+    width = height * aspectRatio;
+  }
+  
+  // Ensure minimum size
+  if (width < 50) {
+    width = 50;
+    height = width / aspectRatio;
+  }
+  
+  return { width: Math.round(width), height: Math.round(height) };
 }
