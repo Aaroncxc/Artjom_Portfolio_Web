@@ -30,7 +30,9 @@ const DEFAULTS = {
   "gravityOnClick": true,
   "showSolidWhenIdle": true,
   "transitionSpeed": 0.08,
-  "burstStrength": 8
+  "burstStrength": 8,
+  "orbitStrength": 1.8,
+  "orbitGravity": 0.35
 };
 
 function safeParseJSON(str){
@@ -61,7 +63,8 @@ class TextPointcloud extends HTMLElement{
       lastKey: "",
       mouse: {x:0,y:0,px:0,py:0,vx:0,vy:0,down:false,inside:false},
       pointsOpacity: 0,  // 0 = solid text, 1 = points visible
-      touch: { startTime:0, startX:0, startY:0, moved:false },
+      touch: { startTime:0, startX:0, startY:0, moved:false, inTextArea:false },
+      textBounds: null,  // Will be set in drawTextOffscreen
     };
 
     this.preset = {...DEFAULTS};
@@ -148,7 +151,7 @@ class TextPointcloud extends HTMLElement{
   _bindMouse(){
     // Mouse events
     this._onMove = (e)=>this.updateMouse(e);
-    this._onEnter = (e)=>{ this.state.mouse.inside=true; this.updateMouse(e); };
+    this._onEnter = (e)=>{ this.updateMouse(e); }; // Let updateMouse determine if inside text bounds
     this._onLeave = ()=>{ this.state.mouse.inside=false; };
     this._onDown = (e)=>{ 
       this.state.mouse.down=true; 
@@ -165,20 +168,37 @@ class TextPointcloud extends HTMLElement{
     window.addEventListener("mouseup", this._onUp);
 
     // Touch: drag = push points (like hover), tap = explode (gravity)
+    // Only block scrolling when touching the text area
     this._onTouchStart = (e)=>{
       if(e.touches.length > 0){
         const t = e.touches[0];
-        this.state.mouse.inside = true;
-        this.state.mouse.down = false; // don't explode on touch – only on tap
-        this.updateTouch(t);
-        this.state.touch.startTime = Date.now();
-        this.state.touch.startX = this.state.mouse.x;
-        this.state.touch.startY = this.state.mouse.y;
-        this.state.touch.moved = false;
+        const r = this.canvas.getBoundingClientRect();
+        const x = (t.clientX - r.left) * this.state.dpr;
+        const y = (t.clientY - r.top) * this.state.dpr;
+        
+        // Check if touch is within text bounds
+        const touchInText = this.isInsideTextBounds(x, y);
+        this.state.touch.inTextArea = touchInText;
+        
+        if(touchInText){
+          this.state.mouse.inside = true;
+          this.state.mouse.down = false; // don't explode on touch – only on tap
+          this.updateTouch(t);
+          this.state.touch.startTime = Date.now();
+          this.state.touch.startX = this.state.mouse.x;
+          this.state.touch.startY = this.state.mouse.y;
+          this.state.touch.moved = false;
+        } else {
+          // Touch outside text - don't activate effect, allow scroll
+          this.state.mouse.inside = false;
+        }
       }
     };
     this._onTouchMove = (e)=>{
       if(e.touches.length > 0){
+        // Only prevent default (block scroll) if touch started in text area
+        if(!this.state.touch.inTextArea) return; // Allow normal scrolling
+        
         const t = e.touches[0];
         const r = this.canvas.getBoundingClientRect();
         const x = (t.clientX - r.left) * this.state.dpr;
@@ -187,10 +207,16 @@ class TextPointcloud extends HTMLElement{
         if(Math.hypot(dx, dy) > 15 * this.state.dpr) this.state.touch.moved = true;
         this.state.mouse.down = false; // drag = push only, no explode
         this.updateTouch(t);
-        e.preventDefault();
+        e.preventDefault(); // Only block scroll when interacting with text
       }
     };
     this._onTouchEnd = (e)=>{
+      // Only process if touch was in text area
+      if(!this.state.touch.inTextArea){
+        this.state.touch.inTextArea = false;
+        return;
+      }
+      
       const touch = this.state.touch;
       const elapsed = Date.now() - touch.startTime;
       const isTap = !touch.moved && elapsed < 350;
@@ -206,8 +232,9 @@ class TextPointcloud extends HTMLElement{
       setTimeout(()=>{
         if(!this.state.mouse.down) this.state.mouse.inside = false;
       }, 120);
+      this.state.touch.inTextArea = false;
     };
-    this.canvas.addEventListener("touchstart", this._onTouchStart, {passive: false});
+    this.canvas.addEventListener("touchstart", this._onTouchStart, {passive: true});
     this.canvas.addEventListener("touchmove", this._onTouchMove, {passive: false});
     this.canvas.addEventListener("touchend", this._onTouchEnd);
     this.canvas.addEventListener("touchcancel", this._onTouchEnd);
@@ -279,8 +306,17 @@ class TextPointcloud extends HTMLElement{
     else if(mode === "top") y0 = Math.max(24*this.state.dpr, H*0.12);
     else y0 = Math.min(H - blockH - 24*this.state.dpr, H*0.78 - blockH);
 
-    // Store text position for solid text rendering
+    // Store text position for solid text rendering AND hit detection
+    const textBounds = {
+      x: x0,
+      y: y0,
+      width: blockW,
+      height: blockH,
+      // Add padding for easier interaction (percentage of font size)
+      padding: Math.round((Number(this.preset.fontSize) || 100) * this.state.dpr * 0.15)
+    };
     this.state.textLayout = { x0, y0, linePx, lines, font, dls: ls * this.state.dpr };
+    this.state.textBounds = textBounds;
 
     const dls = ls * this.state.dpr;
     for(let i=0;i<lines.length;i++){
@@ -368,12 +404,27 @@ class TextPointcloud extends HTMLElement{
     this.rebuild(true);
   }
 
+  // Check if point is inside text bounding box (with padding)
+  isInsideTextBounds(x, y){
+    const tb = this.state.textBounds;
+    if(!tb) return true; // Fallback: treat entire canvas as active
+    const pad = tb.padding || 0;
+    return (
+      x >= tb.x - pad &&
+      x <= tb.x + tb.width + pad &&
+      y >= tb.y - pad &&
+      y <= tb.y + tb.height + pad
+    );
+  }
+
   updateMouse(e){
     const r = this.canvas.getBoundingClientRect();
     const mx = (e.clientX - r.left) * this.state.dpr;
     const my = (e.clientY - r.top) * this.state.dpr;
     const m = this.state.mouse;
-    m.inside = (mx>=0 && mx<=this.state.W && my>=0 && my<=this.state.H);
+    // Only consider "inside" if within canvas AND within text bounds
+    const inCanvas = (mx>=0 && mx<=this.state.W && my>=0 && my<=this.state.H);
+    m.inside = inCanvas && this.isInsideTextBounds(mx, my);
     m.px = m.x; m.py = m.y;
     m.x = mx; m.y = my;
     const vx = (m.x - m.px), vy = (m.y - m.py);
@@ -386,7 +437,9 @@ class TextPointcloud extends HTMLElement{
     const mx = (touch.clientX - r.left) * this.state.dpr;
     const my = (touch.clientY - r.top) * this.state.dpr;
     const m = this.state.mouse;
-    m.inside = (mx>=0 && mx<=this.state.W && my>=0 && my<=this.state.H);
+    // Only consider "inside" if within canvas AND within text bounds
+    const inCanvas = (mx>=0 && mx<=this.state.W && my>=0 && my<=this.state.H);
+    m.inside = inCanvas && this.isInsideTextBounds(mx, my);
     m.px = m.x; m.py = m.y;
     m.x = mx; m.y = my;
     const vx = (m.x - m.px), vy = (m.y - m.py);
@@ -467,24 +520,78 @@ class TextPointcloud extends HTMLElement{
         pt.vy += (pt.oy - pt.y) * k;
       }
 
-      // Hover repulsion effect
+      // Hover repulsion + orbital effect
       if(hoverActive){
         const dx = pt.x - m.x, dy = pt.y - m.y;
         const dist = Math.hypot(dx,dy);
+        
+        // Normalized direction from mouse to point
+        const nx = dx/(dist||1), ny = dy/(dist||1);
+        
+        // Tangential direction (perpendicular, for orbit)
+        // Use point's unique seed for consistent orbit direction
+        const orbitDir = pt.orbitDir || ((pt.ox * 7 + pt.oy * 13) % 2 < 1 ? 1 : -1);
+        if(!pt.orbitDir) pt.orbitDir = orbitDir;
+        const tx = -ny * orbitDir, ty = nx * orbitDir;
+        
+        // Orbital parameters
+        const orbitStrength = Number(p.orbitStrength) || 1.8;
+        const orbitRadius = radius * 1.8;  // Orbit zone extends beyond repulsion
+        const orbitGravity = Number(p.orbitGravity) || 0.35;
+        
+        // Inner repulsion zone - push points outward into orbit
         if(dist < radius){
           const t = 1 - dist/radius;
-          const nx = dx/(dist||1), ny = dy/(dist||1);
-
+          
+          // Radial repulsion (push away)
           const rep = strength * (t*t) * 60 * dt;
           pt.vx += nx*rep; pt.vy += ny*rep;
+          
+          // Strong tangential kick when first entering (starts orbital motion)
+          const tangent = orbitStrength * (t*t) * 45 * dt;
+          pt.vx += tx * tangent;
+          pt.vy += ty * tangent;
 
+          // Mouse drag influence
           const drag = dragInfluence*(t*t)*42*dt*Math.min(4, mvLen/(6*this.state.dpr));
           pt.vx += mvx*drag; pt.vy += mvy*drag;
 
+          // Turbulence
           const n = turb*t*18*dt;
           const ang = (pt.ox*0.013 + pt.oy*0.017 + now*0.0017);
           pt.vx += Math.cos(ang)*n; pt.vy += Math.sin(ang)*n;
+          
+          // Mark as orbiting
+          pt.orbiting = true;
         }
+        // Orbit zone - points circle around the mouse like meteors
+        else if(dist < orbitRadius && pt.orbiting){
+          const orbitT = 1 - (dist - radius) / (orbitRadius - radius);
+          
+          // Tangential force keeps them spinning
+          const tangentForce = orbitStrength * orbitT * 30 * dt;
+          pt.vx += tx * tangentForce;
+          pt.vy += ty * tangentForce;
+          
+          // Centripetal force (pulls towards mouse to maintain orbit)
+          // Stronger when further out to prevent escape
+          const pullStrength = orbitGravity * (1 - orbitT * 0.5) * 60 * dt;
+          pt.vx -= nx * pullStrength;
+          pt.vy -= ny * pullStrength;
+          
+          // Slight turbulence for organic feel
+          const n = turb * orbitT * 8 * dt;
+          const ang = (pt.ox*0.02 + pt.oy*0.02 + now*0.002);
+          pt.vx += Math.cos(ang)*n;
+          pt.vy += Math.sin(ang)*n;
+        }
+        // Outside orbit zone - return force will pull them back
+        else if(dist >= orbitRadius){
+          pt.orbiting = false;
+        }
+      } else {
+        // When mouse leaves, stop orbiting so return force takes over
+        pt.orbiting = false;
       }
 
       // Gravity effect when clicking

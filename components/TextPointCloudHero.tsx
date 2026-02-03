@@ -50,13 +50,16 @@ export function TextPointCloudHero({ onReady }: TextPointCloudHeroProps) {
     drag: 2,
     noise: 0.5,
     returnForce: 0.02,
-    damping: 0.80,
+    damping: 0.88,
     pressOnly: false,
     gravityStrength: 0.8,
     gravityOnClick: true,
     showSolidWhenIdle: true,
     transitionSpeed: 0.2,
     burstStrength: 70,
+    // Orbital effect parameters
+    orbitStrength: 15.0,    // How fast points spin around mouse
+    orbitGravity: 0.2,     // How strongly points are pulled back to orbit
   };
 
   return (
