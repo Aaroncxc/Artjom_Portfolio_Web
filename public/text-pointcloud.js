@@ -30,10 +30,7 @@ const DEFAULTS = {
   "gravityOnClick": true,
   "showSolidWhenIdle": true,
   "transitionSpeed": 0.08,
-  "burstStrength": 8,
-  "orbitStrength": 1.8,
-  "orbitGravity": 0.35,
-  "stirBuildupTime": 2.5
+  "burstStrength": 8
 };
 
 function safeParseJSON(str){
@@ -66,11 +63,6 @@ class TextPointcloud extends HTMLElement{
       pointsOpacity: 0,  // 0 = solid text, 1 = points visible
       touch: { startTime:0, startX:0, startY:0, moved:false, inTextArea:false },
       textBounds: null,  // Will be set in drawTextOffscreen
-      // Hover-still buildup: longer at same spot = more points swirl
-      hoverStillSince: 0,
-      stirIntensity: 0,
-      lastMouseX: -1e9,
-      lastMouseY: -1e9,
     };
 
     this.preset = {...DEFAULTS};
@@ -492,26 +484,6 @@ class TextPointcloud extends HTMLElement{
     
     // Hover repulsion is active when hovering (not clicking)
     const hoverActive = isHovering && !p.pressOnly;
-    
-    // Stationary hover: detect if mouse moved; build up stir intensity when still
-    const stillThreshold = 12 * this.state.dpr;
-    const mouseMoved = Math.hypot(m.x - this.state.lastMouseX, m.y - this.state.lastMouseY) > stillThreshold;
-    this.state.lastMouseX = m.x;
-    this.state.lastMouseY = m.y;
-    
-    if(!hoverActive){
-      this.state.stirIntensity *= 0.97;
-      this.state.hoverStillSince = 0;
-    } else if(mouseMoved){
-      this.state.hoverStillSince = 0;
-      this.state.stirIntensity *= 0.82;
-    } else {
-      if(!this.state.hoverStillSince) this.state.hoverStillSince = now;
-      const holdDuration = (now - this.state.hoverStillSince) / 1000;
-      const buildupTime = Number(p.stirBuildupTime) || 2.5;
-      this.state.stirIntensity = Math.min(1, holdDuration / buildupTime);
-    }
-    const stirIntensity = this.state.stirIntensity;
     // Gravity is active when clicking and gravityOnClick is enabled
     const gravityActive = isClicking && gravityOnClick;
     
@@ -559,98 +531,24 @@ class TextPointcloud extends HTMLElement{
         pt.vy += (pt.oy - pt.y) * k;
       }
 
-      // Hover repulsion + orbital effect
+      // Hover repulsion effect
       if(hoverActive){
         const dx = pt.x - m.x, dy = pt.y - m.y;
         const dist = Math.hypot(dx,dy);
-        
-        // Normalized direction from mouse to point
-        const nx = dx/(dist||1), ny = dy/(dist||1);
-        
-        // Tangential direction (perpendicular, for orbit)
-        // Use point's unique seed for consistent orbit direction
-        const orbitDir = pt.orbitDir || ((pt.ox * 7 + pt.oy * 13) % 2 < 1 ? 1 : -1);
-        if(!pt.orbitDir) pt.orbitDir = orbitDir;
-        const tx = -ny * orbitDir, ty = nx * orbitDir;
-        
-        // Orbital parameters
-        const orbitStrength = Number(p.orbitStrength) || 1.8;
-        const orbitRadius = radius * 1.8;  // Orbit zone extends beyond repulsion
-        const orbitGravity = Number(p.orbitGravity) || 0.35;
-        
-        // Inner repulsion zone - push points outward into orbit
         if(dist < radius){
           const t = 1 - dist/radius;
-          
-          // Radial repulsion (push away)
+          const nx = dx/(dist||1), ny = dy/(dist||1);
+
           const rep = strength * (t*t) * 60 * dt;
           pt.vx += nx*rep; pt.vy += ny*rep;
-          
-          // Strong tangential kick when first entering (starts orbital motion)
-          const tangent = orbitStrength * (t*t) * 45 * dt;
-          pt.vx += tx * tangent;
-          pt.vy += ty * tangent;
 
-          // Mouse drag influence
           const drag = dragInfluence*(t*t)*42*dt*Math.min(4, mvLen/(6*this.state.dpr));
           pt.vx += mvx*drag; pt.vy += mvy*drag;
 
-          // Turbulence
           const n = turb*t*18*dt;
           const ang = (pt.ox*0.013 + pt.oy*0.017 + now*0.0017);
           pt.vx += Math.cos(ang)*n; pt.vy += Math.sin(ang)*n;
-          
-          // Mark as orbiting
-          pt.orbiting = true;
         }
-        // Orbit zone - points circle around the mouse like meteors
-        else if(dist < orbitRadius && pt.orbiting){
-          const orbitT = 1 - (dist - radius) / (orbitRadius - radius);
-          
-          // Tangential force keeps them spinning
-          const tangentForce = orbitStrength * orbitT * 30 * dt;
-          pt.vx += tx * tangentForce;
-          pt.vy += ty * tangentForce;
-          
-          // Centripetal force (pulls towards mouse to maintain orbit)
-          // Stronger when further out to prevent escape
-          const pullStrength = orbitGravity * (1 - orbitT * 0.5) * 60 * dt;
-          pt.vx -= nx * pullStrength;
-          pt.vy -= ny * pullStrength;
-          
-          // Slight turbulence for organic feel
-          const n = turb * orbitT * 8 * dt;
-          const ang = (pt.ox*0.02 + pt.oy*0.02 + now*0.002);
-          pt.vx += Math.cos(ang)*n;
-          pt.vy += Math.sin(ang)*n;
-        }
-        // Outside orbit zone - return force will pull them back
-        else if(dist >= orbitRadius){
-          pt.orbiting = false;
-        }
-        
-        // Stationary-hover buildup: longer still = whole space swirls; more swirling = slower speed
-        if(stirIntensity > 0.02){
-          const maxReach = Math.max(W, H) * 0.85;
-          const effectiveRadius = radius + stirIntensity * maxReach;
-          if(dist < effectiveRadius){
-            const stirT = 1 - dist / (effectiveRadius || 1);
-            const baseStir = stirIntensity * stirT * orbitStrength * 32 * dt;
-            const slowWhenFull = 1 - stirIntensity * 0.7;
-            const stirStrength = baseStir * Math.max(0.3, slowWhenFull);
-            pt.vx += tx * stirStrength;
-            pt.vy += ty * stirStrength;
-            pt.orbiting = true;
-            if(dist >= radius){
-              const pullStrength = orbitGravity * stirT * stirIntensity * 22 * dt * Math.max(0.3, slowWhenFull);
-              pt.vx -= nx * pullStrength;
-              pt.vy -= ny * pullStrength;
-            }
-          }
-        }
-      } else {
-        // When mouse leaves, stop orbiting so return force takes over
-        pt.orbiting = false;
       }
 
       // Gravity effect when clicking

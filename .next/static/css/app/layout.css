@@ -2110,17 +2110,9 @@ audio {
   box-shadow: 0 4px 24px rgba(28, 28, 28, 0.06);
 }
 
-/* Vignette overlay for images - subtle for light theme */
+/* Vignette overlay for images - disabled to show original colors */
 .vignette {
   position: relative;
-}
-
-.vignette::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 0%, rgba(250, 250, 255, 0.4) 100%);
-  pointer-events: none;
 }
 
 /* ===== ANIMATED GRADIENT BACKGROUNDS ===== */

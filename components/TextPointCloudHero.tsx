@@ -57,9 +57,6 @@ export function TextPointCloudHero({ onReady }: TextPointCloudHeroProps) {
     showSolidWhenIdle: true,
     transitionSpeed: 0.2,
     burstStrength: 70,
-    // Orbital effect parameters
-    orbitStrength: 15.0,    // How fast points spin around mouse
-    orbitGravity: 0.2,     // How strongly points are pulled back to orbit
   };
 
   return (

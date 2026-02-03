@@ -427,7 +427,121 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
     );
   }
 
-  // Default layout for other project types (audio, image)
+  // Layout for image projects - similar to video with gallery support
+  if (project.type === 'image') {
+    const mainImage = project.images?.[0] || project.thumbnail;
+    return (
+      <div className="snap-section flex flex-col justify-center px-6 py-8 lg:py-16 min-h-screen">
+        <div className="max-w-5xl w-full mx-auto">
+          <motion.div
+            style={{ opacity: isActive ? 1 : 0.3 }}
+            animate={{ opacity: isActive ? 1 : 0.3 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Horizontal Info Bar */}
+            <GlassPanel variant="default" padding="md" className="mb-6">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                {/* Left side - Type, Date, Title */}
+                <div className="flex items-center gap-4 flex-wrap">
+                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgba(167,139,250,0.15)] border border-[rgba(167,139,250,0.3)] text-accent-violet text-xs font-medium">
+                    {typeIcons[project.type]}
+                    <span className="capitalize">Image</span>
+                  </span>
+                  <span className="text-xs text-mk-text-muted">
+                    {formatDate(project.date)}
+                  </span>
+                  <h2 className="text-xl lg:text-2xl font-semibold tracking-tight text-mk-text">
+                    {project.title}
+                  </h2>
+                </div>
+                
+                {/* Right side - Author and Tags */}
+                <div className="flex items-center gap-3 flex-wrap">
+                  {project.tags.slice(0, 3).map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2 py-0.5 rounded-full text-xs bg-[rgba(28,28,28,0.04)] border border-[rgba(28,28,28,0.08)] text-mk-text-muted"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                  {project.author && (
+                    <span className="text-xs text-mk-text-muted">
+                      by <span className="text-mk-text">{project.author}</span>
+                    </span>
+                  )}
+                </div>
+              </div>
+              
+              {/* Description */}
+              <p className="text-mk-text-secondary text-sm leading-relaxed mt-3 hidden md:block">
+                {project.description}
+              </p>
+            </GlassPanel>
+
+            {/* Main Image */}
+            {mainImage && (
+              <div className="w-full relative rounded-2xl overflow-hidden bg-black/5 mb-6">
+                <img
+                  src={mainImage}
+                  alt={project.title}
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+            )}
+
+            {/* Gallery - additional images */}
+            {project.gallery && project.gallery.length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-lg font-medium text-mk-text mb-4">Weitere Ansichten</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {project.gallery.map((media, index) => (
+                    <div 
+                      key={index}
+                      className="relative rounded-2xl overflow-hidden bg-black/5 group"
+                    >
+                      {media.type === 'video' ? (
+                        <video
+                          src={media.src}
+                          controls
+                          autoPlay
+                          muted
+                          playsInline
+                          loop
+                          className="w-full h-full object-contain"
+                          style={{ aspectRatio: '16/9' }}
+                        >
+                          Your browser does not support the video tag.
+                        </video>
+                      ) : (
+                        <img
+                          src={media.src}
+                          alt={media.title || `Gallery image ${index + 1}`}
+                          className="w-full h-auto object-contain"
+                        />
+                      )}
+                      {media.title && (
+                        <div className="absolute bottom-0 left-0 right-0 px-4 py-2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="text-white text-sm font-medium">{media.title}</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Board / References Accordion */}
+            <div className="mt-6">
+              <ProjectBoardAccordion slug={project.slug} />
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  // Default layout for other project types (audio)
   return (
     <div className="snap-section flex flex-col justify-center px-6 py-8 lg:py-24 min-h-screen">
       <div className="max-w-7xl w-full mx-auto">

@@ -1,6 +1,42 @@
 {
   "posts": [
     {
+      "id": "13",
+      "slug": "ice-gel",
+      "title": "Ice Gel",
+      "description": "A conceptual cosmetic product design featuring surreal 3D compositions. The Ice Gel series explores the boundaries between product visualization and abstract art, combining organic blob forms with precise industrial design and dramatic lighting.",
+      "date": "2026-02-04",
+      "tags": ["3D", "product design", "concept", "cosmetics"],
+      "type": "image",
+      "thumbnail": "/projects/ice-gel/thumbnail.png",
+      "images": ["/projects/ice-gel/thumbnail.png"],
+      "author": "AaronCxC",
+      "gallery": [
+        { "type": "image", "src": "/projects/ice-gel/render-1.png", "title": "Composition 1" },
+        { "type": "image", "src": "/projects/ice-gel/render-2.png", "title": "Detail View" },
+        { "type": "image", "src": "/projects/ice-gel/render-4.png", "title": "Dramatic Lighting" },
+        { "type": "image", "src": "/projects/ice-gel/render-5.png", "title": "Composition 2" },
+        { "type": "image", "src": "/projects/ice-gel/render-6.png", "title": "Top View" },
+        { "type": "image", "src": "/projects/ice-gel/render-7.png", "title": "Side View" },
+        { "type": "image", "src": "/projects/ice-gel/render-8.png", "title": "Ice Environment" },
+        { "type": "image", "src": "/projects/ice-gel/render-16.png", "title": "Product Shot 1" },
+        { "type": "image", "src": "/projects/ice-gel/render-17.png", "title": "Product Shot 2" },
+        { "type": "image", "src": "/projects/ice-gel/render-20.png", "title": "Minimal View" }
+      ]
+    },
+    {
+      "id": "12",
+      "slug": "sticker-box",
+      "title": "Sticker Box",
+      "description": "A collection of handcrafted stickers and print materials. This project showcases the tactile beauty of analog design elements – from bold typographic treatments to expressive illustrations, all presented on natural kraft paper.",
+      "date": "2026-02-04",
+      "tags": ["print", "stickers", "branding", "analog"],
+      "type": "image",
+      "thumbnail": "/projects/sticker-box/thumbnail.png",
+      "images": ["/projects/sticker-box/thumbnail.png"],
+      "author": "JanMitGun"
+    },
+    {
       "id": "11",
       "slug": "pocket-multipass",
       "title": "Pocket Multipass",
@@ -42,103 +78,7 @@
       "htmlPath": "/projects/mask-sculpture/index.html",
       "model3dPath": "/projects/mask-sculpture/model.fbx",
       "author": "AaronCxC"
-    },
-    {
-      "id": "1",
-      "slug": "echo-chamber",
-      "title": "Echo Chamber",
-      "description": "Coming soon.",
-      "date": "2025-11-15",
-      "tags": ["installation", "sound", "interactive"],
-      "type": "html",
-      "thumbnail": "/multikunst.png",
-      "htmlPath": "/projects/echo-chamber/index.html",
-      "author": "multikunst"
-    },
-    {
-      "id": "2",
-      "slug": "chromatic-drift",
-      "title": "Chromatic Drift",
-      "description": "Coming soon.",
-      "date": "2025-10-22",
-      "tags": ["video", "light", "meditation"],
-      "type": "image",
-      "thumbnail": "/multikunst.png",
-      "images": ["/multikunst.png"],
-      "author": "multikunst"
-    },
-    {
-      "id": "3",
-      "slug": "neural-pathways",
-      "title": "Neural Pathways",
-      "description": "Coming soon.",
-      "date": "2025-09-08",
-      "tags": ["webgl", "generative", "science"],
-      "type": "html",
-      "thumbnail": "/multikunst.png",
-      "htmlPath": "/projects/neural-pathways/index.html",
-      "author": "multikunst"
-    },
-    {
-      "id": "4",
-      "slug": "field-recordings-tokyo",
-      "title": "Field Recordings: Tokyo",
-      "description": "Coming soon.",
-      "date": "2025-08-14",
-      "tags": ["audio", "field recording", "documentary"],
-      "type": "image",
-      "thumbnail": "/multikunst.png",
-      "images": ["/multikunst.png"],
-      "author": "multikunst"
-    },
-    {
-      "id": "5",
-      "slug": "between-worlds",
-      "title": "Between Worlds",
-      "description": "Coming soon.",
-      "date": "2025-07-20",
-      "tags": ["photography", "documentary", "urban"],
-      "type": "image",
-      "thumbnail": "/multikunst.png",
-      "images": ["/multikunst.png"],
-      "author": "multikunst"
-    },
-    {
-      "id": "6",
-      "slug": "data-portraits",
-      "title": "Data Portraits",
-      "description": "Coming soon.",
-      "date": "2025-06-05",
-      "tags": ["data viz", "interactive", "identity"],
-      "type": "html",
-      "thumbnail": "/multikunst.png",
-      "htmlPath": "/projects/data-portraits/index.html",
-      "author": "multikunst"
-    },
-    {
-      "id": "7",
-      "slug": "kinetic-assembly",
-      "title": "Kinetic Assembly",
-      "description": "Coming soon.",
-      "date": "2025-05-18",
-      "tags": ["video", "motion", "industrial"],
-      "type": "image",
-      "thumbnail": "/multikunst.png",
-      "images": ["/multikunst.png"],
-      "author": "multikunst"
-    },
-    {
-      "id": "8",
-      "slug": "ephemeral-forms",
-      "title": "Ephemeral Forms",
-      "description": "Coming soon.",
-      "date": "2025-04-02",
-      "tags": ["installation", "nature", "photography"],
-      "type": "image",
-      "thumbnail": "/multikunst.png",
-      "images": ["/multikunst.png"],
-      "author": "multikunst"
     }
   ],
-  "lastUpdated": "2026-01-31T02:10:00Z"
+  "lastUpdated": "2026-02-04T00:30:00Z"
 }
