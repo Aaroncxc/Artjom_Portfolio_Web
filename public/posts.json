@@ -10,8 +10,7 @@
       "type": "video",
       "thumbnail": "/projects/pocket-multipass/preview.mp4",
       "videoUrl": "/projects/pocket-multipass/preview.mp4",
-      "author": "multikunst",
-      "featured": true,
+      "author": "oxxupe",
       "gallery": [
         { "type": "video", "src": "/projects/pocket-multipass/detail.mp4", "title": "Detail Animation" },
         { "type": "image", "src": "/projects/pocket-multipass/front_top.png", "title": "Front View" },
@@ -29,8 +28,7 @@
       "type": "video",
       "thumbnail": "/videos/thehouse.mp4",
       "videoUrl": "/videos/thehouse.mp4",
-      "author": "multikunst",
-      "featured": true
+      "author": "AaronCxC"
     },
     {
       "id": "9",
@@ -43,8 +41,7 @@
       "thumbnail": "https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=800&q=80",
       "htmlPath": "/projects/mask-sculpture/index.html",
       "model3dPath": "/projects/mask-sculpture/model.fbx",
-      "author": "multikunst",
-      "featured": true
+      "author": "AaronCxC"
     },
     {
       "id": "1",
@@ -56,8 +53,7 @@
       "type": "html",
       "thumbnail": "/multikunst.png",
       "htmlPath": "/projects/echo-chamber/index.html",
-      "author": "multikunst",
-      "featured": true
+      "author": "multikunst"
     },
     {
       "id": "2",
@@ -69,8 +65,7 @@
       "type": "image",
       "thumbnail": "/multikunst.png",
       "images": ["/multikunst.png"],
-      "author": "multikunst",
-      "featured": true
+      "author": "multikunst"
     },
     {
       "id": "3",
@@ -82,8 +77,7 @@
       "type": "html",
       "thumbnail": "/multikunst.png",
       "htmlPath": "/projects/neural-pathways/index.html",
-      "author": "multikunst",
-      "featured": true
+      "author": "multikunst"
     },
     {
       "id": "4",
@@ -143,8 +137,7 @@
       "type": "image",
       "thumbnail": "/multikunst.png",
       "images": ["/multikunst.png"],
-      "author": "multikunst",
-      "featured": true
+      "author": "multikunst"
     }
   ],
   "lastUpdated": "2026-01-31T02:10:00Z"

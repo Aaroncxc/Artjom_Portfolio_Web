@@ -216,7 +216,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
   if (!visible) return null;
 
   return (
-    <div id="projects" className="relative min-h-screen py-24 px-6">
+    <div id="projects" className="relative min-h-screen pt-24 pb-8 px-6">
       {/* Section Header */}
       <div className="max-w-7xl mx-auto mb-12">
         <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4 text-mk-text">
@@ -350,11 +350,11 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                     </div>
                   )}
 
-                  {/* Featured Badge */}
-                  {project.featured && (
+                  {/* Artist Badge */}
+                  {project.author && (
                     <div className="absolute top-3 left-3 z-20">
-                      <span className="px-2 py-1 rounded-full bg-accent-cyan text-white text-[10px] font-medium uppercase tracking-wider">
-                        Featured
+                      <span className="px-2 py-1 rounded-full bg-[rgba(28,28,28,0.7)] backdrop-blur-sm text-white text-[10px] font-medium tracking-wide">
+                        {project.author}
                       </span>
                     </div>
                   )}

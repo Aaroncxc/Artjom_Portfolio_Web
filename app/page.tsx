@@ -50,15 +50,15 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="relative z-[5]">
-        {/* About Section */}
-        <AboutSection visible={true} />
-
         {/* Projects Section - Instagram-style Grid */}
         <ProjectsGrid visible={true} />
 
+        {/* About Section - Accordion */}
+        <AboutSection visible={true} />
+
         {/* Footer */}
         <footer className="relative z-10 py-16 px-6">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <div className="glass-panel p-8">
               <div className="grid md:grid-cols-3 gap-8">
                 <div>

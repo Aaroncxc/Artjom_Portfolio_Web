@@ -26,118 +26,136 @@ interface AboutSectionProps {
 }
 
 export function AboutSection({ visible }: AboutSectionProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
-  const [isInView, setIsInView] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!visible) return;
-    
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsInView(true);
-      },
-      { threshold: 0.2 }
-    );
-
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, [visible]);
+  if (!visible) return null;
 
   return (
     <>
       <div 
         ref={sectionRef}
         id="about"
-        className="min-h-screen flex items-center justify-center py-24 px-6"
+        className="pt-4 pb-12 px-6"
       >
-        <div className="max-w-6xl w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+        <div className="max-w-7xl w-full mx-auto">
+          {/* Accordion Header */}
+          <button
+            type="button"
+            onClick={() => setIsOpen(prev => !prev)}
+            className="w-full px-6 py-5 bg-[rgba(255,255,255,0.7)] rounded-2xl border border-[rgba(28,28,28,0.08)] cursor-pointer flex items-center justify-between shadow-[0_2px_12px_rgba(28,28,28,0.04)] hover:bg-[rgba(255,255,255,0.85)] transition-colors"
           >
-            <GlassPanel variant="heavy" padding="lg" className="relative overflow-hidden">
-              {/* Decorative accent blob */}
-              <div 
-                className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-20 blur-3xl pointer-events-none"
-                style={{ background: 'radial-gradient(circle, rgba(20, 184, 166, 0.3) 0%, transparent 70%)' }}
-              />
-              
-              <div className="relative z-10">
-                {/* Header */}
-                <div className="mb-12">
-                  <span className="text-accent-cyan text-sm font-medium tracking-wider uppercase mb-4 block">
-                    About Us
-                  </span>
-                  <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-6 text-mk-text">
-                    We are multikunst
-                  </h2>
-                  <p className="text-lg md:text-xl text-mk-text-secondary leading-relaxed max-w-3xl">
-                    A creative collective dedicated to exploring the boundaries of art, design, and technology. 
-                    We bring together diverse talents to create experiences that inspire, challenge, and connect.
-                  </p>
-                </div>
-
-                {/* Philosophy */}
-                <div className="grid md:grid-cols-2 gap-8 mb-12">
-                  <div>
-                    <h3 className="text-xl font-medium text-mk-text mb-3 flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-accent-violet" />
-                      Our Philosophy
-                    </h3>
-                    <p className="text-mk-text-secondary leading-relaxed">
-                      We believe in the power of collaboration and the magic that happens when different perspectives converge. 
-                      Every project is an opportunity to push creative boundaries.
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-medium text-mk-text mb-3 flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-accent-coral" />
-                      What We Do
-                    </h3>
-                    <p className="text-mk-text-secondary leading-relaxed">
-                      From interactive installations and digital experiences to brand identities and motion design, 
-                      we work across mediums to bring ideas to life.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Members */}
-                <div>
-                  <h3 className="text-lg font-medium text-mk-text mb-4">The Collective</h3>
-                  <div className="flex flex-wrap gap-3">
-                    {members.map((member, index) => (
-                      <motion.button
-                        key={member.id}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                        transition={{ 
-                          duration: 0.4, 
-                          delay: 0.4 + index * 0.05,
-                          ease: [0.25, 0.1, 0.25, 1] 
-                        }}
-                        onClick={() => setSelectedMember(member)}
-                        className="glass-button group flex items-center gap-3"
-                      >
-                            <div className="w-8 h-8 rounded-full bg-[rgba(28,28,28,0.08)] flex items-center justify-center text-xs font-medium">
-                          {member.name.split(' ').map(n => n[0]).join('')}
-                        </div>
-                        <div className="text-left">
-                          <div className="text-sm font-medium text-mk-text group-hover:text-accent-cyan transition-colors">
-                            {member.name}
-                          </div>
-                          <div className="text-xs text-mk-text-muted">
-                            {member.role}
-                          </div>
-                        </div>
-                      </motion.button>
-                    ))}
-                  </div>
-                </div>
+            <div className="flex items-center gap-4">
+              <span className="text-2xl">👥</span>
+              <div className="text-left">
+                <h2 className="text-xl md:text-2xl font-semibold text-mk-text">
+                  About Us
+                </h2>
+                <p className="text-sm text-mk-text-secondary mt-0.5">
+                  Learn more about multikunst and our team
+                </p>
               </div>
-            </GlassPanel>
-          </motion.div>
+            </div>
+            <span 
+              className={`text-[rgba(28,28,28,0.5)] text-lg transition-transform duration-300 ${
+                isOpen ? 'rotate-180' : 'rotate-0'
+              }`}
+            >
+              ▼
+            </span>
+          </button>
+
+          {/* Accordion Content with smooth CSS Grid animation */}
+          <div 
+            className="grid transition-all duration-300 ease-out"
+            style={{ 
+              gridTemplateRows: isOpen ? '1fr' : '0fr',
+              marginTop: isOpen ? 16 : 0,
+            }}
+          >
+            <div className="overflow-hidden">
+              <motion.div
+                initial={false}
+                animate={{ 
+                  opacity: isOpen ? 1 : 0,
+                  scale: isOpen ? 1 : 0.98,
+                }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+              >
+                <GlassPanel variant="heavy" padding="lg" className="relative overflow-hidden">
+                  {/* Decorative accent blob */}
+                  <div 
+                    className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-20 blur-3xl pointer-events-none"
+                    style={{ background: 'radial-gradient(circle, rgba(20, 184, 166, 0.3) 0%, transparent 70%)' }}
+                  />
+                  
+                  <div className="relative z-10">
+                    {/* Header */}
+                    <div className="mb-10">
+                      <h3 className="text-3xl md:text-4xl font-semibold tracking-tight mb-4 text-mk-text">
+                        We are multikunst
+                      </h3>
+                      <p className="text-lg text-mk-text-secondary leading-relaxed max-w-3xl">
+                        A creative collective dedicated to exploring the boundaries of art, design, and technology. 
+                        We bring together diverse talents to create experiences that inspire, challenge, and connect.
+                      </p>
+                    </div>
+
+                    {/* Philosophy */}
+                    <div className="grid md:grid-cols-2 gap-6 mb-10">
+                      <div className="p-5 rounded-xl bg-[rgba(28,28,28,0.02)] border border-[rgba(28,28,28,0.06)]">
+                        <h4 className="text-lg font-medium text-mk-text mb-2 flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-accent-violet" />
+                          Our Philosophy
+                        </h4>
+                        <p className="text-mk-text-secondary text-sm leading-relaxed">
+                          We believe in the power of collaboration and the magic that happens when different perspectives converge. 
+                          Every project is an opportunity to push creative boundaries.
+                        </p>
+                      </div>
+                      <div className="p-5 rounded-xl bg-[rgba(28,28,28,0.02)] border border-[rgba(28,28,28,0.06)]">
+                        <h4 className="text-lg font-medium text-mk-text mb-2 flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-accent-coral" />
+                          What We Do
+                        </h4>
+                        <p className="text-mk-text-secondary text-sm leading-relaxed">
+                          From interactive installations and digital experiences to brand identities and motion design, 
+                          we work across mediums to bring ideas to life.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Members */}
+                    <div>
+                      <h4 className="text-lg font-medium text-mk-text mb-4">The Collective</h4>
+                      <div className="flex flex-wrap gap-3">
+                        {members.map((member) => (
+                          <button
+                            key={member.id}
+                            onClick={() => setSelectedMember(member)}
+                            className="glass-button group flex items-center gap-3"
+                          >
+                            <div className="w-8 h-8 rounded-full bg-[rgba(28,28,28,0.08)] flex items-center justify-center text-xs font-medium">
+                              {member.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <div className="text-left">
+                              <div className="text-sm font-medium text-mk-text group-hover:text-accent-cyan transition-colors">
+                                {member.name}
+                              </div>
+                              <div className="text-xs text-mk-text-muted">
+                                {member.role}
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </GlassPanel>
+              </motion.div>
+            </div>
+          </div>
         </div>
       </div>
 

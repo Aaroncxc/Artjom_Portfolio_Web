@@ -853,6 +853,12 @@ video {
 .mr-2 {
   margin-right: 0.5rem;
 }
+.mb-10 {
+  margin-bottom: 2.5rem;
+}
+.mt-0\.5 {
+  margin-top: 0.125rem;
+}
 .line-clamp-1 {
   overflow: hidden;
   display: -webkit-box;
@@ -1511,6 +1517,9 @@ video {
 .bg-accent-cyan\/30 {
   background-color: rgb(20 184 166 / 0.3);
 }
+.bg-\[rgba\(28\2c 28\2c 28\2c 0\.7\)\] {
+  background-color: rgba(28,28,28,0.7);
+}
 .bg-gradient-to-t {
   background-image: linear-gradient(to top, var(--tw-gradient-stops));
 }
@@ -1636,6 +1645,14 @@ video {
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
+.py-12 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+.py-5 {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
 .pt-2 {
   padding-top: 0.5rem;
 }
@@ -1647,6 +1664,15 @@ video {
 }
 .pt-3 {
   padding-top: 0.75rem;
+}
+.pb-8 {
+  padding-bottom: 2rem;
+}
+.pt-24 {
+  padding-top: 6rem;
+}
+.pb-12 {
+  padding-bottom: 3rem;
 }
 .text-left {
   text-align: left;
@@ -1723,6 +1749,9 @@ video {
 }
 .tracking-widest {
   letter-spacing: 0.1em;
+}
+.tracking-wide {
+  letter-spacing: 0.025em;
 }
 .text-\[\#1C1C1C\] {
   --tw-text-opacity: 1;
@@ -2401,6 +2430,16 @@ audio {
   .md\:text-xl {
     font-size: 1.25rem;
     line-height: 1.75rem;
+  }
+
+  .md\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .md\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 }
 @media (min-width: 1024px) {
