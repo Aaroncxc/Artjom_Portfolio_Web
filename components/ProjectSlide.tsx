@@ -319,6 +319,7 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
                         <video
                           src={media.src}
                           controls
+                          autoPlay
                           muted
                           playsInline
                           loop

@@ -32,7 +32,8 @@ const DEFAULTS = {
   "transitionSpeed": 0.08,
   "burstStrength": 8,
   "orbitStrength": 1.8,
-  "orbitGravity": 0.35
+  "orbitGravity": 0.35,
+  "stirBuildupTime": 2.5
 };
 
 function safeParseJSON(str){
@@ -65,6 +66,11 @@ class TextPointcloud extends HTMLElement{
       pointsOpacity: 0,  // 0 = solid text, 1 = points visible
       touch: { startTime:0, startX:0, startY:0, moved:false, inTextArea:false },
       textBounds: null,  // Will be set in drawTextOffscreen
+      // Hover-still buildup: longer at same spot = more points swirl
+      hoverStillSince: 0,
+      stirIntensity: 0,
+      lastMouseX: -1e9,
+      lastMouseY: -1e9,
     };
 
     this.preset = {...DEFAULTS};
@@ -97,6 +103,11 @@ class TextPointcloud extends HTMLElement{
     this._ro.observe(this);
     this._bindMouse();
     this.resize();
+    const el = this;
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{ el.resize(); });
+    });
+    setTimeout(()=>{ el.resize(); }, 100);
     this._tick = (now)=>this.tick(now);
     this._raf = requestAnimationFrame(this._tick);
   }
@@ -397,11 +408,19 @@ class TextPointcloud extends HTMLElement{
   resize(){
     const r = this.getBoundingClientRect();
     this.state.dpr = clamp(window.devicePixelRatio || 1, 1, 2.5);
-    this.state.W = Math.floor(r.width * this.state.dpr);
-    this.state.H = Math.floor(r.height * this.state.dpr);
-    this.canvas.width = this.state.W;
-    this.canvas.height = this.state.H;
-    this.rebuild(true);
+    const w = Math.floor(r.width * this.state.dpr);
+    const h = Math.floor(r.height * this.state.dpr);
+    if(w < 8 || h < 8){
+      requestAnimationFrame(()=>this.resize());
+      return;
+    }
+    if(w !== this.state.W || h !== this.state.H){
+      this.state.W = w;
+      this.state.H = h;
+      this.canvas.width = this.state.W;
+      this.canvas.height = this.state.H;
+      this.rebuild(true);
+    }
   }
 
   // Check if point is inside text bounding box (with padding)
@@ -473,6 +492,26 @@ class TextPointcloud extends HTMLElement{
     
     // Hover repulsion is active when hovering (not clicking)
     const hoverActive = isHovering && !p.pressOnly;
+    
+    // Stationary hover: detect if mouse moved; build up stir intensity when still
+    const stillThreshold = 12 * this.state.dpr;
+    const mouseMoved = Math.hypot(m.x - this.state.lastMouseX, m.y - this.state.lastMouseY) > stillThreshold;
+    this.state.lastMouseX = m.x;
+    this.state.lastMouseY = m.y;
+    
+    if(!hoverActive){
+      this.state.stirIntensity *= 0.97;
+      this.state.hoverStillSince = 0;
+    } else if(mouseMoved){
+      this.state.hoverStillSince = 0;
+      this.state.stirIntensity *= 0.82;
+    } else {
+      if(!this.state.hoverStillSince) this.state.hoverStillSince = now;
+      const holdDuration = (now - this.state.hoverStillSince) / 1000;
+      const buildupTime = Number(p.stirBuildupTime) || 2.5;
+      this.state.stirIntensity = Math.min(1, holdDuration / buildupTime);
+    }
+    const stirIntensity = this.state.stirIntensity;
     // Gravity is active when clicking and gravityOnClick is enabled
     const gravityActive = isClicking && gravityOnClick;
     
@@ -588,6 +627,26 @@ class TextPointcloud extends HTMLElement{
         // Outside orbit zone - return force will pull them back
         else if(dist >= orbitRadius){
           pt.orbiting = false;
+        }
+        
+        // Stationary-hover buildup: longer still = whole space swirls; more swirling = slower speed
+        if(stirIntensity > 0.02){
+          const maxReach = Math.max(W, H) * 0.85;
+          const effectiveRadius = radius + stirIntensity * maxReach;
+          if(dist < effectiveRadius){
+            const stirT = 1 - dist / (effectiveRadius || 1);
+            const baseStir = stirIntensity * stirT * orbitStrength * 32 * dt;
+            const slowWhenFull = 1 - stirIntensity * 0.7;
+            const stirStrength = baseStir * Math.max(0.3, slowWhenFull);
+            pt.vx += tx * stirStrength;
+            pt.vy += ty * stirStrength;
+            pt.orbiting = true;
+            if(dist >= radius){
+              const pullStrength = orbitGravity * stirT * stirIntensity * 22 * dt * Math.max(0.3, slowWhenFull);
+              pt.vx -= nx * pullStrength;
+              pt.vy -= ny * pullStrength;
+            }
+          }
         }
       } else {
         // When mouse leaves, stop orbiting so return force takes over
