@@ -6,6 +6,7 @@ import LightLeaksBackground from '@/components/LightLeaksBackground';
 import { Navigation } from '@/components/Navigation';
 import { AboutSection } from '@/components/AboutSection';
 import { ProjectsGrid } from '@/components/ProjectsGrid';
+import { ToolsGamesGrid } from '@/components/ToolsGamesGrid';
 import { TextPointCloudHero } from '@/components/TextPointCloudHero';
 
 export default function Home() {
@@ -21,12 +22,15 @@ export default function Home() {
 
       // Determine current section
       const aboutSection = document.getElementById('about');
+      const toolsGamesSection = document.getElementById('tools-games');
       const projectsSection = document.getElementById('projects');
       
-      if (projectsSection && scrollY >= projectsSection.offsetTop - 200) {
-        setCurrentSection('projects');
-      } else if (aboutSection && scrollY >= aboutSection.offsetTop - 200) {
+      if (aboutSection && scrollY >= aboutSection.offsetTop - 200) {
         setCurrentSection('about');
+      } else if (toolsGamesSection && scrollY >= toolsGamesSection.offsetTop - 200) {
+        setCurrentSection('tools-games');
+      } else if (projectsSection && scrollY >= projectsSection.offsetTop - 200) {
+        setCurrentSection('projects');
       } else {
         setCurrentSection('');
       }
@@ -53,6 +57,9 @@ export default function Home() {
         {/* Projects Section - Instagram-style Grid */}
         <ProjectsGrid visible={true} />
 
+        {/* Tools & Games Section */}
+        <ToolsGamesGrid visible={true} />
+
         {/* About Section - Accordion */}
         <AboutSection visible={true} />
 
@@ -70,8 +77,9 @@ export default function Home() {
                 <div>
                   <h4 className="text-sm font-medium mb-4 text-mk-text-muted uppercase tracking-wider">Navigate</h4>
                   <ul className="space-y-2">
-                    <li><a href="#about" className="text-mk-text-secondary hover:text-accent-cyan transition-colors text-sm">About</a></li>
                     <li><a href="#projects" className="text-mk-text-secondary hover:text-accent-cyan transition-colors text-sm">Projects</a></li>
+                    <li><a href="#tools-games" className="text-mk-text-secondary hover:text-accent-cyan transition-colors text-sm">Tools & Games</a></li>
+                    <li><a href="#about" className="text-mk-text-secondary hover:text-accent-cyan transition-colors text-sm">About</a></li>
                     <li><a href="mailto:hello@multikunst.com" className="text-mk-text-secondary hover:text-accent-cyan transition-colors text-sm">Contact</a></li>
                   </ul>
                 </div>

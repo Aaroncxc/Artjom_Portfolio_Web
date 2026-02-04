@@ -17,8 +17,9 @@ export function Navigation({ visible, currentSection }: NavigationProps) {
   }, []);
 
   const navItems = [
-    { id: 'about', label: 'About' },
     { id: 'projects', label: 'Projects' },
+    { id: 'tools-games', label: 'Tools & Games' },
+    { id: 'about', label: 'About' },
   ];
 
   return (
