@@ -6,9 +6,11 @@ interface Project3DPreviewProps {
   modelPath: string;
   isHovered: boolean;
   mousePosition: { x: number; y: number };
+  rotationX?: number; // Rotation in degrees on X axis (default: -90)
+  materialColor?: string; // Override color for plastic/transparent materials
 }
 
-export function Project3DPreview({ modelPath, isHovered, mousePosition }: Project3DPreviewProps) {
+export function Project3DPreview({ modelPath, isHovered, mousePosition, rotationX = -90, materialColor }: Project3DPreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<any>(null);
   const rendererRef = useRef<any>(null);
@@ -40,11 +42,11 @@ export function Project3DPreview({ modelPath, isHovered, mousePosition }: Projec
         scene.background = null;
         sceneRef.current = scene;
 
-        // Camera - closer for better zoom
+        // Camera - positioned to see the full model centered
         const width = containerRef.current.clientWidth;
         const height = containerRef.current.clientHeight;
         const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 1000);
-        camera.position.set(0, 0.2, 3.5); // Closer and slightly up
+        camera.position.set(0, 0, 5.5); // Centered, further back to see full model
         camera.lookAt(0, 0, 0);
         cameraRef.current = camera;
 
@@ -96,7 +98,7 @@ export function Project3DPreview({ modelPath, isHovered, mousePosition }: Projec
             const scale = targetSize / maxDim;
             
             // 3) Apply rotation first (same as 3D viewer), then scale
-            fbx.rotation.x = -Math.PI / 2;  // Rotate to stand upright like in viewer
+            fbx.rotation.x = (rotationX * Math.PI) / 180;  // Convert degrees to radians
             fbx.scale.setScalar(scale);
             fbx.position.set(0, 0, 0);
             fbx.updateMatrixWorld(true);
@@ -104,7 +106,7 @@ export function Project3DPreview({ modelPath, isHovered, mousePosition }: Projec
             // 4) Recalculate bounding box after rotation + scale, then center
             const boxRotated = new THREE.Box3().setFromObject(fbx);
             const centerRotated = boxRotated.getCenter(new THREE.Vector3());
-            fbx.position.set(-centerRotated.x, -centerRotated.y + 0.3, -centerRotated.z);
+            fbx.position.set(-centerRotated.x, -centerRotated.y - 0.3, -centerRotated.z);
             
             // Handle materials - apply red transparent look to plastic/transparent parts (same as viewer)
             fbx.traverse((child: any) => {
@@ -138,28 +140,40 @@ export function Project3DPreview({ modelPath, isHovered, mousePosition }: Projec
                   
                   if (isPlasticMaterial) {
                     hasPlasticMaterial = true;
-                    // ========== PLASTIC MATERIAL - EXACT same as 3D viewer ==========
-                    const plasticColor = '#FF0000';
-                    const plasticOpacity = 0.35;
-                    const plasticTransmission = 0.6;
-                    const plasticRoughness = 0.05;
-                    const plasticThickness = 0.5;
-                    // ==============================================================
                     
-                    const plasticMat = new THREE.MeshPhysicalMaterial({
-                      color: new THREE.Color(plasticColor),
-                      transparent: true,
-                      opacity: plasticOpacity,
-                      roughness: plasticRoughness,
-                      metalness: 0.0,
-                      transmission: plasticTransmission,
-                      thickness: plasticThickness,
-                      side: THREE.DoubleSide,
-                      depthWrite: false,
-                      envMapIntensity: 1.0,
-                    });
-                    (plasticMat as any).renderOrder = 1;
-                    return plasticMat;
+                    // Use custom material color if provided, otherwise default to red transparent
+                    if (materialColor) {
+                      // Solid material with custom color
+                      const solidMat = new THREE.MeshStandardMaterial({
+                        color: new THREE.Color(materialColor),
+                        roughness: 0.3,
+                        metalness: 0.0,
+                        side: THREE.DoubleSide,
+                      });
+                      return solidMat;
+                    } else {
+                      // Default: Red transparent plastic
+                      const plasticColor = '#FF0000';
+                      const plasticOpacity = 0.35;
+                      const plasticTransmission = 0.6;
+                      const plasticRoughness = 0.05;
+                      const plasticThickness = 0.5;
+                      
+                      const plasticMat = new THREE.MeshPhysicalMaterial({
+                        color: new THREE.Color(plasticColor),
+                        transparent: true,
+                        opacity: plasticOpacity,
+                        roughness: plasticRoughness,
+                        metalness: 0.0,
+                        transmission: plasticTransmission,
+                        thickness: plasticThickness,
+                        side: THREE.DoubleSide,
+                        depthWrite: false,
+                        envMapIntensity: 1.0,
+                      });
+                      (plasticMat as any).renderOrder = 1;
+                      return plasticMat;
+                    }
                   }
                   
                   mat.metalness = 0.1;
@@ -231,7 +245,7 @@ export function Project3DPreview({ modelPath, isHovered, mousePosition }: Projec
         sceneRef.current.clear();
       }
     };
-  }, [modelPath]);
+  }, [modelPath, rotationX, materialColor]);
 
   // Animation loop - always running, rotate based on mouse when hovered
   useEffect(() => {

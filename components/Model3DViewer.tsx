@@ -158,27 +158,17 @@ export function Model3DViewer({
                 
                 if (isPlasticMaterial) {
                   hasPlasticMaterial = true;
-                  // ========== PLASTIC MATERIAL - Red transparent plastic ==========
-                  const plasticColor = '#FF0000';
-                  const plasticOpacity = 0.35;
-                  const plasticTransmission = 0.6;
-                  const plasticRoughness = 0.05;
-                  const plasticThickness = 0.5;
+                  // ========== PLASTIC MATERIAL - Solid yellow-orange ==========
+                  const plasticColor = '#FF8C00';
+                  const plasticRoughness = 0.3;
                   // ==============================================================
                   
-                  const plasticMat = new THREE.MeshPhysicalMaterial({
+                  const plasticMat = new THREE.MeshStandardMaterial({
                     color: new THREE.Color(plasticColor),
-                    transparent: true,
-                    opacity: plasticOpacity,
                     roughness: plasticRoughness,
                     metalness: 0.0,
-                    transmission: plasticTransmission,
-                    thickness: plasticThickness,
                     side: THREE.DoubleSide,
-                    depthWrite: false,
-                    envMapIntensity: 1.0,
                   });
-                  (plasticMat as any).renderOrder = 1;
                   return plasticMat;
                 }
                 

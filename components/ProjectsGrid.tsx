@@ -321,6 +321,8 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                       modelPath={project.model3dPath}
                       isHovered={hoveredProject === project.id}
                       mousePosition={mousePos[project.id] || { x: 0.5, y: 0.5 }}
+                      rotationX={project.model3dRotationX}
+                      materialColor={project.model3dMaterialColor}
                     />
                   )}
                   

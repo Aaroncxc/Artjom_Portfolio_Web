@@ -1,6 +1,30 @@
 {
   "posts": [
     {
+      "id": "14",
+      "slug": "rovolto-lost-files",
+      "title": "Rovolto Lost Files",
+      "description": "An interactive 3D visualization exploring lost digital artifacts and recovered file structures. Navigate through the intricate geometry and discover the beauty hidden within corrupted data forms.",
+      "date": "2026-02-05",
+      "tags": ["3D", "sculpture", "interactive", "webgl"],
+      "type": "html",
+      "thumbnail": "/projects/rovolto-lost-files/render-1.png",
+      "htmlPath": "/projects/rovolto-lost-files/index.html",
+      "model3dPath": "/projects/rovolto-lost-files/model.fbx",
+      "model3dRotationX": 0,
+      "model3dMaterialColor": "#FF8C00",
+      "author": "AaronCxC",
+      "gallery": [
+        { "type": "image", "src": "/projects/rovolto-lost-files/render-1.png", "title": "Close-up View" },
+        { "type": "image", "src": "/projects/rovolto-lost-files/render-2.png", "title": "Full Body" },
+        { "type": "image", "src": "/projects/rovolto-lost-files/render-3.png", "title": "Detail Render" },
+        { "type": "image", "src": "/projects/rovolto-lost-files/render-4.png", "title": "Front View" },
+        { "type": "image", "src": "/projects/rovolto-lost-files/render-5.png", "title": "Side View" },
+        { "type": "image", "src": "/projects/rovolto-lost-files/render-6.png", "title": "Three Quarter View" },
+        { "type": "image", "src": "/projects/rovolto-lost-files/render-7.png", "title": "Back View" }
+      ]
+    },
+    {
       "id": "13",
       "slug": "ice-gel",
       "title": "3D Cosmetic Ice Gel",
@@ -80,5 +104,5 @@
       "author": "AaronCxC"
     }
   ],
-  "lastUpdated": "2026-02-04T00:30:00Z"
+  "lastUpdated": "2026-02-05T23:10:00Z"
 }

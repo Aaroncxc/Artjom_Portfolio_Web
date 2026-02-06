@@ -14,6 +14,7 @@ interface ProjectSlideProps {
 export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -418,6 +419,86 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
                 {renderMedia()}
               </div>
             </div>
+
+            {/* Gallery - additional media for HTML projects */}
+            {project.gallery && project.gallery.length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-lg font-medium text-mk-text mb-4">Renders</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {project.gallery.map((media, index) => (
+                    <div 
+                      key={index}
+                      className="relative aspect-video rounded-xl overflow-hidden border border-[rgba(28,28,28,0.1)] group cursor-pointer hover:border-[rgba(28,28,28,0.25)] transition-colors"
+                      onClick={() => media.type === 'image' && setLightboxImage(media.src)}
+                    >
+                      {media.type === 'video' ? (
+                        <video
+                          src={media.src}
+                          controls
+                          autoPlay
+                          muted
+                          playsInline
+                          loop
+                          className="w-full h-full object-cover"
+                        >
+                          Your browser does not support the video tag.
+                        </video>
+                      ) : (
+                        <img
+                          src={media.src}
+                          alt={media.title || `Gallery image ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                      {media.title && (
+                        <div className="absolute bottom-0 left-0 right-0 px-3 py-1.5 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="text-white text-xs font-medium">{media.title}</span>
+                        </div>
+                      )}
+                      {/* Zoom icon overlay */}
+                      {media.type === 'image' && (
+                        <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <svg className="w-3 h-3 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Lightbox Modal */}
+            <AnimatePresence>
+              {lightboxImage && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 cursor-pointer"
+                  onClick={() => setLightboxImage(null)}
+                >
+                  <motion.img
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    src={lightboxImage}
+                    alt="Enlarged view"
+                    className="max-w-full max-h-full object-contain rounded-lg"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <button
+                    className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-colors"
+                    onClick={() => setLightboxImage(null)}
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Board / References - Full Width */}
             <ProjectBoardAccordion slug={project.slug} />
