@@ -288,18 +288,18 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   onTouchMove={(e) => project.model3dPath && handleTileTouchMove(e, project.id)}
                   onTouchEnd={() => project.model3dPath && handleTileTouchEnd()}
                 >
-                  {/* Video Preview for video projects - starts at 10 seconds */}
+                  {/* Video Preview for video projects - starts at 1 second */}
                   {project.type === 'video' && project.videoUrl && (
                     <video
-                      src={`${project.videoUrl}#t=10`}
+                      src={`${project.videoUrl}#t=1`}
                       muted
                       loop
                       playsInline
                       autoPlay
                       onLoadedMetadata={(e) => {
                         const video = e.currentTarget;
-                        if (video.currentTime < 10) {
-                          video.currentTime = 10;
+                        if (video.currentTime < 1) {
+                          video.currentTime = 1;
                         }
                       }}
                       className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
@@ -323,6 +323,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                       mousePosition={mousePos[project.id] || { x: 0.5, y: 0.5 }}
                       rotationX={project.model3dRotationX}
                       materialColor={project.model3dMaterialColor}
+                      offsetY={project.model3dOffsetY}
                     />
                   )}
                   

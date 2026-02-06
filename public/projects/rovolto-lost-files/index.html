@@ -13,7 +13,7 @@
     
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-      background: #3a3a3a;
+      background: #f5f5f5;
       overflow: hidden;
     }
     
@@ -175,7 +175,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(0, 0, 0, 0.6);
     }
     
     .spinner {
@@ -310,7 +310,7 @@
     function init() {
       // Scene with dark gray gradient background (like the render)
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x3a3a3a); // Dark gray like render
+      scene.background = new THREE.Color(0xf5f5f5); // Light gray background
 
       // Camera - positioned similar to render
       const width = container.clientWidth;
@@ -384,82 +384,66 @@
         if (e.button === 1) e.preventDefault();
       });
 
-      // No grid - clean studio look like render
-      gridHelper = null;
+      // Grid Helper (subtle teal grid)
+      gridHelper = new THREE.GridHelper(10, 20, 0x14B8A6, 0xcccccc);
+      gridHelper.material.opacity = 0.2;
+      gridHelper.material.transparent = true;
+      gridHelper.position.y = -1.2;
+      scene.add(gridHelper);
 
-      // ========== STUDIO LIGHTING SETUP (like the render) ==========
+      // ========== BRIGHT LIGHTING SETUP ==========
       
-      // Soft ambient light - slightly warm
-      const ambientLight = new THREE.AmbientLight(0xfff5e6, 0.3);
+      // Bright ambient light
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
       scene.add(ambientLight);
 
       // Hemisphere light for natural sky/ground lighting
-      const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.4);
+      const hemiLight = new THREE.HemisphereLight(0xffffff, 0x888888, 0.5);
       hemiLight.position.set(0, 20, 0);
       scene.add(hemiLight);
 
-      // Key light - main light from upper left (warm)
-      const keyLight = new THREE.DirectionalLight(0xfff0dd, 1.2);
-      keyLight.position.set(-8, 10, 5);
+      // Key light - main light from upper left
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+      keyLight.position.set(-5, 12, 8);
       keyLight.target.position.set(0, 0, 0);
       keyLight.castShadow = true;
-      keyLight.shadow.mapSize.width = 4096;
-      keyLight.shadow.mapSize.height = 4096;
+      keyLight.shadow.mapSize.width = 2048;
+      keyLight.shadow.mapSize.height = 2048;
       keyLight.shadow.camera.near = 1;
-      keyLight.shadow.camera.far = 50;
-      keyLight.shadow.camera.left = -10;
-      keyLight.shadow.camera.right = 10;
-      keyLight.shadow.camera.top = 10;
-      keyLight.shadow.camera.bottom = -10;
-      keyLight.shadow.bias = -0.0001;
+      keyLight.shadow.camera.far = 30;
+      keyLight.shadow.camera.left = -6;
+      keyLight.shadow.camera.right = 6;
+      keyLight.shadow.camera.top = 6;
+      keyLight.shadow.camera.bottom = -6;
+      keyLight.shadow.bias = -0.0005;
       keyLight.shadow.normalBias = 0.02;
-      keyLight.shadow.radius = 8; // Soft shadow edges
+      keyLight.shadow.radius = 4;
       scene.add(keyLight);
       scene.add(keyLight.target);
       shadowLight = keyLight;
 
-      // Fill light - softer from the right side
-      const fillLight = new THREE.DirectionalLight(0xe8e8ff, 0.4);
-      fillLight.position.set(6, 4, 3);
+      // Fill light - from the right side
+      const fillLight = new THREE.DirectionalLight(0xffffff, 0.6);
+      fillLight.position.set(5, 5, 5);
       scene.add(fillLight);
 
-      // Rim/back light - subtle highlight from behind
-      const rimLight = new THREE.DirectionalLight(0xffffff, 0.3);
-      rimLight.position.set(2, 6, -8);
+      // Rim/back light
+      const rimLight = new THREE.DirectionalLight(0x88ccff, 0.4);
+      rimLight.position.set(0, 5, -10);
       scene.add(rimLight);
 
-      // Bottom bounce light - simulates light bouncing from floor
-      const bounceLight = new THREE.DirectionalLight(0x888888, 0.15);
-      bounceLight.position.set(0, -3, 2);
-      scene.add(bounceLight);
-
-      // ========== GROUND PLANE (visible, like render) ==========
-      const groundSize = 30;
+      // ========== SHADOW-ONLY GROUND PLANE ==========
+      const groundSize = 16;
       const groundGeo = new THREE.PlaneGeometry(groundSize, groundSize);
-      
-      // Visible ground with gradient-like material
-      const groundMat = new THREE.MeshStandardMaterial({
-        color: 0x555555,
-        roughness: 0.8,
-        metalness: 0.0,
+      const shadowMat = new THREE.ShadowMaterial({
+        opacity: 0.3,
+        color: 0x000000,
       });
-      const groundPlane = new THREE.Mesh(groundGeo, groundMat);
+      const groundPlane = new THREE.Mesh(groundGeo, shadowMat);
       groundPlane.rotation.x = -Math.PI / 2;
       groundPlane.position.y = -1.2;
       groundPlane.receiveShadow = true;
       scene.add(groundPlane);
-      
-      // Back wall for depth (like in render)
-      const wallGeo = new THREE.PlaneGeometry(30, 15);
-      const wallMat = new THREE.MeshStandardMaterial({
-        color: 0x4a4a4a,
-        roughness: 0.9,
-        metalness: 0.0,
-      });
-      const backWall = new THREE.Mesh(wallGeo, wallMat);
-      backWall.position.set(0, 5, -8);
-      backWall.receiveShadow = true;
-      scene.add(backWall);
 
       // Load Model
       loadModel();
@@ -528,16 +512,95 @@
           // Place the model so its bottom touches the ground plane at y = -1.2
           fbx.position.set(-centerRotated.x, -minY - 1.2, -centerRotated.z);
 
+          // ========== LOAD LOGO TEXTURE ==========
+          const textureLoader = new THREE.TextureLoader();
+          const logoTexture = textureLoader.load('./multikunst-logo.png');
+          logoTexture.colorSpace = THREE.SRGBColorSpace;
+          logoTexture.flipY = true; // Flip vertically (upside down fix)
+          // Flip horizontally
+          logoTexture.wrapS = THREE.RepeatWrapping;
+          logoTexture.repeat.x = -1;
+          logoTexture.offset.x = 1;
+          
+          // ========== CUSTOM SHADER FOR WHITE-TO-TRANSPARENT ==========
+          // This shader makes white pixels transparent (removes white background)
+          // Lower threshold = thinner text
+          const logoMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+              map: { value: logoTexture },
+            },
+            vertexShader: `
+              varying vec2 vUv;
+              void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+              }
+            `,
+            fragmentShader: `
+              uniform sampler2D map;
+              varying vec2 vUv;
+              void main() {
+                vec4 texColor = texture2D(map, vUv);
+                // Calculate how "white" the pixel is (average of RGB)
+                float whiteness = (texColor.r + texColor.g + texColor.b) / 3.0;
+                // Lower threshold for thinner text (0.3-0.5 instead of 0.85-0.95)
+                float alpha = 1.0 - smoothstep(0.3, 0.5, whiteness);
+                // Output black text with calculated alpha
+                gl_FragColor = vec4(0.0, 0.0, 0.0, alpha);
+              }
+            `,
+            transparent: true,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+          });
+          
           // ========== MATERIALS SETUP (matching the render) ==========
           fbx.traverse((child) => {
             if (child.isMesh) {
               child.castShadow = true;
               child.receiveShadow = true;
               
+              const meshName = (child.name || '').toLowerCase();
+              
+              // ========== LOGO PLANE DETECTION ==========
+              // Check if this is the logo plane (by name or if it has a texture/label material)
+              const isLogoPlane = 
+                meshName.includes('logo') || 
+                meshName.includes('label') || 
+                meshName.includes('sign') ||
+                meshName.includes('plane') ||
+                meshName.includes('schild') ||
+                meshName.includes('text') ||
+                meshName.includes('multi');
+              
+              if (isLogoPlane) {
+                console.log('Found logo plane:', child.name);
+                child.material = logoMaterial;
+                return; // Skip other material processing for this mesh
+              }
+              
               if (child.material) {
                 const mats = Array.isArray(child.material) ? child.material : [child.material];
                 const newMaterials = mats.map(mat => {
                   const matName = (mat.name || '').toLowerCase();
+                  
+                  // ========== LOGO/LABEL MATERIAL (by material name) ==========
+                  if (matName.includes('logo') || matName.includes('label') || 
+                      matName.includes('sign') || matName.includes('schild') ||
+                      matName.includes('text') || matName.includes('multi')) {
+                    console.log('Found logo material:', mat.name);
+                    return logoMaterial;
+                  }
+                  
+                  // ========== CHECK IF MATERIAL HAD A TEXTURE THAT DIDN'T LOAD ==========
+                  // If the original material had a map property, it likely needs the logo texture
+                  if (mat.map || (mat.color && mat.color.r < 0.05 && mat.color.g < 0.05 && mat.color.b < 0.05 && !matName.includes('black') && !matName.includes('dark'))) {
+                    // Material is very dark/black but not named black - might be missing texture
+                    const hasMapReference = mat.map !== null || (mat.userData && mat.userData.map);
+                    if (hasMapReference || mat.map === null) {
+                      console.log('Possible missing texture material:', mat.name, mat);
+                    }
+                  }
                   
                   // ========== YELLOW/ORANGE METALLIC PARTS ==========
                   if (matName.includes('yellow') || matName.includes('orange') || 
@@ -640,6 +703,44 @@
 
           scene.add(fbx);
           model = fbx;
+
+          // ========== BONE/SKELETON ANALYSIS ==========
+          console.log('=== SKELETON/BONE ANALYSIS ===');
+          let skeletonCount = 0;
+          let boneList = [];
+          
+          fbx.traverse((child) => {
+            // Check for SkinnedMesh (mesh with bones)
+            if (child.isSkinnedMesh) {
+              skeletonCount++;
+              console.log('Found SkinnedMesh:', child.name);
+              
+              if (child.skeleton) {
+                console.log('  Skeleton has', child.skeleton.bones.length, 'bones:');
+                child.skeleton.bones.forEach((bone, index) => {
+                  boneList.push({
+                    name: bone.name,
+                    index: index,
+                    parent: bone.parent ? bone.parent.name : 'ROOT'
+                  });
+                  console.log('    [' + index + '] ' + bone.name + ' (parent: ' + (bone.parent ? bone.parent.name : 'ROOT') + ')');
+                });
+              }
+            }
+            
+            // Also check for Bone objects directly
+            if (child.isBone) {
+              console.log('Found Bone:', child.name);
+            }
+          });
+          
+          if (skeletonCount === 0) {
+            console.log('No SkinnedMesh/Skeleton found in this model.');
+            console.log('The model might use regular meshes without bones.');
+          } else {
+            console.log('=== TOTAL: ' + skeletonCount + ' SkinnedMesh(es), ' + boneList.length + ' bones ===');
+          }
+          console.log('=== END SKELETON ANALYSIS ===');
 
           // Setup animation if available
           if (fbx.animations && fbx.animations.length > 0) {

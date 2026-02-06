@@ -1,6 +1,22 @@
 {
   "posts": [
     {
+      "id": "15",
+      "slug": "multiply",
+      "title": "Multiply",
+      "description": "Eau de Toilette - A conceptual fragrance campaign blending industrial aesthetics with luxury product design. The MULTIPLY project explores mechanical precision meeting sensorial experience, featuring custom typography and ball bearing inspired packaging.",
+      "date": "2026-02-06",
+      "tags": ["video", "product design", "concept", "motion"],
+      "type": "video",
+      "thumbnail": "/projects/multiply/trailer.mp4",
+      "videoUrl": "/projects/multiply/trailer.mp4",
+      "authors": ["jan_test.mp4", "pustey.png", "alexg030"],
+      "gallery": [
+        { "type": "video", "src": "/projects/multiply/trailer.mp4", "title": "Trailer" },
+        { "type": "image", "src": "/projects/multiply/poster.png", "title": "Poster" }
+      ]
+    },
+    {
       "id": "14",
       "slug": "rovolto-lost-files",
       "title": "Rovolto Lost Files",
@@ -101,8 +117,9 @@
       "thumbnail": "https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=800&q=80",
       "htmlPath": "/projects/mask-sculpture/index.html",
       "model3dPath": "/projects/mask-sculpture/model.fbx",
+      "model3dOffsetY": 0,
       "author": "AaronCxC"
     }
   ],
-  "lastUpdated": "2026-02-05T23:10:00Z"
+  "lastUpdated": "2026-02-06T16:20:00Z"
 }

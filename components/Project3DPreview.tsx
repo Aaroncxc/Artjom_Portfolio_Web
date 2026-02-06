@@ -8,9 +8,10 @@ interface Project3DPreviewProps {
   mousePosition: { x: number; y: number };
   rotationX?: number; // Rotation in degrees on X axis (default: -90)
   materialColor?: string; // Override color for plastic/transparent materials
+  offsetY?: number; // Vertical offset for centering (default: -0.3)
 }
 
-export function Project3DPreview({ modelPath, isHovered, mousePosition, rotationX = -90, materialColor }: Project3DPreviewProps) {
+export function Project3DPreview({ modelPath, isHovered, mousePosition, rotationX = -90, materialColor, offsetY = -0.3 }: Project3DPreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<any>(null);
   const rendererRef = useRef<any>(null);
@@ -65,20 +66,25 @@ export function Project3DPreview({ modelPath, isHovered, mousePosition, rotation
         containerRef.current.appendChild(renderer.domElement);
         rendererRef.current = renderer;
 
-        // Lighting - EXACT same as 3D viewer (index.html)
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        // Lighting - matching the bright 3D viewer setup
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
         scene.add(ambientLight);
 
+        // Hemisphere light for natural lighting
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x888888, 0.5);
+        hemiLight.position.set(0, 20, 0);
+        scene.add(hemiLight);
+
         const mainLight = new THREE.DirectionalLight(0xffffff, 1.4);
-        mainLight.position.set(2, 12, 4);  // Light from above
+        mainLight.position.set(-5, 12, 8);
         scene.add(mainLight);
 
-        const fillLight = new THREE.DirectionalLight(0xffffff, 0.35);
-        fillLight.position.set(-5, 5, -5);
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        fillLight.position.set(5, 5, 5);
         scene.add(fillLight);
 
-        const rimLight = new THREE.DirectionalLight(0x88ccff, 0.25);
-        rimLight.position.set(0, -5, -10);
+        const rimLight = new THREE.DirectionalLight(0x88ccff, 0.4);
+        rimLight.position.set(0, 5, -10);
         scene.add(rimLight);
 
         // Load model
@@ -106,84 +112,123 @@ export function Project3DPreview({ modelPath, isHovered, mousePosition, rotation
             // 4) Recalculate bounding box after rotation + scale, then center
             const boxRotated = new THREE.Box3().setFromObject(fbx);
             const centerRotated = boxRotated.getCenter(new THREE.Vector3());
-            fbx.position.set(-centerRotated.x, -centerRotated.y - 0.3, -centerRotated.z);
+            fbx.position.set(-centerRotated.x, -centerRotated.y + offsetY, -centerRotated.z);
             
-            // Handle materials - apply red transparent look to plastic/transparent parts (same as viewer)
+            // Check if this is the rovolto model (needs special materials)
+            const isRovoltoModel = modelPath.includes('rovolto');
+            
+            // Handle materials based on model type
             fbx.traverse((child: any) => {
               if (child.isMesh && child.material) {
-                const mats = Array.isArray(child.material) ? child.material : [child.material];
-                let hasPlasticMaterial = false;
-
-                const newMats = mats.map((mat: any, idx: number) => {
-                  const matName = (mat.name || '').toLowerCase();
+                
+                if (isRovoltoModel) {
+                  // ========== ROVOLTO MODEL - Custom materials ==========
+                  const textureLoader = new THREE.TextureLoader();
+                  const logoTexture = textureLoader.load('/multikunst-logo.png');
+                  logoTexture.colorSpace = THREE.SRGBColorSpace;
+                  logoTexture.flipY = true;
+                  logoTexture.wrapS = THREE.RepeatWrapping;
+                  logoTexture.repeat.x = -1;
+                  logoTexture.offset.x = 1;
                   
-                  const hasPlasticName = 
-                    matName.includes('plastic') ||
-                    matName.includes('transparent') ||
-                    matName.includes('clear') ||
-                    matName.includes('glass') ||
-                    matName.includes('visor');
+                  const logoMaterial = new THREE.ShaderMaterial({
+                    uniforms: { map: { value: logoTexture } },
+                    vertexShader: `
+                      varying vec2 vUv;
+                      void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                      }
+                    `,
+                    fragmentShader: `
+                      uniform sampler2D map;
+                      varying vec2 vUv;
+                      void main() {
+                        vec4 texColor = texture2D(map, vUv);
+                        float whiteness = (texColor.r + texColor.g + texColor.b) / 3.0;
+                        float alpha = 1.0 - smoothstep(0.3, 0.5, whiteness);
+                        gl_FragColor = vec4(0.0, 0.0, 0.0, alpha);
+                      }
+                    `,
+                    transparent: true,
+                    side: THREE.DoubleSide,
+                    depthWrite: false,
+                  });
                   
-                  const isTransparentProps = 
-                    mat.transparent === true ||
-                    (mat.opacity !== undefined && mat.opacity < 0.99);
+                  const meshName = (child.name || '').toLowerCase();
+                  const isLogoPlane = meshName.includes('logo') || meshName.includes('label') || 
+                    meshName.includes('sign') || meshName.includes('plane') || 
+                    meshName.includes('schild') || meshName.includes('text') || meshName.includes('multi');
                   
-                  let isLightColor = false;
-                  if (mat.color) {
-                    const r = mat.color.r || 0;
-                    const g = mat.color.g || 0;
-                    const b = mat.color.b || 0;
-                    isLightColor = (r > 0.9 && g > 0.9 && b > 0.9);
+                  if (isLogoPlane) {
+                    child.material = logoMaterial;
+                    return;
                   }
                   
-                  const isPlasticMaterial = hasPlasticName || isTransparentProps || isLightColor;
-                  
-                  if (isPlasticMaterial) {
-                    hasPlasticMaterial = true;
+                  const mats = Array.isArray(child.material) ? child.material : [child.material];
+                  const newMats = mats.map((mat: any) => {
+                    const matName = (mat.name || '').toLowerCase();
                     
-                    // Use custom material color if provided, otherwise default to red transparent
-                    if (materialColor) {
-                      // Solid material with custom color
-                      const solidMat = new THREE.MeshStandardMaterial({
-                        color: new THREE.Color(materialColor),
-                        roughness: 0.3,
-                        metalness: 0.0,
-                        side: THREE.DoubleSide,
-                      });
-                      return solidMat;
-                    } else {
-                      // Default: Red transparent plastic
-                      const plasticColor = '#FF0000';
-                      const plasticOpacity = 0.35;
-                      const plasticTransmission = 0.6;
-                      const plasticRoughness = 0.05;
-                      const plasticThickness = 0.5;
-                      
+                    if (matName.includes('logo') || matName.includes('label') || matName.includes('sign')) {
+                      return logoMaterial;
+                    }
+                    if (matName.includes('yellow') || matName.includes('orange') || matName.includes('gold') ||
+                        matName.includes('plastic') || matName.includes('transparent') || matName.includes('clear')) {
+                      return new THREE.MeshStandardMaterial({ color: 0xD4940A, roughness: 0.25, metalness: 0.6, side: THREE.DoubleSide });
+                    }
+                    if (matName.includes('cyan') || matName.includes('turquoise') || matName.includes('glow')) {
+                      return new THREE.MeshStandardMaterial({ color: 0x00E5E5, roughness: 0.1, metalness: 0.3, emissive: new THREE.Color(0x00AAAA), emissiveIntensity: 0.5, side: THREE.DoubleSide });
+                    }
+                    if (matName.includes('black') || matName.includes('dark')) {
+                      return new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.3, metalness: 0.7, side: THREE.DoubleSide });
+                    }
+                    
+                    // Default - check color
+                    const r = mat.color?.r || 0.5, g = mat.color?.g || 0.5, b = mat.color?.b || 0.5;
+                    if ((r > 0.6 && g > 0.3 && b < 0.3) || (r > 0.9 && g > 0.9 && b > 0.9) || mat.transparent) {
+                      return new THREE.MeshStandardMaterial({ color: 0xD4940A, roughness: 0.25, metalness: 0.6, side: THREE.DoubleSide });
+                    }
+                    if (b > 0.5 && g > 0.5 && r < 0.3) {
+                      return new THREE.MeshStandardMaterial({ color: 0x00E5E5, roughness: 0.1, metalness: 0.3, emissive: new THREE.Color(0x00AAAA), emissiveIntensity: 0.5, side: THREE.DoubleSide });
+                    }
+                    return new THREE.MeshStandardMaterial({ color: mat.color || 0x888888, roughness: 0.4, metalness: 0.5, side: THREE.DoubleSide });
+                  });
+                  child.material = Array.isArray(child.material) ? newMats : newMats[0];
+                  
+                } else {
+                  // ========== OTHER MODELS (like Mask) - Default materials ==========
+                  const mats = Array.isArray(child.material) ? child.material : [child.material];
+                  mats.forEach((mat: any) => {
+                    // Default material settings (same as mask-sculpture)
+                    mat.metalness = 0.1;
+                    mat.roughness = 0.6;
+                    
+                    // Check if this is the transparent plastic material
+                    const matName = (mat.name || '').toLowerCase();
+                    const isPlasticMaterial = matName.includes('plastic') || matName.includes('transparent');
+                    
+                    if (isPlasticMaterial) {
+                      // Red transparent plastic (same as mask-sculpture viewer)
                       const plasticMat = new THREE.MeshPhysicalMaterial({
-                        color: new THREE.Color(plasticColor),
+                        color: new THREE.Color('#FF0000'),
                         transparent: true,
-                        opacity: plasticOpacity,
-                        roughness: plasticRoughness,
+                        opacity: 0.35,
+                        roughness: 0.05,
                         metalness: 0.0,
-                        transmission: plasticTransmission,
-                        thickness: plasticThickness,
+                        transmission: 0.6,
+                        thickness: 0.5,
                         side: THREE.DoubleSide,
                         depthWrite: false,
                         envMapIntensity: 1.0,
                       });
-                      (plasticMat as any).renderOrder = 1;
-                      return plasticMat;
+                      child.material = plasticMat;
                     }
-                  }
-                  
-                  mat.metalness = 0.1;
-                  mat.roughness = 0.6;
-                  return mat;
-                });
-                
-                child.material = Array.isArray(child.material) ? newMats : newMats[0];
-                if (hasPlasticMaterial) {
-                  child.renderOrder = 1;
+                    
+                    // Ensure texture is updated
+                    if (mat.map) {
+                      mat.map.needsUpdate = true;
+                    }
+                  });
                 }
               }
             });
@@ -245,7 +290,7 @@ export function Project3DPreview({ modelPath, isHovered, mousePosition, rotation
         sceneRef.current.clear();
       }
     };
-  }, [modelPath, rotationX, materialColor]);
+  }, [modelPath, rotationX, materialColor, offsetY]);
 
   // Animation loop - always running, rotate based on mouse when hovered
   useEffect(() => {
