@@ -100,10 +100,11 @@
       "title": "The House",
       "description": "A cinematic exploration of architectural spaces, light, and shadow. This video piece captures the essence of domestic environments through careful composition and atmospheric visuals.",
       "date": "2026-01-31",
-      "tags": ["video", "architecture", "cinematic"],
+      "tags": ["video", "architecture", "cinematic", "3D"],
       "type": "video",
       "thumbnail": "/videos/thehouse.mp4",
       "videoUrl": "/videos/thehouse.mp4",
+      "htmlPath": "/projects/the-house/index.html",
       "author": "AaronCxC"
     },
     {

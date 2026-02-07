@@ -306,6 +306,26 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
               </video>
             </div>
 
+            {/* 3D Viewer - same size as video, only for projects with htmlPath */}
+            {project.htmlPath && (
+              <div className="mt-6">
+                <h3 className="text-lg font-medium text-mk-text mb-4">3D Modell</h3>
+                <div 
+                  className="w-full relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200"
+                  style={{
+                    aspectRatio: '16/9',
+                  }}
+                >
+                  <iframe
+                    src={project.htmlPath}
+                    className="w-full h-full border-0"
+                    title={`${project.title} - 3D Viewer`}
+                    allow="fullscreen"
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Gallery - additional media */}
             {project.gallery && project.gallery.length > 0 && (
               <div className="mt-6">

@@ -1595,6 +1595,11 @@ video {
   --tw-gradient-to: rgb(245 243 255 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
+.from-slate-100 {
+  --tw-gradient-from: #f1f5f9 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(241 245 249 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
 .via-\[rgba\(28\2c 28\2c 28\2c 0\.2\)\] {
   --tw-gradient-to: rgba(28, 28, 28, 0)  var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), rgba(28,28,28,0.2) var(--tw-gradient-via-position), var(--tw-gradient-to);
@@ -1617,6 +1622,9 @@ video {
 }
 .to-transparent {
   --tw-gradient-to: transparent var(--tw-gradient-to-position);
+}
+.to-slate-200 {
+  --tw-gradient-to: #e2e8f0 var(--tw-gradient-to-position);
 }
 .object-contain {
   -o-object-fit: contain;
