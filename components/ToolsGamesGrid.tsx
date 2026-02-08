@@ -47,9 +47,9 @@ const toolsGamesData: ToolGame[] = [
     description: 'A pixel-art 2D platformer built with Godot. Run, jump and collect bones while exploring hand-crafted levels. Use WASD or arrow keys to play!',
     url: '/tools/ryuk-pp/index.html',
     type: 'game',
-    thumbnail: '/tools/ryuk-pp/index.png',
+    thumbnail: '/tools/ryuk-pp/thumbnail.png',
     screenshots: [
-      '/tools/ryuk-pp/index.png',
+      '/tools/ryuk-pp/thumbnail.png',
     ],
     tags: ['game', 'platformer', 'pixel-art', 'godot'],
     embeddable: true,
