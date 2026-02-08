@@ -69,7 +69,8 @@ export function TextPointCloudHero({ onReady }: TextPointCloudHeroProps) {
       
       <section 
         ref={containerRef}
-        className="relative z-[1] w-full h-screen flex items-center justify-center overflow-hidden"
+        className="relative z-[1] w-full h-[100dvh] flex items-center justify-center overflow-hidden"
+        style={{ height: '100dvh' }}
       >
         <text-pointcloud
           style={{

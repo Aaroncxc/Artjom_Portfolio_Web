@@ -61,7 +61,7 @@
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(10px);
-      font-size: 11px;
+      font-size: clamp(12px, 2.5vw, 11px);
       color: rgba(28, 28, 28, 0.6);
       border: 1px solid rgba(28, 28, 28, 0.06);
     }
@@ -122,6 +122,8 @@
       cursor: pointer;
       transition: all 0.2s ease;
       box-shadow: 0 2px 12px rgba(28, 28, 28, 0.08);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     
     .btn:hover {
@@ -264,6 +266,52 @@
       font-family: inherit;
       font-size: 12px;
     }
+    
+    /* Touch joystick */
+    .touch-joystick {
+      display: none;
+      position: absolute;
+      bottom: 100px;
+      left: 40px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.2);
+      border: 2px solid rgba(255,255,255,0.3);
+      z-index: 25;
+      touch-action: none;
+    }
+    .touch-joystick .knob {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      border: 2px solid rgba(255,255,255,0.7);
+      pointer-events: none;
+      transition: none;
+    }
+    .touch-look-area {
+      display: none;
+      position: absolute;
+      top: 0; right: 0;
+      width: 50%;
+      height: 100%;
+      z-index: 24;
+      touch-action: none;
+    }
+    #fp-overlay.visible .touch-joystick,
+    #fp-overlay.visible .touch-look-area {
+      display: block;
+    }
+    /* Hide joystick on desktop */
+    @media (hover: hover) and (pointer: fine) {
+      .touch-joystick, .touch-look-area {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -295,6 +343,12 @@
       <div class="fp-hint" id="fp-hint">
         <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Bewegen &nbsp;&bull;&nbsp; <kbd>Maus</kbd> Umsehen &nbsp;&bull;&nbsp; <kbd>ESC</kbd> Beenden
       </div>
+      <!-- Touch: virtual joystick for movement -->
+      <div class="touch-joystick" id="touch-joystick">
+        <div class="knob" id="joystick-knob"></div>
+      </div>
+      <!-- Touch: right side for looking around -->
+      <div class="touch-look-area" id="touch-look-area"></div>
     </div>
     
     <div class="controls">
@@ -402,6 +456,21 @@
     
     // Clock for delta time
     const fpClock = new THREE.Clock(false);
+    
+    // Touch controls state
+    let touchJoystickActive = false;
+    let touchJoystickCenter = { x: 0, y: 0 };
+    let touchJoystickInput = { x: 0, y: 0 }; // -1 to 1
+    let touchJoystickTouchId = null;
+    
+    let touchLookActive = false;
+    let touchLookLastPos = { x: 0, y: 0 };
+    let touchLookTouchId = null;
+    const touchLookSensitivity = 0.003;
+    
+    // Euler for touch look rotation
+    let fpEuler = new THREE.Euler(0, 0, 0, 'YXZ');
+    let isTouchDevice = false;
 
     const container = document.getElementById('canvas-container');
     const loadingEl = document.getElementById('loading');
@@ -520,6 +589,96 @@
         const key = e.key.toLowerCase();
         if (key in keysPressed) keysPressed[key] = false;
       });
+      
+      // ========== TOUCH CONTROLS SETUP ==========
+      const joystickEl = document.getElementById('touch-joystick');
+      const knobEl = document.getElementById('joystick-knob');
+      const lookAreaEl = document.getElementById('touch-look-area');
+      
+      // Joystick touch events
+      joystickEl.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const touch = e.changedTouches[0];
+        touchJoystickTouchId = touch.identifier;
+        touchJoystickActive = true;
+        const rect = joystickEl.getBoundingClientRect();
+        touchJoystickCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+      }, { passive: false });
+      
+      joystickEl.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const touch = e.changedTouches[i];
+          if (touch.identifier === touchJoystickTouchId) {
+            const dx = touch.clientX - touchJoystickCenter.x;
+            const dy = touch.clientY - touchJoystickCenter.y;
+            const maxR = 50; // max radius
+            const dist = Math.min(Math.sqrt(dx * dx + dy * dy), maxR);
+            const angle = Math.atan2(dy, dx);
+            
+            // Normalized input (-1 to 1)
+            touchJoystickInput.x = (dist / maxR) * Math.cos(angle);
+            touchJoystickInput.y = (dist / maxR) * Math.sin(angle);
+            
+            // Move knob visually
+            const knobX = (dist / maxR) * maxR * Math.cos(angle);
+            const knobY = (dist / maxR) * maxR * Math.sin(angle);
+            knobEl.style.transform = 'translate(calc(-50% + ' + knobX + 'px), calc(-50% + ' + knobY + 'px))';
+          }
+        }
+      }, { passive: false });
+      
+      const resetJoystick = (e) => {
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === touchJoystickTouchId) {
+            touchJoystickActive = false;
+            touchJoystickInput = { x: 0, y: 0 };
+            touchJoystickTouchId = null;
+            knobEl.style.transform = 'translate(-50%, -50%)';
+          }
+        }
+      };
+      joystickEl.addEventListener('touchend', resetJoystick, { passive: false });
+      joystickEl.addEventListener('touchcancel', resetJoystick, { passive: false });
+      
+      // Look area touch events (right half of screen)
+      lookAreaEl.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const touch = e.changedTouches[0];
+        touchLookTouchId = touch.identifier;
+        touchLookActive = true;
+        touchLookLastPos = { x: touch.clientX, y: touch.clientY };
+      }, { passive: false });
+      
+      lookAreaEl.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const touch = e.changedTouches[i];
+          if (touch.identifier === touchLookTouchId) {
+            const dx = touch.clientX - touchLookLastPos.x;
+            const dy = touch.clientY - touchLookLastPos.y;
+            touchLookLastPos = { x: touch.clientX, y: touch.clientY };
+            
+            // Rotate camera
+            fpEuler.setFromQuaternion(camera.quaternion);
+            fpEuler.y -= dx * touchLookSensitivity;
+            fpEuler.x -= dy * touchLookSensitivity;
+            fpEuler.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, fpEuler.x));
+            camera.quaternion.setFromEuler(fpEuler);
+          }
+        }
+      }, { passive: false });
+      
+      const resetLook = (e) => {
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === touchLookTouchId) {
+            touchLookActive = false;
+            touchLookTouchId = null;
+          }
+        }
+      };
+      lookAreaEl.addEventListener('touchend', resetLook, { passive: false });
+      lookAreaEl.addEventListener('touchcancel', resetLook, { passive: false });
       
       animate();
     }
@@ -678,7 +837,7 @@
       requestAnimationFrame(animate);
       
       // ========== FIRST PERSON MOVEMENT ==========
-      if (firstPersonActive && fpControls.isLocked) {
+      if (firstPersonActive && (fpControls.isLocked || isTouchDevice)) {
         const delta = fpClock.getDelta();
         if (delta > 0.1) return; // skip large jumps
         
@@ -693,12 +852,18 @@
         const right = new THREE.Vector3();
         right.crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
         
-        // Build movement vector from WASD
+        // Build movement vector from WASD + touch joystick
         const moveDir = new THREE.Vector3(0, 0, 0);
         if (keysPressed.w) moveDir.add(forward);
         if (keysPressed.s) moveDir.sub(forward);
         if (keysPressed.d) moveDir.add(right);
         if (keysPressed.a) moveDir.sub(right);
+        
+        // Add touch joystick input (x = left/right, y = up/down on screen = forward/back)
+        if (touchJoystickActive) {
+          moveDir.addScaledVector(forward, -touchJoystickInput.y); // up on screen = forward
+          moveDir.addScaledVector(right, touchJoystickInput.x);
+        }
         
         if (moveDir.length() > 0) {
           moveDir.normalize();
@@ -846,6 +1011,9 @@
     function enterFirstPerson() {
       firstPersonActive = true;
       
+      // Detect touch device
+      isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      
       // Disable orbit controls
       controls.enabled = false;
       controls.autoRotate = false;
@@ -855,9 +1023,12 @@
       
       // Look at the target direction
       camera.lookAt(fpStartLookAt);
+      fpEuler.setFromQuaternion(camera.quaternion);
       
-      // Lock pointer
-      fpControls.lock();
+      // Lock pointer (desktop only - mobile uses touch look area)
+      if (!isTouchDevice) {
+        fpControls.lock();
+      }
       fpClock.start();
       
       // Show overlay
@@ -886,6 +1057,11 @@
       keysPressed.a = false;
       keysPressed.s = false;
       keysPressed.d = false;
+      
+      // Reset touch state
+      touchJoystickActive = false;
+      touchJoystickInput = { x: 0, y: 0 };
+      touchLookActive = false;
       
       // Re-enable orbit controls
       controls.enabled = true;

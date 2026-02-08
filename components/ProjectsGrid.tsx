@@ -234,7 +234,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
             <button
               key={filter.value}
               onClick={() => handleTypeChange(filter.value)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+              className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 min-h-[44px] ${
                 selectedType === filter.value
                   ? 'bg-[rgba(20,184,166,0.15)] border border-accent-cyan text-accent-cyan'
                   : 'bg-[rgba(255,255,255,0.6)] border border-[rgba(28,28,28,0.08)] text-mk-text-secondary hover:bg-[rgba(255,255,255,0.9)] hover:text-mk-text'

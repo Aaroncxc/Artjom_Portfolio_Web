@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ToolGame {
@@ -53,6 +53,10 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
   const [hoveredTool, setHoveredTool] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<'all' | 'game' | 'tool' | 'app'>('all');
 
+  // Touch swipe state for mobile navigation
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+
   const typeFilters: { value: 'all' | 'game' | 'tool' | 'app'; label: string }[] = [
     { value: 'all', label: 'All' },
     { value: 'game', label: 'Games' },
@@ -95,6 +99,29 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
     );
   }, [selectedTool]);
 
+  // Touch swipe handlers for mobile modal navigation
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    const diff = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+    
+    if (Math.abs(diff) > minSwipeDistance) {
+      if (diff > 0) {
+        navigateTool('next');
+      } else {
+        navigateTool('prev');
+      }
+    }
+  }, [navigateTool]);
+
   const typeIcons: Record<'game' | 'tool' | 'app', JSX.Element> = {
     game: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,7 +163,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
             <button
               key={filter.value}
               onClick={() => setSelectedType(filter.value)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+              className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 min-h-[44px] ${
                 selectedType === filter.value
                   ? 'bg-[rgba(99,102,241,0.15)] border border-[rgba(99,102,241,0.5)] text-[rgb(99,102,241)]'
                   : 'bg-[rgba(255,255,255,0.6)] border border-[rgba(28,28,28,0.08)] text-mk-text-secondary hover:bg-[rgba(255,255,255,0.9)] hover:text-mk-text'
@@ -282,8 +309,11 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto"
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto touch-pan-y"
             onClick={() => { setSelectedTool(null); setSelectedIndex(-1); }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             {/* Backdrop */}
             <div className="fixed inset-0 bg-[rgba(250,250,255,0.9)] backdrop-blur-md" />
@@ -398,7 +428,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                               <button
                                 key={i}
                                 onClick={() => setCurrentScreenshot(i)}
-                                className={`w-2 h-2 rounded-full transition-all ${
+                                className={`w-3 h-3 rounded-full transition-all p-0 min-w-[24px] min-h-[24px] flex items-center justify-center ${
                                   i === currentScreenshot 
                                     ? 'bg-white w-6' 
                                     : 'bg-white/50 hover:bg-white/80'
@@ -465,8 +495,11 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
               </div>
             </motion.div>
 
-            {/* Counter */}
-            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60]">
+            {/* Counter with swipe hint on mobile */}
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center gap-2">
+              {filteredItems.length > 1 && (
+                <span className="text-xs text-mk-text-muted md:hidden">Swipe to navigate</span>
+              )}
               <div className="px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] shadow-lg">
                 <span className="text-sm font-medium text-mk-text">
                   {selectedIndex + 1} / {filteredItems.length}

@@ -105,7 +105,7 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
         return (
           <div 
             ref={mediaContainerRef}
-            className="media-container w-full overflow-hidden rounded-2xl relative h-full min-h-[350px] group/html bg-black"
+            className="media-container w-full overflow-hidden rounded-2xl relative h-full min-h-[250px] sm:min-h-[350px] group/html bg-black"
           >
             <iframe
               ref={iframeRef}
@@ -138,7 +138,7 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
       case 'video':
         return (
           <div 
-            className="media-container w-full relative group/video rounded-2xl overflow-hidden bg-black h-full min-h-[350px]"
+            className="media-container w-full relative group/video rounded-2xl overflow-hidden bg-black h-full min-h-[250px] sm:min-h-[350px]"
           >
             <video
               ref={videoRef}
@@ -167,7 +167,7 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
 
       case 'audio':
         return (
-          <div className="media-container h-full min-h-[350px] w-full flex flex-col items-center justify-center p-8 relative overflow-hidden rounded-2xl">
+            <div className="media-container h-full min-h-[250px] sm:min-h-[350px] w-full flex flex-col items-center justify-center p-8 relative overflow-hidden rounded-2xl">
             {/* Animated gradient background - using CSS class */}
             <div className="absolute inset-0 audio-gradient-bg" />
             
@@ -218,7 +218,7 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
       case 'image':
         const images = project.images || (project.thumbnail ? [project.thumbnail] : []);
         return (
-          <div className="vignette h-full min-h-[350px] w-full rounded-2xl overflow-hidden">
+          <div className="vignette h-full min-h-[250px] sm:min-h-[350px] w-full rounded-2xl overflow-hidden">
             {images[0] && (
               <img
                 src={images[0]}
@@ -237,7 +237,7 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
   // Special layout for video projects - horizontal info bar + centered video
   if (project.type === 'video') {
     return (
-      <div className="snap-section flex flex-col justify-center px-6 py-8 lg:py-16 min-h-screen">
+      <div className="snap-section flex flex-col justify-center px-4 sm:px-6 py-6 sm:py-8 lg:py-16 min-h-[100dvh]">
         <div className="max-w-5xl w-full mx-auto">
           <motion.div
             style={{ opacity: isActive ? 1 : 0.3 }}
@@ -245,10 +245,10 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
             transition={{ duration: 0.5 }}
           >
             {/* Horizontal Info Bar */}
-            <GlassPanel variant="default" padding="md" className="mb-6">
-              <div className="flex flex-wrap items-center justify-between gap-4">
+            <GlassPanel variant="default" padding="md" className="mb-4 sm:mb-6">
+              <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
                 {/* Left side - Type, Date, Title */}
-                <div className="flex items-center gap-4 flex-wrap">
+                <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
                   <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgba(167,139,250,0.15)] border border-[rgba(167,139,250,0.3)] text-accent-violet text-xs font-medium">
                     {typeIcons[project.type]}
                     <span className="capitalize">Video</span>
@@ -380,7 +380,7 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
   // Layout for HTML/3D projects - similar to video but with side-by-side boxes
   if (project.type === 'html') {
     return (
-      <div className="snap-section flex flex-col justify-center px-6 py-8 lg:py-16 min-h-screen">
+      <div className="snap-section flex flex-col justify-center px-4 sm:px-6 py-6 sm:py-8 lg:py-16 min-h-[100dvh]">
         <div className="max-w-6xl w-full mx-auto">
           <motion.div
             style={{ opacity: isActive ? 1 : 0.3 }}
@@ -388,7 +388,7 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
             transition={{ duration: 0.5 }}
           >
             {/* Two equal columns: Info and 3D */}
-            <div className="grid gap-6 lg:grid-cols-2 mb-6">
+            <div className="grid gap-4 sm:gap-6 lg:grid-cols-2 mb-4 sm:mb-6">
               {/* Info Panel */}
               <GlassPanel variant="default" padding="lg" className="h-full">
                 {/* Header row */}
@@ -435,7 +435,7 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
               </GlassPanel>
 
               {/* 3D/Interactive Preview */}
-              <div className="h-full min-h-[350px] lg:min-h-[400px]">
+              <div className="h-full min-h-[250px] sm:min-h-[350px] lg:min-h-[400px]">
                 {renderMedia()}
               </div>
             </div>
@@ -532,7 +532,7 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
   if (project.type === 'image') {
     const mainImage = project.images?.[0] || project.thumbnail;
     return (
-      <div className="snap-section flex flex-col justify-center px-6 py-8 lg:py-16 min-h-screen">
+      <div className="snap-section flex flex-col justify-center px-4 sm:px-6 py-6 sm:py-8 lg:py-16 min-h-[100dvh]">
         <div className="max-w-5xl w-full mx-auto">
           <motion.div
             style={{ opacity: isActive ? 1 : 0.3 }}
@@ -540,10 +540,10 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
             transition={{ duration: 0.5 }}
           >
             {/* Horizontal Info Bar */}
-            <GlassPanel variant="default" padding="md" className="mb-6">
-              <div className="flex flex-wrap items-center justify-between gap-4">
+            <GlassPanel variant="default" padding="md" className="mb-4 sm:mb-6">
+              <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
                 {/* Left side - Type, Date, Title */}
-                <div className="flex items-center gap-4 flex-wrap">
+                <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
                   <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgba(167,139,250,0.15)] border border-[rgba(167,139,250,0.3)] text-accent-violet text-xs font-medium">
                     {typeIcons[project.type]}
                     <span className="capitalize">Image</span>
@@ -644,7 +644,7 @@ export function ProjectSlide({ project, isActive }: ProjectSlideProps) {
 
   // Default layout for other project types (audio)
   return (
-    <div className="snap-section flex flex-col justify-center px-6 py-8 lg:py-24 min-h-screen">
+    <div className="snap-section flex flex-col justify-center px-4 sm:px-6 py-6 sm:py-8 lg:py-24 min-h-[100dvh]">
       <div className="max-w-7xl w-full mx-auto">
         <motion.div
           style={{ 

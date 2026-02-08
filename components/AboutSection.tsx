@@ -204,7 +204,7 @@ function MemberModal({ member, onClose }: { member: Member; onClose: () => void 
         >
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-[rgba(28,28,28,0.08)] transition-colors"
+            className="absolute top-4 right-4 w-11 h-11 flex items-center justify-center rounded-full hover:bg-[rgba(28,28,28,0.08)] transition-colors"
             aria-label="Close"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
