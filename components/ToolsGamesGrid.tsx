@@ -13,6 +13,7 @@ interface ToolGame {
   thumbnailVideo?: string; // Optional video for thumbnail preview
   screenshots: string[];
   tags: string[];
+  embeddable?: boolean; // If true, embed as iframe in detail view instead of external link
 }
 
 // Static data for tools and games
@@ -39,6 +40,19 @@ const toolsGamesData: ToolGame[] = [
     thumbnailVideo: '/tools/occupiedvfx-video.mp4',
     screenshots: [],
     tags: ['vfx', 'art', 'visual'],
+  },
+  {
+    id: 'ryuk-pp',
+    title: 'Ryuk PP',
+    description: 'A pixel-art 2D platformer built with Godot. Run, jump and collect bones while exploring hand-crafted levels. Use WASD or arrow keys to play!',
+    url: '/tools/ryuk-pp/index.html',
+    type: 'game',
+    thumbnail: '/tools/ryuk-pp/index.png',
+    screenshots: [
+      '/tools/ryuk-pp/index.png',
+    ],
+    tags: ['game', 'platformer', 'pixel-art', 'godot'],
+    embeddable: true,
   },
 ];
 
@@ -363,84 +377,96 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-[rgba(28,28,28,0.08)]">
-                {/* Media Preview - Video or Screenshot Carousel */}
-                <div className="relative aspect-video bg-gradient-to-br from-[rgba(99,102,241,0.1)] to-[rgba(20,184,166,0.1)]">
-                  {/* Placeholder */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="w-20 h-20 rounded-2xl bg-[rgba(99,102,241,0.2)] flex items-center justify-center mx-auto mb-4">
-                        {typeIcons[selectedTool.type]}
-                      </div>
-                      <p className="text-mk-text-muted text-sm">
-                        {selectedTool.thumbnailVideo ? 'Video Preview' : `Screenshot ${currentScreenshot + 1}`}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {/* Video Preview */}
-                  {selectedTool.thumbnailVideo ? (
-                    <video
-                      src={selectedTool.thumbnailVideo}
-                      controls
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-cover"
+                {/* Media Preview - Embedded Game, Video, or Screenshot Carousel */}
+                {selectedTool.embeddable ? (
+                  <div className="relative bg-black" style={{ aspectRatio: '16/9' }}>
+                    <iframe
+                      src={selectedTool.url}
+                      className="w-full h-full border-0"
+                      title={selectedTool.title}
+                      allow="autoplay; fullscreen; gamepad"
+                      allowFullScreen
                     />
-                  ) : (
-                    <>
-                      {/* Screenshot Image */}
-                      {selectedTool.screenshots[currentScreenshot] && (
-                        <img
-                          src={selectedTool.screenshots[currentScreenshot]}
-                          alt={`${selectedTool.title} screenshot ${currentScreenshot + 1}`}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      )}
+                  </div>
+                ) : (
+                  <div className="relative aspect-video bg-gradient-to-br from-[rgba(99,102,241,0.1)] to-[rgba(20,184,166,0.1)]">
+                    {/* Placeholder */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="w-20 h-20 rounded-2xl bg-[rgba(99,102,241,0.2)] flex items-center justify-center mx-auto mb-4">
+                          {typeIcons[selectedTool.type]}
+                        </div>
+                        <p className="text-mk-text-muted text-sm">
+                          {selectedTool.thumbnailVideo ? 'Video Preview' : `Screenshot ${currentScreenshot + 1}`}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    {/* Video Preview */}
+                    {selectedTool.thumbnailVideo ? (
+                      <video
+                        src={selectedTool.thumbnailVideo}
+                        controls
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    ) : (
+                      <>
+                        {/* Screenshot Image */}
+                        {selectedTool.screenshots[currentScreenshot] && (
+                          <img
+                            src={selectedTool.screenshots[currentScreenshot]}
+                            alt={`${selectedTool.title} screenshot ${currentScreenshot + 1}`}
+                            className="absolute inset-0 w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                        )}
 
-                      {/* Screenshot Navigation */}
-                      {selectedTool.screenshots.length > 1 && (
-                        <>
-                          <button
-                            onClick={() => navigateScreenshot('prev')}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors shadow-lg"
-                          >
-                            <svg className="w-5 h-5 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={() => navigateScreenshot('next')}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors shadow-lg"
-                          >
-                            <svg className="w-5 h-5 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </button>
-                          
-                          {/* Screenshot Dots */}
-                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                            {selectedTool.screenshots.map((_, i) => (
-                              <button
-                                key={i}
-                                onClick={() => setCurrentScreenshot(i)}
-                                className={`w-3 h-3 rounded-full transition-all p-0 min-w-[24px] min-h-[24px] flex items-center justify-center ${
-                                  i === currentScreenshot 
-                                    ? 'bg-white w-6' 
-                                    : 'bg-white/50 hover:bg-white/80'
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        </>
-                      )}
-                    </>
-                  )}
-                </div>
+                        {/* Screenshot Navigation */}
+                        {selectedTool.screenshots.length > 1 && (
+                          <>
+                            <button
+                              onClick={() => navigateScreenshot('prev')}
+                              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+                            >
+                              <svg className="w-5 h-5 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => navigateScreenshot('next')}
+                              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+                            >
+                              <svg className="w-5 h-5 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                            
+                            {/* Screenshot Dots */}
+                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                              {selectedTool.screenshots.map((_, i) => (
+                                <button
+                                  key={i}
+                                  onClick={() => setCurrentScreenshot(i)}
+                                  className={`w-3 h-3 rounded-full transition-all p-0 min-w-[24px] min-h-[24px] flex items-center justify-center ${
+                                    i === currentScreenshot 
+                                      ? 'bg-white w-6' 
+                                      : 'bg-white/50 hover:bg-white/80'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
 
                 {/* Content */}
                 <div className="p-6 md:p-8">
@@ -479,18 +505,42 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                     ))}
                   </div>
 
-                  {/* CTA Button */}
-                  <a
-                    href={selectedTool.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[rgb(99,102,241)] to-[rgb(139,92,246)] text-white font-medium hover:opacity-90 transition-opacity shadow-lg"
-                  >
-                    <span>Open {selectedTool.type === 'game' ? 'Game' : selectedTool.type === 'app' ? 'App' : 'Tool'}</span>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
+                  {/* CTA Buttons */}
+                  <div className="flex flex-wrap gap-3">
+                    {selectedTool.embeddable && (
+                      <button
+                        onClick={() => {
+                          const iframe = document.querySelector<HTMLIFrameElement>(`iframe[title="${selectedTool.title}"]`);
+                          if (iframe) {
+                            if (iframe.requestFullscreen) {
+                              iframe.requestFullscreen();
+                            }
+                          }
+                        }}
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[rgb(99,102,241)] to-[rgb(139,92,246)] text-white font-medium hover:opacity-90 transition-opacity shadow-lg"
+                      >
+                        <span>Fullscreen</span>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/>
+                        </svg>
+                      </button>
+                    )}
+                    <a
+                      href={selectedTool.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity shadow-lg ${
+                        selectedTool.embeddable
+                          ? 'bg-[rgba(28,28,28,0.08)] text-mk-text border border-[rgba(28,28,28,0.1)]'
+                          : 'bg-gradient-to-r from-[rgb(99,102,241)] to-[rgb(139,92,246)] text-white'
+                      }`}
+                    >
+                      <span>{selectedTool.embeddable ? 'Open in New Tab' : `Open ${selectedTool.type === 'game' ? 'Game' : selectedTool.type === 'app' ? 'App' : 'Tool'}`}</span>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </div>
             </motion.div>
