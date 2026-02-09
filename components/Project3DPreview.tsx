@@ -292,33 +292,33 @@ export function Project3DPreview({ modelPath, isHovered, mousePosition, rotation
     };
   }, [modelPath, rotationX, materialColor, offsetY]);
 
-  // Animation loop - always running, rotate based on mouse when hovered
+  // Animation loop - gentle mouse follow + subtle idle breathing
   useEffect(() => {
     if (!isLoaded || !modelRef.current || !rendererRef.current || !sceneRef.current || !cameraRef.current) return;
 
-    let lastTime = performance.now();
-    const baseRotationSpeed = 0.0003; // Slow rotation
+    const startTime = performance.now();
 
     const animate = () => {
       if (!modelRef.current || !rendererRef.current || !sceneRef.current || !cameraRef.current) return;
 
-      const now = performance.now();
-      const delta = now - lastTime;
-      lastTime = now;
+      const elapsed = (performance.now() - startTime) * 0.001; // seconds
 
       if (isHovered) {
-        // Rotate based on mouse position when hovered
-        const targetRotationY = (mousePosition.x - 0.5) * Math.PI * 0.6;
-        const targetRotationX = (mousePosition.y - 0.5) * Math.PI * 0.2;
+        // Follow mouse - gentle tilt based on cursor position
+        const targetRotationY = (mousePosition.x - 0.5) * Math.PI * 0.5;
+        const targetRotationX = (mousePosition.y - 0.5) * Math.PI * 0.15;
         
-        // Smooth interpolation
-        modelRef.current.rotation.y += (targetRotationY - modelRef.current.rotation.y) * 0.1;
-        modelRef.current.rotation.x += (targetRotationX - modelRef.current.rotation.x) * 0.1;
+        // Smooth interpolation (easing towards target)
+        modelRef.current.rotation.y += (targetRotationY - modelRef.current.rotation.y) * 0.08;
+        modelRef.current.rotation.x += (targetRotationX - modelRef.current.rotation.x) * 0.08;
       } else {
-        // Slow auto-rotation when not hovered
-        modelRef.current.rotation.y += baseRotationSpeed * delta;
-        // Slowly return X rotation to 0
-        modelRef.current.rotation.x *= 0.95;
+        // Idle state: subtle breathing/floating motion, no spinning
+        const idleY = Math.sin(elapsed * 0.6) * 0.08;  // gentle Y sway
+        const idleX = Math.sin(elapsed * 0.4) * 0.03;  // very subtle X nod
+        
+        // Smoothly return to idle pose
+        modelRef.current.rotation.y += (idleY - modelRef.current.rotation.y) * 0.04;
+        modelRef.current.rotation.x += (idleX - modelRef.current.rotation.x) * 0.04;
       }
 
       rendererRef.current.render(sceneRef.current, cameraRef.current);

@@ -25,6 +25,7 @@ export interface Project {
   model3dRotationX?: number; // Rotation in degrees on X axis (default: -90 for upright)
   model3dMaterialColor?: string; // Override color for plastic/transparent materials
   model3dOffsetY?: number; // Vertical offset for centering in preview tile (default: -0.3)
+  videoPortrait?: boolean; // If true, video is displayed in portrait (9:16) layout
   // Additional media gallery for projects with multiple assets
   gallery?: ProjectMedia[];
 }

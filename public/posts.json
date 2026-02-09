@@ -1,6 +1,37 @@
 {
   "posts": [
     {
+      "id": "16",
+      "slug": "pult-vacuum",
+      "title": "PULT – Keep Cleaning",
+      "description": "A futuristic vacuum cleaner concept blending industrial design with space-age aesthetics. PULT features a high-caliber drum filter system, organic tech components, and multiple cleaning modes – engineered not just for earthly messes, but with an astronaut's precision and innovation.",
+      "date": "2026-02-08",
+      "tags": ["3D", "product design", "concept", "industrial"],
+      "type": "video",
+      "thumbnail": "/projects/pult-vacuum/pult-1.png",
+      "videoUrl": "/projects/pult-vacuum/pult-final.mp4",
+      "model3dPath": "/projects/pult-vacuum/model.fbx",
+      "model3dRotationX": 0,
+      "model3dMaterialColor": "#FF8C00",
+      "videoPortrait": true,
+      "htmlPath": "/projects/pult-vacuum/index.html",
+      "author": "AaronCxC",
+      "gallery": [
+        { "type": "video", "src": "/projects/pult-vacuum/abstract-bg.mp4", "title": "Abstract Shape Animation" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-1.png", "title": "Side Perspective" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-2.png", "title": "Three Quarter View" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-3.png", "title": "Handguard Detail" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-4.png", "title": "Upright View" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-5.png", "title": "Front Barrel View" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-6.png", "title": "Side Profile" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-7.png", "title": "Product Presentation" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-8.png", "title": "Specification Sheet" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-9.png", "title": "Barrel Detail" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-10.png", "title": "Double Composition" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-11.png", "title": "Close-up Detail" }
+      ]
+    },
+    {
       "id": "15",
       "slug": "multiply",
       "title": "Multiply",
@@ -52,16 +83,11 @@
       "images": ["/projects/ice-gel/thumbnail.png"],
       "author": "AaronCxC",
       "gallery": [
-        { "type": "image", "src": "/projects/ice-gel/render-1.png", "title": "Composition 1" },
-        { "type": "image", "src": "/projects/ice-gel/render-2.png", "title": "Detail View" },
-        { "type": "image", "src": "/projects/ice-gel/render-4.png", "title": "Dramatic Lighting" },
-        { "type": "image", "src": "/projects/ice-gel/render-5.png", "title": "Composition 2" },
-        { "type": "image", "src": "/projects/ice-gel/render-6.png", "title": "Top View" },
-        { "type": "image", "src": "/projects/ice-gel/render-7.png", "title": "Side View" },
-        { "type": "image", "src": "/projects/ice-gel/render-8.png", "title": "Ice Environment" },
-        { "type": "image", "src": "/projects/ice-gel/render-16.png", "title": "Product Shot 1" },
-        { "type": "image", "src": "/projects/ice-gel/render-17.png", "title": "Product Shot 2" },
-        { "type": "image", "src": "/projects/ice-gel/render-20.png", "title": "Minimal View" }
+        { "type": "image", "src": "/projects/ice-gel/cosmetic-1.png", "title": "Dropper Bottle – Pflege für strahlende Haut" },
+        { "type": "image", "src": "/projects/ice-gel/cosmetic-2.png", "title": "Iridescent Serum Bottle" },
+        { "type": "image", "src": "/projects/ice-gel/cosmetic-3.png", "title": "Feuchtigkeitscrème – Strahlende Haut" },
+        { "type": "image", "src": "/projects/ice-gel/cosmetic-4.png", "title": "Dropper Detail" },
+        { "type": "image", "src": "/projects/ice-gel/cosmetic-5.png", "title": "Product Composition" }
       ]
     },
     {
