@@ -70,7 +70,7 @@ export function ProjectSlideVideo({ project, isActive }: ProjectSlideVideoProps)
             </p>
           </GlassPanel>
 
-          {/* Video: bei 3D-Viewer gleiche Box-Größe wie 3D-Viewer (volle Breite, 16/9), sonst ggf. zwei Spalten */}
+          {/* Video: bei 3D-Viewer volle Breite 16/9; mit Gallery-Video: 2 Spalten; sonst: Hauptvideo volle Breite größer */}
           {project.htmlPath ? (
             <div className="w-full relative rounded-2xl overflow-hidden bg-black/5 shrink-0" style={{ aspectRatio: '16/9' }}>
               <video
@@ -86,12 +86,57 @@ export function ProjectSlideVideo({ project, isActive }: ProjectSlideVideoProps)
                 Your browser does not support the video tag.
               </video>
             </div>
+          ) : project.gallery?.find((m) => m.type === 'video') ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6 items-start">
+              <div
+                className={`relative group/video rounded-2xl overflow-hidden bg-black/5 w-full shrink-0 ${isPortraitMainVideo ? 'max-w-[min(100%,320px)]' : ''}`}
+                style={{ aspectRatio: isPortraitMainVideo ? '9/16' : '16/9' }}
+              >
+                <video
+                  ref={videoRef}
+                  src={project.videoUrl}
+                  controls
+                  poster={project.thumbnail}
+                  autoPlay
+                  muted
+                  playsInline
+                  className="w-full h-full object-contain rounded-2xl"
+                >
+                  Your browser does not support the video tag.
+                </video>
+                {isPortraitMainVideo && (
+                  <button
+                    onClick={() => videoRef.current?.requestFullscreen()}
+                    className="absolute top-3 right-3 z-30 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] flex items-center justify-center hover:bg-white hover:scale-110 transition-all shadow-lg"
+                    aria-label="Vollbild"
+                  >
+                    <svg className="w-5 h-5 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v-4.5m0 4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/>
+                    </svg>
+                  </button>
+                )}
+              </div>
+              {(() => {
+                const first = project.gallery!.find((m) => m.type === 'video')!;
+                return (
+                  <div
+                    className="relative rounded-2xl overflow-hidden bg-black/5 w-full shrink-0 isolate aspect-video min-h-[160px]"
+                  >
+                    <video
+                      src={first.src}
+                      controls
+                      autoPlay
+                      muted
+                      playsInline
+                      loop
+                      className="w-full h-full object-contain block"
+                    />
+                  </div>
+                );
+              })()}
+            </div>
           ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6 items-start">
-            <div
-              className={`relative group/video rounded-2xl overflow-hidden bg-black/5 w-full shrink-0 ${isPortraitMainVideo ? 'max-w-[min(100%,320px)]' : ''}`}
-              style={{ aspectRatio: isPortraitMainVideo ? '9/16' : '16/9' }}
-            >
+            <div className="w-full relative rounded-2xl overflow-hidden bg-black/5 shrink-0" style={{ aspectRatio: '16/9' }}>
               <video
                 ref={videoRef}
                 src={project.videoUrl}
@@ -104,37 +149,7 @@ export function ProjectSlideVideo({ project, isActive }: ProjectSlideVideoProps)
               >
                 Your browser does not support the video tag.
               </video>
-              {isPortraitMainVideo && (
-                <button
-                  onClick={() => videoRef.current?.requestFullscreen()}
-                  className="absolute top-3 right-3 z-30 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] flex items-center justify-center hover:bg-white hover:scale-110 transition-all shadow-lg"
-                  aria-label="Vollbild"
-                >
-                  <svg className="w-5 h-5 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v-4.5m0 4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/>
-                  </svg>
-                </button>
-              )}
             </div>
-            {project.gallery?.find((m) => m.type === 'video') && (() => {
-              const first = project.gallery!.find((m) => m.type === 'video')!;
-              return (
-                <div
-                  className="relative rounded-2xl overflow-hidden bg-black/5 w-full shrink-0 isolate aspect-video min-h-[160px]"
-                >
-                  <video
-                    src={first.src}
-                    controls
-                    autoPlay
-                    muted
-                    playsInline
-                    loop
-                    className="w-full h-full object-contain block"
-                  />
-                </div>
-              );
-            })()}
-          </div>
           )}
 
           {project.htmlPath && (
@@ -158,11 +173,15 @@ export function ProjectSlideVideo({ project, isActive }: ProjectSlideVideoProps)
             return (
             <div className="mt-6">
               <h3 className="text-lg font-medium text-mk-text mb-4">Weitere Ansichten</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
                 {galleryRest.map((media, index) => (
                   <div
                     key={index}
-                    className={`relative aspect-video rounded-xl overflow-hidden group bg-black/5 isolate min-h-[140px] ${media.type === 'image' ? 'cursor-pointer border border-[rgba(28,28,28,0.1)] hover:border-[rgba(28,28,28,0.25)] transition-colors' : ''}`}
+                    className={`relative rounded-xl overflow-hidden group bg-black/5 isolate min-h-[140px] ${
+                      media.type === 'image'
+                        ? 'cursor-pointer border border-[rgba(28,28,28,0.1)] hover:border-[rgba(28,28,28,0.25)] transition-colors'
+                        : 'aspect-video'
+                    }`}
                     onClick={() => media.type === 'image' && setLightboxImage(media.src)}
                   >
                     {media.type === 'video' ? (
@@ -180,7 +199,7 @@ export function ProjectSlideVideo({ project, isActive }: ProjectSlideVideoProps)
                         <img
                           src={media.src}
                           alt={media.title || `Gallery image ${index + 1}`}
-                          className="w-full h-full object-contain block"
+                          className="w-full h-auto block object-contain"
                         />
                         <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                           <svg className="w-3 h-3 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">

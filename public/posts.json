@@ -73,9 +73,7 @@
       "thumbnail": "/projects/multiply/trailer.mp4",
       "videoUrl": "/projects/multiply/trailer.mp4",
       "authors": ["jan_test.mp4", "pustey.png", "alexg030"],
-      "gallery": [
-        { "type": "video", "src": "/projects/multiply/trailer.mp4", "title": "Trailer" },
-        { "type": "image", "src": "/projects/multiply/poster.png", "title": "Poster" }
+      "gallery": [ { "type": "image", "src": "/projects/multiply/poster.png", "title": "Poster" }
       ]
     },
     {
