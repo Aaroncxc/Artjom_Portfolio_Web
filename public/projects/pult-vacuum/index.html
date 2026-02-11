@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PULT – 3D Viewer</title>
+  <title>PULT â€“ 3D Viewer</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -133,11 +133,11 @@
       <div class="stats" id="stats">
         <div class="stat-item">
           <span class="label">Vertices</span>
-          <span class="value" id="vertex-count">—</span>
+          <span class="value" id="vertex-count">â€”</span>
         </div>
         <div class="stat-item">
           <span class="label">Triangles</span>
-          <span class="value" id="triangle-count">—</span>
+          <span class="value" id="triangle-count">â€”</span>
         </div>
       </div>
     </div>
@@ -175,11 +175,14 @@
     import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 
     let scene, camera, renderer, controls;
-    let model, wireframeGroup;
+    let model, wireframeGroup, gridHelper;
     let mixer, animationAction, clock;
     let showWireframe = false;
     let isPlaying = false;
     let isAnimating = false;
+    let rafId = null;
+    let animationTimeoutId = null;
+    let isHidden = false;
 
     const ORANGE_ACCENT = 0xFF8C00;
     const container = document.getElementById('canvas-container');
@@ -217,43 +220,40 @@
       controls.dampingFactor = 0.05;
       controls.autoRotate = true;
       controls.autoRotateSpeed = 0.4;
-      controls.enablePan = false;
+      controls.enablePan = true;
       controls.minDistance = 2;
       controls.maxDistance = 12;
       controls.target.set(0, 0.2, 0);
 
-      // Schöne Beleuchtung – produktorientiert
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
+      // SchÃ¶ne Beleuchtung â€“ produktorientiert
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
       scene.add(ambientLight);
 
-      const hemiLight = new THREE.HemisphereLight(0xffffff, 0xaaaaaa, 0.5);
+      const hemiLight = new THREE.HemisphereLight(0xffffff, 0x888888, 0.5);
       hemiLight.position.set(0, 20, 0);
       scene.add(hemiLight);
 
-      const keyLight = new THREE.DirectionalLight(0xffffff, 1.3);
-      keyLight.position.set(-4, 10, 6);
-      keyLight.target.position.set(0, 0, 0);
-      keyLight.castShadow = true;
-      keyLight.shadow.mapSize.width = 2048;
-      keyLight.shadow.mapSize.height = 2048;
-      keyLight.shadow.camera.near = 1;
-      keyLight.shadow.camera.far = 25;
-      keyLight.shadow.camera.left = -5;
-      keyLight.shadow.camera.right = 5;
-      keyLight.shadow.camera.top = 5;
-      keyLight.shadow.camera.bottom = -5;
-      keyLight.shadow.bias = -0.0005;
-      keyLight.shadow.normalBias = 0.02;
-      keyLight.shadow.radius = 3;
-      scene.add(keyLight);
-      scene.add(keyLight.target);
+      const mainLight = new THREE.DirectionalLight(0xffffff, 1.4);
+      mainLight.position.set(-5, 12, 8);
+      mainLight.castShadow = true;
+      mainLight.shadow.mapSize.width = 2048;
+      mainLight.shadow.mapSize.height = 2048;
+      mainLight.shadow.camera.near = 1;
+      mainLight.shadow.camera.far = 25;
+      mainLight.shadow.camera.left = -5;
+      mainLight.shadow.camera.right = 5;
+      mainLight.shadow.camera.top = 5;
+      mainLight.shadow.camera.bottom = -5;
+      mainLight.shadow.bias = -0.0005;
+      mainLight.shadow.normalBias = 0.02;
+      scene.add(mainLight);
 
-      const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
-      fillLight.position.set(5, 4, 4);
+      const fillLight = new THREE.DirectionalLight(0xffffff, 0.35);
+      fillLight.position.set(5, 5, 5);
       scene.add(fillLight);
 
-      const rimLight = new THREE.DirectionalLight(0x88aacc, 0.35);
-      rimLight.position.set(0, 3, -6);
+      const rimLight = new THREE.DirectionalLight(0x88ccff, 0.25);
+      rimLight.position.set(0, 5, -10);
       scene.add(rimLight);
 
       const groundSize = 12;
@@ -265,9 +265,41 @@
       groundPlane.receiveShadow = true;
       scene.add(groundPlane);
 
+      // Grid wie bei Maske/Roboter – gleiche Grafik-Optik
+      gridHelper = new THREE.GridHelper(12, 24, 0x14B8A6, 0xcccccc);
+      gridHelper.material.opacity = 0.15;
+      gridHelper.material.transparent = true;
+      gridHelper.position.y = -0.8;
+      scene.add(gridHelper);
+
       loadModel();
       window.addEventListener('resize', onResize);
-      animate();
+      window.addEventListener('keydown', onKeyDown);
+      // start rendering only when tab is visible to avoid background memory/CPU growth
+      if (!document.hidden) animate();
+      // pause/resume when tab visibility changes
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          isHidden = true;
+          pauseRendering();
+        } else {
+          isHidden = false;
+          resumeRendering();
+        }
+      });
+    }
+
+    function pauseRendering(){
+      if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
+      // stop controls auto-rotate to avoid work
+      try{ if(controls) controls.autoRotate = false; }catch(e){}
+    }
+
+    function resumeRendering(){
+      try{ if(controls) controls.autoRotate = true; }catch(e){}
+      // reset clock so delta doesn't spike
+      clock = new THREE.Clock();
+      if(!rafId) rafId = requestAnimationFrame(animate);
     }
 
     function formatNumber(num) {
@@ -314,7 +346,36 @@
             if (child.isMesh) {
               child.castShadow = true;
               child.receiveShadow = true;
+
+              // Detect actual flat planes (PNG decals): very few vertices + has texture
+              const geo = child.geometry;
+              const vtxCount = geo && geo.attributes && geo.attributes.position ? geo.attributes.position.count : 999;
+              const meshName = (child.name || '').toLowerCase();
+              const nameHintPlane = meshName.includes('plane') || meshName.includes('label') || meshName.includes('logo') ||
+                meshName.includes('sign') || meshName.includes('decal') || meshName.includes('bild');
+              const isActualPlane = vtxCount <= 6 && nameHintPlane;
+
               if (child.material) {
+                // If this is a real flat plane with a texture → transparent PNG material
+                const matArr = Array.isArray(child.material) ? child.material : [child.material];
+                if (isActualPlane && matArr.some(m => m.map)) {
+                  const mat = matArr[0];
+                  if (mat.map) {
+                    const tex = mat.map;
+                    tex.colorSpace = THREE.SRGBColorSpace;
+                    child.material = new THREE.MeshBasicMaterial({
+                      map: tex,
+                      transparent: true,
+                      side: THREE.DoubleSide,
+                      depthWrite: false,
+                      alphaTest: 0.05,
+                    });
+                    child.castShadow = false;
+                    child.renderOrder = 1;
+                    return; // skip normal material handling for this mesh
+                  }
+                }
+
                 const mats = Array.isArray(child.material) ? child.material : [child.material];
                 const newMats = mats.map((mat) => {
                   const matName = (mat.name || '').toLowerCase();
@@ -424,8 +485,27 @@
       renderer.setSize(width, height);
     }
 
+    const zoomStep = 0.4;
+    const minDist = 2;
+    const maxDist = 12;
+    function onKeyDown(e) {
+      if (!controls || !camera) return;
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const dir = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
+        const dist = camera.position.distanceTo(controls.target);
+        if (e.key === 'ArrowUp') {
+          const newDist = Math.max(minDist, dist - zoomStep);
+          camera.position.copy(controls.target).add(dir.multiplyScalar(newDist));
+        } else {
+          const newDist = Math.min(maxDist, dist + zoomStep);
+          camera.position.copy(controls.target).add(dir.multiplyScalar(newDist));
+        }
+      }
+    }
+
     function animate() {
-      requestAnimationFrame(animate);
+      rafId = requestAnimationFrame(animate);
       let delta = clock.getDelta();
       if (delta > 0.1) delta = 0.016;
       if (mixer) mixer.update(delta);
@@ -460,7 +540,8 @@
         isPlaying = true;
         animationText.textContent = 'Reverse';
       }
-      setTimeout(() => { isAnimating = false; }, (clip.duration * 1000) + 200);
+      if (animationTimeoutId) clearTimeout(animationTimeoutId);
+      animationTimeoutId = setTimeout(() => { isAnimating = false; animationTimeoutId = null; }, (clip.duration * 1000) + 200);
     };
 
     window.toggleWireframe = function() {
@@ -470,6 +551,60 @@
     };
 
     init();
+
+    // Dispose helpers â€” non-invasive: only run on teardown (pagehide / beforeunload)
+    function disposeMesh(mesh){
+      try{
+        if(mesh.geometry){ mesh.geometry.dispose(); }
+        if(mesh.material){
+          const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+          mats.forEach(m=>{
+            if(!m) return;
+            if(m.map) m.map.dispose();
+            if(m.lightMap) m.lightMap.dispose && m.lightMap.dispose();
+            if(m.emissiveMap) m.emissiveMap.dispose && m.emissiveMap.dispose();
+            if(m.normalMap) m.normalMap.dispose && m.normalMap.dispose();
+            if(m.metalnessMap) m.metalnessMap.dispose && m.metalnessMap.dispose();
+            if(m.roughnessMap) m.roughnessMap.dispose && m.roughnessMap.dispose();
+            if(m.dispose) m.dispose();
+          });
+        }
+      }catch(e){ console.warn('disposeMesh error', e); }
+    }
+
+    function disposeScene(root){
+      try{
+        if(!root) return;
+        root.traverse((node)=>{
+          if(node.isMesh){ disposeMesh(node); }
+        });
+      }catch(e){ console.warn('disposeScene error', e); }
+    }
+
+    function cleanup(){
+      // stop RAF
+      if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
+      // stop mixer
+      try{
+        if(mixer){ mixer.stopAllAction && mixer.stopAllAction(); if(model) mixer.uncacheRoot && mixer.uncacheRoot(model); mixer = null; }
+      }catch(e){ }
+      // remove controls
+      try{ controls?.dispose && controls.dispose(); controls = null; }catch(e){}
+      try{ window.removeEventListener('resize', onResize); }catch(e){}
+      try{ window.removeEventListener('keydown', onKeyDown); }catch(e){}
+      // clear timeouts
+      try{ if(animationTimeoutId) { clearTimeout(animationTimeoutId); animationTimeoutId = null; } }catch(e){}
+      // dispose scene meshes and renderer
+      try{
+        disposeScene(scene);
+        if(renderer){ renderer.dispose && renderer.dispose(); if(renderer.domElement && renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement); renderer = null; }
+      }catch(e){ console.warn('cleanup error', e); }
+    }
+
+    // Run cleanup when leaving the page to avoid leaked GPU/JS memory across navigations
+    window.addEventListener('pagehide', cleanup, { once: true });
+    window.addEventListener('beforeunload', cleanup, { once: true });
   </script>
 </body>
 </html>
+

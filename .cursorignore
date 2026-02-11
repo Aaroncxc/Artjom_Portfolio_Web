@@ -1,0 +1,74 @@
+# Build outputs & caches
+.next/
+.turbo/
+.vercel/
+dist/
+out/
+build/
+
+# Dependencies
+node_modules/
+/.pnp
+/.pnp.js
+
+# Runtime & package locks
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.*.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Public assets - not source code
+public/projects/*/model.fbx
+public/projects/*/model-preview.fbx
+public/projects/*/trailer.mp4
+public/projects/*/preview.mp4
+public/projects/*/pult-*.mp4
+public/projects/*/pult-*.png
+public/projects/*/abstract-bg.mp4
+public/projects/*/render-*.png
+public/videos/
+public/tools/ryuk-pp/index.js
+public/tools/ryuk-pp/index.wasm
+public/tools/ryuk-pp/*.worklet.js
+public/boards/*.json
+public/posts.json
+
+# Asset folders
+assets/3D/
+assets/Mp4/
+assets/*.png
+
+# Embedded HTML projects - external code
+public/projects/*/index.html
+
+# External vendor folders
+MultiWebsite/
+
+# Generated files
+next-env.d.ts
+
+tsconfig.tsbuildinfo
+
+# Large vendor / custom JS (rAF, avoid indexing)
+public/text-pointcloud.js

@@ -203,10 +203,74 @@
       background: rgba(99, 102, 241, 0.25) !important;
       border-color: rgba(99, 102, 241, 0.6) !important;
     }
-    .btn-fp.active {
+.btn-fp.active {
       background: rgba(99, 102, 241, 0.9) !important;
       border-color: rgba(99, 102, 241, 1) !important;
       color: white !important;
+    }
+
+    /* Dropdown for camera views */
+    .camera-dropdown {
+      position: relative;
+      pointer-events: auto;
+    }
+    .camera-dropdown .btn-dropdown {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 14px;
+      border-radius: 28px;
+      min-width: 44px;
+      height: clamp(44px, 12vmin, 56px);
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .camera-dropdown .btn-dropdown svg {
+      width: 20px;
+      height: 20px;
+    }
+    .camera-dropdown-menu {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 0;
+      min-width: 180px;
+      padding: 6px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(28, 28, 28, 0.1);
+      box-shadow: 0 8px 24px rgba(28, 28, 28, 0.12);
+      z-index: 100;
+    }
+    .camera-dropdown-menu.open {
+      display: block;
+    }
+    .camera-dropdown-menu button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: rgba(28, 28, 28, 0.9);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+      text-align: left;
+    }
+    .camera-dropdown-menu button:hover {
+      background: rgba(20, 184, 166, 0.12);
+      color: #0d9488;
+    }
+    .camera-dropdown-menu button svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      opacity: 0.7;
     }
     
     #fp-overlay {
@@ -364,19 +428,33 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
           </svg>
         </button>
-        <!-- View 3: Badezimmer -->
-        <button class="btn btn-accent" id="view3-btn" onclick="goToView3()" title="Badezimmer">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v4a1 1 0 001 1h3m10-5v4a1 1 0 01-1 1h-3m-4 0h4m-8 4v2a2 2 0 002 2h8a2 2 0 002-2v-2M5 12h14"/>
-          </svg>
-        </button>
-        <!-- View 2: Nahansicht -->
-        <button class="btn btn-accent" id="view2-btn" onclick="goToView2()" title="Nahansicht">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-          </svg>
-        </button>
+        <!-- Camera views dropdown -->
+        <div class="camera-dropdown" id="camera-dropdown">
+          <button class="btn btn-accent btn-dropdown" id="camera-dropdown-btn" onclick="toggleCameraDropdown()" title="Kameraansichten">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+            <span>Kamera</span>
+          </button>
+          <div class="camera-dropdown-menu" id="camera-dropdown-menu">
+            <button type="button" onclick="goToOverview(); closeCameraDropdown();">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+              Ãœbersicht
+            </button>
+            <button type="button" onclick="goToView2(); closeCameraDropdown();">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              Nahansicht
+            </button>
+            <button type="button" onclick="goToView3(); closeCameraDropdown();">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v4a1 1 0 001 1h3m10-5v4a1 1 0 01-1 1h-3m-4 0h4m-8 4v2a2 2 0 002 2h8a2 2 0 002-2v-2M5 12h14"/></svg>
+              Badezimmer
+            </button>
+            <button type="button" onclick="goToView4(); closeCameraDropdown();">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 4V20M17 4V20M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
+              RÃ¼ckansicht
+            </button>
+          </div>
+        </div>
         <!-- Roof Toggle Button -->
         <button class="btn btn-accent" id="roof-btn" onclick="toggleRoof()" title="Dach ein/ausblenden">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" id="roof-icon">
@@ -433,6 +511,10 @@
     const view3CameraPos = new THREE.Vector3(0.86, 0.58, 0.70);
     const view3Target = new THREE.Vector3(0.74, 0.33, 0.59);
     
+    // Fourth view (RÃ¼ckansicht)
+    const view4CameraPos = new THREE.Vector3(0.68, 0.24, -0.73);
+    const view4Target = new THREE.Vector3(0.87, 0.15, -0.51);
+    
     // ========== FIRST PERSON MODE ==========
     let firstPersonActive = false;
     const fpStartPos = new THREE.Vector3(-0.28, 0.24, -0.04);
@@ -479,6 +561,8 @@
     const fpBtn = document.getElementById('fp-btn');
     const fpOverlay = document.getElementById('fp-overlay');
     const roofBtn = document.getElementById('roof-btn');
+    const cameraDropdown = document.getElementById('camera-dropdown-menu');
+    const cameraDropdownBtn = document.getElementById('camera-dropdown-btn');
     const vertexCountEl = document.getElementById('vertex-count');
     const triangleCountEl = document.getElementById('triangle-count');
 
@@ -911,6 +995,18 @@
       renderer.render(scene, camera);
     }
 
+    window.toggleCameraDropdown = function() {
+      if (cameraDropdown) cameraDropdown.classList.toggle('open');
+    };
+    window.closeCameraDropdown = function() {
+      if (cameraDropdown) cameraDropdown.classList.remove('open');
+    };
+    document.addEventListener('click', function(e) {
+      if (cameraDropdown && cameraDropdown.classList.contains('open') && !cameraDropdown.contains(e.target) && !cameraDropdownBtn.contains(e.target)) {
+        cameraDropdown.classList.remove('open');
+      }
+    });
+    
     window.toggleWireframe = function() {
       showWireframe = !showWireframe;
       if (wireframeGroup) wireframeGroup.visible = showWireframe;
@@ -1005,6 +1101,28 @@
       cameraAnimProgress = 0;
       cameraAnimating = true;
       controls.autoRotate = false;
+    };
+    
+    window.goToView4 = function() {
+      if (cameraAnimating || firstPersonActive) return;
+      cameraStartPos.copy(camera.position);
+      cameraStartTarget.copy(controls.target);
+      cameraEndPos.copy(view4CameraPos);
+      cameraEndTarget.copy(view4Target);
+      cameraAnimProgress = 0;
+      cameraAnimating = true;
+      controls.autoRotate = false;
+    };
+    
+    window.goToOverview = function() {
+      if (cameraAnimating || firstPersonActive) return;
+      cameraStartPos.copy(camera.position);
+      cameraStartTarget.copy(controls.target);
+      cameraEndPos.copy(originalCameraPos);
+      cameraEndTarget.copy(originalTarget);
+      cameraAnimProgress = 0;
+      cameraAnimating = true;
+      controls.autoRotate = true;
     };
     
     // ========== FIRST PERSON TOGGLE ==========

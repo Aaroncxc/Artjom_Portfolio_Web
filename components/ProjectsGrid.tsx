@@ -6,6 +6,45 @@ import { ProjectSlide } from './ProjectSlide';
 import { Project3DPreview } from './Project3DPreview';
 import { Project, ProjectType } from '@/lib/types';
 
+/** Video thumbnail that only autoplays when visible in the viewport */
+function LazyVideo({ src, className }: { src: string; className?: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.25 }
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      src={src}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      onLoadedMetadata={(e) => {
+        const v = e.currentTarget;
+        if (v.currentTime < 1) v.currentTime = 1;
+      }}
+      className={className}
+    />
+  );
+}
+
 interface ProjectsGridProps {
   visible: boolean;
 }
@@ -288,20 +327,10 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   onTouchMove={(e) => project.model3dPath && handleTileTouchMove(e, project.id)}
                   onTouchEnd={() => project.model3dPath && handleTileTouchEnd()}
                 >
-                  {/* Video Preview for video projects - starts at 1 second */}
+                  {/* Video Preview – lazy: only autoplay when visible via IntersectionObserver */}
                   {project.type === 'video' && project.videoUrl && (
-                    <video
+                    <LazyVideo
                       src={`${project.videoUrl}#t=1`}
-                      muted
-                      loop
-                      playsInline
-                      autoPlay
-                      onLoadedMetadata={(e) => {
-                        const video = e.currentTarget;
-                        if (video.currentTime < 1) {
-                          video.currentTime = 1;
-                        }
-                      }}
                       className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                     />
                   )}
@@ -315,16 +344,29 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                     />
                   )}
                   
-                  {/* 3D Preview for projects with model3dPath - always visible */}
+                  {/* 3D Preview – Bild wenn nicht gehovert (außer Video-Projekte wie Pult: da nur Video) */}
                   {project.model3dPath && (
-                    <Project3DPreview
-                      modelPath={project.model3dPath}
-                      isHovered={hoveredProject === project.id}
-                      mousePosition={mousePos[project.id] || { x: 0.5, y: 0.5 }}
-                      rotationX={project.model3dRotationX}
-                      materialColor={project.model3dMaterialColor}
-                      offsetY={project.model3dOffsetY}
-                    />
+                    <>
+                      {/* Projektbild als Vorschau – nur bei Nicht-Video-Projekten; Pult zeigt nur Video */}
+                      {hoveredProject !== project.id && project.type !== 'video' && (
+                        <img
+                          src={project.thumbnail}
+                          alt={project.title}
+                          className="absolute inset-0 z-10 w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                        />
+                      )}
+                      {/* 3D-Modell – nur bei Hover gemountet und geladen */}
+                      {hoveredProject === project.id && (
+                        <Project3DPreview
+                          modelPath={project.model3dPath}
+                          isHovered={true}
+                          mousePosition={mousePos[project.id] || { x: 0.5, y: 0.5 }}
+                          rotationX={project.model3dRotationX}
+                          materialColor={project.model3dMaterialColor}
+                          offsetY={project.model3dOffsetY}
+                        />
+                      )}
+                    </>
                   )}
                   
                   {/* Hover Overlay - always on top */}

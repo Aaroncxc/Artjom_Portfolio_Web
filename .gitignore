@@ -1,10 +1,46 @@
-node_modules
-.next
-dist
-.DS_Store
-__MACOSX
-*.log
-.vscode
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+/.next
+/out
+/build
+/.turbo
+.vercel
+
+# Generated
+next-env.d.ts
+
+# Environment
 .env
 .env.local
-.env*.local
+.env.*.local
+.env.*.txt
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+__MACOSX
+*.log
+
+# Runtime caches
+.cache
+.eslintcache
+.tslintcache

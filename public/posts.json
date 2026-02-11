@@ -1,5 +1,43 @@
 {
-  "posts": [
+  "posts": [    {
+      "id": "18",
+      "slug": "multiconcert",
+      "title": "MultiConcert",
+      "description": "A futuristic 3D-rendered concert stage featuring the Multikunst brand. Dramatic lighting, masked performers, and a striking stage setup with neon accents and digital displays create an immersive visual experience.",
+      "date": "2025-07-25",
+      "tags": ["3D", "concert", "event", "visualization"],
+      "type": "image",
+      "thumbnail": "/projects/multiconcert/konzuert-23.png",
+      "images": ["/projects/multiconcert/konzuert-23.png"],
+      "author": "Multikunst",
+      "gallery": [
+        { "type": "image", "src": "/projects/multiconcert/konzuert-23.png", "title": "Stage Overview" },
+        { "type": "image", "src": "/projects/multiconcert/konzuert-5542.png", "title": "Stage Detail" },
+        { "type": "image", "src": "/projects/multiconcert/konzuert161.png", "title": "Concert Scene" },
+        { "type": "image", "src": "/projects/multiconcert/konzuert171.png", "title": "Mask & Display" },
+        { "type": "image", "src": "/projects/multiconcert/konzuert181.png", "title": "Performance" }
+      ]
+    },
+    {
+      "id": "17",
+      "slug": "tshirt-jan",
+      "title": "T-Shirt Jan",
+      "description": "A visual project showcasing T-shirt designs and outdoor photography. Featuring nature-inspired H.265 video and striking imagery.",
+      "date": "2026-02-08",
+      "tags": ["video", "photography", "fashion", "design"],
+      "type": "video",
+      "thumbnail": "/projects/tshirt-jan/shirt1.png",
+      "videoUrl": "/projects/tshirt-jan/shirt-nature.mp4",
+      "author": "JanMitGun",
+      "gallery": [
+        { "type": "image", "src": "/projects/tshirt-jan/shirt1.png", "title": "Shirt" },
+        { "type": "image", "src": "/projects/tshirt-jan/djungle.png", "title": "Jungle" },
+        { "type": "image", "src": "/projects/tshirt-jan/outdoor1a.png", "title": "Outdoor" },
+        { "type": "image", "src": "/projects/tshirt-jan/outdoor2.png", "title": "Outdoor 2" },
+        { "type": "image", "src": "/projects/tshirt-jan/outdoor2a.png", "title": "Outdoor 2a" },
+        { "type": "image", "src": "/projects/tshirt-jan/outdoor3.png", "title": "Outdoor 3" }
+      ]
+    },
     {
       "id": "16",
       "slug": "pult-vacuum",
@@ -8,7 +46,7 @@
       "date": "2026-02-08",
       "tags": ["3D", "product design", "concept", "industrial"],
       "type": "video",
-      "thumbnail": "/projects/pult-vacuum/pult-1.png",
+      "thumbnail": "/projects/pult-vacuum/pult-90grad.png",
       "videoUrl": "/projects/pult-vacuum/pult-final.mp4",
       "model3dPath": "/projects/pult-vacuum/model.fbx",
       "model3dRotationX": 0,
@@ -18,17 +56,10 @@
       "author": "AaronCxC",
       "gallery": [
         { "type": "video", "src": "/projects/pult-vacuum/abstract-bg.mp4", "title": "Abstract Shape Animation" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-1.png", "title": "Side Perspective" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-2.png", "title": "Three Quarter View" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-3.png", "title": "Handguard Detail" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-4.png", "title": "Upright View" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-5.png", "title": "Front Barrel View" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-6.png", "title": "Side Profile" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-7.png", "title": "Product Presentation" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-8.png", "title": "Specification Sheet" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-9.png", "title": "Barrel Detail" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-10.png", "title": "Double Composition" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-11.png", "title": "Close-up Detail" }
+        { "type": "image", "src": "/projects/pult-vacuum/pult-90grad.png", "title": "PULT – Overview" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-90grad-2.png", "title": "Detail" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-90grad-3.png", "title": "Keep Cleaning" },
+        { "type": "image", "src": "/projects/pult-vacuum/pult-90grad-4.png", "title": "Design Detail" }
       ]
     },
     {
@@ -55,15 +86,15 @@
       "date": "2026-02-05",
       "tags": ["3D", "sculpture", "interactive", "webgl"],
       "type": "html",
-      "thumbnail": "/projects/rovolto-lost-files/render-1.png",
+      "thumbnail": "/projects/rovolto-lost-files/rovolto.png",
       "htmlPath": "/projects/rovolto-lost-files/index.html",
       "model3dPath": "/projects/rovolto-lost-files/model.fbx",
       "model3dRotationX": 0,
       "model3dMaterialColor": "#FF8C00",
       "author": "AaronCxC",
       "gallery": [
-        { "type": "image", "src": "/projects/rovolto-lost-files/render-1.png", "title": "Close-up View" },
-        { "type": "image", "src": "/projects/rovolto-lost-files/render-2.png", "title": "Full Body" },
+        { "type": "image", "src": "/projects/rovolto-lost-files/rovolto.png", "title": "Close-up View" },
+        { "type": "image", "src": "/projects/rovolto-lost-files/rovolto1.png", "title": "Full Body" },
         { "type": "image", "src": "/projects/rovolto-lost-files/render-3.png", "title": "Detail Render" },
         { "type": "image", "src": "/projects/rovolto-lost-files/render-4.png", "title": "Front View" },
         { "type": "image", "src": "/projects/rovolto-lost-files/render-5.png", "title": "Side View" },
@@ -79,16 +110,13 @@
       "date": "2026-02-04",
       "tags": ["3D", "product design", "concept", "cosmetics"],
       "type": "image",
-      "thumbnail": "/projects/ice-gel/thumbnail.png",
-      "images": ["/projects/ice-gel/thumbnail.png"],
+      "thumbnail": "/projects/ice-gel/test-render-4-taj.png",
+      "images": ["/projects/ice-gel/test-render-4-taj.png"],
       "author": "AaronCxC",
       "gallery": [
-        { "type": "image", "src": "/projects/ice-gel/cosmetic-1.png", "title": "Dropper Bottle – Pflege für strahlende Haut" },
-        { "type": "image", "src": "/projects/ice-gel/cosmetic-2.png", "title": "Iridescent Serum Bottle" },
-        { "type": "image", "src": "/projects/ice-gel/cosmetic-3.png", "title": "Feuchtigkeitscrème – Strahlende Haut" },
-        { "type": "image", "src": "/projects/ice-gel/cosmetic-4.png", "title": "Dropper Detail" },
-        { "type": "image", "src": "/projects/ice-gel/cosmetic-5.png", "title": "Product Composition" }
-      ]
+        { "type": "image", "src": "/projects/ice-gel/final2.png", "title": "Iridescent Serum Bottle" },
+        { "type": "image", "src": "/projects/ice-gel/multikunst-freitag.png", "title": "Feuchtigkeitscrème – Strahlende Haut" },
+        { "type": "image", "src": "/projects/ice-gel/multikunst-freitag23w.png", "title": "Product Composition" },{ "type": "image", "src": "/projects/ice-gel/test-render-2-taj.png", "title": "Ice Gel Render" },{ "type": "image", "src": "/projects/ice-gel/test-render-4-taj.png", "title": "Abstract Composition" }]
     },
     {
       "id": "12",
@@ -141,12 +169,10 @@
       "date": "2026-01-29",
       "tags": ["3D", "sculpture", "interactive", "webgl"],
       "type": "html",
-      "thumbnail": "https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=800&q=80",
+      "thumbnail": "/projects/mask-sculpture/look-mask-4.png",
       "htmlPath": "/projects/mask-sculpture/index.html",
       "model3dPath": "/projects/mask-sculpture/model.fbx",
-      "model3dOffsetY": 0,
-      "author": "AaronCxC"
-    }
+      "model3dOffsetY": 0,"author": "AaronCxC","gallery": [{ "type": "image", "src": "/projects/mask-sculpture/look-mask-4.png", "title": "Mask Sculpture" },{ "type": "image", "src": "/projects/mask-sculpture/youtube-back-10.png", "title": "YouTube Back" }] }
   ],
   "lastUpdated": "2026-02-06T16:20:00Z"
 }
