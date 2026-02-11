@@ -128,6 +128,18 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     setSelectedIndex(index);
   }, []);
 
+  // Listen for external open-project events (e.g. from ArtistPage)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const slug = (e as CustomEvent).detail?.slug;
+      if (!slug) return;
+      const idx = filteredProjects.findIndex((p) => p.slug === slug);
+      if (idx >= 0) openProject(filteredProjects[idx], idx);
+    };
+    window.addEventListener('open-project', handler);
+    return () => window.removeEventListener('open-project', handler);
+  }, [filteredProjects, openProject]);
+
   // Navigate to next/previous project
   const navigateProject = useCallback((direction: 'prev' | 'next') => {
     if (selectedIndex === -1) return;

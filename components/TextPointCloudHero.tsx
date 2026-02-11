@@ -26,6 +26,8 @@ export function TextPointCloudHero({ onReady }: TextPointCloudHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const scriptLoaded = useRef(false);
   const [presetOverrides, setPresetOverrides] = useState(() => getResponsivePreset());
+  const [morphX, setMorphX] = useState(0);
+  const [morphY, setMorphY] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => onReady?.(), 100);
@@ -57,6 +59,8 @@ export function TextPointCloudHero({ onReady }: TextPointCloudHeroProps) {
     showSolidWhenIdle: true,
     transitionSpeed: 0.2,
     burstStrength: 70,
+    morphAmplitude: 70,
+    morphFreq: 0.0025,
   };
 
   return (
@@ -80,10 +84,41 @@ export function TextPointCloudHero({ onReady }: TextPointCloudHeroProps) {
             inset: 0,
           }}
           preset={JSON.stringify(preset)}
+          {...{ 'morph-x': morphX, 'morph-y': morphY }}
         />
         
-        {/* Scroll indicator */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-10">
+        {/* Interactive controls + Scroll indicator */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-5 z-10 w-full max-w-[280px] px-4">
+          {/* Slider controls */}
+          <div className="w-full flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-2">
+              <label className="text-[10px] text-mk-text-muted uppercase tracking-wider">Wave X</label>
+              <span className="text-[10px] text-mk-text-muted tabular-nums">{Math.round(morphX * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.01}
+              value={morphX}
+              onChange={(e) => setMorphX(parseFloat(e.target.value))}
+              className="w-full h-1.5 rounded-full bg-[rgba(28,28,28,0.12)] appearance-none cursor-pointer accent-[#1C1C1C] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[rgba(28,28,28,0.7)] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-all [&::-webkit-slider-thumb]:hover:bg-[#1C1C1C]"
+            />
+            <div className="flex items-center justify-between gap-2">
+              <label className="text-[10px] text-mk-text-muted uppercase tracking-wider">Wave Y</label>
+              <span className="text-[10px] text-mk-text-muted tabular-nums">{Math.round(morphY * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.01}
+              value={morphY}
+              onChange={(e) => setMorphY(parseFloat(e.target.value))}
+              className="w-full h-1.5 rounded-full bg-[rgba(28,28,28,0.12)] appearance-none cursor-pointer accent-[#1C1C1C] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[rgba(28,28,28,0.7)] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-all [&::-webkit-slider-thumb]:hover:bg-[#1C1C1C]"
+            />
+          </div>
+
           <span className="text-xs text-mk-text-muted tracking-widest uppercase">
             Scroll to explore
           </span>
@@ -107,6 +142,8 @@ declare global {
         React.HTMLAttributes<HTMLElement> & {
           preset?: string;
           text?: string;
+          'morph-x'?: number;
+          'morph-y'?: number;
         },
         HTMLElement
       >;

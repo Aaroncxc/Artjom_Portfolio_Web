@@ -34,3 +34,18 @@ export interface PostsData {
   posts: Project[];
   lastUpdated: string;
 }
+
+export interface MemberLink {
+  label: string;
+  url: string;
+}
+
+export interface Member {
+  id: string;
+  name: string;
+  handle: string;
+  roles: string[];
+  bio: string;
+  isFounder?: boolean;
+  links: MemberLink[];
+}

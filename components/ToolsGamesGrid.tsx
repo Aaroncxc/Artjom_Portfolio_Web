@@ -14,6 +14,7 @@ interface ToolGame {
   screenshots: string[];
   tags: string[];
   embeddable?: boolean; // If true, embed as iframe in detail view instead of external link
+  author?: string; // Creator handle
 }
 
 // Static data for tools and games
@@ -29,6 +30,7 @@ const toolsGamesData: ToolGame[] = [
       '/tools/coincraft-thumb.png',
     ],
     tags: ['game', 'puzzle', 'interactive'],
+    author: 'AaronCxC',
   },
   {
     id: 'occupiedvfx',
@@ -40,6 +42,7 @@ const toolsGamesData: ToolGame[] = [
     thumbnailVideo: '/tools/occupiedvfx-video.mp4',
     screenshots: [],
     tags: ['vfx', 'art', 'visual'],
+    author: 'oxxupe',
   },
   {
     id: 'ryuk-pp',
@@ -53,6 +56,7 @@ const toolsGamesData: ToolGame[] = [
     ],
     tags: ['game', 'platformer', 'pixel-art', 'godot'],
     embeddable: true,
+    author: 'oxxupe',
   },
 ];
 
@@ -264,14 +268,19 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                     {typeIcons[item.type]}
                   </div>
 
-                  {/* External Link Indicator */}
-                  <div className="absolute top-3 left-3 z-20">
+                  {/* External Link Indicator + Author */}
+                  <div className="absolute top-3 left-3 z-20 flex items-center gap-2">
                     <span className="px-2 py-1 rounded-full bg-[rgba(99,102,241,0.9)] text-white text-[10px] font-medium uppercase tracking-wider flex items-center gap-1">
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
                       Live
                     </span>
+                    {item.author && (
+                      <span className="px-2 py-1 rounded-full bg-[rgba(255,255,255,0.85)] backdrop-blur-sm text-mk-text text-[10px] font-medium border border-[rgba(28,28,28,0.08)]">
+                        @{item.author}
+                      </span>
+                    )}
                   </div>
                 </div>
 

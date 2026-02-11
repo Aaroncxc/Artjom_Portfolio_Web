@@ -38,7 +38,7 @@ function safeParseJSON(str){
 }
 
 class TextPointcloud extends HTMLElement{
-  static get observedAttributes(){ return ["preset","text","preset-src"]; }
+  static get observedAttributes(){ return ["preset","text","preset-src","morph-x","morph-y"]; }
 
   constructor(){
     super();
@@ -129,6 +129,14 @@ class TextPointcloud extends HTMLElement{
     if(name === "preset-src"){
       const v = (newValue || "").trim();
       if(v) this.loadPreset(v);
+    }
+    if(name === "morph-x"){
+      const v = parseFloat(newValue);
+      this.preset.morphX = isNaN(v) ? 0 : clamp(v, 0, 1);
+    }
+    if(name === "morph-y"){
+      const v = parseFloat(newValue);
+      this.preset.morphY = isNaN(v) ? 0 : clamp(v, 0, 1);
     }
   }
 
@@ -492,7 +500,12 @@ class TextPointcloud extends HTMLElement{
     const transitionSpeed = Number(p.transitionSpeed) || 0.08;
     
     // Target opacity: 1 when mouse is inside (show points), 0 when outside (show solid)
-    const targetOpacity = m.inside ? 1 : 0;
+    let targetOpacity = m.inside ? 1 : 0;
+    // External morph (0-1): sliders force points visible and apply formula
+    const morphX = Number(p.morphX) || 0;
+    const morphY = Number(p.morphY) || 0;
+    const morphFactor = Math.max(morphX, morphY);
+    if (morphFactor > 0) targetOpacity = Math.max(targetOpacity, morphFactor);
     // Smoothly transition
     this.state.pointsOpacity = lerp(this.state.pointsOpacity, targetOpacity, transitionSpeed);
     
@@ -524,11 +537,20 @@ class TextPointcloud extends HTMLElement{
     ctx.fillStyle = color;
     ctx.globalAlpha = this.state.pointsOpacity;
 
+    const morphAmp = (Number(p.morphAmplitude) || 60) * this.state.dpr;
+    const morphFreq = Number(p.morphFreq) || 0.002;
+
     for(const pt of this.state.points){
       // Return force: only apply when NOT clicking (so points return after release)
       if(!gravityActive){
-        pt.vx += (pt.ox - pt.x) * k;
-        pt.vy += (pt.oy - pt.y) * k;
+        let tx = pt.ox, ty = pt.oy;
+        if (morphX > 0 || morphY > 0) {
+          const t = now * morphFreq;
+          tx = pt.ox + morphX * morphAmp * Math.sin(t + pt.ox * 0.008 + pt.oy * 0.005);
+          ty = pt.oy + morphY * morphAmp * Math.cos(t + pt.oy * 0.008 + pt.ox * 0.005);
+        }
+        pt.vx += (tx - pt.x) * k;
+        pt.vy += (ty - pt.y) * k;
       }
 
       // Hover repulsion effect
