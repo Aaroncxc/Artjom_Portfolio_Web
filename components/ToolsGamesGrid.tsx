@@ -58,6 +58,20 @@ const toolsGamesData: ToolGame[] = [
     embeddable: true,
     author: 'oxxupe',
   },
+  {
+    id: 'multiview',
+    title: 'MultiView',
+    description: '3D Editor by Multikunst. Create and explore 3D scenes in the browser with an intuitive interface for modeling, materials, and rendering. Make your 3D models ready for web.',
+    url: 'https://multiview-blue.vercel.app',
+    type: 'tool',
+    thumbnail: '/tools/Multiview_Multikunst.png',
+    screenshots: [
+      '/tools/Multiview_Multikunst.png',
+      '/tools/Multiview_Viewport.png',
+    ],
+    tags: ['3D', 'editor', 'tool', 'creative'],
+    author: 'AaronCxC',
+  },
 ];
 
 interface ToolsGamesGridProps {

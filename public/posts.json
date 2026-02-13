@@ -1,5 +1,22 @@
 {
   "posts": [    {
+      "id": "19",
+      "slug": "jan-helm",
+      "title": "Jan Helm",
+      "description": "Helmet design project by Jan Boetker. 3D-rendered helmet studies and detail views.",
+      "date": "2026-02-15",
+      "tags": ["3D", "design", "helmet"],
+      "type": "image",
+      "thumbnail": "/projects/jan-helm/helmet1-alt.png",
+      "images": ["/projects/jan-helm/helmet1-alt.png"],
+      "author": "JanMitGun",
+      "gallery": [
+        { "type": "image", "src": "/projects/jan-helm/helmet1-alt.png", "title": "Helmet" },
+        { "type": "image", "src": "/projects/jan-helm/helmet3.png", "title": "Helmet Detail" },
+        { "type": "image", "src": "/projects/jan-helm/render6.png", "title": "Render" }
+      ]
+    },
+    {
       "id": "18",
       "slug": "multiconcert",
       "title": "MultiConcert",
