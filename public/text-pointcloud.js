@@ -1,4 +1,4 @@
-// text-pointcloud-module.js
+﻿// text-pointcloud-module.js
 // Usage:
 // import "./text-pointcloud-module.js"
 // <text-pointcloud style="width:600px;height:320px" preset='{"text":"HELLO"}'></text-pointcloud>
@@ -30,7 +30,10 @@ const DEFAULTS = {
   "gravityOnClick": true,
   "showSolidWhenIdle": true,
   "transitionSpeed": 0.08,
-  "burstStrength": 8
+  "burstStrength": 8,
+  "holdOpen": false,
+    "wanderStrength": 0,
+  "explosionMotionScale": 0.45
 };
 
 function safeParseJSON(str){
@@ -38,7 +41,7 @@ function safeParseJSON(str){
 }
 
 class TextPointcloud extends HTMLElement{
-  static get observedAttributes(){ return ["preset","text","preset-src","morph-x","morph-y"]; }
+  static get observedAttributes(){ return ["preset","text","preset-src","morph-x","morph-y","hold-open","return-force","wander-strength","point-damping","show-solid-when-idle","explosion-motion-scale"]; }
 
   constructor(){
     super();
@@ -137,6 +140,30 @@ class TextPointcloud extends HTMLElement{
     if(name === "morph-y"){
       const v = parseFloat(newValue);
       this.preset.morphY = isNaN(v) ? 0 : clamp(v, 0, 1);
+    }
+    if(name === "hold-open"){
+      const v = (newValue || "").trim().toLowerCase();
+      this.preset.holdOpen = v !== "" && v !== "0" && v !== "false";
+    }
+    if(name === "return-force"){
+      const v = parseFloat(newValue);
+      if(!isNaN(v)) this.preset.returnForce = v;
+    }
+    if(name === "wander-strength"){
+      const v = parseFloat(newValue);
+      this.preset.wanderStrength = isNaN(v) ? 0 : Math.max(0, v);
+    }
+    if(name === "point-damping"){
+      const v = parseFloat(newValue);
+      if(!isNaN(v)) this.preset.damping = v;
+    }
+    if(name === "explosion-motion-scale"){
+      const v = parseFloat(newValue);
+      this.preset.explosionMotionScale = isNaN(v) ? 0.45 : clamp(v, 0.05, 1);
+    }
+    if(name === "show-solid-when-idle"){
+      const v = (newValue || "").trim().toLowerCase();
+      this.preset.showSolidWhenIdle = v !== "false" && v !== "0";
     }
   }
 
@@ -506,6 +533,7 @@ class TextPointcloud extends HTMLElement{
     const morphY = Number(p.morphY) || 0;
     const morphFactor = Math.max(morphX, morphY);
     if (morphFactor > 0) targetOpacity = Math.max(targetOpacity, morphFactor);
+    if (p.holdOpen === true) targetOpacity = 1;
     // Smoothly transition
     this.state.pointsOpacity = lerp(this.state.pointsOpacity, targetOpacity, transitionSpeed);
     
@@ -517,9 +545,15 @@ class TextPointcloud extends HTMLElement{
     const strength = Number(p.strength)||2.2;
     const dragInfluence = Number(p.drag)||1.6;
     const turb = Number(p.noise)||0.55;
-    const k = Number(p.returnForce)||0.07;
+    const kRaw = Number(p.returnForce);
+    const k = Number.isFinite(kRaw) ? kRaw : 0.07;
     const damping = Number(p.damping)||0.90;
     const gravity = Number(p.gravityStrength)||0.5;
+
+    // Slow-mo during click-burst and free drift (holdOpen). Full speed for idle hover.
+    const explSlowRaw = Number(p.explosionMotionScale);
+    const explSlow = Number.isFinite(explSlowRaw) ? clamp(explSlowRaw, 0.05, 1) : 0.45;
+    const motionStep = (p.holdOpen === true || gravityActive) ? explSlow : 1;
 
     const ps = (Number(p.pointSize)||2.2) * this.state.dpr;
     const color = p.color || "#E8EEF7";
@@ -541,16 +575,26 @@ class TextPointcloud extends HTMLElement{
     const morphFreq = Number(p.morphFreq) || 0.002;
 
     for(const pt of this.state.points){
-      // Return force: only apply when NOT clicking (so points return after release)
+      // Return force: pull back toward text shape — skipped after "explode" (holdOpen)
       if(!gravityActive){
-        let tx = pt.ox, ty = pt.oy;
-        if (morphX > 0 || morphY > 0) {
-          const t = now * morphFreq;
-          tx = pt.ox + morphX * morphAmp * Math.sin(t + pt.ox * 0.008 + pt.oy * 0.005);
-          ty = pt.oy + morphY * morphAmp * Math.cos(t + pt.oy * 0.008 + pt.ox * 0.005);
+        const holdOpen = p.holdOpen === true;
+        if(!holdOpen){
+          let tx = pt.ox, ty = pt.oy;
+          if (morphX > 0 || morphY > 0) {
+            const t = now * morphFreq;
+            tx = pt.ox + morphX * morphAmp * Math.sin(t + pt.ox * 0.008 + pt.oy * 0.005);
+            ty = pt.oy + morphY * morphAmp * Math.cos(t + pt.oy * 0.008 + pt.ox * 0.005);
+          }
+          pt.vx += (tx - pt.x) * k;
+          pt.vy += (ty - pt.y) * k;
+        } else {
+          const wander = Number(p.wanderStrength);
+          const wanderAmt = Number.isFinite(wander) ? wander : 0;
+          if(wanderAmt > 0){
+            pt.vx += (Math.random()-0.5) * wanderAmt * dt * motionStep;
+            pt.vy += (Math.random()-0.5) * wanderAmt * dt * motionStep;
+          }
         }
-        pt.vx += (tx - pt.x) * k;
-        pt.vy += (ty - pt.y) * k;
       }
 
       // Hover repulsion effect
@@ -586,18 +630,18 @@ class TextPointcloud extends HTMLElement{
           // Random burst strength using burstStrength parameter
           const burstBase = Number(p.burstStrength) || 8;
           const burst = (0.5 + Math.random() * 1.5) * burstBase;
-          pt.vx += nx * burst;
-          pt.vy += ny * burst - (burstBase * 0.25); // slight upward component first
+          pt.vx += nx * burst * motionStep;
+          pt.vy += (ny * burst - (burstBase * 0.25)) * motionStep; // slight upward component first
           // Assign unique fall speed multiplier
           pt.fallSpeed = 0.7 + Math.random() * 0.8;
         }
         
         // Apply gravity with individual fall speed
         const fallMultiplier = pt.fallSpeed || 1;
-        pt.vy += gravity * fallMultiplier * 60 * dt;
+        pt.vy += gravity * fallMultiplier * 60 * dt * motionStep;
         
         // Add slight horizontal drift for more natural falling
-        const drift = (Math.random() - 0.5) * 0.15 * dt * 60;
+        const drift = (Math.random() - 0.5) * 0.15 * dt * 60 * motionStep;
         pt.vx += drift;
       } else {
         // Reset falling state when not clicking
@@ -605,9 +649,18 @@ class TextPointcloud extends HTMLElement{
       }
 
       pt.vx *= damping; pt.vy *= damping;
-      pt.x += pt.vx; pt.y += pt.vy;
+      pt.x += pt.vx * motionStep; pt.y += pt.vy * motionStep;
+
+      if(p.holdOpen === true){
+        const pad = 6 * this.state.dpr;
+        if(pt.x < pad){ pt.x = pad; pt.vx *= -0.55; }
+        else if(pt.x > W - pad){ pt.x = W - pad; pt.vx *= -0.55; }
+        if(pt.y < pad){ pt.y = pad; pt.vy *= -0.55; }
+        else if(pt.y > H - pad){ pt.y = H - pad; pt.vy *= -0.55; }
+      }
 
       ctx.beginPath();
+
       ctx.arc(pt.x, pt.y, ps, 0, Math.PI*2);
       ctx.fill();
     }

@@ -24,6 +24,7 @@
   --accent-cyan: #14B8A6;
   --accent-violet: #8B5CF6;
   --accent-coral: #F43F5E;
+  --brand-letter-spacing: -0.1em;
 }
 
 * {
@@ -58,16 +59,68 @@ body[data-modal-open="true"] nav {
 body {
   background: var(--color-bg-1);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: Arial, sans-serif;
+  letter-spacing: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Hero scroll lock */
+/* Keep typography consistent across controls as well */
+button,
+input,
+textarea,
+select {
+  letter-spacing: inherit;
+}
+
+/* Brand hierarchy: tighter spacing only for headings/important text */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.brand-tight {
+  letter-spacing: var(--brand-letter-spacing);
+}
+
+/* Hero scroll lock — also locks <html> to prevent rubber-banding / pull-to-refresh on iOS */
+html.hero-locked,
 body.hero-locked {
   overflow: hidden;
+  height: 100%;
   touch-action: none;
+  overscroll-behavior: contain;
+}
+
+/* Hero wave sliders — bigger thumbs for touch */
+.hero-range {
+  -webkit-tap-highlight-color: transparent;
+}
+.hero-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: rgba(28, 28, 28, 0.85);
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(28, 28, 28, 0.18);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.hero-range::-webkit-slider-thumb:hover {
+  background: #1c1c1c;
+}
+.hero-range::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: rgba(28, 28, 28, 0.85);
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(28, 28, 28, 0.18);
+  cursor: pointer;
 }
 
 /* Focus styles */
@@ -341,3 +394,4 @@ audio {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+

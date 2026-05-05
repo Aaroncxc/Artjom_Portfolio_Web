@@ -47,9 +47,9 @@ export function ArtistPage({ member, projects, onClose, onOpenProject }: ArtistP
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 40 }}
         transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
-        className="fixed inset-0 z-[101] flex items-start justify-center overflow-y-auto touch-pan-y"
+        className="fixed inset-0 z-[101] flex items-start justify-center overflow-y-auto touch-pan-y pt-20 sm:pt-24 md:pt-28 pb-10 sm:pb-14 px-4"
       >
-        <div className="w-full max-w-2xl mx-auto my-8 md:my-16 px-4" onClick={(e) => e.stopPropagation()}>
+        <div className="w-full max-w-2xl mx-auto mb-8 md:mb-12" onClick={(e) => e.stopPropagation()}>
           <GlassPanel variant="heavy" padding="lg" className="relative">
             {/* Close button */}
             <button
@@ -132,9 +132,9 @@ export function ArtistPage({ member, projects, onClose, onOpenProject }: ArtistP
                             className="w-full h-full object-cover"
                           />
                         )}
-                        {/* Hover overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[rgba(28,28,28,0.7)] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-                          <span className="text-white text-xs font-medium truncate">
+                        {/* Title overlay — always visible on touch, hover-only on desktop */}
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end bg-gradient-to-t from-[rgba(28,28,28,0.75)] via-[rgba(28,28,28,0.15)] to-transparent p-3 transition-opacity opacity-100 md:opacity-0 md:inset-0 md:group-hover:opacity-100">
+                          <span className="truncate text-xs font-medium text-white">
                             {project.title}
                           </span>
                         </div>

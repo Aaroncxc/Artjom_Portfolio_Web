@@ -34,16 +34,7 @@ const config: Config = {
         'accent-coral': '#F43F5E',
       },
       fontFamily: {
-        sans: [
-          '-apple-system',
-          'BlinkMacSystemFont',
-          'SF Pro Display',
-          'SF Pro Text',
-          'Helvetica Neue',
-          'Helvetica',
-          'Arial',
-          'sans-serif',
-        ],
+        sans: ['Arial', 'sans-serif'],
         mono: ['SF Mono', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       backdropBlur: {
@@ -75,6 +66,7 @@ const config: Config = {
         'aurora': 'aurora 20s ease-in-out infinite',
         'float': 'float 6s ease-in-out infinite',
         'pulse-slow': 'pulse 4s ease-in-out infinite',
+        'marquee': 'marquee 55s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -99,6 +91,10 @@ const config: Config = {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-10px)' },
         },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
       },
     },
   },
@@ -106,3 +102,4 @@ const config: Config = {
 };
 
 export default config;
+

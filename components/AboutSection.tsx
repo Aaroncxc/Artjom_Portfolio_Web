@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassPanel } from './GlassPanel';
 import { ArtistPage } from './ArtistPage';
@@ -43,6 +43,18 @@ const members: Member[] = [
       { label: 'Instagram', url: '#' },
     ],
   },
+];
+
+const aboutMedia: string[] = [
+  '/about/E-Learning_Africa_2024.jpg',
+  '/about/ELA_130.jpg',
+  '/about/IMG_0828.JPG',
+  '/about/ProductRoadshow1_India_2024.jpg',
+  '/about/ProductRoadshow2_India_2024.jpg',
+  '/about/ProductRoadshow3_India_2024.jpg',
+  '/about/ProductRoadshow_India_2024.jpg',
+  '/about/Rectangle 4431.png',
+  '/about/Rectangle 4432.png',
 ];
 
 // ── Marquee background with project thumbnails ────────────────
@@ -97,10 +109,8 @@ interface AboutSectionProps {
 }
 
 export function AboutSection({ visible }: AboutSectionProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
-  const sectionRef = useRef<HTMLDivElement>(null);
 
   // Load projects for marquee and artist pages
   useEffect(() => {
@@ -118,62 +128,36 @@ export function AboutSection({ visible }: AboutSectionProps) {
 
   if (!visible) return null;
 
-  const thumbnails = projects
+  const projectThumbnails = projects
     .map((p) => p.thumbnail)
     .filter((t): t is string => !!t);
+  const thumbnails = [...aboutMedia, ...projectThumbnails];
 
   return (
     <>
-      <div ref={sectionRef} id="about" className="pt-4 pb-12 px-4 sm:px-6">
+      <div
+        id="about"
+        className="pt-28 sm:pt-32 md:pt-36 pb-20 sm:pb-24 md:pb-28 px-5 sm:px-8"
+      >
         <div className="max-w-7xl w-full mx-auto">
-          {/* Accordion Header */}
-          <button
-            type="button"
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="w-full px-5 sm:px-6 py-5 bg-[rgba(255,255,255,0.7)] rounded-2xl border border-[rgba(28,28,28,0.08)] cursor-pointer flex items-center justify-between shadow-[0_2px_12px_rgba(28,28,28,0.04)] hover:bg-[rgba(255,255,255,0.85)] transition-colors"
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
           >
-            <div className="text-left">
-              <h2 className="text-xl md:text-2xl font-semibold text-mk-text tracking-tight">
-                About Us
-              </h2>
-              <p className="text-sm text-mk-text-secondary mt-0.5">
-                Learn more about multikunst and our team
-              </p>
-            </div>
-            <svg
-              className={`w-5 h-5 text-[rgba(28,28,28,0.4)] transition-transform duration-300 ${
-                isOpen ? 'rotate-180' : 'rotate-0'
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <GlassPanel
+              variant="heavy"
+              padding="none"
+              className="relative overflow-hidden rounded-3xl"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {/* Accordion Content */}
-          <div
-            className="grid transition-all duration-300 ease-out"
-            style={{
-              gridTemplateRows: isOpen ? '1fr' : '0fr',
-              marginTop: isOpen ? 16 : 0,
-            }}
-          >
-            <div className="overflow-hidden">
-              <motion.div
-                initial={false}
-                animate={{ opacity: isOpen ? 1 : 0, scale: isOpen ? 1 : 0.98 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
-              >
-                <GlassPanel variant="heavy" padding="none" className="relative overflow-hidden">
                   {/* Marquee background */}
                   <ProjectMarquee thumbnails={thumbnails} />
 
-                  <div className="relative z-10 p-6 sm:p-8 lg:p-10">
+                  <div className="relative z-10 p-5 sm:p-6 lg:p-8">
                     {/* Headline */}
-                    <div className="mb-10 max-w-2xl">
-                      <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-mk-text mb-5 leading-[1.1]">
+                    <div className="mb-8 max-w-2xl">
+                      <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-mk-text mb-4 leading-[1.1]">
                         We are multikunst
                       </h3>
                       <p className="text-base sm:text-lg text-mk-text-secondary leading-relaxed">
@@ -184,8 +168,8 @@ export function AboutSection({ visible }: AboutSectionProps) {
                     </div>
 
                     {/* Philosophy grid */}
-                    <div className="grid sm:grid-cols-2 gap-4 sm:gap-5 mb-12">
-                      <div className="p-5 rounded-xl bg-[rgba(255,255,255,0.5)] border border-[rgba(28,28,28,0.06)]">
+                    <div className="grid sm:grid-cols-2 gap-4 sm:gap-5 mb-10">
+                      <div className="p-4 sm:p-5 rounded-xl bg-[rgba(255,255,255,0.5)] border border-[rgba(28,28,28,0.06)]">
                         <h4 className="text-[15px] font-semibold text-mk-text mb-2">
                           Our Philosophy
                         </h4>
@@ -194,7 +178,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
                           Every project is a chance to merge perspectives and push creative boundaries.
                         </p>
                       </div>
-                      <div className="p-5 rounded-xl bg-[rgba(255,255,255,0.5)] border border-[rgba(28,28,28,0.06)]">
+                      <div className="p-4 sm:p-5 rounded-xl bg-[rgba(255,255,255,0.5)] border border-[rgba(28,28,28,0.06)]">
                         <h4 className="text-[15px] font-semibold text-mk-text mb-2">
                           What We Do
                         </h4>
@@ -207,15 +191,15 @@ export function AboutSection({ visible }: AboutSectionProps) {
 
                     {/* Members */}
                     <div>
-                      <h4 className="text-sm font-medium text-mk-text-muted uppercase tracking-wider mb-5">
+                      <h4 className="text-sm font-medium text-mk-text-muted uppercase tracking-wider mb-4">
                         The Collective
                       </h4>
-                      <div className="grid sm:grid-cols-3 gap-4">
+                      <div className="grid sm:grid-cols-3 gap-3 sm:gap-4">
                         {members.map((member) => (
                           <button
                             key={member.id}
                             onClick={() => setSelectedMember(member)}
-                            className="group text-left p-5 rounded-2xl bg-[rgba(255,255,255,0.6)] border border-[rgba(28,28,28,0.06)] hover:bg-[rgba(255,255,255,0.85)] hover:border-[rgba(28,28,28,0.12)] hover:shadow-[0_4px_20px_rgba(28,28,28,0.06)] transition-all cursor-pointer"
+                            className="group text-left p-4 sm:p-5 rounded-2xl bg-[rgba(255,255,255,0.6)] border border-[rgba(28,28,28,0.06)] hover:bg-[rgba(255,255,255,0.85)] hover:border-[rgba(28,28,28,0.12)] hover:shadow-[0_4px_20px_rgba(28,28,28,0.06)] transition-all cursor-pointer"
                           >
                             {/* Avatar + Founder badge */}
                             <div className="flex items-center gap-3 mb-3">
@@ -242,8 +226,8 @@ export function AboutSection({ visible }: AboutSectionProps) {
                               {member.roles.slice(0, 3).join(' / ')}
                             </div>
 
-                            {/* Arrow hint */}
-                            <div className="mt-4 flex items-center gap-1 text-xs text-mk-text-muted opacity-0 group-hover:opacity-100 transition-opacity">
+                            {/* Arrow hint — visible by default on touch */}
+                            <div className="mt-4 flex items-center gap-1 text-xs text-mk-text-muted opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
                               <span>View profile</span>
                               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -254,10 +238,8 @@ export function AboutSection({ visible }: AboutSectionProps) {
                       </div>
                     </div>
                   </div>
-                </GlassPanel>
-              </motion.div>
-            </div>
-          </div>
+            </GlassPanel>
+          </motion.div>
         </div>
       </div>
 

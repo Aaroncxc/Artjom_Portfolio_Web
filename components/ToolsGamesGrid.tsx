@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ToolGame {
@@ -84,6 +84,16 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
   const [currentScreenshot, setCurrentScreenshot] = useState<number>(0);
   const [hoveredTool, setHoveredTool] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<'all' | 'game' | 'tool' | 'app'>('all');
+
+  // Lock body scroll while the modal is open
+  useEffect(() => {
+    if (!selectedTool) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [selectedTool]);
 
   // Touch swipe state for mobile navigation
   const touchStartX = useRef<number>(0);
@@ -177,15 +187,20 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
   if (!visible) return null;
 
   return (
-    <div id="tools-games" className="relative min-h-screen pt-24 pb-8 px-6">
+    <div id="tools-games" className="relative min-h-screen px-4 pb-12 pt-24 sm:px-6">
       {/* Section Header */}
-      <div className="max-w-7xl mx-auto mb-12">
-        <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4 text-mk-text">
-          Tools & Games
-        </h2>
-        <p className="text-mk-text-secondary text-lg max-w-2xl">
-          Interactive web experiences, games, and tools we've built. Click to explore them live.
-        </p>
+      <div className="mx-auto mb-10 max-w-7xl sm:mb-14">
+        <div className="max-w-3xl">
+          <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
+            Playground
+          </span>
+          <h2 className="mb-5 text-4xl font-semibold tracking-tight text-mk-text brand-tight leading-[1.05] sm:text-5xl lg:text-6xl">
+            Tools & Games
+          </h2>
+          <p className="text-base leading-relaxed text-mk-text-secondary sm:text-lg">
+            Interactive web experiences, games, and tools we've built. Click to explore them live.
+          </p>
+        </div>
       </div>
 
       {/* Filters */}
@@ -265,12 +280,12 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                     />
                   )}
 
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(28,28,28,0.9)] via-[rgba(28,28,28,0.3)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="px-4 py-2 rounded-full bg-white/90 text-mk-text text-sm font-medium flex items-center gap-2 shadow-lg">
+                  {/* Hover Overlay — visible by default on touch */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(28,28,28,0.9)] via-[rgba(28,28,28,0.3)] to-transparent opacity-100 transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100">
+                    <div className="absolute inset-x-0 bottom-3 flex items-center justify-center md:inset-0">
+                      <div className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-mk-text shadow-lg">
                         <span>View Details</span>
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
                       </div>
@@ -300,10 +315,10 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
 
                 {/* Content */}
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-mk-text mb-2 line-clamp-1">
+                  <h3 className="mb-2 line-clamp-1 text-lg font-semibold text-mk-text brand-tight">
                     {item.title}
                   </h3>
-                  <p className="text-mk-text-secondary text-sm line-clamp-2 mb-3">
+                  <p className="mb-3 line-clamp-2 text-sm leading-relaxed text-mk-text-secondary">
                     {item.description}
                   </p>
                   
@@ -506,7 +521,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                           {selectedTool.type}
                         </span>
                       </div>
-                      <h2 className="text-2xl md:text-3xl font-semibold text-mk-text">
+                      <h2 className="text-2xl font-semibold leading-tight text-mk-text brand-tight md:text-3xl">
                         {selectedTool.title}
                       </h2>
                     </div>

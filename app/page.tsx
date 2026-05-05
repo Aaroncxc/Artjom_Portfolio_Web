@@ -1,67 +1,128 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { GlobalBackgroundAurora } from '@/components/GlobalBackgroundAurora';
+import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import LightLeaksBackground from '@/components/LightLeaksBackground';
 import { Navigation } from '@/components/Navigation';
 import { AboutSection } from '@/components/AboutSection';
 import { ProjectsGrid } from '@/components/ProjectsGrid';
+import { ServicesGrid } from '@/components/ServicesGrid';
 import { ToolsGamesGrid } from '@/components/ToolsGamesGrid';
 import { TextPointCloudHero } from '@/components/TextPointCloudHero';
 
 export default function Home() {
-  const [showNav, setShowNav] = useState(false);
+  const [heroDismissed, setHeroDismissed] = useState(false);
+  const [introKey, setIntroKey] = useState(0);
   const [currentSection, setCurrentSection] = useState<string>('');
 
-  // Track scroll position for nav and sections
+  // Lock scroll while the intro hero is up — also blocks touch scroll on iOS/Android
   useEffect(() => {
+    if (heroDismissed) return undefined;
+    document.documentElement.classList.add('hero-locked');
+    document.body.classList.add('hero-locked');
+    return () => {
+      document.documentElement.classList.remove('hero-locked');
+      document.body.classList.remove('hero-locked');
+    };
+  }, [heroDismissed]);
+
+  // Scroll-spy: detect current section once the hero is gone
+  useEffect(() => {
+    if (!heroDismissed) return;
+
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const threshold = window.innerHeight * 0.3;
-      setShowNav(scrollY > threshold);
+      const offset = 200;
 
-      // Determine current section
       const aboutSection = document.getElementById('about');
-      const toolsGamesSection = document.getElementById('tools-games');
+      const servicesSection = document.getElementById('services');
       const projectsSection = document.getElementById('projects');
-      
-      if (aboutSection && scrollY >= aboutSection.offsetTop - 200) {
-        setCurrentSection('about');
-      } else if (toolsGamesSection && scrollY >= toolsGamesSection.offsetTop - 200) {
+      const toolsGamesSection = document.getElementById('tools-games');
+
+      if (toolsGamesSection && scrollY >= toolsGamesSection.offsetTop - offset) {
         setCurrentSection('tools-games');
-      } else if (projectsSection && scrollY >= projectsSection.offsetTop - 200) {
+      } else if (projectsSection && scrollY >= projectsSection.offsetTop - offset) {
         setCurrentSection('projects');
+      } else if (servicesSection && scrollY >= servicesSection.offsetTop - offset) {
+        setCurrentSection('services');
+      } else if (aboutSection && scrollY >= aboutSection.offsetTop - offset) {
+        setCurrentSection('about');
       } else {
-        setCurrentSection('');
+        setCurrentSection('about');
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
+  }, [heroDismissed]);
+
+  const openIntro = useCallback(() => {
+    window.scrollTo(0, 0);
+    setIntroKey((k) => k + 1);
+    setHeroDismissed(false);
   }, []);
 
   return (
     <>
       {/* Light Leaks Background - pearl gradient with subtle color blobs */}
       <LightLeaksBackground />
-      
-      {/* Hero Section - Text Pointcloud */}
-      <TextPointCloudHero />
 
-      {/* Navigation */}
-      <Navigation visible={showNav} currentSection={currentSection} />
+      {/* Cinematic intro gate */}
+      <AnimatePresence>
+        {!heroDismissed && (
+          <motion.div
+            key="hero-gate"
+            initial={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+            exit={{
+              opacity: 0,
+              y: 80,
+              scale: 1.04,
+              filter: 'blur(10px)',
+            }}
+            transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 z-[100]"
+            style={{ willChange: 'opacity, transform, filter' }}
+          >
+            <TextPointCloudHero key={introKey} onActivate={() => setHeroDismissed(true)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Main Content */}
-      <main className="relative z-[5]">
+      {/* Navigation appears as soon as the gate dissolves */}
+      <Navigation visible={heroDismissed} currentSection={currentSection} onLogoClick={openIntro} />
+
+      {/* Main Content - revealed after the gate */}
+      <motion.main
+        className="relative z-[5]"
+        initial={false}
+        animate={{
+          opacity: heroDismissed ? 1 : 0,
+          y: heroDismissed ? 0 : -40,
+          scale: heroDismissed ? 1 : 0.97,
+        }}
+        transition={{
+          duration: 0.9,
+          ease: [0.22, 1, 0.36, 1],
+          delay: heroDismissed ? 0.2 : 0,
+        }}
+        style={{
+          pointerEvents: heroDismissed ? 'auto' : 'none',
+        }}
+        aria-hidden={!heroDismissed}
+      >
+        {/* About Section - first content the visitor sees */}
+        <AboutSection visible={true} />
+
+        {/* Services Section - what we do for clients */}
+        <ServicesGrid visible={true} />
+
         {/* Projects Section - Instagram-style Grid */}
         <ProjectsGrid visible={true} />
 
         {/* Tools & Games Section */}
         <ToolsGamesGrid visible={true} />
-
-        {/* About Section - Accordion */}
-        <AboutSection visible={true} />
 
         {/* Footer */}
         <footer className="relative z-10 py-12 sm:py-16 px-4 sm:px-6">
@@ -71,24 +132,25 @@ export default function Home() {
                 <div>
                   <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">multikunst</h3>
                   <p className="text-mk-text-secondary text-sm leading-relaxed">
-                    A creative collective exploring art, design, and technology.
+                    A creative collective &amp; agency at the intersection of art, design, and technology.
                   </p>
                 </div>
                 <div>
                   <h4 className="text-sm font-medium mb-3 sm:mb-4 text-mk-text-muted uppercase tracking-wider">Navigate</h4>
-                  <ul className="space-y-2.5 sm:space-y-2">
-                    <li><a href="#projects" className="text-mk-text-secondary hover:text-accent-cyan transition-colors text-sm py-1 inline-block">Projects</a></li>
-                    <li><a href="#tools-games" className="text-mk-text-secondary hover:text-accent-cyan transition-colors text-sm py-1 inline-block">Tools & Games</a></li>
-                    <li><a href="#about" className="text-mk-text-secondary hover:text-accent-cyan transition-colors text-sm py-1 inline-block">About</a></li>
-                    <li><a href="mailto:hello@multikunst.com" className="text-mk-text-secondary hover:text-accent-cyan transition-colors text-sm py-1 inline-block">Contact</a></li>
+                  <ul className="space-y-1">
+                    <li><a href="#about" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">About</a></li>
+                    <li><a href="#services" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Services</a></li>
+                    <li><a href="#projects" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Projects</a></li>
+                    <li><a href="#tools-games" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Tools &amp; Games</a></li>
+                    <li><a href="mailto:hello@multikunst.com" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Contact</a></li>
                   </ul>
                 </div>
                 <div>
                   <h4 className="text-sm font-medium mb-3 sm:mb-4 text-mk-text-muted uppercase tracking-wider">Connect</h4>
-                  <ul className="space-y-2.5 sm:space-y-2">
-                    <li><a href="#" className="text-mk-text-secondary hover:text-accent-cyan transition-colors text-sm py-1 inline-block">Instagram</a></li>
-                    <li><a href="#" className="text-mk-text-secondary hover:text-accent-cyan transition-colors text-sm py-1 inline-block">Twitter</a></li>
-                    <li><a href="#" className="text-mk-text-secondary hover:text-accent-cyan transition-colors text-sm py-1 inline-block">GitHub</a></li>
+                  <ul className="space-y-1">
+                    <li><a href="#" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Instagram</a></li>
+                    <li><a href="#" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Twitter</a></li>
+                    <li><a href="#" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">GitHub</a></li>
                   </ul>
                 </div>
               </div>
@@ -100,7 +162,7 @@ export default function Home() {
             </div>
           </div>
         </footer>
-      </main>
+      </motion.main>
     </>
   );
 }

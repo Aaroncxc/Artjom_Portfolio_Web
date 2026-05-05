@@ -267,15 +267,20 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
   if (!visible) return null;
 
   return (
-    <div id="projects" className="relative min-h-screen pt-24 pb-8 px-6">
+    <div id="projects" className="relative min-h-screen px-4 pb-12 pt-24 sm:px-6">
       {/* Section Header */}
-      <div className="max-w-7xl mx-auto mb-12">
-        <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4 text-mk-text">
-          Projects
-        </h2>
-        <p className="text-mk-text-secondary text-lg max-w-2xl">
-          A collection of interactive experiences, visual explorations, and sonic experiments.
-        </p>
+      <div className="mx-auto mb-10 max-w-7xl sm:mb-14">
+        <div className="max-w-3xl">
+          <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
+            Portfolio
+          </span>
+          <h2 className="mb-5 text-4xl font-semibold tracking-tight text-mk-text brand-tight leading-[1.05] sm:text-5xl lg:text-6xl">
+            Projects
+          </h2>
+          <p className="text-base leading-relaxed text-mk-text-secondary sm:text-lg">
+            A collection of interactive experiences, visual explorations, and sonic experiments.
+          </p>
+        </div>
       </div>
 
       {/* Filters */}
@@ -381,20 +386,28 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                     </>
                   )}
                   
-                  {/* Hover Overlay - always on top */}
-                  <div className={`absolute inset-0 z-20 bg-gradient-to-t from-[rgba(28,28,28,0.8)] via-[rgba(28,28,28,0.2)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}>
+                  {/* Mobile/touch: lightweight permanent gradient with title */}
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-[rgba(28,28,28,0.65)] via-[rgba(28,28,28,0.15)] to-transparent md:hidden" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 px-3 pb-2.5 md:hidden">
+                    <h3 className="line-clamp-1 text-[12px] font-semibold text-white brand-tight">
+                      {project.title}
+                    </h3>
+                  </div>
+
+                  {/* Hover Overlay (desktop hover) */}
+                  <div className="absolute inset-0 z-20 bg-gradient-to-t from-[rgba(28,28,28,0.8)] via-[rgba(28,28,28,0.2)] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h3 className="text-white font-medium text-sm md:text-base mb-1 line-clamp-1">
+                      <h3 className="mb-1 line-clamp-1 text-sm font-bold text-white brand-tight md:text-base">
                         {project.title}
                       </h3>
-                      <p className="text-white/70 text-xs md:text-sm line-clamp-2 hidden md:block">
+                      <p className="hidden line-clamp-2 text-xs leading-relaxed text-white/70 md:block md:text-sm">
                         {project.description}
                       </p>
                     </div>
                   </div>
 
-                  {/* Type Icon Badge */}
-                  <div className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm flex items-center justify-center text-mk-text opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
+                  {/* Type Icon Badge — always visible on touch, hover-only on desktop */}
+                  <div className="absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(255,255,255,0.9)] text-mk-text shadow-lg backdrop-blur-sm transition-opacity duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100">
                     {typeIcons[project.type]}
                   </div>
 
