@@ -9,14 +9,17 @@ interface TextPointCloudHeroProps {
   onActivate?: () => void;
 }
 
-// Scale text to 92% of viewport width: "multikunst" width ~ fontSize * 5.5
+// Scale text responsively for desktop and smaller mobile viewports.
 function getResponsivePreset() {
   if (typeof window === 'undefined') {
     return { fontSize: 260, letterSpacing: -26, radius: 90, pointSize: 1, strength: 9 };
   }
   const w = window.innerWidth;
-  const maxFontSize = Math.min(240, (w * 0.92) / 5.5);
-  const fontSize = Math.max(48, Math.round(maxFontSize));
+  // Mobile gets a smaller logo so it stays comfortably inside the viewport.
+  const mobileRatio = w < 640 ? 0.78 : 0.9;
+  const maxCap = w < 640 ? 170 : 240;
+  const maxFontSize = Math.min(maxCap, (w * mobileRatio) / 5.5);
+  const fontSize = Math.max(42, Math.round(maxFontSize));
   // Brand typography: keep logo letter spacing close to Figma (-10%)
   const letterSpacing = Math.round(-fontSize * 0.1);
   const radius = Math.max(50, Math.round(fontSize * 0.65));
