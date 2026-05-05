@@ -12,6 +12,10 @@ export interface ServiceMedia {
   type: 'image' | 'video';
   src: string;
   alt?: string;
+  /** H.264 MP4 (same clip). Listed first in <video> so Safari / iOS can play WebM VP9 fallbacks. */
+  mp4Src?: string;
+  /** Optional poster while metadata loads (defaults to same path with .png if present). */
+  poster?: string;
 }
 
 export interface Service {
@@ -157,6 +161,7 @@ export const services: Service[] = [
     hero: {
       type: 'video',
       src: '/services/post-production/hero.webm',
+      mp4Src: '/services/post-production/hero.mp4',
       alt: 'GADE — trailer (ASA)',
     },
     samples: [
@@ -205,7 +210,8 @@ export const services: Service[] = [
     ],
     hero: {
       type: 'video',
-      src: '/services/product-development/hero.mp4',
+      src: '/services/product-development/hero.webm',
+      mp4Src: '/services/product-development/hero.mp4',
       alt: 'Product demo trailer — solar configurator',
     },
     samples: [

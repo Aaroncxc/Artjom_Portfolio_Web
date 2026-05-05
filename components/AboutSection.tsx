@@ -195,46 +195,78 @@ export function AboutSection({ visible }: AboutSectionProps) {
                         The Collective
                       </h4>
                       <div className="grid sm:grid-cols-3 gap-3 sm:gap-4">
-                        {members.map((member) => (
-                          <button
-                            key={member.id}
-                            onClick={() => setSelectedMember(member)}
-                            className="group text-left p-4 sm:p-5 rounded-2xl bg-[rgba(255,255,255,0.6)] border border-[rgba(28,28,28,0.06)] hover:bg-[rgba(255,255,255,0.85)] hover:border-[rgba(28,28,28,0.12)] hover:shadow-[0_4px_20px_rgba(28,28,28,0.06)] transition-all cursor-pointer"
-                          >
-                            {/* Avatar + Founder badge */}
-                            <div className="flex items-center gap-3 mb-3">
-                              <div className="w-10 h-10 rounded-full bg-[rgba(28,28,28,0.06)] border border-[rgba(28,28,28,0.08)] flex items-center justify-center text-sm font-semibold text-mk-text">
-                                {member.name.split(' ').map((n) => n[0]).join('')}
-                              </div>
-                              {member.isFounder && (
-                                <span className="px-2 py-0.5 rounded-full bg-[rgba(20,184,166,0.1)] border border-[rgba(20,184,166,0.2)] text-[10px] font-medium text-[#0d9488] uppercase tracking-wider">
-                                  Founder
-                                </span>
+                        {members.map((member) => {
+                          const bgImage =
+                            member.id === 'artjom'
+                              ? '/about/artjom-bg.png'
+                              : member.id === 'sahachat'
+                                ? '/about/sahi-bg.png'
+                                : null;
+                          const bgImagePositionClass =
+                            member.id === 'artjom'
+                              ? 'object-[86%_34%]'
+                              : member.id === 'sahachat'
+                                ? 'object-[86%_center]'
+                                : 'object-center';
+                          return (
+                            <button
+                              key={member.id}
+                              onClick={() => setSelectedMember(member)}
+                              className="group relative overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.52)] bg-[rgba(255,255,255,0.34)] shadow-[0_10px_30px_rgba(28,28,28,0.14),inset_0_1px_0_rgba(255,255,255,0.45)] backdrop-blur-[10px] hover:bg-[rgba(255,255,255,0.48)] hover:border-[rgba(255,255,255,0.72)] hover:shadow-[0_14px_38px_rgba(28,28,28,0.18),inset_0_1px_0_rgba(255,255,255,0.65)] transition-all cursor-pointer"
+                            >
+                              {bgImage && (
+                                <>
+                                  <img
+                                    src={bgImage}
+                                    alt=""
+                                    loading="lazy"
+                                    className={`absolute inset-0 h-full w-full object-cover opacity-85 ${bgImagePositionClass}`}
+                                  />
+                                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[rgba(255,255,255,0.78)] via-[rgba(255,255,255,0.30)] to-[rgba(255,255,255,0.00)]" />
+                                  <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-[rgba(255,255,255,0.42)] to-transparent" />
+                                </>
                               )}
-                            </div>
 
-                            {/* Name */}
-                            <div className="text-[15px] font-semibold text-mk-text group-hover:text-[#0d9488] transition-colors leading-tight mb-0.5">
-                              {member.name}
-                            </div>
-                            <div className="text-xs text-mk-text-muted mb-3">
-                              @{member.handle}
-                            </div>
+                              <div className="relative z-10 p-4 text-left sm:p-5">
+                                {/* Avatar + Founder badge */}
+                                <div className="mb-3 flex items-center gap-3">
+                                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(255,255,255,0.8)] text-sm font-semibold text-mk-text shadow-sm">
+                                    {member.name
+                                      .split(' ')
+                                      .map((n) => n[0])
+                                      .join('')}
+                                  </div>
+                                  {member.isFounder && (
+                                    <span className="rounded-full border border-[rgba(20,184,166,0.35)] bg-[rgba(20,184,166,0.14)] px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#ecfeff] shadow-[0_0_0_1px_rgba(15,118,110,0.4)]">
+                                      Founder
+                                    </span>
+                                  )}
+                                </div>
 
-                            {/* Primary role */}
-                            <div className="text-xs text-mk-text-secondary">
-                              {member.roles.slice(0, 3).join(' / ')}
-                            </div>
+                                {/* Name */}
+                                <div className="mb-0.5 text-[15px] font-semibold leading-tight text-mk-text group-hover:text-[#0d9488] transition-colors">
+                                  {member.name}
+                                </div>
+                                <div className="mb-3 text-xs text-mk-text-muted">
+                                  @{member.handle}
+                                </div>
 
-                            {/* Arrow hint — visible by default on touch */}
-                            <div className="mt-4 flex items-center gap-1 text-xs text-mk-text-muted opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
-                              <span>View profile</span>
-                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </div>
-                          </button>
-                        ))}
+                                {/* Primary role */}
+                                <div className="text-xs text-mk-text-secondary">
+                                  {member.roles.slice(0, 3).join(' / ')}
+                                </div>
+
+                                {/* Arrow hint — visible by default on touch */}
+                                <div className="mt-4 flex items-center gap-1 text-xs text-mk-text-muted opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
+                                  <span>View profile</span>
+                                  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                  </svg>
+                                </div>
+                              </div>
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Service, ServiceMedia } from '@/lib/services';
 import { accentTokens } from '@/lib/services';
+import { ServiceMediaVideo } from './ServiceMediaVideo';
 import { ServicePlaceholder } from './ServicePlaceholder';
 
 export type ServiceCardLevel = 'collapsed' | 'preview' | 'detail';
@@ -33,8 +34,8 @@ function buildDisplaySamples(
 function HeroMedia({ service }: { service: Service }) {
   if (service.hero.type === 'video') {
     return (
-      <video
-        src={service.hero.src}
+      <ServiceMediaVideo
+        media={service.hero}
         muted
         loop
         playsInline
@@ -204,9 +205,8 @@ export function ServiceCard({
           <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-[rgba(28,28,28,0.04)]">
             {activeMedia ? (
               activeMedia.type === 'video' ? (
-                <video
-                  key={activeMedia.src}
-                  src={activeMedia.src}
+                <ServiceMediaVideo
+                  media={activeMedia}
                   controls
                   autoPlay
                   muted
@@ -264,8 +264,8 @@ export function ServiceCard({
                   }`}
                 >
                   {sample.type === 'video' ? (
-                    <video
-                      src={sample.src}
+                    <ServiceMediaVideo
+                      media={sample}
                       muted
                       playsInline
                       autoPlay

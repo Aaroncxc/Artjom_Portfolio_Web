@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Service, ServiceMedia } from '@/lib/services';
 import { accentTokens } from '@/lib/services';
+import { ServiceMediaVideo } from './ServiceMediaVideo';
 import { ServicePlaceholder } from './ServicePlaceholder';
 
 interface ServiceModalProps {
@@ -133,15 +134,14 @@ export function ServiceModal({
               <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-[rgba(28,28,28,0.04)]">
                 {activeMedia ? (
                   activeMedia.type === 'video' ? (
-                    <video
-                      key={activeMedia.src}
-                      src={activeMedia.src}
+                    <ServiceMediaVideo
+                      media={activeMedia}
                       controls
                       autoPlay
                       muted
                       loop
                       playsInline
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="absolute inset-0 h-full w-full object-cover"
                     />
                   ) : (
                     <img
@@ -195,13 +195,13 @@ export function ServiceModal({
                       }`}
                     >
                       {sample.type === 'video' ? (
-                        <video
-                          src={sample.src}
+                        <ServiceMediaVideo
+                          media={sample}
                           muted
                           playsInline
                           autoPlay
                           loop
-                          className="absolute inset-0 w-full h-full object-cover"
+                          className="absolute inset-0 h-full w-full object-cover"
                         />
                       ) : (
                         <img

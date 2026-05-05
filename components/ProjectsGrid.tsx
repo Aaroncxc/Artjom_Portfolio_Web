@@ -6,27 +6,23 @@ import { ProjectSlide } from './ProjectSlide';
 import { Project3DPreview } from './Project3DPreview';
 import { Project, ProjectType } from '@/lib/types';
 
-/** Video thumbnail that only autoplays when visible in the viewport */
-function LazyVideo({ src, className }: { src: string; className?: string }) {
+/** Only mounted while tile is hovered — plays preview video (like 3D hover swap). */
+function HoverPlayVideo({ src, className }: { src: string; className?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const video = ref.current;
-    if (!video) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
-      },
-      { threshold: 0.25 }
-    );
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, []);
+    const v = ref.current;
+    if (!v) return;
+    v.play().catch(() => {});
+    return () => {
+      v.pause();
+      try {
+        v.currentTime = 0;
+      } catch {
+        /* ignore */
+      }
+    };
+  }, [src]);
 
   return (
     <video
@@ -36,10 +32,6 @@ function LazyVideo({ src, className }: { src: string; className?: string }) {
       loop
       playsInline
       preload="metadata"
-      onLoadedMetadata={(e) => {
-        const v = e.currentTarget;
-        if (v.currentTime < 1) v.currentTime = 1;
-      }}
       className={className}
     />
   );
@@ -344,32 +336,51 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   onTouchMove={(e) => project.model3dPath && handleTileTouchMove(e, project.id)}
                   onTouchEnd={() => project.model3dPath && handleTileTouchEnd()}
                 >
-                  {/* Video Preview – lazy: only autoplay when visible via IntersectionObserver */}
-                  {project.type === 'video' && project.videoUrl && (
-                    <LazyVideo
-                      src={`${project.videoUrl}#t=1`}
-                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
-                    />
+                  {/* Video-only tiles: static thumbnail, preview video on hover (like 3D) */}
+                  {project.type === 'video' && project.videoUrl && !project.model3dPath && (
+                    <>
+                      {project.thumbnail ? (
+                        <img
+                          src={project.thumbnail}
+                          alt={project.title}
+                          className={`absolute inset-0 z-[1] h-full w-full object-cover transition-all duration-500 group-hover:scale-105 ${
+                            hoveredProject === project.id ? 'opacity-0' : 'opacity-100'
+                          }`}
+                        />
+                      ) : (
+                        <div
+                          className={`absolute inset-0 z-[1] bg-[rgba(28,28,28,0.08)] transition-opacity duration-300 ${
+                            hoveredProject === project.id ? 'opacity-0' : 'opacity-100'
+                          }`}
+                          aria-hidden
+                        />
+                      )}
+                      {hoveredProject === project.id && (
+                        <HoverPlayVideo
+                          src={project.videoUrl}
+                          className="absolute inset-0 z-[2] h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      )}
+                    </>
                   )}
 
-                  {/* Thumbnail - hide for 3D and video projects */}
+                  {/* Thumbnail - non-video, non-3D projects */}
                   {!project.model3dPath && project.type !== 'video' && (
                     <img
                       src={project.thumbnail}
                       alt={project.title}
-                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                      className="h-full w-full object-cover transition-all duration-500 group-hover:scale-105"
                     />
                   )}
                   
-                  {/* 3D Preview – Bild wenn nicht gehovert (außer Video-Projekte wie Pult: da nur Video) */}
+                  {/* 3D Preview – thumbnail until hover, then 3D (also for video+3D, e.g. Pult) */}
                   {project.model3dPath && (
                     <>
-                      {/* Projektbild als Vorschau – nur bei Nicht-Video-Projekten; Pult zeigt nur Video */}
-                      {hoveredProject !== project.id && project.type !== 'video' && (
+                      {hoveredProject !== project.id && project.thumbnail && (
                         <img
                           src={project.thumbnail}
                           alt={project.title}
-                          className="absolute inset-0 z-10 w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                          className="absolute inset-0 z-10 h-full w-full object-cover transition-all duration-500 group-hover:scale-105"
                         />
                       )}
                       {/* 3D-Modell – nur bei Hover gemountet und geladen */}
