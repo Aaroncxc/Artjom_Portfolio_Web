@@ -12,38 +12,17 @@ interface ServicesGridProps {
 
 export function ServicesGrid({ visible }: ServicesGridProps) {
   const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
-  const [expandedLevel, setExpandedLevel] = useState<'preview' | 'detail'>('preview');
 
   const closeExpanded = useCallback(() => {
     setExpandedSlug(null);
-    setExpandedLevel('preview');
   }, []);
 
-  const openPreview = useCallback((slug: string) => {
+  const openExpanded = useCallback((slug: string) => {
     setExpandedSlug(slug);
-    setExpandedLevel('preview');
   }, []);
-
-  const openDetailFor = useCallback(
-    (slug: string) => {
-      if (expandedSlug === slug && expandedLevel === 'preview') {
-        setExpandedLevel('detail');
-      }
-    },
-    [expandedSlug, expandedLevel]
-  );
-
-  const collapsePreviewIfOpen = useCallback(
-    (slug: string) => {
-      if (expandedSlug === slug && expandedLevel === 'preview') {
-        closeExpanded();
-      }
-    },
-    [expandedSlug, expandedLevel, closeExpanded]
-  );
 
   useEffect(() => {
-    if (!expandedSlug || expandedLevel !== 'detail') return;
+    if (!expandedSlug) return;
     const id = requestAnimationFrame(() => {
       const el = document.getElementById(`service-detail-${expandedSlug}`);
       if (!el) return;
@@ -52,7 +31,7 @@ export function ServicesGrid({ visible }: ServicesGridProps) {
       window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
     });
     return () => cancelAnimationFrame(id);
-  }, [expandedSlug, expandedLevel]);
+  }, [expandedSlug]);
 
   if (!visible) return null;
 
@@ -79,9 +58,7 @@ export function ServicesGrid({ visible }: ServicesGridProps) {
         >
           {services.map((service, i) => {
             const isExpanded = expandedSlug === service.slug;
-            const level: ServiceCardLevel = !isExpanded
-              ? 'collapsed'
-              : expandedLevel;
+            const level: ServiceCardLevel = isExpanded ? 'detail' : 'collapsed';
 
             return (
               <motion.div
@@ -107,9 +84,7 @@ export function ServicesGrid({ visible }: ServicesGridProps) {
                     <ServiceCard
                       service={service}
                       level={level}
-                      onOpenPreview={() => openPreview(service.slug)}
-                      onOpenDetail={() => openDetailFor(service.slug)}
-                      onCollapsePreview={() => collapsePreviewIfOpen(service.slug)}
+                      onOpen={() => openExpanded(service.slug)}
                       onClose={closeExpanded}
                       mailtoHref={buildServiceMailto(service)}
                     />

@@ -201,13 +201,17 @@ export function AboutSection({ visible }: AboutSectionProps) {
                               ? '/about/artjom-bg.png'
                               : member.id === 'sahachat'
                                 ? '/about/sahi-bg.png'
-                                : null;
+                                : member.id === 'jan'
+                                  ? '/about/jan-bg.png'
+                                  : null;
                           const bgImagePositionClass =
                             member.id === 'artjom'
                               ? 'object-[86%_34%]'
                               : member.id === 'sahachat'
                                 ? 'object-[86%_center]'
-                                : 'object-center';
+                                : member.id === 'jan'
+                                  ? 'object-[center_32%]'
+                                  : 'object-center';
                           return (
                             <button
                               key={member.id}
