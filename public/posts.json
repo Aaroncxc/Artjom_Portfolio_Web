@@ -1,19 +1,55 @@
 {
-  "posts": [    {
+  "posts": [
+    {
+      "id": "20",
+      "slug": "multi-watch",
+      "title": "Multi Watch",
+      "description": "Product visualization and motion study for the Multi Watch — materials, lighting, and industrial product storytelling.",
+      "date": "2026-05-06",
+      "tags": [
+        "video",
+        "3D",
+        "product design",
+        "watch"
+      ],
+      "type": "video",
+      "thumbnail": "/projects/multi-watch/Thumbnail.png",
+      "videoUrl": "/projects/multi-watch/Final%20Multiwatch%20Clip.webm",
+      "author": "Multikunst"
+    },
+    {
       "id": "19",
       "slug": "jan-helm",
       "title": "Jan Helm",
       "description": "Helmet design project by Jan Boetker. 3D-rendered helmet studies and detail views.",
       "date": "2026-02-15",
-      "tags": ["3D", "design", "helmet"],
+      "tags": [
+        "3D",
+        "design",
+        "helmet"
+      ],
       "type": "image",
       "thumbnail": "/projects/jan-helm/helmet1-alt.png",
-      "images": ["/projects/jan-helm/helmet1-alt.png"],
+      "images": [
+        "/projects/jan-helm/helmet1-alt.png"
+      ],
       "author": "JanMitGun",
       "gallery": [
-        { "type": "image", "src": "/projects/jan-helm/helmet1-alt.png", "title": "Helmet" },
-        { "type": "image", "src": "/projects/jan-helm/helmet3.png", "title": "Helmet Detail" },
-        { "type": "image", "src": "/projects/jan-helm/render6.png", "title": "Render" }
+        {
+          "type": "image",
+          "src": "/projects/jan-helm/helmet1-alt.png",
+          "title": "Helmet"
+        },
+        {
+          "type": "image",
+          "src": "/projects/jan-helm/helmet3.png",
+          "title": "Helmet Detail"
+        },
+        {
+          "type": "image",
+          "src": "/projects/jan-helm/render6.png",
+          "title": "Render"
+        }
       ]
     },
     {
@@ -22,17 +58,44 @@
       "title": "MultiConcert",
       "description": "A futuristic 3D-rendered concert stage featuring the Multikunst brand. Dramatic lighting, masked performers, and a striking stage setup with neon accents and digital displays create an immersive visual experience.",
       "date": "2025-07-25",
-      "tags": ["3D", "concert", "event", "visualization"],
+      "tags": [
+        "3D",
+        "concert",
+        "event",
+        "visualization"
+      ],
       "type": "image",
       "thumbnail": "/projects/multiconcert/konzuert-23.png",
-      "images": ["/projects/multiconcert/konzuert-23.png"],
+      "images": [
+        "/projects/multiconcert/konzuert-23.png"
+      ],
       "author": "Multikunst",
       "gallery": [
-        { "type": "image", "src": "/projects/multiconcert/konzuert-23.png", "title": "Stage Overview" },
-        { "type": "image", "src": "/projects/multiconcert/konzuert-5542.png", "title": "Stage Detail" },
-        { "type": "image", "src": "/projects/multiconcert/konzuert161.png", "title": "Concert Scene" },
-        { "type": "image", "src": "/projects/multiconcert/konzuert171.png", "title": "Mask & Display" },
-        { "type": "image", "src": "/projects/multiconcert/konzuert181.png", "title": "Performance" }
+        {
+          "type": "image",
+          "src": "/projects/multiconcert/konzuert-23.png",
+          "title": "Stage Overview"
+        },
+        {
+          "type": "image",
+          "src": "/projects/multiconcert/konzuert-5542.png",
+          "title": "Stage Detail"
+        },
+        {
+          "type": "image",
+          "src": "/projects/multiconcert/konzuert161.png",
+          "title": "Concert Scene"
+        },
+        {
+          "type": "image",
+          "src": "/projects/multiconcert/konzuert171.png",
+          "title": "Mask & Display"
+        },
+        {
+          "type": "image",
+          "src": "/projects/multiconcert/konzuert181.png",
+          "title": "Performance"
+        }
       ]
     },
     {
@@ -41,27 +104,61 @@
       "title": "T-Shirt Jan",
       "description": "A visual project showcasing T-shirt designs and outdoor photography. Featuring nature-inspired H.265 video and striking imagery.",
       "date": "2026-02-08",
-      "tags": ["video", "photography", "fashion", "design"],
+      "tags": [
+        "video",
+        "photography",
+        "fashion",
+        "design"
+      ],
       "type": "video",
-      "thumbnail": "/projects/tshirt-jan/shirt1.png",
+      "thumbnail": "/projects/tshirt-jan/thumbnail.png",
       "videoUrl": "/projects/tshirt-jan/shirt-nature.mp4",
       "author": "JanMitGun",
       "gallery": [
-        { "type": "image", "src": "/projects/tshirt-jan/shirt1.png", "title": "Shirt" },
-        { "type": "image", "src": "/projects/tshirt-jan/djungle.png", "title": "Jungle" },
-        { "type": "image", "src": "/projects/tshirt-jan/outdoor1a.png", "title": "Outdoor" },
-        { "type": "image", "src": "/projects/tshirt-jan/outdoor2.png", "title": "Outdoor 2" },
-        { "type": "image", "src": "/projects/tshirt-jan/outdoor2a.png", "title": "Outdoor 2a" },
-        { "type": "image", "src": "/projects/tshirt-jan/outdoor3.png", "title": "Outdoor 3" }
+        {
+          "type": "image",
+          "src": "/projects/tshirt-jan/shirt1.png",
+          "title": "Shirt"
+        },
+        {
+          "type": "image",
+          "src": "/projects/tshirt-jan/djungle.png",
+          "title": "Jungle"
+        },
+        {
+          "type": "image",
+          "src": "/projects/tshirt-jan/outdoor1a.png",
+          "title": "Outdoor"
+        },
+        {
+          "type": "image",
+          "src": "/projects/tshirt-jan/outdoor2.png",
+          "title": "Outdoor 2"
+        },
+        {
+          "type": "image",
+          "src": "/projects/tshirt-jan/outdoor2a.png",
+          "title": "Outdoor 2a"
+        },
+        {
+          "type": "image",
+          "src": "/projects/tshirt-jan/outdoor3.png",
+          "title": "Outdoor 3"
+        }
       ]
     },
     {
       "id": "16",
       "slug": "pult-vacuum",
-      "title": "PULT – Keep Cleaning",
-      "description": "A futuristic vacuum cleaner concept blending industrial design with space-age aesthetics. PULT features a high-caliber drum filter system, organic tech components, and multiple cleaning modes – engineered not just for earthly messes, but with an astronaut's precision and innovation.",
+      "title": "PULT — Keep Cleaning",
+      "description": "A futuristic vacuum cleaner concept blending industrial design with space-age aesthetics. PULT features a high-caliber drum filter system, organic tech components, and multiple cleaning modes — engineered not just for earthly messes, but with an astronaut's precision and innovation.",
       "date": "2026-02-08",
-      "tags": ["3D", "product design", "concept", "industrial"],
+      "tags": [
+        "3D",
+        "product design",
+        "concept",
+        "industrial"
+      ],
       "type": "video",
       "thumbnail": "/projects/pult-vacuum/pult-90grad.png",
       "videoUrl": "/projects/pult-vacuum/pult-final.mp4",
@@ -72,11 +169,31 @@
       "htmlPath": "/projects/pult-vacuum/index.html",
       "author": "AaronCxC",
       "gallery": [
-        { "type": "video", "src": "/projects/pult-vacuum/abstract-bg.mp4", "title": "Abstract Shape Animation" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-90grad.png", "title": "PULT – Overview" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-90grad-2.png", "title": "Detail" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-90grad-3.png", "title": "Keep Cleaning" },
-        { "type": "image", "src": "/projects/pult-vacuum/pult-90grad-4.png", "title": "Design Detail" }
+        {
+          "type": "video",
+          "src": "/projects/pult-vacuum/abstract-bg.mp4",
+          "title": "Abstract Shape Animation"
+        },
+        {
+          "type": "image",
+          "src": "/projects/pult-vacuum/pult-90grad.png",
+          "title": "PULT — Overview"
+        },
+        {
+          "type": "image",
+          "src": "/projects/pult-vacuum/pult-90grad-2.png",
+          "title": "Detail"
+        },
+        {
+          "type": "image",
+          "src": "/projects/pult-vacuum/pult-90grad-3.png",
+          "title": "Keep Cleaning"
+        },
+        {
+          "type": "image",
+          "src": "/projects/pult-vacuum/pult-90grad-4.png",
+          "title": "Design Detail"
+        }
       ]
     },
     {
@@ -85,13 +202,23 @@
       "title": "Multiply",
       "description": "Eau de Toilette - A conceptual fragrance campaign blending industrial aesthetics with luxury product design. The MULTIPLY project explores mechanical precision meeting sensorial experience, featuring custom typography and ball bearing inspired packaging.",
       "date": "2026-02-06",
-      "tags": ["video", "product design", "concept", "motion"],
+      "tags": [
+        "video",
+        "product design",
+        "concept",
+        "motion"
+      ],
       "type": "video",
-      "thumbnail": "/projects/multiply/trailer.mp4",
-      "videoUrl": "/projects/multiply/trailer.mp4",
-      "authors": ["jan_test.mp4", "pustey.png", "alexg030"],
-      "gallery": [ { "type": "image", "src": "/projects/multiply/poster.png", "title": "Poster" }
-      ]
+      "thumbnail": "/projects/multiply/Thumbnail.png",
+      "videoUrl": "/projects/multiply/Trailer.webm",
+      "gallery": [
+        {
+          "type": "image",
+          "src": "/projects/multiply/poster.png",
+          "title": "Poster"
+        }
+      ],
+      "author": "Multikunst"
     },
     {
       "id": "14",
@@ -99,22 +226,55 @@
       "title": "Rovolto Lost Files",
       "description": "An interactive 3D visualization exploring lost digital artifacts and recovered file structures. Navigate through the intricate geometry and discover the beauty hidden within corrupted data forms.",
       "date": "2026-02-05",
-      "tags": ["3D", "sculpture", "interactive", "webgl"],
+      "tags": [
+        "3D",
+        "sculpture",
+        "interactive",
+        "webgl"
+      ],
       "type": "html",
-      "thumbnail": "/projects/rovolto-lost-files/rovolto.png",
+      "thumbnail": "/projects/rovolto-lost-files/Thumbnail.png",
       "htmlPath": "/projects/rovolto-lost-files/index.html",
       "model3dPath": "/projects/rovolto-lost-files/model.fbx",
       "model3dRotationX": 0,
       "model3dMaterialColor": "#FF8C00",
       "author": "AaronCxC",
       "gallery": [
-        { "type": "image", "src": "/projects/rovolto-lost-files/rovolto.png", "title": "Close-up View" },
-        { "type": "image", "src": "/projects/rovolto-lost-files/rovolto1.png", "title": "Full Body" },
-        { "type": "image", "src": "/projects/rovolto-lost-files/render-3.png", "title": "Detail Render" },
-        { "type": "image", "src": "/projects/rovolto-lost-files/render-4.png", "title": "Front View" },
-        { "type": "image", "src": "/projects/rovolto-lost-files/render-5.png", "title": "Side View" },
-        { "type": "image", "src": "/projects/rovolto-lost-files/render-6.png", "title": "Three Quarter View" },
-        { "type": "image", "src": "/projects/rovolto-lost-files/render-7.png", "title": "Back View" }
+        {
+          "type": "image",
+          "src": "/projects/rovolto-lost-files/rovolto.png",
+          "title": "Close-up View"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rovolto-lost-files/rovolto1.png",
+          "title": "Full Body"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rovolto-lost-files/render-3.png",
+          "title": "Detail Render"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rovolto-lost-files/render-4.png",
+          "title": "Front View"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rovolto-lost-files/render-5.png",
+          "title": "Side View"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rovolto-lost-files/render-6.png",
+          "title": "Three Quarter View"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rovolto-lost-files/render-7.png",
+          "title": "Back View"
+        }
       ]
     },
     {
@@ -123,26 +283,63 @@
       "title": "3D Cosmetic Ice Gel",
       "description": "A conceptual cosmetic product design featuring surreal 3D compositions. The Ice Gel series explores the boundaries between product visualization and abstract art, combining organic blob forms with precise industrial design and dramatic lighting.",
       "date": "2026-02-04",
-      "tags": ["3D", "product design", "concept", "cosmetics"],
+      "tags": [
+        "3D",
+        "product design",
+        "concept",
+        "cosmetics"
+      ],
       "type": "image",
       "thumbnail": "/projects/ice-gel/test-render-4-taj.png",
-      "images": ["/projects/ice-gel/test-render-4-taj.png"],
+      "images": [
+        "/projects/ice-gel/test-render-4-taj.png"
+      ],
       "author": "AaronCxC",
       "gallery": [
-        { "type": "image", "src": "/projects/ice-gel/final2.png", "title": "Iridescent Serum Bottle" },
-        { "type": "image", "src": "/projects/ice-gel/multikunst-freitag.png", "title": "Feuchtigkeitscrème – Strahlende Haut" },
-        { "type": "image", "src": "/projects/ice-gel/multikunst-freitag23w.png", "title": "Product Composition" },{ "type": "image", "src": "/projects/ice-gel/test-render-2-taj.png", "title": "Ice Gel Render" },{ "type": "image", "src": "/projects/ice-gel/test-render-4-taj.png", "title": "Abstract Composition" }]
+        {
+          "type": "image",
+          "src": "/projects/ice-gel/final2.png",
+          "title": "Iridescent Serum Bottle"
+        },
+        {
+          "type": "image",
+          "src": "/projects/ice-gel/multikunst-freitag.png",
+          "title": "Feuchtigkeitscreme — Strahlende Haut"
+        },
+        {
+          "type": "image",
+          "src": "/projects/ice-gel/multikunst-freitag23w.png",
+          "title": "Product Composition"
+        },
+        {
+          "type": "image",
+          "src": "/projects/ice-gel/test-render-2-taj.png",
+          "title": "Ice Gel Render"
+        },
+        {
+          "type": "image",
+          "src": "/projects/ice-gel/test-render-4-taj.png",
+          "title": "Abstract Composition"
+        }
+      ]
     },
     {
       "id": "12",
       "slug": "sticker-box",
       "title": "Sticker Box",
-      "description": "A collection of handcrafted stickers and print materials. This project showcases the tactile beauty of analog design elements – from bold typographic treatments to expressive illustrations, all presented on natural kraft paper.",
+      "description": "A collection of handcrafted stickers and print materials. This project showcases the tactile beauty of analog design elements — from bold typographic treatments to expressive illustrations, all presented on natural kraft paper.",
       "date": "2026-02-04",
-      "tags": ["print", "stickers", "branding", "analog"],
+      "tags": [
+        "print",
+        "stickers",
+        "branding",
+        "analog"
+      ],
       "type": "image",
       "thumbnail": "/projects/sticker-box/thumbnail.png",
-      "images": ["/projects/sticker-box/thumbnail.png"],
+      "images": [
+        "/projects/sticker-box/thumbnail.png"
+      ],
       "author": "JanMitGun"
     },
     {
@@ -151,16 +348,37 @@
       "title": "Pocket Multipass",
       "description": "A conceptual hardware device design exploring the intersection of retro gaming aesthetics and modern technology. The Pocket Multipass features a distinctive form factor with premium materials and tactile interface elements.",
       "date": "2026-02-02",
-      "tags": ["3D", "product design", "concept", "hardware"],
+      "tags": [
+        "3D",
+        "product design",
+        "concept",
+        "hardware"
+      ],
       "type": "video",
-      "thumbnail": "/projects/pocket-multipass/preview.mp4",
+      "thumbnail": "/projects/pocket-multipass/Thumbnail.png",
       "videoUrl": "/projects/pocket-multipass/preview.mp4",
       "author": "oxxupe",
       "gallery": [
-        { "type": "video", "src": "/projects/pocket-multipass/detail.mp4", "title": "Detail Animation" },
-        { "type": "image", "src": "/projects/pocket-multipass/front_top.png", "title": "Front View" },
-        { "type": "image", "src": "/projects/pocket-multipass/front_top_2.png", "title": "Front View with Cartridge" },
-        { "type": "image", "src": "/projects/pocket-multipass/perspective.png", "title": "Perspective View" }
+        {
+          "type": "video",
+          "src": "/projects/pocket-multipass/detail.mp4",
+          "title": "Detail Animation"
+        },
+        {
+          "type": "image",
+          "src": "/projects/pocket-multipass/front_top.png",
+          "title": "Front View"
+        },
+        {
+          "type": "image",
+          "src": "/projects/pocket-multipass/front_top_2.png",
+          "title": "Front View with Cartridge"
+        },
+        {
+          "type": "image",
+          "src": "/projects/pocket-multipass/perspective.png",
+          "title": "Perspective View"
+        }
       ]
     },
     {
@@ -169,10 +387,15 @@
       "title": "The House",
       "description": "A cinematic exploration of architectural spaces, light, and shadow. This video piece captures the essence of domestic environments through careful composition and atmospheric visuals.",
       "date": "2026-01-31",
-      "tags": ["video", "architecture", "cinematic", "3D"],
+      "tags": [
+        "video",
+        "architecture",
+        "cinematic",
+        "3D"
+      ],
       "type": "video",
-      "thumbnail": "/videos/thehouse.mp4",
-      "videoUrl": "/videos/thehouse.mp4",
+      "thumbnail": "/projects/the-house/Thumbnail.png",
+      "videoUrl": "/projects/the-house/Thehouse%20Multi%20Portfolio(1).webm",
       "htmlPath": "/projects/the-house/index.html",
       "author": "AaronCxC"
     },
@@ -182,12 +405,31 @@
       "title": "Mask Sculpture",
       "description": "An interactive 3D visualization of a sculptural mask form. Explore the intricate geometry through rotation and wireframe overlay, revealing the mathematical beauty hidden within organic shapes.",
       "date": "2026-01-29",
-      "tags": ["3D", "sculpture", "interactive", "webgl"],
+      "tags": [
+        "3D",
+        "sculpture",
+        "interactive",
+        "webgl"
+      ],
       "type": "html",
       "thumbnail": "/projects/mask-sculpture/look-mask-4.png",
       "htmlPath": "/projects/mask-sculpture/index.html",
       "model3dPath": "/projects/mask-sculpture/model.fbx",
-      "model3dOffsetY": 0,"author": "AaronCxC","gallery": [{ "type": "image", "src": "/projects/mask-sculpture/look-mask-4.png", "title": "Mask Sculpture" },{ "type": "image", "src": "/projects/mask-sculpture/youtube-back-10.png", "title": "YouTube Back" }] }
+      "model3dOffsetY": 0,
+      "author": "AaronCxC",
+      "gallery": [
+        {
+          "type": "image",
+          "src": "/projects/mask-sculpture/look-mask-4.png",
+          "title": "Mask Sculpture"
+        },
+        {
+          "type": "image",
+          "src": "/projects/mask-sculpture/youtube-back-10.png",
+          "title": "YouTube Back"
+        }
+      ]
+    }
   ],
   "lastUpdated": "2026-02-06T16:20:00Z"
 }

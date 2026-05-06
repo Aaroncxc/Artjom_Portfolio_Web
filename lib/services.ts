@@ -12,7 +12,7 @@ export interface ServiceMedia {
   type: 'image' | 'video';
   src: string;
   alt?: string;
-  /** H.264 MP4 (same clip). Listed first in <video> so Safari / iOS can play WebM VP9 fallbacks. */
+  /** H.264 MP4 (same clip). Fallback after `src`; browsers that support WebM load only WebM. */
   mp4Src?: string;
   /** Optional poster while metadata loads (defaults to same path with .png if present). */
   poster?: string;
@@ -66,8 +66,10 @@ export const services: Service[] = [
     ],
     hero: {
       type: 'video',
-      src: '/videos/thehouse.mp4',
+      src: '/projects/the-house/Thehouse%20Multi%20Portfolio(1).webm',
+      mp4Src: '/videos/thehouse.mp4',
       alt: 'The House — cinematic architectural visualization',
+      poster: '/projects/the-house/Thumbnail.png',
     },
     samples: [
       { type: 'image', src: '/services/architectural-visualisation/samples/sample-1.png' },

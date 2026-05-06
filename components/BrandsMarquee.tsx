@@ -33,13 +33,13 @@ export function BrandsMarquee() {
       className="mt-20 sm:mt-28"
     >
       <p className="mb-10 px-4 text-center text-sm font-semibold uppercase tracking-[0.24em] text-mk-text-muted sm:mb-12 sm:text-base sm:tracking-[0.26em]">
-        Partner, mit denen wir zusammengearbeitet haben
+        Partners we&apos;ve worked with
       </p>
 
       {/* Static grid when user prefers reduced motion */}
       <div
         className="motion-reduce:flex hidden flex-wrap items-center justify-center gap-6 px-4 py-4 sm:gap-8 sm:py-5"
-        aria-label="Logos von Partnern und Kunden"
+        aria-label="Partner and client logos"
       >
         {brandLogos.map((brand) => (
           <div key={brand.src} className={cardShellClass}>
@@ -55,7 +55,7 @@ export function BrandsMarquee() {
 
       <div
         className="relative motion-reduce:hidden w-screen max-w-[100vw] left-1/2 -translate-x-1/2 overflow-hidden py-6 sm:py-8 [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]"
-        aria-label="Logos von Partnern und Kunden"
+        aria-label="Partner and client logos"
         role="presentation"
       >
         <div className="flex w-max animate-marquee will-change-transform">

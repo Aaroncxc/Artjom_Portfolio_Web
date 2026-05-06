@@ -137,7 +137,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
     <>
       <div
         id="about"
-        className="pt-28 sm:pt-32 md:pt-36 pb-20 sm:pb-24 md:pb-28 px-5 sm:px-8"
+        className="pt-28 sm:pt-32 md:pt-36 pb-10 sm:pb-12 md:pb-14 px-5 sm:px-8"
       >
         <div className="max-w-7xl w-full mx-auto">
           <motion.div
@@ -157,36 +157,14 @@ export function AboutSection({ visible }: AboutSectionProps) {
                   <div className="relative z-10 p-5 sm:p-6 lg:p-8">
                     {/* Headline */}
                     <div className="mb-8 max-w-2xl">
-                      <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-mk-text mb-4 leading-[1.1]">
+                      <h3 className="mb-4 text-3xl font-semibold leading-[1.1] tracking-tight text-mk-text sm:text-4xl lg:text-5xl">
                         We are multikunst
                       </h3>
-                      <p className="text-base sm:text-lg text-mk-text-secondary leading-relaxed">
+                      <p className="text-base leading-relaxed text-mk-text-secondary sm:text-lg">
                         A creative collective at the intersection of art, design, and technology.
                         We combine architecture, 3D visualization, videography, music, and code
                         to build immersive digital experiences.
                       </p>
-                    </div>
-
-                    {/* Philosophy grid */}
-                    <div className="grid sm:grid-cols-2 gap-4 sm:gap-5 mb-10">
-                      <div className="p-4 sm:p-5 rounded-xl bg-[rgba(255,255,255,0.5)] border border-[rgba(28,28,28,0.06)]">
-                        <h4 className="text-[15px] font-semibold text-mk-text mb-2">
-                          Our Philosophy
-                        </h4>
-                        <p className="text-sm text-mk-text-secondary leading-relaxed">
-                          We believe the best work happens when different disciplines collide.
-                          Every project is a chance to merge perspectives and push creative boundaries.
-                        </p>
-                      </div>
-                      <div className="p-4 sm:p-5 rounded-xl bg-[rgba(255,255,255,0.5)] border border-[rgba(28,28,28,0.06)]">
-                        <h4 className="text-[15px] font-semibold text-mk-text mb-2">
-                          What We Do
-                        </h4>
-                        <p className="text-sm text-mk-text-secondary leading-relaxed">
-                          From interactive 3D web experiences and product visualizations to
-                          music videos and brand identities &mdash; we work across every medium.
-                        </p>
-                      </div>
                     </div>
 
                     {/* Members */}
@@ -224,10 +202,12 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                     src={bgImage}
                                     alt=""
                                     loading="lazy"
-                                    className={`absolute inset-0 h-full w-full object-cover opacity-85 ${bgImagePositionClass}`}
+                                    className={`absolute inset-0 h-full w-full object-cover opacity-100 transition-opacity duration-300 ease-out group-hover:opacity-[0.42] ${bgImagePositionClass}`}
                                   />
-                                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[rgba(255,255,255,0.78)] via-[rgba(255,255,255,0.30)] to-[rgba(255,255,255,0.00)]" />
-                                  <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-[rgba(255,255,255,0.42)] to-transparent" />
+                                  {/* Light scrim at rest so type stays readable on busy photos */}
+                                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[rgba(255,255,255,0.38)] via-[rgba(255,255,255,0.06)] to-transparent" />
+                                  {/* Bleaches on hover so text pops */}
+                                  <div className="pointer-events-none absolute inset-0 bg-white opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-60" />
                                 </>
                               )}
 

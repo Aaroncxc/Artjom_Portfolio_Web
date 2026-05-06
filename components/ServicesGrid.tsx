@@ -36,7 +36,7 @@ export function ServicesGrid({ visible }: ServicesGridProps) {
   if (!visible) return null;
 
   return (
-    <section id="services" className="relative pt-20 pb-12 px-4 sm:px-6">
+    <section id="services" className="relative pt-10 pb-12 px-4 sm:px-6 sm:pt-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10 sm:mb-14 max-w-3xl">
           <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted mb-3">

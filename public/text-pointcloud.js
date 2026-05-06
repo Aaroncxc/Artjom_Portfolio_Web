@@ -30,7 +30,8 @@ const DEFAULTS = {
   "gravityOnClick": true,
   "showSolidWhenIdle": true,
   "transitionSpeed": 0.08,
-  "burstStrength": 8,
+  "solidRevealDelayMs": 420,
+"burstStrength": 8,
   "holdOpen": false,
     "wanderStrength": 0,
   "explosionMotionScale": 0.45
@@ -527,13 +528,27 @@ class TextPointcloud extends HTMLElement{
     const transitionSpeed = Number(p.transitionSpeed) || 0.08;
     
     // Target opacity: 1 when mouse is inside (show points), 0 when outside (show solid)
-    let targetOpacity = m.inside ? 1 : 0;
+    let rawTargetOpacity = m.inside ? 1 : 0;
     // External morph (0-1): sliders force points visible and apply formula
     const morphX = Number(p.morphX) || 0;
     const morphY = Number(p.morphY) || 0;
     const morphFactor = Math.max(morphX, morphY);
-    if (morphFactor > 0) targetOpacity = Math.max(targetOpacity, morphFactor);
-    if (p.holdOpen === true) targetOpacity = 1;
+    if (morphFactor > 0) rawTargetOpacity = Math.max(rawTargetOpacity, morphFactor);
+    if (p.holdOpen === true) rawTargetOpacity = 1;
+
+    // Hold particle view so the solid wordmark fades in only after particles start settling
+    const delayRaw = Number(p.solidRevealDelayMs);
+    const solidDelayMs = Number.isFinite(delayRaw) ? Math.max(0, delayRaw) : 0;
+    let targetOpacity = rawTargetOpacity;
+    if (solidDelayMs > 0 && rawTargetOpacity < 1 && this.state.pointsOpacity > 0.12) {
+      const now = performance.now();
+      if (!this.state._pendingSolidReveal) this.state._pendingSolidReveal = { until: now + solidDelayMs };
+      if (now < this.state._pendingSolidReveal.until) targetOpacity = 1;
+      else this.state._pendingSolidReveal = null;
+    } else if (rawTargetOpacity >= 1) {
+      this.state._pendingSolidReveal = null;
+    }
+
     // Smoothly transition
     this.state.pointsOpacity = lerp(this.state.pointsOpacity, targetOpacity, transitionSpeed);
     

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import type { ServiceMedia } from '@/lib/services';
 
 function mimeForVideoSrc(src: string): string {
@@ -28,8 +28,8 @@ interface ServiceMediaVideoProps {
 }
 
 /**
- * Renders service hero/sample video with optional H.264 MP4 first for Safari / iOS
- * (WebM VP9 often shows a black player there).
+ * Service hero/sample video. When `mp4Src` is set alongside a WebM `src`, only one format is
+ * loaded: the browser picks the first `<source>` it can play (WebM in Chromium/Firefox, MP4 on Safari).
  */
 export function ServiceMediaVideo({
   media,
@@ -44,18 +44,16 @@ export function ServiceMediaVideo({
 
   const poster = defaultPoster(media);
   const sources = useMemo(() => {
-    const ordered = [
-      media.mp4Src ? { src: media.mp4Src, type: 'video/mp4' } : null,
+    const list: Array<{ src: string; type: string }> = [
       { src: media.src, type: mimeForVideoSrc(media.src) },
-    ].filter(Boolean) as Array<{ src: string; type: string }>;
-    return ordered;
+    ];
+    if (media.mp4Src && media.mp4Src !== media.src) {
+      list.push({ src: media.mp4Src, type: 'video/mp4' });
+    }
+    return list;
   }, [media.mp4Src, media.src]);
-  const [activeSrc, setActiveSrc] = useState(sources[0]?.src ?? media.src);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    setActiveSrc(sources[0]?.src ?? media.src);
-  }, [sources, media.src]);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -64,22 +62,13 @@ export function ServiceMediaVideo({
     if (autoPlay) {
       video.play().catch(() => {});
     }
-  }, [activeSrc, autoPlay]);
-
-  const handleError = () => {
-    const idx = sources.findIndex((source) => source.src === activeSrc);
-    const next = sources[idx + 1];
-    if (next && next.src !== activeSrc) {
-      setActiveSrc(next.src);
-    }
-  };
+  }, [sources, autoPlay]);
 
   return (
     <video
-      key={activeSrc}
+      key={`${media.src}|${media.mp4Src ?? ''}`}
       ref={videoRef}
       className={className}
-      src={activeSrc}
       controls={controls}
       autoPlay={autoPlay}
       muted={muted}
@@ -87,7 +76,6 @@ export function ServiceMediaVideo({
       playsInline={playsInline}
       preload={controls ? 'metadata' : 'auto'}
       poster={poster}
-      onError={handleError}
     >
       {sources.map((source) => (
         <source key={source.src} src={source.src} type={source.type} />
