@@ -1,0 +1,73 @@
+{
+  "id": "architectural-vizualisation",
+  "type": "service",
+  "title": "Architectural Vizualisation",
+  "slug": "video-production",
+  "status": "published",
+
+  "shortDescription": "Hochwertige Videoproduktion für Websites, Kampagnen und Social Media.",
+  "description": "Wir entwickeln und produzieren Videos von der Konzeption bis zur finalen Ausspielung. Dazu gehören Konzept, Dreh, Schnitt, Color Grading, Sound Design und Export für verschiedene Plattformen.",
+
+  "category": "production",
+  "tags": ["video", "social-media", "campaign", "production"],
+
+  "offer": {
+    "headline": "Was wir anbieten",
+    "items": [
+      "Konzeption",
+      "Drehplanung",
+      "Videoproduktion",
+      "Schnitt",
+      "Color Grading",
+      "Sound Design",
+      "Export für Web und Social Media"
+    ]
+  },
+
+  "thumbnail": {
+    "src": "/media/services/video-production/thumbnail.webp",
+    "alt": "Videoproduktion mit Kamera-Setup"
+  },
+
+  "media": [
+    {
+      "id": "service-video-production-001",
+      "type": "image",
+      "src": "/media/services/video-production/images/001.webp",
+      "alt": "Kamera-Setup bei einer Videoproduktion",
+      "caption": "Behind the Scenes",
+      "order": 1,
+      "featured": true,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "id": "service-video-production-002",
+      "type": "video",
+      "src": "/media/services/video-production/videos/001.mp4",
+      "poster": "/media/services/video-production/videos/001-poster.webp",
+      "caption": "Video Production Showreel",
+      "order": 2,
+      "featured": false,
+      "autoplay": false,
+      "loop": true,
+      "muted": true
+    }
+  ],
+
+  "relatedProjects": [
+    "max-brandcampaign",
+    "studio-launchfilm"
+  ],
+
+  "cta": {
+    "label": "Anfrage stellen",
+    "href": "/contact",
+    "text": "Du brauchst ein Video für dein Projekt? Schreib uns."
+  },
+
+  "seo": {
+    "title": "Video Production Service",
+    "description": "Videoproduktion für Kampagnen, Websites und Social Media."
+  }
+}

@@ -1,5 +1,7 @@
+const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const baseConfig = {
   reactStrictMode: true,
 
   // ✅ Unblock Vercel build if lint/types fail
@@ -28,7 +30,20 @@ const nextConfig = {
       },
     ];
   },
+
+  /** Dev-only: avoids broken chunk refs (`Cannot find module './NNN.js'`) + PackFileCache ENOENT on Windows when `.next` desyncs. */
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.cache = false;
+    }
+    return config;
+  },
 };
 
-module.exports = nextConfig;
+module.exports = (phase) => ({
+  ...baseConfig,
+  // Keep dev artifacts separate from build/start artifacts to prevent
+  // `.next` corruption when commands are run in parallel on Windows.
+  distDir: phase === PHASE_DEVELOPMENT_SERVER ? '.next-dev' : '.next',
+});
 

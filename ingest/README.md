@@ -72,6 +72,9 @@ Create a folder for each project in the designated Drive folder:
 - `type` (required): One of `html`, `video`, `audio`, `image`
 - `author` (optional): Creator name
 - `featured` (optional): Boolean, highlights on homepage
+- `model3dPath` (optional): Public path to an FBX for the portfolio modal 3D tab (e.g. `/projects/my-slug/model.fbx`). The file must already exist under `public/projects/<slug>/` (ingest does not upload it).
+- `model3dRotationX`, `model3dOffsetY`, `model3dMaterialColor` (optional): Tunables for that preview
+- `showTile3dHover` (optional): When `false`, the grid tile skips mounting 3D on hover (large models stay out of the grid)
 
 ### Asset Types by Project Type
 

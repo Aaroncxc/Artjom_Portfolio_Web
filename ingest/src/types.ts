@@ -7,6 +7,23 @@ export interface DrivePostMeta {
   type: 'html' | 'video' | 'audio' | 'image';
   author?: string;
   featured?: boolean;
+  // Long-form copy for the project modal "Explanation" tab.
+  explanation?: string;
+  // Bullet list for the "Private" tab info column.
+  highlights?: string[];
+  // Optional override for the project's "Hire Me" CTA target.
+  ctaHref?: string;
+  // When false → video/thumbnail hover only on grid; omit or true → 3D on hover if model3dPath exists.
+  showTile3dHover?: boolean;
+  /** When false → modal carousel omits FBX / model3d slides; tile can still use model3dPath. */
+  showModel3dInModal?: boolean;
+  /** Optional public URL/path to FBX loaded by the modal 3D preview (typically `/projects/<slug>/model.fbx`). */
+  model3dPath?: string;
+  model3dRotationX?: number;
+  model3dMaterialColor?: string;
+  model3dOffsetY?: number;
+  /** Libraries / apps (optional `icon` is a public URL path). */
+  tools?: { name: string; icon?: string }[];
 }
 
 // Internal representation of a project during processing
@@ -52,6 +69,16 @@ export interface OutputPost {
   htmlPath?: string;
   author?: string;
   featured?: boolean;
+  explanation?: string;
+  highlights?: string[];
+  ctaHref?: string;
+  tools?: { name: string; icon?: string }[];
+  showTile3dHover?: boolean;
+  showModel3dInModal?: boolean;
+  model3dPath?: string;
+  model3dRotationX?: number;
+  model3dMaterialColor?: string;
+  model3dOffsetY?: number;
 }
 
 export interface OutputPostsData {

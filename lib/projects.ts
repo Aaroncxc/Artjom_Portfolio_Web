@@ -2,7 +2,8 @@ import { Project, PostsData, ProjectType } from './types';
 
 export async function getProjects(): Promise<Project[]> {
   try {
-    const response = await fetch('/posts.json', { next: { revalidate: 60 } });
+    /** Avoid stale grids/modals during local edits — `posts.json` is source of truth. */
+    const response = await fetch('/posts.json', { cache: 'no-store' });
     if (!response.ok) throw new Error('Failed to fetch projects');
     const data: PostsData = await response.json();
     return data.posts;

@@ -1,0 +1,42 @@
+DADB_Production_Management_KPI_Reporting
+
+Kurzbeschreibung:
+Dieses Projekt umfasst meine Arbeit als Produktionsleiter im Bereich digitale Kursproduktion bei der DADB. Gemeinsam mit einem weiteren Projektmanager habe ich die laufende Produktion mehrerer Kurse, Module und Lerninhalte überblickt, koordiniert und für das Management transparent gemacht.
+
+Die Produktion bestand aus mehreren parallelen Departments, darunter Editorial, 2D, 3D und interaktive Unreal-Engine-basierte Inhalte. Ziel war es, den Fortschritt der gesamten Content-Produktion nachvollziehbar zu steuern und wöchentlich belastbare Übersichten für CEO, Management und weitere Stakeholder bereitzustellen.
+
+Ziel:
+Ziel war es, ein klares Produktions- und Reporting-System aufzubauen, mit dem sichtbar wird, wie viele Chapters, Module, Minuten und Stunden an Kurscontent produziert wurden, welche Inhalte sich in Bearbeitung befinden und wo mögliche Engpässe entstehen.
+
+Die wöchentlichen Reports sollten dem Management eine schnelle und präzise Übersicht über Produktionsstand, Output, Teamleistung und offene Arbeitspakete geben. Gleichzeitig sollte das System intern helfen, die Arbeit der verschiedenen Departments besser zu koordinieren.
+
+Meine Rolle:
+Ich war in diesem Projekt als Produktionsleiter verantwortlich für die operative Steuerung der Kursproduktion. Dazu gehörten die Abstimmung mit den Projektmanagern, die Koordination der Teams, die Kontrolle von Produktionsfortschritten und die regelmäßige Kommunikation mit CEO, Management und Stakeholdern.
+
+Ich habe tägliche Meetings mit den Teams durchgeführt, Daily Calls mit den Projektmanagern koordiniert und monatliche Reportings mit den Teamleads vorbereitet. Zwei Projektmanager betreuten dabei jeweils mehrere Teams, während ich die Gesamtübersicht über Produktion, Deadlines, Output und Reporting verantwortete.
+
+Ein zentraler Bestandteil meiner Arbeit war die Entwicklung eines KPI-Reportings: Die Projektmanager pflegten Produktionsdaten in Excel-Tabellen ein, aus denen automatisch wöchentliche KPI-Reports erzeugt wurden. Diese Reports zeigten unter anderem den Fortschritt nach Kursen, Produktionsbereichen, Content-Stunden, Modulen und Review-Status.
+
+Zusätzlich habe ich ein AI-gestütztes internes Tool entwickelt, das auf die Excel-Tabellen zugreifen konnte, Informationen aus den Produktionsdaten extrahierte und diese sauber strukturiert aufbereitete. Das Tool diente als praktische Unterstützung für Auswertung, Übersicht und Reporting.
+
+Tools:
+Excel, AI-Tools, Projektmanagement-Workflows, KPI-Reporting, Asana, interne Produktionssysteme
+
+Beteiligte Bereiche:
+Editorial, 2D, 3D, Postproduktion, interaktive Inhalte, Unreal Engine, LMS / Kursimplementierung, Management Reporting
+
+Ergebnis:
+Entstanden ist ein wöchentliches Reporting- und Produktionssteuerungssystem für die digitale Kursproduktion der DADB. Das System ermöglichte eine klare Übersicht über produzierte Inhalte, offene Arbeitspakete, Produktionsfortschritt und Teamleistung.
+
+Die KPI-Reports wurden regelmäßig an CEO, Management und Stakeholder verschickt und dienten als Grundlage für Produktionsentscheidungen, Priorisierung und Kapazitätsplanung. Zusätzlich entstanden strukturierte Workflow-Dokumente für verschiedene Produktionsbereiche, um Übergaben, Qualitätskontrolle und Verantwortlichkeiten klarer zu definieren.
+
+Besondere Punkte:
+Besonders an diesem Projekt war die Kombination aus operativer Produktionsleitung, Teamkoordination, automatisiertem Reporting und Prozessoptimierung. Neben der laufenden Steuerung mehrerer Departments ging es auch darum, komplexe Produktionsdaten verständlich aufzubereiten und für Managemententscheidungen nutzbar zu machen.
+
+Im Projektordner befindet sich außerdem ein IHK-Zertifikat aus einem Projektleiterlehrgang, den ich während meiner Zeit bei der DADB absolviert habe. Dieser Lehrgang unterstützte meine Rolle als Projektleiter und Produktionsverantwortlicher innerhalb der Organisation.
+
+Datum / Zeitraum:
+2023 / während der Tätigkeit bei der DADB
+
+Status:
+Abgeschlossen

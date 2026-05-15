@@ -4,7 +4,7 @@
       "id": "20",
       "slug": "multi-watch",
       "title": "Multi Watch",
-      "description": "Product visualization and motion study for the Multi Watch — materials, lighting, and industrial product storytelling.",
+      "description": "Product visualization and motion study for the Multi Watch â€” materials, lighting, and industrial product storytelling.",
       "date": "2026-05-06",
       "tags": [
         "video",
@@ -160,9 +160,9 @@
         "industrial"
       ],
       "type": "video",
-      "thumbnail": "/projects/pult-vacuum/pult-90grad.png",
+      "thumbnail": "/projects/pult-vacuum/pult-praesentation-5.png",
       "videoUrl": "/projects/pult-vacuum/pult-final.mp4",
-      "model3dPath": "/projects/pult-vacuum/model.fbx",
+      "model3dPath": "/projects/pult-vacuum/model.glb",
       "model3dRotationX": 0,
       "model3dMaterialColor": "#FF8C00",
       "videoPortrait": true,
@@ -173,6 +173,11 @@
           "type": "video",
           "src": "/projects/pult-vacuum/abstract-bg.mp4",
           "title": "Abstract Shape Animation"
+        },
+        {
+          "type": "image",
+          "src": "/projects/pult-vacuum/pult-praesentation.png",
+          "title": "Presentation"
         },
         {
           "type": "image",
@@ -193,6 +198,13 @@
           "type": "image",
           "src": "/projects/pult-vacuum/pult-90grad-4.png",
           "title": "Design Detail"
+        }
+      ],
+      "showModel3dInModal": false,
+      "tools": [
+        {
+          "name": "Blender",
+          "icon": "/tool-icons/blender.png"
         }
       ]
     },
@@ -225,7 +237,7 @@
       "slug": "rovolto-lost-files",
       "title": "Rovolto Lost Files",
       "description": "An interactive 3D visualization exploring lost digital artifacts and recovered file structures. Navigate through the intricate geometry and discover the beauty hidden within corrupted data forms.",
-      "date": "2026-02-05",
+      "date": "2025-02-01",
       "tags": [
         "3D",
         "sculpture",
@@ -235,7 +247,7 @@
       "type": "html",
       "thumbnail": "/projects/rovolto-lost-files/Thumbnail.png",
       "htmlPath": "/projects/rovolto-lost-files/index.html",
-      "model3dPath": "/projects/rovolto-lost-files/model.fbx",
+      "model3dPath": "/projects/rovolto-lost-files/model.glb",
       "model3dRotationX": 0,
       "model3dMaterialColor": "#FF8C00",
       "author": "AaronCxC",
@@ -252,28 +264,22 @@
         },
         {
           "type": "image",
-          "src": "/projects/rovolto-lost-files/render-3.png",
-          "title": "Detail Render"
-        },
-        {
-          "type": "image",
-          "src": "/projects/rovolto-lost-files/render-4.png",
-          "title": "Front View"
-        },
-        {
-          "type": "image",
           "src": "/projects/rovolto-lost-files/render-5.png",
           "title": "Side View"
         },
         {
           "type": "image",
-          "src": "/projects/rovolto-lost-files/render-6.png",
-          "title": "Three Quarter View"
-        },
-        {
-          "type": "image",
           "src": "/projects/rovolto-lost-files/render-7.png",
           "title": "Back View"
+        }
+      ],
+      "tools": [
+        {
+          "name": "Blender",
+          "icon": "/tool-icons/blender.png"
+        },
+        {
+          "name": "Three.js"
         }
       ]
     },
@@ -281,8 +287,8 @@
       "id": "13",
       "slug": "ice-gel",
       "title": "3D Cosmetic Ice Gel",
-      "description": "A conceptual cosmetic product design featuring surreal 3D compositions. The Ice Gel series explores the boundaries between product visualization and abstract art, combining organic blob forms with precise industrial design and dramatic lighting.",
-      "date": "2026-02-04",
+      "description": "A conceptual cosmetic product design featuring surreal 3D compositions. The Ice Gel series explores the boundaries between product visualization and abstract art, combining organic blob forms with precise industrial design and dramatic lighting. Created with Blender in March 2026.",
+      "date": "2026-03-15",
       "tags": [
         "3D",
         "product design",
@@ -321,13 +327,26 @@
           "src": "/projects/ice-gel/test-render-4-taj.png",
           "title": "Abstract Composition"
         }
+      ],
+      "tools": [
+        {
+          "name": "Blender",
+          "icon": "/tool-icons/blender.png"
+        }
+      ],
+      "tile3dBadge": true,
+      "highlights": [
+        "Blender",
+        "3D",
+        "Product design",
+        "Cosmetics"
       ]
     },
     {
       "id": "12",
       "slug": "sticker-box",
       "title": "Sticker Box",
-      "description": "A collection of handcrafted stickers and print materials. This project showcases the tactile beauty of analog design elements — from bold typographic treatments to expressive illustrations, all presented on natural kraft paper.",
+      "description": "A collection of handcrafted stickers and print materials. This project showcases the tactile beauty of analog design elements â€” from bold typographic treatments to expressive illustrations, all presented on natural kraft paper.",
       "date": "2026-02-04",
       "tags": [
         "print",
@@ -385,8 +404,8 @@
       "id": "10",
       "slug": "the-house",
       "title": "The House",
-      "description": "A cinematic exploration of architectural spaces, light, and shadow. This video piece captures the essence of domestic environments through careful composition and atmospheric visuals.",
-      "date": "2026-01-31",
+      "description": "Architectural visualization of a contemporary residence—modeled in Archicad and rendered in Unreal Engine. A cinematic study of light, materials, and indoor–outdoor living: the trailer explores atmosphere and movement; still frames highlight form and landscape.",
+      "date": "2025-12-01",
       "tags": [
         "video",
         "architecture",
@@ -395,9 +414,45 @@
       ],
       "type": "video",
       "thumbnail": "/projects/the-house/Thumbnail.png",
+      "author": "AaronCxC",
+      "model3dPath": "/projects/the-house/model.glb",
+      "model3dRotationX": 0,
+      "model3dOffsetY": -0.15,
+      "showTile3dHover": false,
       "videoUrl": "/projects/the-house/Thehouse%20Multi%20Portfolio(1).webm",
       "htmlPath": "/projects/the-house/index.html",
-      "author": "AaronCxC"
+      "gallery": [
+        {
+          "type": "image",
+          "src": "/projects/the-house/TheHouse_00000.png",
+          "title": "Exterior & entrance"
+        },
+        {
+          "type": "image",
+          "src": "/projects/the-house/TheHouse_00002_00000.png",
+          "title": "Pool & terrace"
+        },
+        {
+          "type": "image",
+          "src": "/projects/the-house/TheHouse_000010_00000.png",
+          "title": "Aerial view"
+        },
+        {
+          "type": "image",
+          "src": "/projects/the-house/TheHouse_0000130_00000.png",
+          "title": "Patio & deck"
+        }
+      ],
+      "tools": [
+        {
+          "name": "Archicad",
+          "icon": "/tool-icons/archicad.png"
+        },
+        {
+          "name": "Unreal Engine",
+          "icon": "/tool-icons/unreal-engine.png"
+        }
+      ]
     },
     {
       "id": "9",
@@ -414,7 +469,7 @@
       "type": "html",
       "thumbnail": "/projects/mask-sculpture/look-mask-4.png",
       "htmlPath": "/projects/mask-sculpture/index.html",
-      "model3dPath": "/projects/mask-sculpture/model.fbx",
+      "model3dPath": "/projects/mask-sculpture/model.glb",
       "model3dOffsetY": 0,
       "author": "AaronCxC",
       "gallery": [
@@ -428,8 +483,11 @@
           "src": "/projects/mask-sculpture/youtube-back-10.png",
           "title": "YouTube Back"
         }
-      ]
+      ],
+      "model3dRotationX": 0,
+      "model3dMaterialColor": "#FF8C00",
+      "model3dAnimationProgress": 0
     }
   ],
-  "lastUpdated": "2026-02-06T16:20:00Z"
+  "lastUpdated": "2026-05-15T18:55:39Z"
 }

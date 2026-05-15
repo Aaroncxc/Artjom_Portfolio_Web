@@ -1,12 +1,15 @@
 {
-  "name": "multikunst-web",
+  "name": "artjom-portfolio-web",
   "version": "2.0.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/next-dev-preflight.js",
     "dev": "next dev",
+    "dev:clean": "node -e \"const fs=require('fs');for(const d of ['.next-dev','.next']){try{fs.rmSync(d,{recursive:true,force:true});}catch(_){}}\" && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "convert:3d": "node scripts/convert-fbx-to-glb.js"
   },
   "dependencies": {
     "@react-three/drei": "^9.99.0",
@@ -26,6 +29,8 @@
     "autoprefixer": "^10.4.0",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.2.0",
+    "fbx2gltf": "^0.9.7-p1",
+    "gltf-pipeline": "^4.3.1",
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.3.0"

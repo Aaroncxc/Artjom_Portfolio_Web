@@ -112,6 +112,13 @@ export function ProjectSlideHtml({ project, isActive }: ProjectSlideHtmlProps) {
                   >
                     {media.type === 'video' ? (
                       <video src={media.src} controls autoPlay muted playsInline loop className="w-full h-full object-cover" />
+                    ) : media.type === 'html' ? (
+                      <iframe
+                        src={media.src}
+                        title={media.title || 'Interactive'}
+                        className="h-full min-h-[200px] w-full border-0"
+                        sandbox="allow-scripts allow-same-origin"
+                      />
                     ) : (
                       <img src={media.src} alt={media.title || `Gallery image ${index + 1}`} className="w-full h-full object-cover" />
                     )}

@@ -6,9 +6,9 @@ import LightLeaksBackground from '@/components/LightLeaksBackground';
 import { Navigation } from '@/components/Navigation';
 import { AboutSection } from '@/components/AboutSection';
 import { ProjectsGrid } from '@/components/ProjectsGrid';
-import { ServicesGrid } from '@/components/ServicesGrid';
 import { ToolsGamesGrid } from '@/components/ToolsGamesGrid';
 import { TextPointCloudHero } from '@/components/TextPointCloudHero';
+import { CONTACT_MAILTO } from '@/lib/contact';
 
 export default function Home() {
   const [heroDismissed, setHeroDismissed] = useState(false);
@@ -35,7 +35,6 @@ export default function Home() {
       const offset = 200;
 
       const aboutSection = document.getElementById('about');
-      const servicesSection = document.getElementById('services');
       const projectsSection = document.getElementById('projects');
       const toolsGamesSection = document.getElementById('tools-games');
 
@@ -43,8 +42,6 @@ export default function Home() {
         setCurrentSection('tools-games');
       } else if (projectsSection && scrollY >= projectsSection.offsetTop - offset) {
         setCurrentSection('projects');
-      } else if (servicesSection && scrollY >= servicesSection.offsetTop - offset) {
-        setCurrentSection('services');
       } else if (aboutSection && scrollY >= aboutSection.offsetTop - offset) {
         setCurrentSection('about');
       } else {
@@ -115,9 +112,6 @@ export default function Home() {
         {/* About Section - first content the visitor sees */}
         <AboutSection visible={true} />
 
-        {/* Services Section - what we do for clients */}
-        <ServicesGrid visible={true} />
-
         {/* Projects Section - Instagram-style Grid */}
         <ProjectsGrid visible={true} />
 
@@ -130,33 +124,32 @@ export default function Home() {
             <div className="glass-panel p-6 sm:p-8">
               <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
                 <div>
-                  <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">multikunst</h3>
+                  <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Artjom Naninjan</h3>
                   <p className="text-mk-text-secondary text-sm leading-relaxed">
-                    A creative collective &amp; agency at the intersection of art, design, and technology.
+                    3D Generalist, Architect &amp; App Developer building immersive digital experiences at the intersection of art, design, and technology.
                   </p>
                 </div>
                 <div>
                   <h4 className="text-sm font-medium mb-3 sm:mb-4 text-mk-text-muted uppercase tracking-wider">Navigate</h4>
                   <ul className="space-y-1">
                     <li><a href="#about" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">About</a></li>
-                    <li><a href="#services" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Services</a></li>
                     <li><a href="#projects" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Projects</a></li>
                     <li><a href="#tools-games" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Tools &amp; Games</a></li>
-                    <li><a href="mailto:hello@multikunst.com" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Contact</a></li>
+                    <li><a href={CONTACT_MAILTO} className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Contact</a></li>
                   </ul>
                 </div>
                 <div>
                   <h4 className="text-sm font-medium mb-3 sm:mb-4 text-mk-text-muted uppercase tracking-wider">Connect</h4>
                   <ul className="space-y-1">
                     <li><a href="#" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Instagram</a></li>
-                    <li><a href="#" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Twitter</a></li>
-                    <li><a href="#" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">GitHub</a></li>
+                    <li><a href="#" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Behance</a></li>
+                    <li><a href="#" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">LinkedIn</a></li>
                   </ul>
                 </div>
               </div>
               <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-[rgba(28,28,28,0.08)] text-center">
                 <p className="text-xs sm:text-sm text-mk-text-muted">
-                  © {new Date().getFullYear()} multikunst. All rights reserved.
+                  © {new Date().getFullYear()} Artjom Naninjan. All rights reserved.
                 </p>
               </div>
             </div>

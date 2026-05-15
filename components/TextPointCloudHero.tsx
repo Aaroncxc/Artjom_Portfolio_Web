@@ -18,12 +18,17 @@ type ResponsivePresetExt = {
   morphAmplitude: number;
   morphFreq: number;
   solidRevealDelayMs: number;
+  /** True when min(width,height) is strictly smaller than MOBILE_STACK_MIN_DIM_PX (stacked hero name). */
+  stackedHeroName: boolean;
 };
 
 /**
  * Layout size for hero math — prefers VisualViewport (iOS Safari URL bar / overscroll)
  * and the smaller CSS dimension so landscape phones do not get “desktop” font math from width alone.
+ * `MOBILE_STACK_*`: stacked “Artjom / Naninjan” only below this min-dimension threshold (phones, not tablets).
  */
+const MOBILE_STACK_MIN_DIM_PX = 480;
+
 function readLayoutCssSize(): { w: number; h: number; minDim: number; maxDim: number } {
   if (typeof window === 'undefined') {
     return { w: 390, h: 844, minDim: 390, maxDim: 844 };
@@ -49,41 +54,47 @@ function readLayoutCssSize(): { w: number; h: number; minDim: number; maxDim: nu
 function getResponsivePreset(): ResponsivePresetExt {
   if (typeof window === 'undefined') {
     return {
-      fontSize: 260,
-      letterSpacing: -26,
-      radius: 90,
-      pointSize: 1,
-      strength: 9,
-      morphAmplitude: 70,
-      morphFreq: 0.0025,
-      solidRevealDelayMs: 480,
+      fontSize: 98,
+      letterSpacing: -10,
+      radius: 66,
+      pointSize: 0.84,
+      strength: 8.5,
+      morphAmplitude: 60,
+      morphFreq: 0.0027,
+      solidRevealDelayMs: 400,
+      stackedHeroName: false,
     };
   }
 
   const { w, h, minDim, maxDim } = readLayoutCssSize();
   const narrow = minDim < 640;
   const shortViewport = minDim < 700;
+  const stackedHeroName = minDim < MOBILE_STACK_MIN_DIM_PX;
 
-  const mobileRatio = narrow ? 0.78 : 0.88;
-  const maxCap = narrow ? Math.min(118, Math.round(minDim * 0.31)) : 220;
+  // Compact but readable; scaled up from previous generation for better legibility.
+  const mobileRatio = narrow ? 0.84 : 0.82;
+  const maxCap = narrow ? Math.min(128, Math.round(minDim * 0.33)) : 186;
 
-  const byMinDim = (minDim * mobileRatio) / (narrow ? 5.1 : 5.5);
-  const byHeight = h * (narrow ? 0.11 : 0.125);
-  const byWidthFit = w * 0.34;
+  const byMinDim = (minDim * mobileRatio) / (narrow ? 5.15 : 5.45);
+  const byHeight = h * (narrow ? 0.112 : 0.104);
+  const longestLineChars = stackedHeroName ? 9 : 16;
+  const byWidthFit = Math.min(w * 0.34, (w * 0.88) / (0.52 * longestLineChars));
 
   let maxFontSize = Math.min(maxCap, byMinDim, byHeight, byWidthFit);
+  if (stackedHeroName) {
+    maxFontSize = Math.min(maxFontSize, (h * 0.24) / 2.05);
+  }
   if (!narrow && maxDim >= 1100) {
-    maxFontSize = Math.max(maxFontSize, Math.min(210, (w * 0.88) / 5.4));
-    maxFontSize = Math.min(maxFontSize, 240, h * 0.16);
+    maxFontSize = Math.min(maxFontSize, 182, (w * 0.46) / 5.1, h * 0.145);
   }
 
-  const fontSize = Math.max(34, Math.round(maxFontSize));
+  const fontSize = Math.max(36, Math.round(maxFontSize));
   const letterSpacing = Math.round(-fontSize * 0.1);
-  const radius = Math.max(40, Math.round(fontSize * (narrow ? 0.6 : 0.64)));
-  const pointSize = minDim < 400 ? 0.68 : w < 400 ? 0.72 : 1;
+  const radius = Math.max(44, Math.round(fontSize * (narrow ? 0.62 : 0.66)));
+  const pointSize = minDim < 400 ? 0.78 : w < 400 ? 0.84 : 1.12;
   const strength = narrow ? 7.5 : 9;
 
-  const morphAmplitude = narrow ? Math.round(42 + fontSize * 0.11) : Math.min(70, Math.round(50 + fontSize * 0.08));
+  const morphAmplitude = narrow ? Math.round(46 + fontSize * 0.12) : Math.min(78, Math.round(54 + fontSize * 0.09));
   const morphFreq = narrow ? 0.0029 : 0.0025;
   let solidRevealDelayMs = narrow ? 400 : 480;
   if (shortViewport && narrow) solidRevealDelayMs = Math.min(solidRevealDelayMs, 360);
@@ -97,26 +108,92 @@ function getResponsivePreset(): ResponsivePresetExt {
     morphAmplitude,
     morphFreq,
     solidRevealDelayMs,
+    stackedHeroName,
   };
 }
 
-/** Approximate wordmark hit area — slightly larger on phones (fat finger + tall logo). */
-function isOverLogoZone(clientX: number, clientY: number): boolean {
-  const { w, h, minDim } = readLayoutCssSize();
-  const narrow = minDim < 640;
-  const cx = w * 0.5;
-  const cy = h * 0.5 - (narrow ? Math.min(18, h * 0.02) : 0);
-  const dx = clientX - cx;
-  const dy = clientY - cy;
-  const rx = Math.max(narrow ? w * 0.46 : 120, w * (narrow ? 0.46 : 0.4));
-  const ry = Math.max(narrow ? h * 0.19 : 56, h * (narrow ? 0.19 : 0.14));
-  return dx * dx / (rx * rx) + dy * dy / (ry * ry) <= 1;
+/** Role phrases around the hero name (see heroPrimaryText below). */
+const INTRO_ROLE_LAYERS = [
+  {
+    text: 'Project Management',
+    relativePosition: { x: 0.12, y: 0.16 },
+    fontScale: 0.188,
+    spacingMul: 2.88,
+    opacity: 0.38,
+    driftAmp: 31,
+    driftFreq: 0.00026,
+    morphGain: 0.92,
+    pointSizeMul: 0.86,
+  },
+  {
+    text: '3D Generalist',
+    relativePosition: { x: 0.88, y: 0.15 },
+    fontScale: 0.203,
+    spacingMul: 2.62,
+    opacity: 0.4,
+    driftAmp: 34,
+    driftFreq: 0.00034,
+    morphGain: 0.94,
+    pointSizeMul: 0.88,
+  },
+  {
+    text: 'App Developer',
+    relativePosition: { x: 0.1, y: 0.5 },
+    fontScale: 0.196,
+    spacingMul: 2.68,
+    opacity: 0.36,
+    driftAmp: 29,
+    driftFreq: 0.00031,
+    morphGain: 0.88,
+    pointSizeMul: 0.84,
+  },
+  {
+    text: 'Art Director',
+    relativePosition: { x: 0.91, y: 0.5 },
+    fontScale: 0.202,
+    spacingMul: 2.68,
+    opacity: 0.38,
+    driftAmp: 33,
+    driftFreq: 0.00033,
+    morphGain: 0.93,
+    pointSizeMul: 0.88,
+  },
+  {
+    text: 'Producer',
+    relativePosition: { x: 0.16, y: 0.82 },
+    fontScale: 0.222,
+    spacingMul: 2.78,
+    opacity: 0.35,
+    driftAmp: 36,
+    driftFreq: 0.00036,
+    morphGain: 0.91,
+    pointSizeMul: 0.9,
+  },
+  {
+    text: 'Architect',
+    relativePosition: { x: 0.85, y: 0.82 },
+    fontScale: 0.234,
+    spacingMul: 2.85,
+    opacity: 0.36,
+    driftAmp: 35,
+    driftFreq: 0.00035,
+    morphGain: 0.9,
+    pointSizeMul: 0.92,
+  },
+] as const;
+
+function isInsideElementRect(clientX: number, clientY: number, rect: DOMRect): boolean {
+  return (
+    clientX >= rect.left &&
+    clientX <= rect.right &&
+    clientY >= rect.top &&
+    clientY <= rect.bottom
+  );
 }
 
 export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cloudRef = useRef<HTMLElement | null>(null);
-  const scriptLoaded = useRef(false);
   const [presetOverrides, setPresetOverrides] = useState(() => getResponsivePreset());
   const [activated, setActivated] = useState(false);
   const activatedRef = useRef(false);
@@ -155,7 +232,7 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
     return () => mq.removeEventListener?.('change', update);
   }, []);
 
-  // Morph from pointer/touch movement over logo; tuned for coarse pointers (mobile).
+  // Morph from pointer/touch movement anywhere on the hero; tuned for coarse pointers (mobile).
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -199,7 +276,9 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
 
     const feedMorph = (clientX: number, clientY: number, t: number) => {
       if (activatedRef.current) return;
-      if (!isOverLogoZone(clientX, clientY)) return;
+      const node = containerRef.current;
+      if (!node) return;
+      if (!isInsideElementRect(clientX, clientY, node.getBoundingClientRect())) return;
 
       const lp = lastMoveRef.current;
       const dt = lp.t > 0 ? t - lp.t : 0;
@@ -287,11 +366,15 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
     morphAmplitude,
     morphFreq,
     solidRevealDelayMs,
+    stackedHeroName,
     ...sizePreset
   } = presetOverrides;
 
+  const heroPrimaryText = stackedHeroName ? 'Artjom\nNaninjan' : 'Artjom Naninjan';
+
   const preset = {
-    text: 'multikunst',
+    interactFullCanvas: true,
+    layers: [{ text: heroPrimaryText }, ...INTRO_ROLE_LAYERS],
     ...sizePreset,
     weight: 700,
     spacing: 2,
@@ -316,13 +399,7 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
 
   return (
     <>
-      <Script
-        src="/text-pointcloud.js"
-        strategy="afterInteractive"
-        onLoad={() => {
-          scriptLoaded.current = true;
-        }}
-      />
+      <Script src="/text-pointcloud.js?v=hero5" strategy="afterInteractive" />
 
       <section
         ref={containerRef}
@@ -368,12 +445,12 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
                 >
                   {isCoarsePointer ? (
                     <>
-                      Move on the word, then
+                      Move on the canvas, then
                       <br />
                       tap to enter
                     </>
                   ) : (
-                    'Click multikunst to enter'
+                    'Click anywhere to enter'
                   )}
                 </motion.span>
                 <div className="h-4 w-px bg-[rgba(28,28,28,0.25)] sm:h-5" />

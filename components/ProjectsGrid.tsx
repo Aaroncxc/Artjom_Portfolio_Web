@@ -2,13 +2,38 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ProjectSlide } from './ProjectSlide';
+import { PortfolioProjectModal } from './portfolio/PortfolioProjectModal';
 import { Project3DPreview } from './Project3DPreview';
 import { Project, ProjectType } from '@/lib/types';
+import { projectMatchesPortfolioOwner } from '@/lib/portfolioOwnerFilter';
+import { chip3dGrayClass, chip3dInteractiveClass, chip3dModalOnlyClass, metaChipClass } from '@/lib/chipClasses';
 
-/** Only mounted while tile is hovered — plays preview video (like 3D hover swap). */
+const warmedVideoUrls = new Set<string>();
+const warmedModelUrls = new Set<string>();
+
+function warmVideoAsset(src?: string) {
+  if (!src || warmedVideoUrls.has(src) || typeof document === 'undefined') return;
+  warmedVideoUrls.add(src);
+  const probe = document.createElement('video');
+  probe.preload = 'auto';
+  probe.muted = true;
+  probe.playsInline = true;
+  probe.src = src;
+  probe.load();
+}
+
+function warmModelAsset(src?: string) {
+  if (!src || warmedModelUrls.has(src) || typeof window === 'undefined') return;
+  warmedModelUrls.add(src);
+  fetch(src, { cache: 'force-cache' }).catch(() => {
+    /* best effort warmup */
+  });
+}
+
+/** Only mounted while tile is hovered — plays preview video and fades itself in once playable. */
 function HoverPlayVideo({ src, className }: { src: string; className?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const v = ref.current;
@@ -31,8 +56,10 @@ function HoverPlayVideo({ src, className }: { src: string; className?: string })
       muted
       loop
       playsInline
-      preload="metadata"
-      className={className}
+      preload="auto"
+      onCanPlay={() => setReady(true)}
+      onLoadedData={() => setReady(true)}
+      className={`${className ?? ''} transition-opacity duration-500 ${ready ? 'opacity-100' : 'opacity-0'}`.trim()}
     />
   );
 }
@@ -62,11 +89,22 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
   useEffect(() => {
     async function loadProjects() {
       try {
-        const response = await fetch('/posts.json');
-        const data = await response.json();
-        setProjects(data.posts);
+        const response = await fetch('/posts.json', { cache: 'no-store' });
+        if (!response.ok) {
+          console.error('Failed to load projects:', response.status, response.statusText);
+          setProjects([]);
+          return;
+        }
+        const data: unknown = await response.json();
+        const rawPosts =
+          data && typeof data === 'object' && 'posts' in data
+            ? (data as { posts?: unknown }).posts
+            : data;
+        const list = Array.isArray(rawPosts) ? rawPosts : [];
+        setProjects(list as Project[]);
       } catch (error) {
         console.error('Failed to load projects:', error);
+        setProjects([]);
       } finally {
         setLoading(false);
       }
@@ -74,27 +112,56 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     loadProjects();
   }, []);
 
-  // Filter projects
-  const filteredProjects = useMemo(() => {
-    let result = projects;
-    
-    if (selectedType !== 'all') {
-      result = result.filter(p => p.type === selectedType);
-    }
-    
-    if (selectedTag !== 'all') {
-      result = result.filter(p => p.tags.includes(selectedTag));
-    }
-    
-    return result;
-  }, [projects, selectedType, selectedTag]);
+  const portfolioOwnerProjects = useMemo(
+    () => (Array.isArray(projects) ? projects : []).filter(projectMatchesPortfolioOwner),
+    [projects]
+  );
 
-  // Get all unique tags
+  // Filter projects (only listings attributed to Artjom / AaronCxC)
+  const filteredProjects = useMemo(() => {
+    let result = portfolioOwnerProjects;
+
+    if (selectedType !== 'all') {
+      result = result.filter((p) => p.type === selectedType);
+    }
+
+    if (selectedTag !== 'all') {
+      result = result.filter((p) => (p.tags ?? []).includes(selectedTag));
+    }
+
+    return result;
+  }, [portfolioOwnerProjects, selectedType, selectedTag]);
+
+  // Get all unique tags from the owner-filtered set
   const allTags = useMemo(() => {
     const tagSet = new Set<string>();
-    projects.forEach(p => p.tags.forEach(t => tagSet.add(t)));
+    portfolioOwnerProjects.forEach((p) =>
+      (p.tags ?? []).forEach((t) => tagSet.add(t))
+    );
     return Array.from(tagSet).sort();
-  }, [projects]);
+  }, [portfolioOwnerProjects]);
+
+  // Warm visible tile assets in idle time for snappier hover transitions.
+  useEffect(() => {
+    if (!visible || filteredProjects.length === 0) return;
+    const warm = () => {
+      filteredProjects.slice(0, 12).forEach((project) => {
+        if (project.type === 'video' && project.videoUrl) warmVideoAsset(project.videoUrl);
+        if (project.model3dPath && project.showTile3dHover !== false) warmModelAsset(project.model3dPath);
+      });
+    };
+    const ric = (window as Window & { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback;
+    if (ric) {
+      const id = ric(warm);
+      return () => {
+        if ((window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback) {
+          (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(id);
+        }
+      };
+    }
+    const timeoutId = window.setTimeout(warm, 200);
+    return () => window.clearTimeout(timeoutId);
+  }, [visible, filteredProjects]);
 
   // Type filter options
   const typeFilters: { value: ProjectType | 'all'; label: string }[] = [
@@ -104,6 +171,14 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     { value: 'audio', label: 'Audio' },
     { value: 'image', label: 'Image' },
   ];
+
+  // Medium chip label per project type — kept in sync with `typeFilters`.
+  const typeChipLabel: Record<ProjectType, string> = {
+    html: 'Interactive',
+    video: 'Video',
+    audio: 'Audio',
+    image: 'Image',
+  };
 
   // Handle filter changes
   const handleTypeChange = useCallback((type: ProjectType | 'all') => {
@@ -120,7 +195,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     setSelectedIndex(index);
   }, []);
 
-  // Listen for external open-project events (e.g. from ArtistPage)
+  // Listen for external open-project events (e.g. from in-page links)
   useEffect(() => {
     const handler = (e: Event) => {
       const slug = (e as CustomEvent).detail?.slug;
@@ -134,9 +209,9 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
 
   // Navigate to next/previous project
   const navigateProject = useCallback((direction: 'prev' | 'next') => {
-    if (selectedIndex === -1) return;
-    
-    const newIndex = direction === 'next' 
+    if (selectedIndex === -1 || filteredProjects.length === 0) return;
+
+    const newIndex = direction === 'next'
       ? (selectedIndex + 1) % filteredProjects.length
       : (selectedIndex - 1 + filteredProjects.length) % filteredProjects.length;
     
@@ -195,6 +270,12 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     setHoveredProject(projectId);
   }, []);
 
+  const handleProjectHoverStart = useCallback((project: Project) => {
+    setHoveredProject(project.id);
+    if (project.type === 'video' && project.videoUrl) warmVideoAsset(project.videoUrl);
+    if (project.model3dPath && project.showTile3dHover !== false) warmModelAsset(project.model3dPath);
+  }, []);
+
   const handleTileTouchEnd = useCallback(() => {
     // Small delay to allow effect to be visible before hover ends
     setTimeout(() => {
@@ -233,35 +314,12 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     };
   }, [selectedProject]);
 
-  const typeIcons: Record<ProjectType, JSX.Element> = {
-    html: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-      </svg>
-    ),
-    video: (
-      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M8 5v14l11-7z" />
-      </svg>
-    ),
-    audio: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-      </svg>
-    ),
-    image: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-    ),
-  };
-
   if (!visible) return null;
 
   return (
-    <div id="projects" className="relative min-h-screen px-4 pb-12 pt-24 sm:px-6">
+    <div id="projects" className="relative min-h-screen scroll-mt-20 px-4 pb-12 pt-8 sm:scroll-mt-[5.5rem] sm:px-6 sm:pt-10 md:scroll-mt-24 md:pt-12">
       {/* Section Header */}
-      <div className="mx-auto mb-10 max-w-7xl sm:mb-14">
+      <div className="mx-auto mb-8 max-w-7xl sm:mb-10">
         <div className="max-w-3xl">
           <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
             Portfolio
@@ -319,7 +377,16 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
             layout
           >
             <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project, index) => (
+              {filteredProjects.map((project, index) => {
+                /** When false (`showTile3dHover`), tile behaves like plain video/thumbnail hover even if modal has a separate 3D asset. */
+                const tileUses3dHover = Boolean(project.model3dPath && project.showTile3dHover !== false);
+                const modalOnly3dBadge =
+                  Boolean(project.model3dPath?.trim()) &&
+                  project.showTile3dHover === false;
+                const grayRenderOnly3dBadge = project.tile3dBadge === true && !project.model3dPath?.trim();
+                const showTile3dChip =
+                  tileUses3dHover || modalOnly3dBadge || grayRenderOnly3dBadge;
+                return (
                 <motion.div
                   key={project.id}
                   layout
@@ -328,44 +395,49 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3, delay: index * 0.03 }}
                   className="relative aspect-square cursor-pointer group overflow-hidden bg-[rgba(28,28,28,0.03)] rounded-sm md:rounded-lg"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Open ${project.title}`}
                   onClick={() => openProject(project, index)}
-                  onMouseEnter={() => setHoveredProject(project.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openProject(project, index);
+                    }
+                  }}
+                  onMouseEnter={() => handleProjectHoverStart(project)}
                   onMouseLeave={() => setHoveredProject(null)}
-                  onMouseMove={(e) => project.model3dPath && handleTileMouseMove(e, project.id)}
-                  onTouchStart={() => project.model3dPath && handleTileTouchStart(project.id)}
-                  onTouchMove={(e) => project.model3dPath && handleTileTouchMove(e, project.id)}
-                  onTouchEnd={() => project.model3dPath && handleTileTouchEnd()}
+                  onMouseMove={(e) => tileUses3dHover && handleTileMouseMove(e, project.id)}
+                  onTouchStart={() => {
+                    if (tileUses3dHover) handleTileTouchStart(project.id);
+                    handleProjectHoverStart(project);
+                  }}
+                  onTouchMove={(e) => tileUses3dHover && handleTileTouchMove(e, project.id)}
+                  onTouchEnd={() => tileUses3dHover && handleTileTouchEnd()}
                 >
-                  {/* Video-only tiles: static thumbnail, preview video on hover (like 3D) */}
-                  {project.type === 'video' && project.videoUrl && !project.model3dPath && (
+                  {/* Video hover when no interactive 3D on the tile (or 3D is modal-only via showTile3dHover:false) */}
+                  {project.type === 'video' && project.videoUrl && !tileUses3dHover && (
                     <>
                       {project.thumbnail ? (
                         <img
                           src={project.thumbnail}
                           alt={project.title}
-                          className={`absolute inset-0 z-[1] h-full w-full object-cover transition-all duration-500 group-hover:scale-105 ${
-                            hoveredProject === project.id ? 'opacity-0' : 'opacity-100'
-                          }`}
+                          className="absolute inset-0 z-[1] h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : (
-                        <div
-                          className={`absolute inset-0 z-[1] bg-[rgba(28,28,28,0.08)] transition-opacity duration-300 ${
-                            hoveredProject === project.id ? 'opacity-0' : 'opacity-100'
-                          }`}
-                          aria-hidden
-                        />
+                        <div className="absolute inset-0 z-[1] bg-[rgba(28,28,28,0.08)]" aria-hidden />
                       )}
                       {hoveredProject === project.id && (
                         <HoverPlayVideo
                           src={project.videoUrl}
-                          className="absolute inset-0 z-[2] h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="absolute inset-0 z-[2] h-full w-full object-cover group-hover:scale-105"
                         />
                       )}
                     </>
                   )}
 
-                  {/* Thumbnail - non-video, non-3D projects */}
-                  {!project.model3dPath && project.type !== 'video' && (
+                  {/* Thumbnail - non-video, non-tile-3D projects */}
+                  {!tileUses3dHover && project.type !== 'video' && (
                     <img
                       src={project.thumbnail}
                       alt={project.title}
@@ -373,17 +445,16 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                     />
                   )}
                   
-                  {/* 3D Preview – thumbnail until hover, then 3D (also for video+3D, e.g. Pult) */}
-                  {project.model3dPath && (
+                  {/* 3D on tile hover when enabled */}
+                  {tileUses3dHover && project.model3dPath && (
                     <>
-                      {hoveredProject !== project.id && project.thumbnail && (
+                      {project.thumbnail && (
                         <img
                           src={project.thumbnail}
                           alt={project.title}
-                          className="absolute inset-0 z-10 h-full w-full object-cover transition-all duration-500 group-hover:scale-105"
+                          className="absolute inset-0 z-[1] h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       )}
-                      {/* 3D-Modell – nur bei Hover gemountet und geladen */}
                       {hoveredProject === project.id && (
                         <Project3DPreview
                           modelPath={project.model3dPath}
@@ -392,55 +463,38 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                           rotationX={project.model3dRotationX}
                           materialColor={project.model3dMaterialColor}
                           offsetY={project.model3dOffsetY}
+                          fallbackPoster={project.thumbnail}
+                          animationProgress={project.model3dAnimationProgress}
                         />
                       )}
                     </>
                   )}
                   
-                  {/* Mobile/touch: lightweight permanent gradient with title */}
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-[rgba(28,28,28,0.65)] via-[rgba(28,28,28,0.15)] to-transparent md:hidden" />
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 px-3 pb-2.5 md:hidden">
-                    <h3 className="line-clamp-1 text-[12px] font-semibold text-white brand-tight">
-                      {project.title}
-                    </h3>
-                  </div>
-
-                  {/* Hover Overlay (desktop hover) */}
-                  <div className="absolute inset-0 z-20 bg-gradient-to-t from-[rgba(28,28,28,0.8)] via-[rgba(28,28,28,0.2)] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h3 className="mb-1 line-clamp-1 text-sm font-bold text-white brand-tight md:text-base">
-                        {project.title}
-                      </h3>
-                      <p className="hidden line-clamp-2 text-xs leading-relaxed text-white/70 md:block md:text-sm">
-                        {project.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Type Icon Badge — always visible on touch, hover-only on desktop */}
-                  <div className="absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(255,255,255,0.9)] text-mk-text shadow-lg backdrop-blur-sm transition-opacity duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100">
-                    {typeIcons[project.type]}
-                  </div>
-
-                  {/* 3D Badge for models */}
-                  {project.model3dPath && (
-                    <div className="absolute top-3 left-12 z-20">
-                      <span className="px-2 py-1 rounded-full bg-[rgba(99,102,241,0.9)] text-white text-[10px] font-medium uppercase tracking-wider">
+                  {/* Tag chips: medium, tools, optional 3D — replaces hover text + author/type/3D badges */}
+                  <div className="pointer-events-none absolute left-2 top-2 right-2 z-20 flex flex-wrap gap-1">
+                    <span className={metaChipClass}>{typeChipLabel[project.type]}</span>
+                    {project.tools?.map((tool) => (
+                      <span key={tool.name} className={metaChipClass}>
+                        {tool.name}
+                      </span>
+                    ))}
+                    {showTile3dChip && (
+                      <span
+                        className={
+                          tileUses3dHover
+                            ? chip3dInteractiveClass
+                            : modalOnly3dBadge
+                              ? chip3dModalOnlyClass
+                              : chip3dGrayClass
+                        }
+                      >
                         3D
                       </span>
-                    </div>
-                  )}
-
-                  {/* Artist Badge */}
-                  {project.author && (
-                    <div className="absolute top-3 left-3 z-20">
-                      <span className="px-2 py-1 rounded-full bg-[rgba(28,28,28,0.7)] backdrop-blur-sm text-white text-[10px] font-medium tracking-wide">
-                        {project.author}
-                      </span>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </motion.div>
-              ))}
+                );
+              })}
             </AnimatePresence>
           </motion.div>
         )}
@@ -462,38 +516,27 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
             onTouchEnd={handleTouchEnd}
           >
             {/* Backdrop */}
-            <div className="fixed inset-0 bg-[rgba(250,250,255,0.85)] backdrop-blur-md" />
-            
-            {/* Close Button */}
-            <button
-              onClick={() => { setSelectedProject(null); setSelectedIndex(-1); }}
-              className="fixed top-4 right-4 md:top-6 md:right-6 z-[60] w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] flex items-center justify-center hover:bg-white transition-colors shadow-lg"
-              aria-label="Close project"
-            >
-              <svg className="w-5 h-5 md:w-6 md:h-6 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div className="fixed inset-0 bg-black/25 backdrop-blur-md" aria-hidden />
 
             {/* Previous Project Button - hidden on mobile */}
             <button
               onClick={(e) => { e.stopPropagation(); navigateProject('prev'); }}
-              className="hidden md:flex fixed left-8 top-1/2 -translate-y-1/2 z-[60] w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] items-center justify-center hover:bg-white hover:scale-110 transition-all shadow-lg group"
+              className="group fixed left-6 top-1/2 z-[60] hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black/[0.08] bg-white/92 text-[#3C3C43] shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md transition-[background,box-shadow,color] hover:bg-white hover:text-[#1D1D1F] hover:shadow-md md:flex"
               aria-label="Previous project"
             >
-              <svg className="w-6 h-6 text-mk-text group-hover:text-accent-cyan transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
 
             {/* Next Project Button - hidden on mobile */}
             <button
               onClick={(e) => { e.stopPropagation(); navigateProject('next'); }}
-              className="hidden md:flex fixed right-8 top-1/2 -translate-y-1/2 z-[60] w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] items-center justify-center hover:bg-white hover:scale-110 transition-all shadow-lg group"
+              className="group fixed right-6 top-1/2 z-[60] hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black/[0.08] bg-white/92 text-[#3C3C43] shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md transition-[background,box-shadow,color] hover:bg-white hover:text-[#1D1D1F] hover:shadow-md md:flex"
               aria-label="Next project"
             >
-              <svg className="w-6 h-6 text-mk-text group-hover:text-accent-cyan transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </button>
 
@@ -506,7 +549,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="md:hidden flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan text-xs font-medium"
+                    className="md:hidden flex items-center gap-2 rounded-full border border-black/[0.06] bg-[rgba(118,118,128,0.12)] px-3 py-1.5 text-xs font-medium text-[#48484A]"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m-12 5h12m-12 5h12M4 7h.01M4 12h.01M4 17h.01" />
@@ -516,10 +559,8 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                 )}
               </AnimatePresence>
               
-              <div className="px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-[rgba(28,28,28,0.1)] shadow-lg">
-                <span className="text-sm font-medium text-mk-text">
+              <div className="rounded-full border border-black/[0.08] bg-white/92 px-4 py-2 text-[13px] font-semibold tracking-[-0.01em] text-[#48484A] shadow-[0_2px_10px_rgba(0,0,0,0.06)] backdrop-blur-md">
                   {selectedIndex + 1} / {filteredProjects.length}
-                </span>
               </div>
             </div>
 
@@ -527,23 +568,29 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={selectedProject.id}
-                initial={{ 
-                  opacity: 0, 
-                  x: slideDirection === 'right' ? 100 : -100 
+                initial={{
+                  opacity: 0,
+                  x: slideDirection === 'right' ? 100 : -100,
                 }}
-                animate={{ 
-                  opacity: 1, 
-                  x: 0 
+                animate={{
+                  opacity: 1,
+                  x: 0,
                 }}
-                exit={{ 
-                  opacity: 0, 
-                  x: slideDirection === 'right' ? -100 : 100 
+                exit={{
+                  opacity: 0,
+                  x: slideDirection === 'right' ? -100 : 100,
                 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="relative z-[55] w-full max-w-7xl mx-auto my-4 md:my-16 px-4 md:px-24"
+                className="relative z-[55] w-full max-w-7xl mx-auto my-10 md:my-16 px-4 md:px-24"
                 onClick={(e) => e.stopPropagation()}
               >
-                <ProjectSlide project={selectedProject} isActive={true} />
+                <PortfolioProjectModal
+                  project={selectedProject}
+                  onClose={() => {
+                    setSelectedProject(null);
+                    setSelectedIndex(-1);
+                  }}
+                />
               </motion.div>
             </AnimatePresence>
           </motion.div>

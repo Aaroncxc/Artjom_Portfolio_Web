@@ -414,11 +414,18 @@
                       side: THREE.DoubleSide,
                     });
                   }
+                  const hasTex = !!mat.map;
+                  if (hasTex && mat.map) {
+                    mat.map.colorSpace = THREE.SRGBColorSpace;
+                  }
                   return new THREE.MeshStandardMaterial({
-                    color: mat.color ? mat.color.clone() : new THREE.Color(0xcccccc),
-                    roughness: 0.45,
-                    metalness: 0.4,
+                    color: hasTex ? new THREE.Color(0xffffff) : (mat.color ? mat.color.clone() : new THREE.Color(0xcccccc)),
+                    map: hasTex ? mat.map : null,
+                    transparent: hasTex,
+                    alphaTest: hasTex ? 0.05 : 0,
                     side: THREE.DoubleSide,
+                    roughness: 0.45,
+                    metalness: hasTex ? 0.0 : 0.4,
                   });
                 });
                 child.material = Array.isArray(child.material) ? newMats : newMats[0];

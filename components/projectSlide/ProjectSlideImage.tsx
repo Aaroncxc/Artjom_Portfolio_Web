@@ -93,6 +93,13 @@ export function ProjectSlideImage({ project, isActive }: ProjectSlideImageProps)
                         className="w-full h-full object-contain"
                         style={{ aspectRatio: '16/9' }}
                       />
+                    ) : media.type === 'html' ? (
+                      <iframe
+                        src={media.src}
+                        title={media.title || 'Interactive'}
+                        className="aspect-video min-h-[200px] w-full border-0"
+                        sandbox="allow-scripts allow-same-origin"
+                      />
                     ) : (
                       <>
                         <img

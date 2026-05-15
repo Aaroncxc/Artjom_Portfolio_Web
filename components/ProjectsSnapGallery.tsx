@@ -21,7 +21,7 @@ export function ProjectsSnapGallery({ visible }: ProjectsSnapGalleryProps) {
   useEffect(() => {
     async function loadProjects() {
       try {
-        const response = await fetch('/posts.json');
+        const response = await fetch('/posts.json', { cache: 'no-store' });
         const data = await response.json();
         setProjects(data.posts);
       } catch (error) {

@@ -70,5 +70,3 @@ next-env.d.ts
 
 tsconfig.tsbuildinfo
 
-# Large vendor / custom JS (rAF, avoid indexing)
-public/text-pointcloud.js

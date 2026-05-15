@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { GlassPanel } from './GlassPanel';
+import { CONTACT_MAILTO } from '@/lib/contact';
 
 interface NavigationProps {
   visible: boolean;
@@ -13,7 +14,6 @@ interface NavigationProps {
 
 const NAV_ITEMS = [
   { id: 'about', label: 'About' },
-  { id: 'services', label: 'Services' },
   { id: 'projects', label: 'Projects' },
   { id: 'tools-games', label: 'Tools & Games' },
 ];
@@ -67,7 +67,7 @@ export function Navigation({ visible, currentSection, onLogoClick }: NavigationP
             }}
             className="flex min-h-[44px] items-center px-3 py-2.5 text-sm font-semibold tracking-tight text-mk-text transition-colors duration-175 hover:text-accent-cyan sm:px-4 sm:py-2"
           >
-            multikunst
+            Artjom
           </button>
 
           <div className="mx-0.5 hidden h-5 w-px bg-[rgba(28,28,28,0.12)] sm:mx-1 sm:block" />
@@ -93,10 +93,10 @@ export function Navigation({ visible, currentSection, onLogoClick }: NavigationP
 
           {/* Desktop contact */}
           <a
-            href="mailto:hello@multikunst.com"
+            href={CONTACT_MAILTO}
             className="hidden min-h-[44px] items-center rounded-full bg-[#1C1C1C] px-4 py-2 text-sm text-white transition-colors duration-175 hover:bg-accent-cyan sm:flex"
           >
-            Contact
+            Hire Me
           </a>
 
           {/* Mobile burger */}
@@ -183,11 +183,11 @@ export function Navigation({ visible, currentSection, onLogoClick }: NavigationP
                 </ul>
                 <div className="border-t border-[rgba(28,28,28,0.08)] p-3">
                   <a
-                    href="mailto:hello@multikunst.com"
+                    href={CONTACT_MAILTO}
                     onClick={() => setMenuOpen(false)}
                     className="flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#1C1C1C] px-4 py-3 text-base font-medium text-white transition-colors hover:bg-accent-cyan"
                   >
-                    Contact
+                    Hire Me
                   </a>
                 </div>
               </GlassPanel>

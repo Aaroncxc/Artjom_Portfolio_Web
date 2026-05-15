@@ -1,7 +1,15 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo, type CSSProperties } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import clsx from 'clsx';
+import { toolMatchesPortfolioOwner } from '@/lib/portfolioOwnerFilter';
+import {
+  contentTagTintAt,
+  liveChipClass,
+  metaChipClass,
+  toolModalTypeChipClass,
+} from '@/lib/chipClasses';
 
 interface ToolGame {
   id: string;
@@ -15,6 +23,10 @@ interface ToolGame {
   tags: string[];
   embeddable?: boolean; // If true, embed as iframe in detail view instead of external link
   author?: string; // Creator handle
+  /** Big brand-tight “staircase” overlay on the tile only (first word, then indented rest — no box). */
+  tileOverlayTitle?: string;
+  /** >1 zooms the tile image (object-cover + scale) to hide letterboxing / gray gaps; clips inside 16:9. */
+  tileThumbnailScale?: number;
 }
 
 // Static data for tools and games
@@ -29,8 +41,8 @@ const toolsGamesData: ToolGame[] = [
     screenshots: [
       '/tools/coincraft-thumb.png',
     ],
-    tags: ['game', 'puzzle', 'interactive'],
-    author: 'AaronCxC',
+    tags: ['Multikunst', 'game', 'puzzle', 'interactive'],
+    author: 'Artjom N.',
   },
   {
     id: 'occupiedvfx',
@@ -59,18 +71,34 @@ const toolsGamesData: ToolGame[] = [
     author: 'oxxupe',
   },
   {
-    id: 'multiview',
-    title: 'MultiView',
-    description: '3D Editor by Multikunst. Create and explore 3D scenes in the browser with an intuitive interface for modeling, materials, and rendering. Make your 3D models ready for web.',
-    url: 'https://multiview-blue.vercel.app',
+    id: 'dadb-course-overview',
+    title: 'Course Overview Tool',
+    description:
+      "Internal production-analytics dashboard I coded in Cursor while leading the DADB course production. Project managers logged status into Excel sheets, and the tool synced them every day at 06:00 and 18:00 — so team, stakeholders, shareholders and the CEO could watch the entire content pipeline live: courses, modules, team workloads, delays, completion rates and weekly KPIs.",
+    url: 'https://v0-image-analysis-taupe-beta.vercel.app',
     type: 'tool',
-    thumbnail: '/tools/Multiview_Multikunst.png',
+    thumbnail: '/tools/dadb-course-overview/thumbnail.jpg',
     screenshots: [
-      '/tools/Multiview_Multikunst.png',
-      '/tools/Multiview_Viewport.png',
+      '/tools/dadb-course-overview/course-1.jpg',
+      '/tools/dadb-course-overview/course-2.jpg',
+      '/tools/dadb-course-overview/course-3.jpg',
+      '/tools/dadb-course-overview/course-4.jpg',
+      '/tools/dadb-course-overview/course-5.jpg',
+      '/tools/dadb-course-overview/course-6.jpg',
+      '/tools/dadb-course-overview/team-1.jpg',
+      '/tools/dadb-course-overview/team-2.jpg',
     ],
-    tags: ['3D', 'editor', 'tool', 'creative'],
-    author: 'AaronCxC',
+    tags: [
+      'German Academy of Digital Education',
+      'production',
+      'dashboard',
+      'cursor',
+      'KPI',
+      'DADB',
+    ],
+    author: 'Artjom N.',
+    tileOverlayTitle: 'Course Overview Tool',
+    tileThumbnailScale: 1.22,
   },
 ];
 
@@ -106,9 +134,16 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
     { value: 'app', label: 'Apps' },
   ];
 
-  const filteredItems = selectedType === 'all' 
-    ? toolsGamesData 
-    : toolsGamesData.filter(item => item.type === selectedType);
+  const toolsGamesForOwner = useMemo(
+    () => toolsGamesData.filter(toolMatchesPortfolioOwner),
+    []
+  );
+
+  const filteredItems = useMemo(() => {
+    return selectedType === 'all'
+      ? toolsGamesForOwner
+      : toolsGamesForOwner.filter((item) => item.type === selectedType);
+  }, [toolsGamesForOwner, selectedType]);
 
   const openTool = useCallback((tool: ToolGame, index: number) => {
     setSelectedTool(tool);
@@ -244,48 +279,79 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
               >
                 {/* Thumbnail Container - 16:9 aspect ratio */}
                 <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-[rgba(99,102,241,0.1)] to-[rgba(20,184,166,0.1)]">
-                  {/* Placeholder with icon if no thumbnail */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 rounded-2xl bg-[rgba(99,102,241,0.2)] flex items-center justify-center">
-                      <svg className="w-8 h-8 text-[rgb(99,102,241)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        {item.type === 'game' ? (
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                        ) : (
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        )}
-                      </svg>
+                  {/* Inner clip — zoom >1 hides letterboxing / gray side gutters */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    {/* Placeholder with icon if no thumbnail */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[rgba(99,102,241,0.2)]">
+                        <svg className="h-8 w-8 text-[rgb(99,102,241)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          {item.type === 'game' ? (
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                          ) : (
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          )}
+                        </svg>
+                      </div>
+                    </div>
+
+                    <div
+                      className={clsx(
+                        'absolute inset-0 h-full w-full transition-transform duration-500 ease-out will-change-transform',
+                        item.tileThumbnailScale && item.tileThumbnailScale > 1
+                          ? 'origin-center [transform:scale(var(--tile-zoom))] group-hover:[transform:scale(calc(var(--tile-zoom)*1.065))]'
+                          : 'group-hover:scale-105'
+                      )}
+                      style={
+                        item.tileThumbnailScale && item.tileThumbnailScale > 1
+                          ? ({ ['--tile-zoom' as string]: String(item.tileThumbnailScale) } as CSSProperties)
+                          : undefined
+                      }
+                    >
+                      {item.thumbnailVideo ? (
+                        <video
+                          src={item.thumbnailVideo}
+                          muted
+                          loop
+                          playsInline
+                          autoPlay
+                          className="h-full w-full object-cover object-center"
+                        />
+                      ) : (
+                        <img
+                          src={item.thumbnail}
+                          alt={item.title}
+                          className="h-full w-full object-cover object-center"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      )}
                     </div>
                   </div>
-                  
-                  {/* Video thumbnail - autoplay on hover */}
-                  {item.thumbnailVideo ? (
-                    <video
-                      src={item.thumbnailVideo}
-                      muted
-                      loop
-                      playsInline
-                      autoPlay
-                      className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    /* Actual thumbnail image - will overlay placeholder when loaded */
-                    <img
-                      src={item.thumbnail}
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
-                      onError={(e) => {
-                        // Hide broken image to show placeholder
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                  )}
+
+                  {/* Staircase title on tile only (same rhythm as project stair headings; no glass box) */}
+                  {item.tileOverlayTitle &&
+                    (() => {
+                      const words = item.tileOverlayTitle.trim().split(/\s+/);
+                      const [first, ...rest] = words;
+                      return (
+                        <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-start justify-end p-4 sm:justify-center sm:p-5 md:p-6">
+                          <div className="brand-tight max-w-[min(100%,19rem)] text-left text-2xl font-semibold leading-[1.06] tracking-tight text-mk-text [text-shadow:0_1px_0_rgba(255,255,255,0.9),0_2px_14px_rgba(255,255,255,0.65),0_2px_18px_rgba(0,0,0,0.12)] sm:max-w-[min(100%,26rem)] sm:text-3xl md:text-4xl lg:text-5xl">
+                            <span className="block">{first}</span>
+                            {rest.length > 0 ? (
+                              <span className="block pl-5 pt-0.5 sm:pl-8 sm:pt-1">{rest.join(' ')}</span>
+                            ) : null}
+                          </div>
+                        </div>
+                      );
+                    })()}
 
                   {/* Hover Overlay — visible by default on touch */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(28,28,28,0.9)] via-[rgba(28,28,28,0.3)] to-transparent opacity-100 transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100">
+                  <div className="absolute inset-0 z-20 bg-gradient-to-t from-[rgba(28,28,28,0.9)] via-[rgba(28,28,28,0.3)] to-transparent opacity-100 transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100">
                     <div className="absolute inset-x-0 bottom-3 flex items-center justify-center md:inset-0">
-                      <div className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-mk-text shadow-lg">
+                      <div className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2.5 text-base font-medium text-mk-text shadow-lg">
                         <span>View Details</span>
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="h-[18px] w-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
                       </div>
@@ -293,42 +359,39 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                   </div>
 
                   {/* Type Badge */}
-                  <div className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm flex items-center justify-center text-mk-text shadow-lg">
+                  <div className="absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,255,255,0.9)] text-mk-text shadow-lg backdrop-blur-sm md:h-10 md:w-10">
                     {typeIcons[item.type]}
                   </div>
 
                   {/* External Link Indicator + Author */}
-                  <div className="absolute top-3 left-3 z-20 flex items-center gap-2">
-                    <span className="px-2 py-1 rounded-full bg-[rgba(99,102,241,0.9)] text-white text-[10px] font-medium uppercase tracking-wider flex items-center gap-1">
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute left-3 top-3 z-20 flex items-center gap-2">
+                    <span className={liveChipClass}>
+                      <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
                       Live
                     </span>
                     {item.author && (
-                      <span className="px-2 py-1 rounded-full bg-[rgba(255,255,255,0.85)] backdrop-blur-sm text-mk-text text-[10px] font-medium border border-[rgba(28,28,28,0.08)]">
-                        @{item.author}
+                      <span className={metaChipClass}>
+                        {/\s/.test(item.author) ? item.author : `@${item.author}`}
                       </span>
                     )}
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-4">
-                  <h3 className="mb-2 line-clamp-1 text-lg font-semibold text-mk-text brand-tight">
+                <div className="p-5 sm:p-6">
+                  <h3 className="brand-tight mb-2 line-clamp-1 text-xl font-semibold text-mk-text sm:text-2xl">
                     {item.title}
                   </h3>
-                  <p className="mb-3 line-clamp-2 text-sm leading-relaxed text-mk-text-secondary">
+                  <p className="mb-3 line-clamp-2 text-base leading-relaxed text-mk-text-secondary sm:text-lg">
                     {item.description}
                   </p>
-                  
+
                   {/* Tags */}
-                  <div className="flex flex-wrap gap-1">
-                    {item.tags.slice(0, 3).map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 rounded-full bg-[rgba(28,28,28,0.05)] text-mk-text-muted text-xs"
-                      >
+                  <div className="flex flex-wrap gap-1.5">
+                    {item.tags.slice(0, 3).map((tag, i) => (
+                      <span key={tag} className={contentTagTintAt(i)}>
                         {tag}
                       </span>
                     ))}
@@ -511,15 +574,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                   <div className="flex items-start justify-between gap-4 mb-4">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium uppercase tracking-wider ${
-                          selectedTool.type === 'game' 
-                            ? 'bg-[rgba(236,72,153,0.1)] text-[rgb(236,72,153)]'
-                            : selectedTool.type === 'tool'
-                            ? 'bg-[rgba(99,102,241,0.1)] text-[rgb(99,102,241)]'
-                            : 'bg-[rgba(20,184,166,0.1)] text-[rgb(20,184,166)]'
-                        }`}>
-                          {selectedTool.type}
-                        </span>
+                        <span className={toolModalTypeChipClass(selectedTool.type)}>{selectedTool.type}</span>
                       </div>
                       <h2 className="text-2xl font-semibold leading-tight text-mk-text brand-tight md:text-3xl">
                         {selectedTool.title}
@@ -533,11 +588,8 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {selectedTool.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 rounded-full bg-[rgba(28,28,28,0.05)] text-mk-text-muted text-sm"
-                      >
+                    {selectedTool.tags.map((tag, i) => (
+                      <span key={tag} className={contentTagTintAt(i)}>
                         {tag}
                       </span>
                     ))}

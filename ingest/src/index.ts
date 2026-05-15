@@ -206,6 +206,16 @@ async function main() {
     htmlPath: p.publicUrls.htmlPath,
     author: p.meta.author,
     featured: p.meta.featured,
+    explanation: p.meta.explanation,
+    highlights: p.meta.highlights,
+    ctaHref: p.meta.ctaHref,
+    tools: p.meta.tools,
+    showTile3dHover: p.meta.showTile3dHover,
+    showModel3dInModal: p.meta.showModel3dInModal,
+    model3dPath: p.meta.model3dPath,
+    model3dRotationX: p.meta.model3dRotationX,
+    model3dMaterialColor: p.meta.model3dMaterialColor,
+    model3dOffsetY: p.meta.model3dOffsetY,
   }));
 
   const output: OutputPostsData = {
