@@ -244,6 +244,11 @@
           "title": "Future Forward AR — event clip"
         },
         {
+          "type": "video",
+          "src": "/projects/elearning-africa-kigali-2024/expokigali-demo-vr-test.webm",
+          "title": "Expo Kigali demo (VR test)"
+        },
+        {
           "type": "image",
           "src": "/projects/elearning-africa-kigali-2024/Kigali_ConventionCenter.jpg",
           "title": "Kigali Convention Centre"
