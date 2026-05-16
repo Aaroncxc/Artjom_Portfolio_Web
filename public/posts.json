@@ -1,6 +1,311 @@
 {
   "posts": [
     {
+      "id": "23",
+      "slug": "elearning-africa-dakar-senegal-2023",
+      "title": "E-Learning Africa Dakar 2023 — VR booth experience",
+      "description": "Trade-fair project for the German Academy of Digital Education at E-Learning Africa 2023 in Dakar: an interactive VR experience in the German Pavilion that let visitors step into a Solar / Inverter training scenario. Pre-visualised the booth in Archicad, modelled scene assets in Blender, built and rendered the VR experience in Unreal Engine, then ran the stand on-site—onboarding visitors, presenting DADB courses and XR demos, and handling hardware in real time.",
+      "date": "2023-05-25",
+      "tags": [
+        "video",
+        "VR",
+        "education",
+        "trade fair",
+        "3D",
+        "visualization",
+        "project management"
+      ],
+      "type": "video",
+      "thumbnail": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-07-thumb.jpg",
+      "images": [
+        "/projects/elearning-africa-dakar-senegal-2023/vr-scene-07-thumb.jpg"
+      ],
+      "videoUrl": "/projects/elearning-africa-dakar-senegal-2023/linkedin-vr-trailer.webm",
+      "tools": [
+        {
+          "name": "Archicad",
+          "icon": "/tool-icons/archicad.png"
+        },
+        {
+          "name": "Blender",
+          "icon": "/tool-icons/blender.png"
+        },
+        {
+          "name": "Unreal Engine",
+          "icon": "/tool-icons/unreal-engine.png"
+        }
+      ],
+      "tile3dBadge": true,
+      "highlights": [
+        "VR experience in Unreal Engine",
+        "Archicad booth pre-vis",
+        "Blender in the 3D pipeline",
+        "On-site stand & visitor onboarding"
+      ],
+      "explanation": "For the German Academy of Digital Education, this was the E-Learning Africa 2023 presence in Dakar (German Pavilion): an interactive Virtual-Reality experience built around a Solar / Inverter training scenario, where visitors could step into the scene, interact with components, and follow a guided task in 1:1 scale.\n\nGoal: present DADB’s digital learning portfolio—courses, LMS, and XR applications—to an international audience from education, technology, business, and public institutions, and demonstrate how technical content can be taught through immersive VR.\n\nRole: I was part of the on-site stand team—actively running the booth, presenting the XR applications, onboarding visitors, handling VR hardware, and making sure the experiences ran reliably throughout the show. In parallel I led the pre-show production: pre-visualising the stand in Archicad, modelling props and scene elements in Blender, and assembling the VR experience in Unreal Engine (character setup, grab interactions, scene lighting, capture renders).\n\nVisualization: the booth, props and visitor flow were planned and rendered in Archicad and Unreal before travel; the VR scene itself—environment, signage, the Solar / Inverter rig and interactive components—was authored in Unreal Engine with custom Blueprints (Grab Component, VR Character) and supported by Blender assets.\n\nOutcome: an international booth delivery in Dakar with a working VR demo at the DADB stand, plus a set of pre-vis renders used to plan layout, positioning, run-of-show, and technical needs ahead of the trip.\n\nEspecially notable: combining technical responsibility, content production, and direct visitor communication in one role—developing the VR experience, coordinating booth logistics, and then presenting and supporting it live for an international, non-technical audience.\n\nTimeline: 2023 — completed.",
+      "author": "AaronCxC",
+      "gallery": [
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-00.webp",
+          "title": "VR scene — hero shot"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-01.webp",
+          "title": "VR scene — interaction view"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-02.webp",
+          "title": "VR scene — inverter close-up"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-03.webp",
+          "title": "VR scene — environment"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-04.webp",
+          "title": "VR scene — instruction overlay"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-05.webp",
+          "title": "VR scene — wide angle"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-06.webp",
+          "title": "VR scene — perspective"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-07.webp",
+          "title": "VR scene — detail"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-08.webp",
+          "title": "VR scene — step view"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-09.webp",
+          "title": "VR scene — step view 2"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-10.webp",
+          "title": "VR scene — step view 3"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-11.webp",
+          "title": "VR scene — final pose"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Visualisation_1.webp",
+          "title": "Booth visualization 1"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Visualisation_2.webp",
+          "title": "Booth visualization 2"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_DADBBOT_1.webp",
+          "title": "DADB-Bot — render 1"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_DADBBOT_2.webp",
+          "title": "DADB-Bot — render 2"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_DADBBOT_3.webp",
+          "title": "DADB-Bot — render 3"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_DADBBOT_5.webp",
+          "title": "DADB-Bot — render 5"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Proffesional_1.jpg",
+          "title": "On site — booth"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Proffesional_2.jpg",
+          "title": "On site — visitors"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Proffesional_3.jpg",
+          "title": "On site — presentation"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Proffesional_5.jpg",
+          "title": "On site — hardware setup"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Proffesional_6.jpg",
+          "title": "On site — German Pavilion"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_8.jpg",
+          "title": "Dakar — impression"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_13.jpg",
+          "title": "Dakar — impression 2"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/grab-component-blueprint.jpg",
+          "title": "Unreal — Grab Component blueprint"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-character-blueprint.jpg",
+          "title": "Unreal — VR Character blueprint"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-character-blueprint-2.jpg",
+          "title": "Unreal — VR Character blueprint detail"
+        }
+      ],
+      "references": [
+        {
+          "url": "https://www.elearning-africa.com/conference2026/media_2023.php",
+          "label": "E-Learning Africa 2023 — official media gallery"
+        }
+      ]
+    },
+    {
+      "id": "22",
+      "slug": "elearning-africa-kigali-2024",
+      "title": "E-Learning Africa Kigali 2024 — AR inverter installation",
+      "description": "Trade-fair project for the German Academy of Digital Education at E-Learning Africa 2024 in Kigali: an interactive augmented-reality experience that teaches inverter installation together with SMA experts and course teams. Led coordination across editorial, production, internal SMEs, and partners; pre-visualized the booth in Archicad and rendered planning shots in Unreal Engine—with Blender in the 3D pipeline—so layout, visitor routing, presentation zones, and the AR area were validated before Rwanda.",
+      "date": "2024-09-30",
+      "tags": [
+        "video",
+        "AR",
+        "education",
+        "trade fair",
+        "3D",
+        "visualization",
+        "project management"
+      ],
+      "type": "video",
+      "thumbnail": "/projects/elearning-africa-kigali-2024/Kigali_Gameplay_Thumbnail.jpg",
+      "images": [
+        "/projects/elearning-africa-kigali-2024/Kigali_Gameplay_Thumbnail.jpg"
+      ],
+      "videoUrl": "/projects/elearning-africa-kigali-2024/concept.webm",
+      "tools": [
+        {
+          "name": "Archicad",
+          "icon": "/tool-icons/archicad.png"
+        },
+        {
+          "name": "Blender",
+          "icon": "/tool-icons/blender.png"
+        },
+        {
+          "name": "Unreal Engine",
+          "icon": "/tool-icons/unreal-engine.png"
+        }
+      ],
+      "tile3dBadge": true,
+      "highlights": [
+        "Archicad & Unreal booth pre-vis",
+        "Blender in the 3D pipeline",
+        "AR learning & SMA partnership",
+        "Stakeholder & production coordination"
+      ],
+      "explanation": "For the German Academy of Digital Education, this was the E-Learning Africa 2024 presence in Kigali (German Pavilion): an interactive augmented-reality learning experience where visitors could follow how an inverter is installed and what matters in each technical step.\n\nEditorial, production, internal experts, and external SMA stakeholders collaborated on an AR training application that tied technical course content, expert knowledge, and live trade-fair storytelling together.\n\nGoal: translate hands-on solar and energy-training into AR—visitors should repeat steps actively and learn rules, cues, and components, while the booth demonstrated how augmented learning, industrial partner content, and digital courses reinforce each other.\n\nRole: led and coordinated the initiative—alignment across editorial, production, SMEs, and SMA; progress control; stakeholder, management, and executive communication; ensuring content, engineering, booth constraints, and presentation goals stayed aligned.\n\nVisualization: modeled the booth early in Archicad and rendered walkthroughs in Unreal Engine, with Blender supporting the broader 3D workflow—testing build-up, routing, presentation surfaces, the AR zone, and hardware placement before the show.\n\nOutcome: an international booth delivery with an interactive AR inverter-installation experience at the DADB stand, plus a digital pre-vis package used to align build, positioning, run-of-show, and technical needs ahead of travel.\n\nEspecially notable: the mix of project leadership, cross-team coordination, technical production, instructional design, and partner communication required to ship course logic, SMA expertise, and AR technology as one reliable expo experience.\n\nTimeline: 2024 — completed.",
+      "author": "AaronCxC",
+      "gallery": [
+        {
+          "type": "video",
+          "src": "/projects/elearning-africa-kigali-2024/future-forward-ar.mp4",
+          "title": "Future Forward AR — event clip"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-kigali-2024/Kigali_ConventionCenter.jpg",
+          "title": "Kigali Convention Centre"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-kigali-2024/Kigali_Messestand_3.jpg",
+          "title": "Stand layout planning"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-kigali-2024/Kigali_Messestand_2.webp",
+          "title": "Stand render"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-kigali-2024/Kigali_AR_2.webp",
+          "title": "AR experience"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-kigali-2024/Kigali_AR_3.webp",
+          "title": "AR — installation steps"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-kigali-2024/Kigali_AR_4.webp",
+          "title": "AR UI"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-kigali-2024/Kigali_AR_5.webp",
+          "title": "Hands-on AR guidance"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-kigali-2024/Kigali_AR_6.webp",
+          "title": "Technical overlays"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-kigali-2024/Kigali_AR_7.png",
+          "title": "Learner view"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-kigali-2024/Kigali_Proffesional_1.jpg",
+          "title": "On site — booth"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-kigali-2024/Kigali_Proffesional_2.jpg",
+          "title": "On site — presentation"
+        },
+        {
+          "type": "image",
+          "src": "/projects/elearning-africa-kigali-2024/Kigali_Proffesional_3.jpg",
+          "title": "On site — German Pavilion"
+        }
+      ]
+    },
+    {
       "id": "21",
       "slug": "rekuperation-education",
       "title": "Rekuperation — E-Mobility Education",
@@ -14,9 +319,9 @@
         "electromobility"
       ],
       "type": "video",
-      "thumbnail": "/projects/rekuperation-education/rekuperation-edu-video.png",
+      "thumbnail": "/projects/rekuperation-education/rekuperation-edu-video.webp",
       "images": [
-        "/projects/rekuperation-education/rekuperation-edu-video.png"
+        "/projects/rekuperation-education/rekuperation-edu-video.webp"
       ],
       "gallery": [
         {
@@ -31,32 +336,32 @@
         },
         {
           "type": "image",
-          "src": "/projects/rekuperation-education/rekuperation-edu-video.png",
+          "src": "/projects/rekuperation-education/rekuperation-edu-video.webp",
           "title": "Education video — key frame"
         },
         {
           "type": "image",
-          "src": "/projects/rekuperation-education/rekuperation-edu-video-1.png",
+          "src": "/projects/rekuperation-education/rekuperation-edu-video-1.webp",
           "title": "Air resistance"
         },
         {
           "type": "image",
-          "src": "/projects/rekuperation-education/rekuperation-edu-video-2.png",
+          "src": "/projects/rekuperation-education/rekuperation-edu-video-2.webp",
           "title": "Acceleration resistance"
         },
         {
           "type": "image",
-          "src": "/projects/rekuperation-education/rekuperation-edu-video-3.png",
+          "src": "/projects/rekuperation-education/rekuperation-edu-video-3.webp",
           "title": "Electric motor as generator"
         },
         {
           "type": "image",
-          "src": "/projects/rekuperation-education/rekuperation-edu-video-5.png",
+          "src": "/projects/rekuperation-education/rekuperation-edu-video-5.webp",
           "title": "Braking with electric motor"
         },
         {
           "type": "image",
-          "src": "/projects/rekuperation-education/rekuperation-edu-video-43.png",
+          "src": "/projects/rekuperation-education/rekuperation-edu-video-43.webp",
           "title": "Gradient scenario — 12%"
         },
         {
@@ -133,7 +438,7 @@
         },
         {
           "type": "image",
-          "src": "/projects/jan-helm/render6.png",
+          "src": "/projects/jan-helm/render6.webp",
           "title": "Render"
         }
       ]
@@ -151,35 +456,35 @@
         "visualization"
       ],
       "type": "image",
-      "thumbnail": "/projects/multiconcert/konzuert-23.png",
+      "thumbnail": "/projects/multiconcert/konzuert-23.webp",
       "images": [
-        "/projects/multiconcert/konzuert-23.png"
+        "/projects/multiconcert/konzuert-23.webp"
       ],
       "author": "Multikunst",
       "gallery": [
         {
           "type": "image",
-          "src": "/projects/multiconcert/konzuert-23.png",
+          "src": "/projects/multiconcert/konzuert-23.webp",
           "title": "Stage Overview"
         },
         {
           "type": "image",
-          "src": "/projects/multiconcert/konzuert-5542.png",
+          "src": "/projects/multiconcert/konzuert-5542.webp",
           "title": "Stage Detail"
         },
         {
           "type": "image",
-          "src": "/projects/multiconcert/konzuert161.png",
+          "src": "/projects/multiconcert/konzuert161.webp",
           "title": "Concert Scene"
         },
         {
           "type": "image",
-          "src": "/projects/multiconcert/konzuert171.png",
+          "src": "/projects/multiconcert/konzuert171.webp",
           "title": "Mask & Display"
         },
         {
           "type": "image",
-          "src": "/projects/multiconcert/konzuert181.png",
+          "src": "/projects/multiconcert/konzuert181.webp",
           "title": "Performance"
         }
       ]
@@ -208,27 +513,27 @@
         },
         {
           "type": "image",
-          "src": "/projects/tshirt-jan/djungle.png",
+          "src": "/projects/tshirt-jan/djungle.webp",
           "title": "Jungle"
         },
         {
           "type": "image",
-          "src": "/projects/tshirt-jan/outdoor1a.png",
+          "src": "/projects/tshirt-jan/outdoor1a.webp",
           "title": "Outdoor"
         },
         {
           "type": "image",
-          "src": "/projects/tshirt-jan/outdoor2.png",
+          "src": "/projects/tshirt-jan/outdoor2.webp",
           "title": "Outdoor 2"
         },
         {
           "type": "image",
-          "src": "/projects/tshirt-jan/outdoor2a.png",
+          "src": "/projects/tshirt-jan/outdoor2a.webp",
           "title": "Outdoor 2a"
         },
         {
           "type": "image",
-          "src": "/projects/tshirt-jan/outdoor3.png",
+          "src": "/projects/tshirt-jan/outdoor3.webp",
           "title": "Outdoor 3"
         }
       ]
@@ -246,7 +551,7 @@
         "industrial"
       ],
       "type": "video",
-      "thumbnail": "/projects/pult-vacuum/pult-praesentation-5.png",
+      "thumbnail": "/projects/pult-vacuum/pult-praesentation-5.webp",
       "videoUrl": "/projects/pult-vacuum/pult-final.mp4",
       "model3dPath": "/projects/pult-vacuum/model.glb",
       "model3dRotationX": 0,
@@ -262,27 +567,27 @@
         },
         {
           "type": "image",
-          "src": "/projects/pult-vacuum/pult-praesentation.png",
+          "src": "/projects/pult-vacuum/pult-praesentation.webp",
           "title": "Presentation"
         },
         {
           "type": "image",
-          "src": "/projects/pult-vacuum/pult-90grad.png",
+          "src": "/projects/pult-vacuum/pult-90grad.webp",
           "title": "PULT — Overview"
         },
         {
           "type": "image",
-          "src": "/projects/pult-vacuum/pult-90grad-2.png",
+          "src": "/projects/pult-vacuum/pult-90grad-2.webp",
           "title": "Detail"
         },
         {
           "type": "image",
-          "src": "/projects/pult-vacuum/pult-90grad-3.png",
+          "src": "/projects/pult-vacuum/pult-90grad-3.webp",
           "title": "Keep Cleaning"
         },
         {
           "type": "image",
-          "src": "/projects/pult-vacuum/pult-90grad-4.png",
+          "src": "/projects/pult-vacuum/pult-90grad-4.webp",
           "title": "Design Detail"
         }
       ],
@@ -340,12 +645,12 @@
       "gallery": [
         {
           "type": "image",
-          "src": "/projects/rovolto-lost-files/rovolto.png",
+          "src": "/projects/rovolto-lost-files/rovolto.webp",
           "title": "Close-up View"
         },
         {
           "type": "image",
-          "src": "/projects/rovolto-lost-files/rovolto1.png",
+          "src": "/projects/rovolto-lost-files/rovolto1.webp",
           "title": "Full Body"
         },
         {
@@ -382,35 +687,35 @@
         "cosmetics"
       ],
       "type": "image",
-      "thumbnail": "/projects/ice-gel/test-render-4-taj.png",
+      "thumbnail": "/projects/ice-gel/test-render-4-taj.webp",
       "images": [
-        "/projects/ice-gel/test-render-4-taj.png"
+        "/projects/ice-gel/test-render-4-taj.webp"
       ],
       "author": "AaronCxC",
       "gallery": [
         {
           "type": "image",
-          "src": "/projects/ice-gel/final2.png",
+          "src": "/projects/ice-gel/final2.webp",
           "title": "Iridescent Serum Bottle"
         },
         {
           "type": "image",
-          "src": "/projects/ice-gel/multikunst-freitag.png",
+          "src": "/projects/ice-gel/multikunst-freitag.webp",
           "title": "Feuchtigkeitscreme — Strahlende Haut"
         },
         {
           "type": "image",
-          "src": "/projects/ice-gel/multikunst-freitag23w.png",
+          "src": "/projects/ice-gel/multikunst-freitag23w.webp",
           "title": "Product Composition"
         },
         {
           "type": "image",
-          "src": "/projects/ice-gel/test-render-2-taj.png",
+          "src": "/projects/ice-gel/test-render-2-taj.webp",
           "title": "Ice Gel Render"
         },
         {
           "type": "image",
-          "src": "/projects/ice-gel/test-render-4-taj.png",
+          "src": "/projects/ice-gel/test-render-4-taj.webp",
           "title": "Abstract Composition"
         }
       ],
@@ -471,17 +776,17 @@
         },
         {
           "type": "image",
-          "src": "/projects/pocket-multipass/front_top.png",
+          "src": "/projects/pocket-multipass/front_top.webp",
           "title": "Front View"
         },
         {
           "type": "image",
-          "src": "/projects/pocket-multipass/front_top_2.png",
+          "src": "/projects/pocket-multipass/front_top_2.webp",
           "title": "Front View with Cartridge"
         },
         {
           "type": "image",
-          "src": "/projects/pocket-multipass/perspective.png",
+          "src": "/projects/pocket-multipass/perspective.webp",
           "title": "Perspective View"
         }
       ]
@@ -510,22 +815,22 @@
       "gallery": [
         {
           "type": "image",
-          "src": "/projects/the-house/TheHouse_00000.png",
+          "src": "/projects/the-house/TheHouse_00000.webp",
           "title": "Exterior & entrance"
         },
         {
           "type": "image",
-          "src": "/projects/the-house/TheHouse_00002_00000.png",
+          "src": "/projects/the-house/TheHouse_00002_00000.webp",
           "title": "Pool & terrace"
         },
         {
           "type": "image",
-          "src": "/projects/the-house/TheHouse_000010_00000.png",
+          "src": "/projects/the-house/TheHouse_000010_00000.webp",
           "title": "Aerial view"
         },
         {
           "type": "image",
-          "src": "/projects/the-house/TheHouse_0000130_00000.png",
+          "src": "/projects/the-house/TheHouse_0000130_00000.webp",
           "title": "Patio & deck"
         }
       ],
@@ -553,7 +858,7 @@
         "webgl"
       ],
       "type": "html",
-      "thumbnail": "/projects/mask-sculpture/look-mask-4.png",
+      "thumbnail": "/projects/mask-sculpture/look-mask-4.webp",
       "htmlPath": "/projects/mask-sculpture/index.html",
       "model3dPath": "/projects/mask-sculpture/model.glb",
       "model3dOffsetY": 0,
@@ -561,12 +866,12 @@
       "gallery": [
         {
           "type": "image",
-          "src": "/projects/mask-sculpture/look-mask-4.png",
+          "src": "/projects/mask-sculpture/look-mask-4.webp",
           "title": "Mask Sculpture"
         },
         {
           "type": "image",
-          "src": "/projects/mask-sculpture/youtube-back-10.png",
+          "src": "/projects/mask-sculpture/youtube-back-10.webp",
           "title": "YouTube Back"
         }
       ],
@@ -575,5 +880,5 @@
       "model3dAnimationProgress": 0
     }
   ],
-  "lastUpdated": "2026-05-16T14:30:00Z"
+  "lastUpdated": "2026-05-16T19:45:00Z"
 }

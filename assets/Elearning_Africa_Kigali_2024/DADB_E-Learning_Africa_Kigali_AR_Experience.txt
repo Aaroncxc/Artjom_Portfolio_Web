@@ -1,0 +1,42 @@
+DADB_E-Learning_Africa_Kigali_AR_Experience
+
+Kurzbeschreibung:
+Für die German Academy of Digital Education entstand im Rahmen der E-Learning Africa 2024 in Kigali ein Messeprojekt im German Pavilion. Dort wurde eine interaktive Augmented-Reality-Experience präsentiert, mit der Besucher lernen konnten, wie ein Inverter installiert wird und worauf bei diesem technischen Prozess zu achten ist.
+
+Das Projekt brachte Redaktion, Produktion, interne Fachexperten und externe Partner von SMA, einem deutschen Inverter-Hersteller, zusammen. Gemeinsam wurde eine AR-Lernanwendung entwickelt, die technische Kursinhalte, Expertenwissen und interaktive Messepräsentation miteinander verband.
+
+Ziel:
+Ziel war es, einen praxisnahen Lernprozess aus dem Bereich Solar- und Energietechnik in eine interaktive AR-Erfahrung zu übersetzen. Besucher sollten die Installation eines Inverters nicht nur theoretisch erklärt bekommen, sondern einzelne Schritte aktiv nachvollziehen und dabei wichtige Hinweise, Regeln und Bauteile kennenlernen.
+
+Gleichzeitig sollte der Messeauftritt zeigen, wie technische Weiterbildung durch Augmented Learning, Industriepartner-Content und digitale Kursformate erweitert werden kann.
+
+Meine Rolle:
+Ich habe das Projekt als Leitungsperson begleitet, koordiniert und überwacht. Dabei war ich für die Abstimmung zwischen Redaktion, Produktion, internen Expertenteams und externen Partnern von SMA mitverantwortlich.
+
+Zu meinen Aufgaben gehörten die Betreuung der beteiligten Teams, die Kontrolle des Projektfortschritts, die Koordination der Umsetzung sowie die Kommunikation mit Stakeholdern, Management und CEO. Ich habe sichergestellt, dass fachliche Inhalte, technische Umsetzung, Messeanforderungen und Präsentationsziel zusammengeführt wurden.
+
+Zusätzlich habe ich den Messestand im Vorfeld in ArchiCAD visualisiert und in Unreal Engine gerendert. Dadurch konnten Aufbau, Besucherführung, Präsentationsflächen, AR-Zone und technische Platzierung bereits in Deutschland getestet und geplant werden, bevor die Anwendung auf der Messe präsentiert wurde.
+
+Tools:
+ArchiCAD, Unreal Engine, AR-Hardware, Messeplanung, Projektmanagement, Teamkoordination
+
+Partner / Beteiligte:
+German Academy of Digital Education, SMA, Redaktion, Produktion, interne Fachexperten, Management / Stakeholder
+
+Ergebnis:
+Entstanden ist ein internationaler Messeauftritt mit einer interaktiven AR-Lernanwendung zur Inverter-Installation. Die Experience wurde am DADB-Stand im German Pavilion präsentiert und machte technische Lerninhalte für Besucher direkt erlebbar.
+
+Zusätzlich entstand eine digitale Vorabvisualisierung des Messestands, mit der Aufbau, Positionierung, Präsentationsablauf und technische Anforderungen vor der Messe geplant und abgestimmt werden konnten.
+
+Besondere Punkte:
+Besonders an diesem Projekt war die enge Verbindung aus Projektleitung, Teamkoordination, technischer Produktion, redaktioneller Didaktik und externer Partnerkommunikation. Mehrere Bereiche mussten zusammenarbeiten, damit aus Kursinhalten, SMA-Expertenwissen und AR-Technologie eine funktionierende Messe-Experience entstehen konnte.
+
+Das Projekt zeigte, wie Augmented Learning im technischen Bildungsbereich eingesetzt werden kann, um komplexe Installationsprozesse greifbarer, interaktiver und praxisnäher zu vermitteln.
+
+Projektleitung, Produktionskoordination, Stakeholder-Kommunikation, Team-Betreuung, Messe- und AR-Experience-Planung
+
+Datum / Zeitraum:
+2024
+
+Status:
+Abgeschlossen

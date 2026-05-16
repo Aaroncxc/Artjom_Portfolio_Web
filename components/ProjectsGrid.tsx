@@ -6,7 +6,7 @@ import { PortfolioProjectModal } from './portfolio/PortfolioProjectModal';
 import { Project3DPreview } from './Project3DPreview';
 import { Project, ProjectType } from '@/lib/types';
 import { projectMatchesPortfolioOwner } from '@/lib/portfolioOwnerFilter';
-import { chip3dGrayClass, chip3dInteractiveClass, chip3dModalOnlyClass, metaChipClass } from '@/lib/chipClasses';
+import { chipTileImmersionClass, metaChipClass } from '@/lib/chipClasses';
 
 const warmedVideoUrls = new Set<string>();
 const warmedModelUrls = new Set<string>();
@@ -386,6 +386,9 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                 const grayRenderOnly3dBadge = project.tile3dBadge === true && !project.model3dPath?.trim();
                 const showTile3dChip =
                   tileUses3dHover || modalOnly3dBadge || grayRenderOnly3dBadge;
+                const normalizedTags = (project.tags ?? []).map((t) => t.trim().toUpperCase());
+                const showVrChip = normalizedTags.includes('VR');
+                const showArChip = normalizedTags.includes('AR');
                 return (
                 <motion.div
                   key={project.id}
@@ -479,18 +482,10 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                       </span>
                     ))}
                     {showTile3dChip && (
-                      <span
-                        className={
-                          tileUses3dHover
-                            ? chip3dInteractiveClass
-                            : modalOnly3dBadge
-                              ? chip3dModalOnlyClass
-                              : chip3dGrayClass
-                        }
-                      >
-                        3D
-                      </span>
+                      <span className={chipTileImmersionClass}>3D</span>
                     )}
+                    {showVrChip && <span className={chipTileImmersionClass}>VR</span>}
+                    {showArChip && <span className={chipTileImmersionClass}>AR</span>}
                   </div>
                 </motion.div>
                 );

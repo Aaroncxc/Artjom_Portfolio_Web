@@ -1,8 +1,14 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import clsx from 'clsx';
 import type { Project } from '@/lib/types';
 import { Project3DPreview } from '../Project3DPreview';
+import {
+  assignGroupKey,
+  type ProjectMediaGroupsConfig,
+} from '@/lib/projectMediaGroups';
 
 /** Optional miniature GLB thumb for modal strip (live HTML tile). */
 export interface ModalThumbModelPreview {
@@ -21,6 +27,8 @@ export interface ModalAsset {
   title?: string;
   /** When set, `ProjectMediaThumbs` renders a tiny Three.js preview instead of `thumb`. */
   thumbModelPreview?: ModalThumbModelPreview;
+  /** Optional group bucket assigned by `lib/projectMediaGroups` for the project. */
+  groupKey?: string;
 }
 
 function thumbModelPreviewForProject(project: Project): ModalThumbModelPreview | undefined {
@@ -114,9 +122,17 @@ export function buildModalAssets(project: Project): ModalAsset[] {
   }
 
   if (project.gallery) {
+    const primaryVideoUrl = project.videoUrl?.trim() ?? '';
     for (const media of project.gallery) {
       if (!includeModal3d && media.type === 'model3d') continue;
       if (prependLiveHtml && media.type === 'html' && media.src === embeddedHtmlPath) continue;
+      if (
+        media.type === 'video' &&
+        primaryVideoUrl &&
+        media.src === primaryVideoUrl
+      ) {
+        continue;
+      }
       assets.push({
         kind: media.type,
         src: media.src,
@@ -135,6 +151,17 @@ export function buildModalAssets(project: Project): ModalAsset[] {
   }
 
   return assets;
+}
+
+/** Attach `groupKey` to assets in place when a project has a grouping config. */
+export function applyMediaGroupAssignment(
+  assets: ModalAsset[],
+  config: ProjectMediaGroupsConfig | undefined,
+): void {
+  if (!config) return;
+  for (const a of assets) {
+    a.groupKey = assignGroupKey(a, config);
+  }
 }
 
 interface ProjectMediaCanvasProps {
@@ -362,77 +389,268 @@ export function ProjectMediaCanvas({
   );
 }
 
+interface MediaThumbButtonProps {
+  asset: ModalAsset;
+  index: number;
+  isActive: boolean;
+  onSelect: (index: number) => void;
+}
+
+/** Single asset thumbnail button used by both the linear strip and grouped strip. */
+function MediaThumbButton({ asset, index, isActive, onSelect }: MediaThumbButtonProps) {
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(index)}
+      className={clsx(
+        'relative flex-shrink-0 overflow-hidden rounded-[10px] border bg-white transition',
+        isActive
+          ? 'border-system-blue shadow-[0_0_0_3px_rgba(0,122,255,0.22)]'
+          : 'border-[rgba(60,60,67,0.18)] hover:border-[rgba(60,60,67,0.32)] shadow-sm',
+      )}
+      style={{ width: 96, height: 64 }}
+      aria-label={`Asset ${index + 1}`}
+      aria-current={isActive}
+    >
+      {asset.thumbModelPreview ? (
+        <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[linear-gradient(135deg,rgba(248,250,252,1)_0%,rgba(241,245,249,1)_100%)]">
+          <Project3DPreview
+            modelPath={asset.thumbModelPreview.src}
+            isHovered={false}
+            mousePosition={{ x: 0.5, y: 0.5 }}
+            rotationX={asset.thumbModelPreview.rotationX}
+            materialColor={asset.thumbModelPreview.materialColor}
+            offsetY={asset.thumbModelPreview.offsetY}
+            animationProgress={asset.thumbModelPreview.animationProgress ?? 0}
+            fallbackPoster={asset.thumb || null}
+            showMeshStatsOverlay={false}
+          />
+        </div>
+      ) : asset.thumb ? (
+        <img
+          src={asset.thumb}
+          alt={asset.title || ''}
+          className="h-full w-full object-cover"
+          loading="lazy"
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center bg-[rgba(28,28,28,0.06)] text-[10px] uppercase tracking-wide text-mk-text-muted">
+          {asset.kind}
+        </div>
+      )}
+      {asset.kind === 'video' && (
+        <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/20">
+          <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </span>
+      )}
+      {asset.kind === 'html' && (
+        <span className="pointer-events-none absolute bottom-1 right-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white">
+          Live
+        </span>
+      )}
+      {asset.kind === 'model3d' && (
+        <span className="pointer-events-none absolute bottom-1 right-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white">
+          3D
+        </span>
+      )}
+    </button>
+  );
+}
+
 interface ProjectMediaThumbsProps {
   assets: ModalAsset[];
   activeIndex: number;
   onSelect: (index: number) => void;
+  /** When provided, renders collapsible group tiles instead of the linear strip. */
+  groupsConfig?: ProjectMediaGroupsConfig;
 }
 
-export function ProjectMediaThumbs({ assets, activeIndex, onSelect }: ProjectMediaThumbsProps) {
+export function ProjectMediaThumbs({
+  assets,
+  activeIndex,
+  onSelect,
+  groupsConfig,
+}: ProjectMediaThumbsProps) {
   if (assets.length <= 1) return null;
+
+  if (groupsConfig) {
+    return (
+      <GroupedMediaThumbs
+        assets={assets}
+        activeIndex={activeIndex}
+        onSelect={onSelect}
+        groupsConfig={groupsConfig}
+      />
+    );
+  }
 
   return (
     <div className="flex w-full gap-2 overflow-x-auto pb-1">
-      {assets.map((asset, index) => {
-        const isActive = index === activeIndex;
+      {assets.map((asset, index) => (
+        <MediaThumbButton
+          key={`${asset.src}-${index}`}
+          asset={asset}
+          index={index}
+          isActive={index === activeIndex}
+          onSelect={onSelect}
+        />
+      ))}
+    </div>
+  );
+}
+
+interface GroupedMediaThumbsProps {
+  assets: ModalAsset[];
+  activeIndex: number;
+  onSelect: (index: number) => void;
+  groupsConfig: ProjectMediaGroupsConfig;
+}
+
+/**
+ * Collapsible group strip — N tiles up front, each with a faded preview image
+ * hinting at more content. Clicking a tile makes the others vanish and reveals
+ * its assets inline; clicking the open tile again restores all tiles.
+ * Asset selection still uses the original `assets` index, so the main canvas
+ * stays in sync with the linear strip behavior.
+ */
+function GroupedMediaThumbs({
+  assets,
+  activeIndex,
+  onSelect,
+  groupsConfig,
+}: GroupedMediaThumbsProps) {
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  const buckets = useMemo(() => {
+    const map = new Map<string, Array<{ asset: ModalAsset; index: number }>>();
+    for (const g of groupsConfig.groups) map.set(g.key, []);
+    assets.forEach((asset, index) => {
+      const key = asset.groupKey;
+      if (key && map.has(key)) {
+        map.get(key)!.push({ asset, index });
+      }
+    });
+    return map;
+  }, [assets, groupsConfig]);
+
+  /** First usable thumb per group — used as the faded preview behind the tile label. */
+  const previewByGroup = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const [key, list] of buckets.entries()) {
+      const withThumb = list.find(({ asset }) => Boolean(asset.thumb));
+      if (withThumb?.asset.thumb) map.set(key, withThumb.asset.thumb);
+    }
+    return map;
+  }, [buckets]);
+
+  const toggle = (key: string) => {
+    setExpanded((prev) => (prev === key ? null : key));
+  };
+
+  return (
+    <div className="flex w-full items-stretch gap-2 overflow-x-auto pb-1">
+      {groupsConfig.groups.map((group) => {
+        const items = buckets.get(group.key) ?? [];
+        const isOpen = expanded === group.key;
+        const isHidden = expanded !== null && !isOpen;
+        const activeIsHere = items.some(({ index }) => index === activeIndex);
+        const previewSrc = previewByGroup.get(group.key);
+
         return (
-          <button
-            key={`${asset.src}-${index}`}
-            type="button"
-            onClick={() => onSelect(index)}
-            className={`relative flex-shrink-0 overflow-hidden rounded-[10px] border bg-white transition ${
-              isActive
-                ? 'border-system-blue shadow-[0_0_0_3px_rgba(0,122,255,0.22)]'
-                : 'border-[rgba(60,60,67,0.18)] hover:border-[rgba(60,60,67,0.32)] shadow-sm'
-            }`}
-            style={{ width: 96, height: 64 }}
-            aria-label={`Asset ${index + 1}`}
-            aria-current={isActive}
-          >
-            {asset.thumbModelPreview ? (
-              <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[linear-gradient(135deg,rgba(248,250,252,1)_0%,rgba(241,245,249,1)_100%)]">
-                <Project3DPreview
-                  modelPath={asset.thumbModelPreview.src}
-                  isHovered={false}
-                  mousePosition={{ x: 0.5, y: 0.5 }}
-                  rotationX={asset.thumbModelPreview.rotationX}
-                  materialColor={asset.thumbModelPreview.materialColor}
-                  offsetY={asset.thumbModelPreview.offsetY}
-                  animationProgress={asset.thumbModelPreview.animationProgress ?? 0}
-                  fallbackPoster={asset.thumb || null}
-                  showMeshStatsOverlay={false}
-                />
-              </div>
-            ) : asset.thumb ? (
-              <img
-                src={asset.thumb}
-                alt={asset.title || ''}
-                className="h-full w-full object-cover"
-                loading="lazy"
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-[rgba(28,28,28,0.06)] text-[10px] uppercase tracking-wide text-mk-text-muted">
-                {asset.kind}
-              </div>
-            )}
-            {asset.kind === 'video' && (
-              <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/20">
-                <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </span>
-            )}
-            {asset.kind === 'html' && (
-              <span className="pointer-events-none absolute bottom-1 right-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white">
-                Live
-              </span>
-            )}
-            {asset.kind === 'model3d' && (
-              <span className="pointer-events-none absolute bottom-1 right-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white">
-                3D
-              </span>
-            )}
-          </button>
+          <Fragment key={group.key}>
+            <AnimatePresence initial={false} mode="popLayout">
+              {!isHidden && (
+                <motion.button
+                  layout
+                  key={`tile-${group.key}`}
+                  type="button"
+                  onClick={() => toggle(group.key)}
+                  aria-expanded={isOpen}
+                  aria-label={`${group.label} (${items.length})`}
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.94 }}
+                  transition={{ duration: 0.18, ease: [0.25, 0.1, 0.25, 1] }}
+                  className={clsx(
+                    'relative flex flex-shrink-0 flex-col items-start justify-between overflow-hidden rounded-[10px] border bg-white px-2.5 py-1.5 text-left transition-colors',
+                    isOpen
+                      ? 'border-system-blue shadow-[0_0_0_3px_rgba(0,122,255,0.22)]'
+                      : 'border-[rgba(60,60,67,0.18)] hover:border-[rgba(60,60,67,0.32)] shadow-sm',
+                  )}
+                  style={{ width: 152, height: 64 }}
+                >
+                  {previewSrc && (
+                    <>
+                      <img
+                        src={previewSrc}
+                        alt=""
+                        loading="lazy"
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-45"
+                      />
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.94)_0%,rgba(255,255,255,0.78)_55%,rgba(255,255,255,0.32)_100%)]"
+                      />
+                    </>
+                  )}
+
+                  <span className="relative flex w-full items-start gap-1.5">
+                    <span className="line-clamp-2 text-[11px] font-semibold leading-tight text-mk-text drop-shadow-[0_1px_0_rgba(255,255,255,0.55)]">
+                      {group.label}
+                    </span>
+                    {activeIsHere && (
+                      <span
+                        className="ml-auto mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-system-blue"
+                        aria-hidden
+                      />
+                    )}
+                  </span>
+                  <span className="relative flex w-full items-center justify-between">
+                    <span className="text-[10px] font-semibold uppercase tracking-wide text-mk-text-muted">
+                      {items.length} {items.length === 1 ? 'item' : 'items'}
+                    </span>
+                    <svg
+                      className={clsx(
+                        'h-3.5 w-3.5 text-system-blue transition-transform duration-200',
+                        isOpen && 'rotate-90',
+                      )}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2.25}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </motion.button>
+              )}
+            </AnimatePresence>
+
+            <AnimatePresence initial={false} mode="popLayout">
+              {isOpen &&
+                items.map(({ asset, index }) => (
+                  <motion.div
+                    layout
+                    key={`${asset.src}-${index}`}
+                    initial={{ opacity: 0, x: -8, scale: 0.96 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: -8, scale: 0.96 }}
+                    transition={{ duration: 0.18, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="flex-shrink-0"
+                  >
+                    <MediaThumbButton
+                      asset={asset}
+                      index={index}
+                      isActive={index === activeIndex}
+                      onSelect={onSelect}
+                    />
+                  </motion.div>
+                ))}
+            </AnimatePresence>
+          </Fragment>
         );
       })}
     </div>

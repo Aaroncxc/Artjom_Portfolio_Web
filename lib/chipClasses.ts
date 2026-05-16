@@ -10,13 +10,17 @@ export const metaChipClass =
 export const liveChipClass =
   'flex items-center gap-1 rounded-full bg-[rgba(99,102,241,0.9)] px-2.5 py-1 text-[11px] font-medium uppercase tracking-wider text-white shadow-sm backdrop-blur-sm sm:text-xs';
 
-/** Project tile: 3D badge variants (same logic as before neutral unification). */
-export const chip3dInteractiveClass =
-  'rounded-full bg-[rgba(99,102,241,0.92)] px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white shadow-sm backdrop-blur-sm';
-export const chip3dModalOnlyClass =
+/** Project tile: 3D / VR / AR — solid brand blue (same as modal-only project pills). */
+export const chipTileImmersionClass =
   'rounded-full bg-system-blue px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white shadow-sm backdrop-blur-sm';
-export const chip3dGrayClass =
-  'rounded-full bg-[rgba(120,120,128,0.88)] px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white shadow-sm backdrop-blur-sm';
+
+/** Aliases kept for backward-compatible imports — all match `chipTileImmersionClass`. */
+export const chip3dInteractiveClass = chipTileImmersionClass;
+export const chip3dModalOnlyClass = chipTileImmersionClass;
+export const chip3dGrayClass = chipTileImmersionClass;
+
+export const chipVrClass = chipTileImmersionClass;
+export const chipArClass = chipTileImmersionClass;
 
 /** Subtle tinted topic tags (cycles — pink / violet / teal). */
 const CONTENT_TAG_TINTS = [

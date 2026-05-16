@@ -12,17 +12,15 @@ import type { Project } from '@/lib/types';
 
 const ROLES = [
   '3D Generalist',
-  'Architect',
   'Project Manager',
   'App Developer',
   'Art Director',
-  'Producer',
 ];
 
 const BIO = `I merge architecture, 3D art, and code into immersive digital experiences. From product visualisations and AR/VR experiments to interactive web installations, I lead concept, design, and engineering end-to-end.`;
 
 /** Collapsed-state hero image — single still shot, no rotation. */
-const STATIC_PORTRAIT_SRC = '/about/artjom-bg.png';
+const STATIC_PORTRAIT_SRC = '/about/artjom-bg.webp';
 
 /** Expanded About portrait carousel — high-res event photos (`object-position` tweaks framing). */
 const PROFILE_CAROUSEL_SLIDES: { src: string; focus: string }[] = [
@@ -101,7 +99,7 @@ const aboutMedia: string[] = [
   '/about/ProductRoadshow3_India_2024.jpg',
   '/about/ProductRoadshow_India_2024.jpg',
   '/about/Rectangle 4431.png',
-  '/about/Rectangle 4432.png',
+  '/about/Rectangle 4432.webp',
 ];
 
 // ── Marquee background with project thumbnails ────────────────
@@ -353,7 +351,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
                   onClick={() => setIsExpanded((v) => !v)}
                   aria-expanded={isExpanded}
                   aria-controls="about-expandable"
-                  className="inline-flex min-h-[44px] items-center gap-2 rounded-full border-2 border-accent-cyan bg-transparent px-5 py-2.5 text-sm font-medium text-mk-text transition-colors duration-200 hover:bg-accent-cyan hover:text-white"
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-full border-2 border-accent-cyan bg-transparent px-5 py-2.5 text-sm font-bold text-mk-text transition-colors duration-200 hover:bg-accent-cyan hover:text-white"
                 >
                   {isExpanded ? 'Show less' : 'More about me'}
                   <svg

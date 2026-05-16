@@ -69,6 +69,14 @@ export interface Project {
   highlights?: string[];
   // Optional override for the "Hire Me" CTA target. Defaults to the global contact mailto.
   ctaHref?: string;
+  // External reference links (e.g. official event page, article, partner site) shown as chips
+  // in the project modal info column.
+  references?: ProjectReference[];
+}
+
+export interface ProjectReference {
+  url: string;
+  label?: string;
 }
 
 export interface PostsData {
