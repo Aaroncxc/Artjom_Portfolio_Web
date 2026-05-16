@@ -1,6 +1,92 @@
 {
   "posts": [
     {
+      "id": "21",
+      "slug": "rekuperation-education",
+      "title": "Rekuperation — E-Mobility Education",
+      "description": "Animated learning video on regenerative braking for the German Academy of Digital Education, developed with the editorial team and Tesla expert Harald Schlarb. Blender assets and Unreal Engine scenes turn recuperation into clear 3D visuals—vehicle setups, energy flows, braking, and battery cues—for students.",
+      "date": "2024-11-18",
+      "tags": [
+        "video",
+        "3D",
+        "education",
+        "animation",
+        "electromobility"
+      ],
+      "type": "video",
+      "thumbnail": "/projects/rekuperation-education/rekuperation-edu-video.png",
+      "images": [
+        "/projects/rekuperation-education/rekuperation-edu-video.png"
+      ],
+      "gallery": [
+        {
+          "type": "image",
+          "src": "/projects/rekuperation-education/artjom-schlarp-1.jpg",
+          "title": "Collaboration — CAD session"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rekuperation-education/artjom-schlarp-2.jpg",
+          "title": "Collaboration — walkthrough"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rekuperation-education/rekuperation-edu-video.png",
+          "title": "Education video — key frame"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rekuperation-education/rekuperation-edu-video-1.png",
+          "title": "Air resistance"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rekuperation-education/rekuperation-edu-video-2.png",
+          "title": "Acceleration resistance"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rekuperation-education/rekuperation-edu-video-3.png",
+          "title": "Electric motor as generator"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rekuperation-education/rekuperation-edu-video-5.png",
+          "title": "Braking with electric motor"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rekuperation-education/rekuperation-edu-video-43.png",
+          "title": "Gradient scenario — 12%"
+        },
+        {
+          "type": "image",
+          "src": "/projects/rekuperation-education/harald-schlarp-interview.png",
+          "title": "Expert interview — Harald Schlarb"
+        }
+      ],
+      "tools": [
+        {
+          "name": "Blender",
+          "icon": "/tool-icons/blender.png"
+        },
+        {
+          "name": "Unreal Engine",
+          "icon": "/tool-icons/unreal-engine.png"
+        }
+      ],
+      "tile3dBadge": true,
+      "highlights": [
+        "Blender & Unreal Engine",
+        "Educational 3D / realtime",
+        "E-mobility & recuperation",
+        "Editorial workflow + expert input"
+      ],
+      "explanation": "For the German Academy of Digital Education, this project is an animated learning film about recuperation in electromobility. It was produced together with the editorial team and Harald Schlarb (Tesla) so students can grasp regenerative braking through animated 3D scenes, vehicle depictions, energy flows, and clear overlays—not only as theory but as a visual process.\n\nGoal: translate a complex technical topic into a modern, easy-to-follow learning video.\n\nAs Head of 3D, responsibilities included creating assets in Blender, building scenes in Unreal Engine, breaking the script into visual sequences, staging processes, shooting/rendering, and integrating expert material—including vehicle and drivetrain shots, energy-flow visualization, braking, battery states, and technical flows.\n\nOutcome: an educational video for an e-mobility course that combines editorial learning design, expert contribution, and 3D/real-time visualization into one coherent module. Especially notable is the mix of subject-matter depth, didactic structure, and high-quality 3D staging—the visuals had to look strong while staying accurate and understandable for learners.\n\nTimeline: November 2024 — completed.",
+      "author": "AaronCxC",
+      "videoUrl": "/projects/rekuperation-education/electromobility-rekuperation-v96.webm"
+    },
+    {
       "id": "20",
       "slug": "multi-watch",
       "title": "Multi Watch",
@@ -489,5 +575,5 @@
       "model3dAnimationProgress": 0
     }
   ],
-  "lastUpdated": "2026-05-15T18:55:39Z"
+  "lastUpdated": "2026-05-16T14:30:00Z"
 }

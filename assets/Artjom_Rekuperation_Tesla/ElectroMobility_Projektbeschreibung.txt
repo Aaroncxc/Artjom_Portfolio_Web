@@ -1,0 +1,27 @@
+Rekuperation_Educational_Animation
+
+Kurzbeschreibung:
+Für die German Academy of Digital Education entstand ein animiertes Lernvideo zum Thema Rekuperation im Bereich Elektromobilität. Das Projekt wurde gemeinsam mit dem Redaktionsteam und Harald Schlarb von Tesla entwickelt, um Studierenden die Funktionsweise von regenerativem Bremsen verständlich und visuell anschaulich zu erklären.
+
+Ziel:
+Ziel war es, einen komplexen technischen Prozess aus dem E-Mobility-Bereich in ein klares, modernes und gut nachvollziehbares Lernvideo zu übersetzen. Die Rekuperation sollte nicht nur theoretisch erklärt, sondern durch animierte 3D-Szenen, Fahrzeugdarstellungen, Energieflüsse und visuelle Overlays verständlich gemacht werden.
+
+Meine Rolle:
+Als Head of 3D war ich für die visuelle und technische Umsetzung der 3D-Produktion verantwortlich. Ich habe die benötigten Assets in Blender erstellt, die Szenen in Unreal Engine aufgebaut, das Skript visuell in einzelne Sequenzen übersetzt und die Prozesse dort inszeniert, abgefilmt und gerendert.
+
+Dazu gehörten unter anderem Fahrzeug- und Antriebsszenen, Visualisierungen von Energieflüssen, Bremsvorgängen, Batteriezuständen und technischen Abläufen. Zusätzlich wurde das Expertenmaterial mit Harald Schlarb in das Lernvideo-Konzept eingebunden.
+
+Tools:
+Blender, Unreal Engine
+
+Ergebnis:
+Entstanden ist ein animiertes Educational Video für einen E-Mobility-Kurs, das den Prozess der Rekuperation visuell erklärt. Das Video verbindet redaktionell entwickelten Lerncontent, Experteninput und 3D-/Realtime-Visualisierung zu einem verständlichen Kursmodul.
+
+Besondere Punkte:
+Besonders an diesem Projekt war die Kombination aus fachlichem Expertenwissen, redaktioneller Didaktik und technischer 3D-Inszenierung. Der Inhalt musste nicht nur visuell hochwertig aussehen, sondern auch fachlich korrekt, verständlich und für Studierende nachvollziehbar sein.
+
+Datum / Zeitraum:
+11.2024
+
+Status:
+Abgeschlossen
