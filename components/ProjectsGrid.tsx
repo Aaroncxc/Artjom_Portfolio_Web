@@ -544,17 +544,19 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="md:hidden flex items-center gap-2 rounded-full border border-black/[0.06] bg-[rgba(118,118,128,0.12)] px-3 py-1.5 text-xs font-medium text-[#48484A]"
+                    className="md:hidden flex max-w-[18rem] items-center gap-2 rounded-full border border-black/[0.06] bg-[rgba(118,118,128,0.12)] px-3 py-1.5 text-[11px] font-medium leading-tight text-[#48484A]"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m-12 5h12m-12 5h12M4 7h.01M4 12h.01M4 17h.01" />
                     </svg>
-                    Wischen zum Wechseln
+                    <span>
+                      Bilder wischen im Player. Projekt wechseln am Rand.
+                    </span>
                   </motion.div>
                 )}
               </AnimatePresence>
               
-              <div className="rounded-full border border-black/[0.08] bg-white/92 px-4 py-2 text-[13px] font-semibold tracking-[-0.01em] text-[#48484A] shadow-[0_2px_10px_rgba(0,0,0,0.06)] backdrop-blur-md">
+              <div className="hidden md:block rounded-full border border-black/[0.08] bg-white/92 px-4 py-2 text-[13px] font-semibold tracking-[-0.01em] text-[#48484A] shadow-[0_2px_10px_rgba(0,0,0,0.06)] backdrop-blur-md">
                   {selectedIndex + 1} / {filteredProjects.length}
               </div>
             </div>
@@ -576,8 +578,11 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   x: slideDirection === 'right' ? -100 : 100,
                 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="relative z-[55] w-full max-w-7xl mx-auto my-10 md:my-16 px-4 md:px-24"
+                className="relative z-[55] mx-auto my-2 w-full max-w-7xl px-2 sm:my-10 sm:px-4 md:my-16 md:px-24"
                 onClick={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+                onTouchEnd={(e) => e.stopPropagation()}
               >
                 <PortfolioProjectModal
                   project={selectedProject}

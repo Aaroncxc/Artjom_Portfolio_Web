@@ -866,6 +866,10 @@ video {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
 .-ml-0\.5 {
   margin-left: -0.125rem;
 }
@@ -1067,6 +1071,9 @@ video {
 .max-h-full {
   max-height: 100%;
 }
+.max-h-\[calc\(100dvh-1rem\)\] {
+  max-height: calc(100dvh - 1rem);
+}
 .min-h-0 {
   min-height: 0px;
 }
@@ -1228,6 +1235,9 @@ video {
 }
 .max-w-xs {
   max-width: 20rem;
+}
+.max-w-\[18rem\] {
+  max-width: 18rem;
 }
 .flex-1 {
   flex: 1 1 0%;
@@ -3158,6 +3168,16 @@ audio {
     margin-right: 0.25rem;
   }
 
+  .sm\:my-10 {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .sm\:my-8 {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
   .sm\:mb-10 {
     margin-bottom: 2.5rem;
   }
@@ -3528,12 +3548,24 @@ audio {
     aspect-ratio: auto;
   }
 
+  .lg\:h-\[min\(720px\2c calc\(100dvh-2rem\)\)\] {
+    height: min(720px, calc(100dvh - 2rem));
+  }
+
   .lg\:min-h-\[360px\] {
     min-height: 360px;
   }
 
   .lg\:min-h-\[400px\] {
     min-height: 400px;
+  }
+
+  .lg\:min-h-0 {
+    min-height: 0px;
+  }
+
+  .lg\:flex-1 {
+    flex: 1 1 0%;
   }
 
   .lg\:grid-cols-2 {
@@ -3570,6 +3602,14 @@ audio {
 
   .lg\:gap-8 {
     gap: 2rem;
+  }
+
+  .lg\:overflow-hidden {
+    overflow: hidden;
+  }
+
+  .lg\:overflow-y-auto {
+    overflow-y: auto;
   }
 
   .lg\:p-8 {

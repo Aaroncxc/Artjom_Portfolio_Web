@@ -474,8 +474,11 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="relative z-[55] w-full max-w-4xl mx-auto my-8 px-4"
+              className="relative z-[55] mx-auto my-2 w-full max-w-4xl px-2 sm:my-8 sm:px-4"
               onClick={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+              onTouchMove={(e) => e.stopPropagation()}
+              onTouchEnd={(e) => e.stopPropagation()}
             >
               <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-[rgba(28,28,28,0.08)]">
                 {/* Media Preview - Embedded Game, Video, or Screenshot Carousel */}

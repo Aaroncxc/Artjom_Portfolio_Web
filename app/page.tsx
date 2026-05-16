@@ -15,6 +15,18 @@ export default function Home() {
   const [introKey, setIntroKey] = useState(0);
   const [currentSection, setCurrentSection] = useState<string>('');
 
+  // Allow skipping the cinematic intro via ?skipHero=true or hash deep-link (#projects, #about, …).
+  // Useful on mobile where the canvas sometimes swallows the first tap, and for direct deep links.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const url = new URL(window.location.href);
+    const skipParam = url.searchParams.get('skipHero');
+    const hasHashTarget = /^#\w/.test(window.location.hash || '');
+    if (skipParam === 'true' || skipParam === '1' || hasHashTarget) {
+      setHeroDismissed(true);
+    }
+  }, []);
+
   // Lock scroll while the intro hero is up — also blocks touch scroll on iOS/Android
   useEffect(() => {
     if (heroDismissed) return undefined;

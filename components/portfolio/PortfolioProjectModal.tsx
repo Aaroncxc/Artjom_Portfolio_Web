@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Project, ProjectReference, ProjectTool } from '@/lib/types';
 import { buildHireMailto } from '@/lib/contact';
@@ -194,6 +194,35 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
   const explanation = project.explanation?.trim() || project.description;
   const hireHref = project.ctaHref || buildHireMailto(`Hire me — ${project.title}`);
 
+  /**
+   * Touch swipe to step through `assets` while staying inside the modal.
+   * Mounted on the media frame so it doesn't compete with vertical scroll
+   * elsewhere in the modal. Horizontal-only — vertical drags are ignored.
+   */
+  const swipeStart = useRef<{ x: number; y: number } | null>(null);
+  const handleMediaTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    const t = e.touches[0];
+    if (!t) return;
+    swipeStart.current = { x: t.clientX, y: t.clientY };
+  };
+  const handleMediaTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    const start = swipeStart.current;
+    swipeStart.current = null;
+    if (!start) return;
+    const t = e.changedTouches[0];
+    if (!t) return;
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    const horizontal = Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4;
+    if (!horizontal) return;
+    if (assets.length <= 1) return;
+    if (dx < 0) {
+      setActiveAssetIndex((i) => (i + 1) % assets.length);
+    } else {
+      setActiveAssetIndex((i) => (i - 1 + assets.length) % assets.length);
+    }
+  };
+
   const hireButton = (
     <a
       href={hireHref}
@@ -221,7 +250,7 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
       <div
         className={clsx(
           'flex flex-col overflow-hidden rounded-[20px]',
-          'h-[min(720px,calc(100dvh-2rem))]',
+          'max-h-[calc(100dvh-1rem)] lg:h-[min(720px,calc(100dvh-2rem))]',
           'border border-black/[0.10]',
           'bg-white',
           'shadow-[0_4px_24px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04)]'
@@ -292,7 +321,7 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
         </div>
 
         {/* Body — media + copy share one visual row (items-start: no stretch gap under thumbnails); Focus + CTA span full width below */}
-        <div className="relative flex min-h-0 flex-1 flex-col px-4 pb-6 pt-5 sm:px-6 sm:pb-8 sm:pt-6">
+        <div className="relative flex flex-1 flex-col overflow-y-auto px-4 pb-6 pt-5 sm:px-6 sm:pb-8 sm:pt-6 lg:min-h-0 lg:overflow-hidden">
           <AnimatePresence mode="wait" initial={false}>
             {activeTab === 'private' ? (
               <motion.div
@@ -303,15 +332,18 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
                 transition={{ duration: 0.18, ease: [0.25, 0.1, 0.25, 1] }}
                 className="flex min-h-0 flex-1 flex-col gap-6 lg:gap-8"
               >
-                <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[minmax(0,1.52fr)_minmax(320px,1fr)] lg:items-stretch lg:gap-10 xl:gap-12">
+                <div className="grid gap-6 lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1.52fr)_minmax(320px,1fr)] lg:items-stretch lg:gap-10 xl:gap-12">
                   <div className="flex min-w-0 flex-col gap-3">
                     <div
                       className={clsx(
                         'aspect-video w-full overflow-hidden rounded-2xl',
                         'bg-[#F2F2F7]',
                         'p-2 sm:p-2.5',
-                        'ring-1 ring-black/[0.06]'
+                        'ring-1 ring-black/[0.06]',
+                        'touch-pan-y select-none'
                       )}
+                      onTouchStart={handleMediaTouchStart}
+                      onTouchEnd={handleMediaTouchEnd}
                     >
                       {activeAsset && (
                         <div className="h-full w-full overflow-hidden rounded-[12px] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]">
@@ -409,7 +441,7 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.18, ease: [0.25, 0.1, 0.25, 1] }}
-                className="flex min-h-0 flex-1 flex-col gap-6"
+                className="flex flex-col gap-6 lg:min-h-0 lg:flex-1"
               >
                 <div className="space-y-3">
                   <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.24em] text-mk-text-muted">
@@ -417,7 +449,7 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
                   </span>
                   <StaircaseTitle title={project.title} />
                 </div>
-                <div className="mk-scroll min-h-0 flex-1 overflow-y-auto pr-1">
+                <div className="mk-scroll pr-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
                   <div className="max-w-3xl space-y-5 text-base font-normal leading-relaxed text-mk-text-secondary md:text-lg">
                     {explanation.split(/\n{2,}/).map((paragraph, i) => (
                       <p key={i}>{paragraph}</p>
