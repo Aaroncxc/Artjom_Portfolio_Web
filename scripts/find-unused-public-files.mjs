@@ -88,7 +88,7 @@ function scanSourceCodeForPublicPaths(bucket) {
   const extOk = /\.(tsx?|jsx?|css|html)$/i;
   /** Ab `/` bis Dateiextension (auch mehrteilige Pfade wie `/about/x/y.webp`). */
   const re =
-    /['"`]((?:\/|%2F|%2f)[^'"`]{1,500}?\.(?:webp|png|jpg|jpeg|gif|svg|ico|mov|webm|mp4|glb|fbx|html|js|mjs|cjs|wasm|json|css|woff2?))(?:\?[^'"`]*)?['"`]/gi;
+    /['"`]((?:\/|%2F|%2f)[^'"`]{1,500}?\.(?:webp|png|jpg|jpeg|gif|svg|ico|mov|webm|mp4|glb|fbx|html|js|mjs|cjs|wasm|json|css|woff2?|pdf))(?:\?[^'"`]*)?['"`]/gi;
   /** index.html ohne Query. */
   const reLooseHtml = /['"`]((?:\/|%2F|%2f)[a-zA-Z0-9_\-%.]+(?:\/[\w\-%.]*)*\/index\.html)(?:\?[^'"`]*)?['"`]/gi;
 

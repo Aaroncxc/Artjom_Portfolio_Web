@@ -55,6 +55,11 @@ interface CvEntry {
   location?: string;
   /** Subtle standout card styling for short creds — no heading or badge text. */
   highlight?: boolean;
+  /** Ausklappbare Rollenbeschreibung („Mehr“ / „Weniger“). */
+  description?: string;
+  /** Inline-Zertifikat (PDF unter `/public`). */
+  pdfPath?: string;
+  pdfLabel?: string;
 }
 /** Curated CV — short version (one line per stop). */
 const CV: CvEntry[] = [
@@ -65,9 +70,29 @@ const CV: CvEntry[] = [
     location: 'Berlin',
   },
   {
-    role: 'Head of Production / Head of 3D / Mixed Reality Lead / 3D Environment Artist',
+    role: 'Head of Production',
     org: 'German Academy of Digital Education (DADB)',
-    period: 'May 2021 — Oct 2025',
+    period: 'Jan 2024 — Oct 2025',
+    location: 'Berlin · On-site',
+    description:
+      'As the Head of Production at DADB Germany, I oversaw the management of our digital education projects — ensuring the seamless delivery of high-quality courses to students worldwide and leading cross-functional production teams (3D, post-production, editorial).',
+  },
+  {
+    role: 'Head of 3D',
+    org: 'German Academy of Digital Education (DADB)',
+    period: 'Feb 2023 — Jan 2024',
+    location: 'Berlin · Hybrid',
+  },
+  {
+    role: 'Mixed Reality Lead',
+    org: 'German Academy of Digital Education (DADB)',
+    period: 'Jan 2022 — Feb 2023',
+    location: 'Berlin',
+  },
+  {
+    role: '3D Environment Artist',
+    org: 'German Academy of Digital Education (DADB)',
+    period: 'May 2021 — Jan 2022',
     location: 'Berlin',
   },
   {
@@ -81,6 +106,8 @@ const CV: CvEntry[] = [
     org: 'Certifications',
     period: 'Nov 2024',
     highlight: true,
+    pdfPath: '/about/certificates/ihk-projektleiter.pdf',
+    pdfLabel: 'Zertifikat ansehen',
   },
   {
     role: 'Revit Grundlagen (Autodesk)',
@@ -268,6 +295,11 @@ export function AboutSection({ visible }: AboutSectionProps) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [profileCarouselHover, setProfileCarouselHover] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [openCvDetails, setOpenCvDetails] = useState<Record<string, boolean>>({});
+
+  const toggleCvDetail = (key: string) => {
+    setOpenCvDetails((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   useEffect(() => {
     async function load() {
@@ -423,6 +455,10 @@ export function AboutSection({ visible }: AboutSectionProps) {
                           </h4>
                           <ol className="relative space-y-5 border-l border-[rgba(28,28,28,0.12)] pl-5">
                             {CV.map((entry) => {
+                              const cvKey = `${entry.role}-${entry.period}`;
+                              const hasToggle = Boolean(entry.description || entry.pdfPath);
+                              const isCvOpen = !!openCvDetails[cvKey];
+
                               const body = (
                                 <>
                                   <p className="text-sm font-semibold leading-snug text-mk-text">
@@ -435,8 +471,87 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                   </p>
                                 </>
                               );
+
+                              const expandableBlock = (
+                                <>
+                                  {hasToggle && (
+                                    <button
+                                      type="button"
+                                      onClick={() => toggleCvDetail(cvKey)}
+                                      aria-expanded={isCvOpen}
+                                      aria-controls={`cv-detail-${cvKey}`}
+                                      className={clsx(
+                                        'mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-system-blue transition-opacity hover:opacity-80',
+                                        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue',
+                                      )}
+                                    >
+                                      {entry.pdfPath
+                                        ? isCvOpen
+                                          ? 'Zertifikat ausblenden'
+                                          : (entry.pdfLabel ?? 'Zertifikat ansehen')
+                                        : isCvOpen
+                                          ? 'Weniger'
+                                          : 'Mehr'}
+                                      <svg
+                                        className={clsx('h-3 w-3 transition-transform duration-200', isCvOpen && 'rotate-180')}
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={2.25}
+                                        aria-hidden
+                                      >
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                      </svg>
+                                    </button>
+                                  )}
+                                  <AnimatePresence initial={false}>
+                                    {isCvOpen && hasToggle && (
+                                      <motion.div
+                                        id={`cv-detail-${cvKey}`}
+                                        key={`cv-detail-${cvKey}`}
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
+                                        className="overflow-hidden"
+                                      >
+                                        <div className="mt-2 space-y-2.5">
+                                          {entry.description ? (
+                                            <p className="text-sm leading-relaxed text-mk-text-secondary">
+                                              {entry.description}
+                                            </p>
+                                          ) : null}
+                                          {entry.pdfPath ? (
+                                            <div className="overflow-hidden rounded-lg border border-[rgba(28,28,28,0.1)] bg-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+                                              <div className="flex items-center justify-between gap-3 border-b border-[rgba(28,28,28,0.08)] bg-white/80 px-3 py-2">
+                                                <span className="text-[11px] font-semibold uppercase tracking-wider text-mk-text-muted">
+                                                  IHK-Zertifikat (PDF)
+                                                </span>
+                                                <a
+                                                  href={entry.pdfPath}
+                                                  target="_blank"
+                                                  rel="noreferrer noopener"
+                                                  className="text-[11px] font-semibold text-system-blue transition-opacity hover:opacity-80"
+                                                >
+                                                  In neuem Tab öffnen
+                                                </a>
+                                              </div>
+                                              <iframe
+                                                src={`${entry.pdfPath}#view=FitH&toolbar=0`}
+                                                title={`${entry.role} — Zertifikat`}
+                                                className="block h-[420px] w-full border-0 bg-white"
+                                              />
+                                            </div>
+                                          ) : null}
+                                        </div>
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
+                                </>
+                              );
+
                               return (
-                                <li key={`${entry.role}-${entry.period}`} className="relative">
+                                <li key={cvKey} className="relative">
                                   <span
                                     className={clsx(
                                       'absolute -left-[1.34rem] h-2 w-2 shrink-0 rounded-full',
@@ -447,9 +562,13 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                   {entry.highlight ? (
                                     <div className="-ml-0.5 rounded-xl border border-[rgba(20,184,166,0.26)] bg-[linear-gradient(125deg,rgba(20,184,166,0.08)_0%,rgba(167,139,250,0.055)_55%,rgba(255,255,255,0.4)_100%)] px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
                                       {body}
+                                      {expandableBlock}
                                     </div>
                                   ) : (
-                                    body
+                                    <>
+                                      {body}
+                                      {expandableBlock}
+                                    </>
                                   )}
                                 </li>
                               );
