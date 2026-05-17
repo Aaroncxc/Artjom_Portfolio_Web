@@ -7,6 +7,7 @@ import type { Project } from '@/lib/types';
 import { Project3DPreview } from '../Project3DPreview';
 import {
   assignGroupKey,
+  isUnrealBlueprintAsset,
   type ProjectMediaGroupsConfig,
 } from '@/lib/projectMediaGroups';
 
@@ -138,6 +139,19 @@ export function buildModalAssets(project: Project): ModalAsset[] {
         src: media.src,
         thumb: media.type === 'image' ? media.src : fallbackThumb,
         title: media.title,
+      });
+    }
+  }
+
+  if (project.unrealBlueprints?.length) {
+    for (const bp of project.unrealBlueprints) {
+      const url = bp.url?.trim();
+      if (!url) continue;
+      assets.push({
+        kind: 'html',
+        src: url,
+        thumb: fallbackThumb,
+        title: bp.title?.trim() || 'Unreal Blueprint',
       });
     }
   }
@@ -283,10 +297,15 @@ export function ProjectMediaCanvas({
         <>
           <iframe
             src={asset.src}
-            title={projectTitle}
+            title={asset.title || projectTitle}
             className="h-full w-full border-0"
-            sandbox="allow-scripts allow-same-origin"
+            sandbox={
+              /^https?:\/\//i.test(asset.src)
+                ? 'allow-scripts allow-popups'
+                : 'allow-scripts allow-same-origin'
+            }
             allow="fullscreen"
+            scrolling="no"
           />
           <button
             type="button"
@@ -447,7 +466,7 @@ function MediaThumbButton({ asset, index, isActive, onSelect }: MediaThumbButton
       )}
       {asset.kind === 'html' && (
         <span className="pointer-events-none absolute bottom-1 right-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white">
-          Live
+          {isUnrealBlueprintAsset(asset) ? 'BP' : 'Live'}
         </span>
       )}
       {asset.kind === 'model3d' && (

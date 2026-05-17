@@ -24,6 +24,8 @@ export interface DrivePostMeta {
   model3dOffsetY?: number;
   /** Libraries / apps (optional `icon` is a public URL path). */
   tools?: { name: string; icon?: string }[];
+  /** Interactive Unreal blueprint embed URLs (passed through to posts.json). */
+  unrealBlueprints?: { url: string; title?: string }[];
 }
 
 // Internal representation of a project during processing
@@ -79,6 +81,7 @@ export interface OutputPost {
   model3dRotationX?: number;
   model3dMaterialColor?: string;
   model3dOffsetY?: number;
+  unrealBlueprints?: { url: string; title?: string }[];
 }
 
 export interface OutputPostsData {

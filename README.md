@@ -64,10 +64,7 @@ Open [http://localhost:3000](http://localhost:3000)
 │   └── boardIO.ts          # Board load/export/import
 ├── public/
 │   ├── posts.json          # Projects data
-│   ├── logo.svg            # Logo
-│   ├── boards/             # Board JSON files
-│   │   ├── echo-chamber.json
-│   │   └── neural-pathways.json
+│   ├── boards/             # Board JSON (when used; load by project slug)
 │   └── projects/           # Interactive project files
 ```
 

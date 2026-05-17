@@ -61,6 +61,8 @@ export interface Project {
   videoPortrait?: boolean; // If true, video is displayed in portrait (9:16) layout
   // Additional media gallery for projects with multiple assets
   gallery?: ProjectMedia[];
+  /** Interactive Unreal Engine blueprint embeds (blueprintue.com render URLs). */
+  unrealBlueprints?: { url: string; title?: string }[];
   // Long-form description shown in the "Explanation" tab of the project modal.
   // Falls back to `description` when omitted.
   explanation?: string;

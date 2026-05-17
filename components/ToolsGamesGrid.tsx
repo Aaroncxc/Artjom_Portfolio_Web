@@ -50,7 +50,7 @@ const toolsGamesData: ToolGame[] = [
     description: 'Digital Art VFX showcase featuring stunning visual effects and motion graphics. Explore our collection of experimental visual works.',
     url: 'https://occupiedvfx-v3-30-01-2026-2c75.vercel.app',
     type: 'tool',
-    thumbnail: '/tools/occupiedvfx-thumb.png',
+    thumbnail: '/tools/occupiedvfx-video.mp4',
     thumbnailVideo: '/tools/occupiedvfx-video.mp4',
     screenshots: [],
     tags: ['vfx', 'art', 'visual'],

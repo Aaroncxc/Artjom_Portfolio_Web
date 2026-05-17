@@ -169,27 +169,18 @@
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_13.jpg",
           "title": "Dakar — impression 2"
-        },
-        {
-          "type": "image",
-          "src": "/projects/elearning-africa-dakar-senegal-2023/grab-component-blueprint.jpg",
-          "title": "Unreal — Grab Component blueprint"
-        },
-        {
-          "type": "image",
-          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-character-blueprint.jpg",
-          "title": "Unreal — VR Character blueprint"
-        },
-        {
-          "type": "image",
-          "src": "/projects/elearning-africa-dakar-senegal-2023/vr-character-blueprint-2.jpg",
-          "title": "Unreal — VR Character blueprint detail"
         }
       ],
       "references": [
         {
           "url": "https://www.elearning-africa.com/conference2026/media_2023.php",
           "label": "E-Learning Africa 2023 — official media gallery"
+        }
+      ],
+      "unrealBlueprints": [
+        {
+          "url": "https://blueprintue.com/render/el7bkue9/",
+          "title": "Grab Component"
         }
       ]
     },
@@ -809,7 +800,7 @@
         "3D"
       ],
       "type": "video",
-      "thumbnail": "/projects/the-house/Thumbnail.png",
+      "thumbnail": "/projects/the-house/The_House_Thumbnail.png",
       "author": "AaronCxC",
       "model3dPath": "/projects/the-house/model.glb",
       "model3dRotationX": 0,
@@ -820,22 +811,22 @@
       "gallery": [
         {
           "type": "image",
-          "src": "/projects/the-house/TheHouse_00000.webp",
+          "src": "/projects/the-house/architecture-enhanced-01.webp",
           "title": "Exterior & entrance"
         },
         {
           "type": "image",
-          "src": "/projects/the-house/TheHouse_00002_00000.webp",
+          "src": "/projects/the-house/architecture-enhanced-02.webp",
           "title": "Pool & terrace"
         },
         {
           "type": "image",
-          "src": "/projects/the-house/TheHouse_000010_00000.webp",
+          "src": "/projects/the-house/architecture-enhanced-03.webp",
           "title": "Aerial view"
         },
         {
           "type": "image",
-          "src": "/projects/the-house/TheHouse_0000130_00000.webp",
+          "src": "/projects/the-house/architecture-enhanced-04.webp",
           "title": "Patio & deck"
         }
       ],

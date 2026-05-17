@@ -216,6 +216,7 @@ async function main() {
     model3dRotationX: p.meta.model3dRotationX,
     model3dMaterialColor: p.meta.model3dMaterialColor,
     model3dOffsetY: p.meta.model3dOffsetY,
+    unrealBlueprints: p.meta.unrealBlueprints,
   }));
 
   const output: OutputPostsData = {

@@ -54,9 +54,14 @@ const isInteractiveAsset = (a: ProjectMediaGroupAsset): boolean =>
 const filenameMatches = (a: ProjectMediaGroupAsset, regex: RegExp): boolean =>
   regex.test(a.src.toLowerCase());
 
+/** blueprintue.com interactive embeds (modal `kind: 'html'` + render URL). */
+export function isUnrealBlueprintAsset(a: ProjectMediaGroupAsset): boolean {
+  return a.kind === 'html' && /blueprintue\.com\/render\//i.test(a.src);
+}
+
 /**
- * Dakar 2023 — trade-fair impressions, Unreal/in-game renders, videos.
- * Display order: Fair -> In-Game -> Videos. Match order is identical.
+ * Dakar 2023 — trade-fair impressions, gameplay footage, blueprint embeds, videos.
+ * Blueprint embeds must be excluded from fair/ingame (URLs contain substring "blueprint").
  */
 const dakarConfig: ProjectMediaGroupsConfig = {
   groups: [
@@ -65,22 +70,29 @@ const dakarConfig: ProjectMediaGroupsConfig = {
       label: 'eLearning Fair',
       match: (a) => {
         if (isVideoAsset(a)) return false;
+        if (isUnrealBlueprintAsset(a)) return false;
         return !filenameMatches(
           a,
-          /vr-scene|vr-character|dadbbot|blueprint|visualisation|visualization/,
+          /vr-scene|vr-character|dadbbot|visualisation|visualization/,
         );
       },
     },
     {
       key: 'ingame',
-      label: 'Unreal Engine In-Game',
+      label: 'Gameplay Footage',
       match: (a) => {
         if (isVideoAsset(a)) return false;
+        if (isUnrealBlueprintAsset(a)) return false;
         return filenameMatches(
           a,
-          /vr-scene|vr-character|dadbbot|blueprint|visualisation|visualization/,
+          /vr-scene|vr-character|dadbbot|visualisation|visualization/,
         );
       },
+    },
+    {
+      key: 'blueprints',
+      label: 'Unreal Blueprints',
+      match: isUnrealBlueprintAsset,
     },
     { key: 'videos', label: 'Videos', match: isVideoAsset },
   ],
