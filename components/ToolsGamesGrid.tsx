@@ -151,6 +151,32 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
     setCurrentScreenshot(0);
   }, []);
 
+  /** Deep link: `?tool=<id>#tools-games` (e.g. from About → Course Overview Tool). */
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const openToolFromUrl = () => {
+      const url = new URL(window.location.href);
+      const toolId = url.searchParams.get('tool')?.trim();
+      if (!toolId || window.location.hash.replace(/^#/, '') !== 'tools-games') return;
+
+      const tool = toolsGamesForOwner.find((t) => t.id === toolId);
+      if (!tool) return;
+
+      setSelectedType('all');
+      const index = toolsGamesForOwner.findIndex((t) => t.id === toolId);
+      openTool(tool, index >= 0 ? index : 0);
+    };
+
+    openToolFromUrl();
+    window.addEventListener('popstate', openToolFromUrl);
+    window.addEventListener('hashchange', openToolFromUrl);
+    return () => {
+      window.removeEventListener('popstate', openToolFromUrl);
+      window.removeEventListener('hashchange', openToolFromUrl);
+    };
+  }, [toolsGamesForOwner, openTool]);
+
   const navigateTool = useCallback((direction: 'prev' | 'next') => {
     if (selectedIndex === -1) return;
     

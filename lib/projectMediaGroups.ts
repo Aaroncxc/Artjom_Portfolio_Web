@@ -59,6 +59,14 @@ export function isUnrealBlueprintAsset(a: ProjectMediaGroupAsset): boolean {
   return a.kind === 'html' && /blueprintue\.com\/render\//i.test(a.src);
 }
 
+/** Still screenshot paired with a blueprint embed (Dakar Companion BOT editor view). */
+function isDakarBlueprintStillImage(a: ProjectMediaGroupAsset): boolean {
+  return (
+    a.kind === 'image' &&
+    /elearning-africa-dakar-senegal-2023\/companion-bot-blueprint\.webp$/i.test(a.src)
+  );
+}
+
 /**
  * Dakar 2023 — trade-fair impressions, gameplay footage, blueprint embeds, videos.
  * Blueprint embeds must be excluded from fair/ingame (URLs contain substring "blueprint").
@@ -71,6 +79,7 @@ const dakarConfig: ProjectMediaGroupsConfig = {
       match: (a) => {
         if (isVideoAsset(a)) return false;
         if (isUnrealBlueprintAsset(a)) return false;
+        if (isDakarBlueprintStillImage(a)) return false;
         return !filenameMatches(
           a,
           /vr-scene|vr-character|dadbbot|visualisation|visualization/,
@@ -83,6 +92,7 @@ const dakarConfig: ProjectMediaGroupsConfig = {
       match: (a) => {
         if (isVideoAsset(a)) return false;
         if (isUnrealBlueprintAsset(a)) return false;
+        if (isDakarBlueprintStillImage(a)) return false;
         return filenameMatches(
           a,
           /vr-scene|vr-character|dadbbot|visualisation|visualization/,
@@ -92,7 +102,7 @@ const dakarConfig: ProjectMediaGroupsConfig = {
     {
       key: 'blueprints',
       label: 'Unreal Blueprints',
-      match: isUnrealBlueprintAsset,
+      match: (a) => isUnrealBlueprintAsset(a) || isDakarBlueprintStillImage(a),
     },
     { key: 'videos', label: 'Videos', match: isVideoAsset },
   ],
@@ -207,6 +217,31 @@ const theHouseConfig: ProjectMediaGroupsConfig = {
 };
 
 /**
+ * Lexsolar — in-game prototype screens + gameplay / case / UI videos.
+ */
+const lexsolarConfig: ProjectMediaGroupsConfig = {
+  groups: [
+    {
+      key: 'ingame',
+      label: 'In-Game Prototype',
+      match: (a) => !isVideoAsset(a),
+    },
+    {
+      key: 'gameplay',
+      label: 'Gameplay',
+      match: (a) => isVideoAsset(a) && filenameMatches(a, /whole-exercise|gameplay/),
+    },
+    {
+      key: 'reference',
+      label: 'Case & UI',
+      match: (a) =>
+        isVideoAsset(a) &&
+        filenameMatches(a, /case-footage|ui-examples|expert-exercise/),
+    },
+  ],
+};
+
+/**
  * Pocket Multipass — product renders, motion / detail videos.
  */
 const pocketMultipassConfig: ProjectMediaGroupsConfig = {
@@ -241,6 +276,7 @@ const PROJECT_MEDIA_GROUPS: Record<string, ProjectMediaGroupsConfig> = {
   'tshirt-jan': tshirtJanConfig,
   'pult-vacuum': pultVacuumConfig,
   'the-house': theHouseConfig,
+  'lexsolar-digital-learning-kit': lexsolarConfig,
   'pocket-multipass': pocketMultipassConfig,
 };
 

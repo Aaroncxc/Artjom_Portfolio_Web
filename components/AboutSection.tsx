@@ -6,6 +6,7 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import { GlassPanel } from './GlassPanel';
 import { projectMatchesPortfolioOwner } from '@/lib/portfolioOwnerFilter';
+import { DADB_COURSE_OVERVIEW_TOOL_ID, toolDeepLink } from '@/lib/toolLinks';
 import type { Project } from '@/lib/types';
 
 // ── Artjom profile ────────────────────────────────────────────
@@ -57,6 +58,8 @@ interface CvEntry {
   highlight?: boolean;
   /** Ausklappbare Rollenbeschreibung („Mehr“ / „Weniger“). */
   description?: string;
+  /** Optional link to a Tools & Games entry (opens modal after scroll). */
+  toolLink?: { id: string; label: string };
   /** Inline-Zertifikat (PDF unter `/public`). */
   pdfPath?: string;
   pdfLabel?: string;
@@ -75,13 +78,19 @@ const CV: CvEntry[] = [
     period: 'Jan 2024 — Oct 2025',
     location: 'Berlin · On-site',
     description:
-      'As the Head of Production at DADB Germany, I oversaw the management of our digital education projects — ensuring the seamless delivery of high-quality courses to students worldwide and leading cross-functional production teams (3D, post-production, editorial).',
+      'As Head of Production at DADB Germany, I oversaw digital education projects end-to-end — coordinating cross-functional teams (3D, post-production, editorial) and keeping course delivery on track for learners worldwide. In this role I also built an internal live-monitoring dashboard for course production so management and stakeholders could follow pipeline status, workloads, and KPIs in real time.',
+    toolLink: {
+      id: DADB_COURSE_OVERVIEW_TOOL_ID,
+      label: 'Course Overview Tool',
+    },
   },
   {
     role: 'Head of 3D',
     org: 'German Academy of Digital Education (DADB)',
     period: 'Feb 2023 — Jan 2024',
     location: 'Berlin · Hybrid',
+    description:
+      'As Head of 3D, I led the visual production of DADB’s technical learning content — from asset creation in Blender through scene build, staging, and cinematic renders in Unreal Engine. I translated scripts into clear 3D sequences for topics such as e-mobility and rekuperation, working closely with editorial, professors and subject-matter experts from the Technical University of Berlin and Offenburg University of Applied Sciences, and partners across the renewables sector — including SMA and Sunotec, as well as Tesla.',
   },
   {
     role: 'Mixed Reality Lead',
@@ -519,6 +528,29 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                           {entry.description ? (
                                             <p className="text-sm leading-relaxed text-mk-text-secondary">
                                               {entry.description}
+                                              {entry.toolLink ? (
+                                                <>
+                                                  {' '}
+                                                  <a
+                                                    href={toolDeepLink(entry.toolLink.id)}
+                                                    className="font-semibold text-system-blue underline decoration-system-blue/30 underline-offset-2 transition-opacity hover:opacity-80"
+                                                    onClick={(e) => {
+                                                      e.preventDefault();
+                                                      const url = new URL(window.location.href);
+                                                      url.searchParams.set('tool', entry.toolLink!.id);
+                                                      url.hash = 'tools-games';
+                                                      window.history.pushState(null, '', url.toString());
+                                                      document
+                                                        .getElementById('tools-games')
+                                                        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                                      window.dispatchEvent(new PopStateEvent('popstate'));
+                                                    }}
+                                                  >
+                                                    {entry.toolLink.label}
+                                                  </a>
+                                                  .
+                                                </>
+                                              ) : null}
                                             </p>
                                           ) : null}
                                           {entry.pdfPath ? (

@@ -26,10 +26,23 @@ export interface ModalAsset {
   thumb: string;
   poster?: string;
   title?: string;
+  /** Visible description under the main viewer in the project modal. */
+  caption?: string;
   /** When set, `ProjectMediaThumbs` renders a tiny Three.js preview instead of `thumb`. */
   thumbModelPreview?: ModalThumbModelPreview;
   /** Optional group bucket assigned by `lib/projectMediaGroups` for the project. */
   groupKey?: string;
+}
+
+function resolveAssetCaption(
+  project: Project,
+  src: string,
+  explicit?: string,
+): string | undefined {
+  const fromExplicit = explicit?.trim();
+  if (fromExplicit) return fromExplicit;
+  const fromMap = project.mediaCaptions?.[src.trim()]?.trim();
+  return fromMap || undefined;
 }
 
 function thumbModelPreviewForProject(project: Project): ModalThumbModelPreview | undefined {
@@ -45,122 +58,192 @@ function thumbModelPreviewForProject(project: Project): ModalThumbModelPreview |
   };
 }
 
+/** First still image for the modal (thumbnail or gallery), never a video file path. */
+function pickFirstImageSrc(project: Project): string | undefined {
+  const thumb = project.thumbnail?.trim();
+  if (thumb && !/\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(thumb)) return thumb;
+  const fromImages = project.images?.map((s) => s.trim()).find(Boolean);
+  if (fromImages) return fromImages;
+  const fromGallery = project.gallery?.find((m) => m.type === 'image')?.src?.trim();
+  if (fromGallery) return fromGallery;
+  if (project.type === 'image' && thumb) return thumb;
+  return undefined;
+}
+
 /**
  * Builds the ordered list of media assets that the project modal can swap between.
- * When a project adds an embedded Live viewer (`htmlPath` while `type !== 'html'`), that HTML
- * slide opens first; otherwise the primary medium (video, audio, or html-first project) leads.
+ * Order: video (if any) → first still image → live HTML 3D → remaining media.
  */
 export function buildModalAssets(project: Project): ModalAsset[] {
   const fallbackThumb = project.thumbnail ?? '';
   const assets: ModalAsset[] = [];
+  const pushedSrc = new Set<string>();
 
-  /** Interactive `/projects/.../index.html` when primary type is not `html` but `htmlPath` is set. */
   const embeddedHtmlPath = project.htmlPath?.trim() ?? '';
-  const prependLiveHtml = Boolean(embeddedHtmlPath && project.type !== 'html');
-
-  if (project.type === 'html' && (project.htmlPath || project.slug)) {
-    const tpm = thumbModelPreviewForProject(project);
-    assets.push({
-      kind: 'html',
-      src: project.htmlPath || `/projects/${project.slug}/index.html`,
-      thumb: fallbackThumb,
-      title: project.title,
-      ...(tpm ? { thumbModelPreview: tpm } : {}),
-    });
-  } else {
-    if (prependLiveHtml) {
-      const tpm = thumbModelPreviewForProject(project);
-      assets.push({
-        kind: 'html',
-        src: embeddedHtmlPath,
-        thumb: fallbackThumb,
-        title: 'Live 3D',
-        ...(tpm ? { thumbModelPreview: tpm } : {}),
-      });
-    }
-    if (project.type === 'video' && project.videoUrl) {
-      assets.push({
-        kind: 'video',
-        src: project.videoUrl,
-        poster: project.thumbnail,
-        thumb: fallbackThumb,
-        title: project.title,
-      });
-    } else if (project.type === 'audio' && project.audioUrl) {
-      assets.push({
-        kind: 'audio',
-        src: project.audioUrl,
-        thumb: fallbackThumb,
-        title: project.title,
-      });
-    }
-  }
-
-  // Default: when a Live HTML viewer (`htmlPath`) is available, skip the static
-  // model3d slide so the modal only shows the interactive viewer. Projects can
-  // opt back in via `showModel3dInModal: true`.
+  const primaryVideoUrl = project.videoUrl?.trim() ?? '';
+  const primaryAudioUrl = project.audioUrl?.trim() ?? '';
   const hasLiveHtmlViewer = Boolean(embeddedHtmlPath) || project.type === 'html';
   const includeModal3d = project.showModel3dInModal ?? !hasLiveHtmlViewer;
+
+  const push = (asset: ModalAsset) => {
+    const key = asset.src.trim();
+    if (pushedSrc.has(key)) return;
+    pushedSrc.add(key);
+    assets.push(asset);
+  };
+
+  // 1. Video first when available (any project type)
+  if (primaryVideoUrl) {
+    push({
+      kind: 'video',
+      src: primaryVideoUrl,
+      poster: project.thumbnail,
+      thumb: fallbackThumb,
+      title: project.title,
+      caption: resolveAssetCaption(project, primaryVideoUrl),
+    });
+  }
+
+  // 2. Primary audio when there is no video
+  if (!primaryVideoUrl && primaryAudioUrl) {
+    push({
+      kind: 'audio',
+      src: primaryAudioUrl,
+      thumb: fallbackThumb,
+      title: project.title,
+      caption: resolveAssetCaption(project, primaryAudioUrl),
+    });
+  }
+
+  // 3. First still image (after video, or leads when no video/audio)
+  const firstImageSrc = pickFirstImageSrc(project);
+  if (firstImageSrc) {
+    push({
+      kind: 'image',
+      src: firstImageSrc,
+      thumb: firstImageSrc,
+      caption: resolveAssetCaption(project, firstImageSrc),
+    });
+  }
+
+  // 4. Live / embedded HTML 3D viewer (lazy-loaded inside iframe)
+  const pushLiveHtml = (htmlSrc: string, title: string) => {
+    const tpm = thumbModelPreviewForProject(project);
+    push({
+      kind: 'html',
+      src: htmlSrc,
+      thumb: fallbackThumb,
+      title,
+      caption: resolveAssetCaption(project, htmlSrc),
+      ...(tpm ? { thumbModelPreview: tpm } : {}),
+    });
+  };
+
+  if (project.type === 'html' && (project.htmlPath || project.slug)) {
+    pushLiveHtml(
+      project.htmlPath || `/projects/${project.slug}/index.html`,
+      project.title,
+    );
+  } else if (embeddedHtmlPath) {
+    pushLiveHtml(embeddedHtmlPath, 'Live 3D');
+  }
+
+  // 5. Optional static model3d slide
   if (includeModal3d && project.model3dPath) {
-    assets.push({
+    push({
       kind: 'model3d',
       src: project.model3dPath,
       thumb: fallbackThumb,
       title: '3D model',
+      caption: resolveAssetCaption(project, project.model3dPath),
     });
   }
 
-  if (project.images && project.images.length > 0) {
+  // 6. Remaining images
+  if (project.images?.length) {
     for (const src of project.images) {
-      assets.push({ kind: 'image', src, thumb: src });
+      const trimmed = src.trim();
+      if (!trimmed || trimmed === firstImageSrc) continue;
+      push({
+        kind: 'image',
+        src: trimmed,
+        thumb: trimmed,
+        caption: resolveAssetCaption(project, trimmed),
+      });
     }
-  } else if (project.type === 'image' && project.thumbnail) {
-    assets.push({
+  } else if (
+    project.type === 'image' &&
+    project.thumbnail?.trim() &&
+    project.thumbnail.trim() !== firstImageSrc
+  ) {
+    const src = project.thumbnail.trim();
+    push({
       kind: 'image',
-      src: project.thumbnail,
-      thumb: project.thumbnail,
+      src,
+      thumb: src,
+      caption: resolveAssetCaption(project, src),
     });
   }
 
-  if (project.gallery) {
-    const primaryVideoUrl = project.videoUrl?.trim() ?? '';
+  // 7. Gallery (skip duplicates already pushed)
+  if (project.gallery?.length) {
     for (const media of project.gallery) {
       if (!includeModal3d && media.type === 'model3d') continue;
-      if (prependLiveHtml && media.type === 'html' && media.src === embeddedHtmlPath) continue;
-      if (
-        media.type === 'video' &&
-        primaryVideoUrl &&
-        media.src === primaryVideoUrl
-      ) {
-        continue;
-      }
-      assets.push({
+      const src = media.src.trim();
+      if (!src) continue;
+      if (pushedSrc.has(src)) continue;
+      if (media.type === 'html' && src === embeddedHtmlPath) continue;
+      if (media.type === 'video' && src === primaryVideoUrl) continue;
+      if (media.type === 'image' && src === firstImageSrc) continue;
+
+      push({
         kind: media.type,
-        src: media.src,
-        thumb: media.type === 'image' ? media.src : fallbackThumb,
+        src,
+        thumb: media.type === 'image' ? src : fallbackThumb,
         title: media.title,
+        caption: resolveAssetCaption(project, src, media.caption),
       });
     }
   }
 
+  // 8. Unreal blueprint embeds
   if (project.unrealBlueprints?.length) {
     for (const bp of project.unrealBlueprints) {
       const url = bp.url?.trim();
       if (!url) continue;
-      assets.push({
-        kind: 'html',
-        src: url,
-        thumb: fallbackThumb,
-        title: bp.title?.trim() || 'Unreal Blueprint',
-      });
+      const titleBase = bp.title?.trim() || 'Unreal Blueprint';
+      const preview = bp.previewImage?.trim();
+      const thumb = preview || fallbackThumb;
+      const bpCaption = resolveAssetCaption(project, url, bp.caption);
+
+      if (preview && !pushedSrc.has(preview)) {
+        push({
+          kind: 'image',
+          src: preview,
+          thumb: preview,
+          title: `${titleBase} — Editor view`,
+          caption: bpCaption ?? resolveAssetCaption(project, preview),
+        });
+      }
+
+      if (!pushedSrc.has(url)) {
+        push({
+          kind: 'html',
+          src: url,
+          thumb,
+          title: titleBase,
+          caption: bpCaption,
+        });
+      }
     }
   }
 
-  if (assets.length === 0 && project.thumbnail) {
-    assets.push({
+  if (assets.length === 0 && project.thumbnail?.trim()) {
+    push({
       kind: 'image',
       src: project.thumbnail,
       thumb: project.thumbnail,
+      caption: resolveAssetCaption(project, project.thumbnail),
     });
   }
 

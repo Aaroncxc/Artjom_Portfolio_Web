@@ -248,11 +248,14 @@ export function Project3DPreview({
         if (isGlb) {
           const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
           const { DRACOLoader } = await import('three/examples/jsm/loaders/DRACOLoader.js');
+          const { MeshoptDecoder } = await import('three/examples/jsm/libs/meshopt_decoder.module.js');
+          await MeshoptDecoder.ready;
           const draco = new DRACOLoader();
           draco.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
           draco.setDecoderConfig({ type: 'js' });
           const gltf = new GLTFLoader();
           gltf.setDRACOLoader(draco);
+          gltf.setMeshoptDecoder(MeshoptDecoder);
           loader = {
             load: (url, onLoad, onProgress, onError) => {
               gltf.load(url, (data: any) => {

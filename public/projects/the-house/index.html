@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Perf: the-house viewer — baseline model.glb ~7.1 MB (2026-05); optimized glb ~3.52 MB; viewer previously fetched model.fbx ~58 MB on load. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -35,7 +36,65 @@
     #canvas-container canvas {
       display: block;
     }
-    
+
+    #lazy-load-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(245, 247, 250, 0.95) 0%, rgba(232, 236, 241, 0.98) 100%);
+      backdrop-filter: blur(8px);
+      text-align: center;
+    }
+    #lazy-load-overlay.hidden {
+      display: none;
+    }
+    #lazy-load-overlay .poster-wrap {
+      width: min(92vw, 520px);
+      aspect-ratio: 16 / 10;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(28, 28, 28, 0.12);
+      border: 1px solid rgba(28, 28, 28, 0.08);
+    }
+    #lazy-load-overlay img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #lazy-load-overlay .lazy-copy {
+      max-width: 420px;
+      color: rgba(28, 28, 28, 0.65);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    #lazy-load-overlay #lazy-load-btn {
+      pointer-events: auto;
+      margin-top: 4px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      border: none;
+      background: #14B8A6;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(20, 184, 166, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #lazy-load-overlay #lazy-load-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(20, 184, 166, 0.45);
+    }
+
     .top-bar {
       position: absolute;
       top: clamp(12px, 3vw, 24px);
@@ -382,7 +441,15 @@
   <div id="container">
     <div id="canvas-container"></div>
     
-    <div class="loading" id="loading">
+    <div id="lazy-load-overlay">
+      <div class="poster-wrap">
+        <img src="./The_House_Thumbnail.png" alt="" width="960" height="600" decoding="async" fetchpriority="high" />
+      </div>
+      <p class="lazy-copy">Das interaktive 3D-Modell lädt erst beim Tippen — weniger Daten beim ersten Laden.</p>
+      <button type="button" id="lazy-load-btn">3D-Ansicht laden</button>
+    </div>
+    
+    <div class="loading hidden" id="loading">
       <div class="spinner"></div>
       <p>Loading 3D Model...</p>
       <p id="progress" style="font-size: 12px; margin-top: 8px; opacity: 0.7;"></p>
@@ -478,7 +545,9 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
-    import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+    import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
     let scene, camera, renderer, controls;
     let fpControls; // PointerLockControls
@@ -565,6 +634,21 @@
     const cameraDropdownBtn = document.getElementById('camera-dropdown-btn');
     const vertexCountEl = document.getElementById('vertex-count');
     const triangleCountEl = document.getElementById('triangle-count');
+
+    function wireLazyModelLoad() {
+      const lazyOverlay = document.getElementById('lazy-load-overlay');
+      const lazyBtn = document.getElementById('lazy-load-btn');
+      lazyBtn.addEventListener('click', async () => {
+        lazyOverlay.classList.add('hidden');
+        loadingEl.classList.remove('hidden');
+        try {
+          await loadModel();
+        } catch (_) {
+          loadingEl.classList.add('hidden');
+          lazyOverlay.classList.remove('hidden');
+        }
+      });
+    }
 
     function init() {
       // Scene
@@ -654,7 +738,9 @@
       groundPlane.receiveShadow = true;
       scene.add(groundPlane);
 
-      loadModel();
+      vertexCountEl.textContent = '\u2014';
+      triangleCountEl.textContent = '\u2014';
+      wireLazyModelLoad();
       window.addEventListener('resize', onResize);
       
       // Key handling: C for camera log, WASD for first person movement
@@ -786,111 +872,118 @@
       return { vertices, triangles: Math.floor(triangles) };
     }
 
-    function loadModel() {
-      const loader = new FBXLoader();
-      
-      loader.load('./model.fbx', (fbx) => {
-        // Scale and position
-        const box = new THREE.Box3().setFromObject(fbx);
-        const size = box.getSize(new THREE.Vector3());
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 5 / maxDim;
-        
-        fbx.scale.setScalar(scale);
-        fbx.updateMatrixWorld(true);
-        
-        // Center the model
-        const boxScaled = new THREE.Box3().setFromObject(fbx);
-        const center = boxScaled.getCenter(new THREE.Vector3());
-        fbx.position.set(-center.x, -boxScaled.min.y, -center.z);
+        async function loadModel() {
+      await MeshoptDecoder.ready;
 
-        // Materials & shadows + find roof mesh
-        fbx.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-            
-            // Find the roof mesh by name
-            const meshName = (child.name || '').toUpperCase();
-            if (meshName.includes('DACH') || meshName.includes('ROOF') || meshName.includes('AUSBLENDEN')) {
-              console.log('Found roof mesh:', child.name);
-              roofMesh = child;
-              // Make material transparent-capable
-              if (child.material) {
-                const mats = Array.isArray(child.material) ? child.material : [child.material];
-                mats.forEach(mat => {
-                  mat.transparent = true;
-                  mat.opacity = 1.0;
-                });
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+
+      const loader = new GLTFLoader();
+      loader.setDRACOLoader(dracoLoader);
+      loader.setMeshoptDecoder(MeshoptDecoder);
+
+      await new Promise((resolve, reject) => {
+        loader.load(
+          './model.glb',
+          (gltf) => {
+            const root = gltf.scene;
+
+            const box = new THREE.Box3().setFromObject(root);
+            const size = box.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const scale = 5 / maxDim;
+
+            root.scale.setScalar(scale);
+            root.updateMatrixWorld(true);
+
+            const boxScaled = new THREE.Box3().setFromObject(root);
+            const center = boxScaled.getCenter(new THREE.Vector3());
+            root.position.set(-center.x, -boxScaled.min.y, -center.z);
+
+            root.traverse((child) => {
+              if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+
+                const meshName = (child.name || '').toUpperCase();
+                if (meshName.includes('DACH') || meshName.includes('ROOF') || meshName.includes('AUSBLENDEN')) {
+                  console.log('Found roof mesh:', child.name);
+                  roofMesh = child;
+                  if (child.material) {
+                    const mats = Array.isArray(child.material) ? child.material : [child.material];
+                    mats.forEach((mat) => {
+                      mat.transparent = true;
+                      mat.opacity = 1.0;
+                    });
+                  }
+                }
+
+                if (child.material) {
+                  const mats = Array.isArray(child.material) ? child.material : [child.material];
+                  mats.forEach((mat) => {
+                    mat.metalness = 0.1;
+                    mat.roughness = 0.7;
+                    if (mat.map) mat.map.needsUpdate = true;
+                  });
+                }
               }
-            }
-            
-            if (child.material) {
-              const mats = Array.isArray(child.material) ? child.material : [child.material];
-              mats.forEach(mat => {
-                mat.metalness = 0.1;
-                mat.roughness = 0.7;
-                if (mat.map) mat.map.needsUpdate = true;
+            });
+
+            if (!roofMesh) {
+              console.log('No roof mesh found. Available meshes:');
+              root.traverse((child) => {
+                if (child.isMesh) console.log('  -', child.name);
               });
             }
+
+            scene.add(root);
+            model = root;
+
+            const stats = countGeometry(root);
+            vertexCountEl.textContent = formatNumber(stats.vertices);
+            triangleCountEl.textContent = formatNumber(stats.triangles);
+
+            wireframeGroup = new THREE.Group();
+            root.updateMatrixWorld(true);
+            root.traverse((child) => {
+              if (child.isMesh) {
+                const wireGeo = new THREE.WireframeGeometry(child.geometry);
+                const wireMat = new THREE.LineBasicMaterial({ color: 0x14B8A6, transparent: true, opacity: 0.7 });
+                const wire = new THREE.LineSegments(wireGeo, wireMat);
+                wire.matrix.copy(child.matrixWorld);
+                wire.matrixAutoUpdate = false;
+                wireframeGroup.add(wire);
+              }
+            });
+            wireframeGroup.visible = false;
+            scene.add(wireframeGroup);
+
+            collisionMeshes = [];
+            root.traverse((child) => {
+              if (child.isMesh && child !== roofMesh) {
+                collisionMeshes.push(child);
+              }
+            });
+            console.log('Collision meshes:', collisionMeshes.length);
+
+            loadingEl.classList.add('hidden');
+            resolve();
+          },
+          (progress) => {
+            if (progress.total > 0) {
+              progressEl.textContent = Math.round((progress.loaded / progress.total) * 100) + '%';
+            }
+          },
+          (error) => {
+            console.error('Error loading model:', error);
+            progressEl.textContent = 'Failed to load model';
+            reject(error);
           }
-        });
-        
-        if (!roofMesh) {
-          console.log('No roof mesh found. Available meshes:');
-          fbx.traverse((child) => {
-            if (child.isMesh) console.log('  -', child.name);
-          });
-        }
-
-        scene.add(fbx);
-        model = fbx;
-
-        // Stats
-        const stats = countGeometry(fbx);
-        vertexCountEl.textContent = '935,000';
-        triangleCountEl.textContent = '904,035';
-
-        // Wireframe
-        wireframeGroup = new THREE.Group();
-        fbx.traverse((child) => {
-          if (child.isMesh) {
-            const wireGeo = new THREE.WireframeGeometry(child.geometry);
-            const wireMat = new THREE.LineBasicMaterial({ color: 0x14B8A6, transparent: true, opacity: 0.7 });
-            const wire = new THREE.LineSegments(wireGeo, wireMat);
-            wire.position.copy(child.position);
-            wire.rotation.copy(child.rotation);
-            wire.scale.copy(child.scale);
-            wireframeGroup.add(wire);
-          }
-        });
-        wireframeGroup.scale.copy(fbx.scale);
-        wireframeGroup.position.copy(fbx.position);
-        wireframeGroup.visible = false;
-        scene.add(wireframeGroup);
-
-        // Collect meshes for collision detection (exclude roof)
-        fbx.traverse((child) => {
-          if (child.isMesh && child !== roofMesh) {
-            collisionMeshes.push(child);
-          }
-        });
-        console.log('Collision meshes:', collisionMeshes.length);
-
-        loadingEl.classList.add('hidden');
-      },
-      (progress) => {
-        if (progress.total > 0) {
-          progressEl.textContent = Math.round((progress.loaded / progress.total) * 100) + '%';
-        }
-      },
-      (error) => {
-        console.error('Error loading model:', error);
-        progressEl.textContent = 'Failed to load model';
+        );
       });
     }
 
-    function onResize() {
+function onResize() {
       const width = container.clientWidth;
       const height = container.clientHeight;
       if (width === 0 || height === 0) return;

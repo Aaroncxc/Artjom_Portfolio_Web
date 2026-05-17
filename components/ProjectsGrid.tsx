@@ -6,7 +6,11 @@ import { PortfolioProjectModal } from './portfolio/PortfolioProjectModal';
 import { Project3DPreview } from './Project3DPreview';
 import { Project, ProjectType } from '@/lib/types';
 import { projectMatchesPortfolioOwner } from '@/lib/portfolioOwnerFilter';
-import { chipTileImmersionClass, metaChipClass } from '@/lib/chipClasses';
+import {
+  chipLearningExperienceClass,
+  chipTileImmersionClass,
+  metaChipClass,
+} from '@/lib/chipClasses';
 
 const warmedVideoUrls = new Set<string>();
 const warmedModelUrls = new Set<string>();
@@ -389,6 +393,10 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                 const normalizedTags = (project.tags ?? []).map((t) => t.trim().toUpperCase());
                 const showVrChip = normalizedTags.includes('VR');
                 const showArChip = normalizedTags.includes('AR');
+                const tileContentTags = new Set(['LEARNING EXPERIENCE']);
+                const contentTagChips = (project.tags ?? []).filter((tag) =>
+                  tileContentTags.has(tag.trim().toUpperCase()),
+                );
                 return (
                 <motion.div
                   key={project.id}
@@ -481,11 +489,16 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                         {tool.name}
                       </span>
                     ))}
+                    {contentTagChips.map((tag) => (
+                      <span key={tag} className={chipLearningExperienceClass}>
+                        {tag}
+                      </span>
+                    ))}
+                    {showArChip && <span className={chipTileImmersionClass}>AR</span>}
                     {showTile3dChip && (
                       <span className={chipTileImmersionClass}>3D</span>
                     )}
                     {showVrChip && <span className={chipTileImmersionClass}>VR</span>}
-                    {showArChip && <span className={chipTileImmersionClass}>AR</span>}
                   </div>
                 </motion.div>
                 );
@@ -578,7 +591,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   x: slideDirection === 'right' ? -100 : 100,
                 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="relative z-[55] mx-auto my-2 w-full max-w-7xl px-2 sm:my-10 sm:px-4 md:my-16 md:px-24"
+                className="relative z-[55] mx-auto my-2 w-full max-w-[min(92rem,calc(100vw-1.5rem))] px-2 sm:my-10 sm:px-4 md:my-14 md:px-12 lg:px-16 xl:px-20"
                 onClick={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onTouchMove={(e) => e.stopPropagation()}

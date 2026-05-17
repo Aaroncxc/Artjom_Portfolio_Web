@@ -35,6 +35,64 @@
     #canvas-container canvas {
       display: block;
     }
+    #lazy-load-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(245, 247, 250, 0.95) 0%, rgba(232, 236, 241, 0.98) 100%);
+      backdrop-filter: blur(8px);
+      text-align: center;
+    }
+    #lazy-load-overlay.hidden {
+      display: none;
+    }
+    #lazy-load-overlay .poster-wrap {
+      width: min(92vw, 520px);
+      aspect-ratio: 16 / 10;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(28, 28, 28, 0.12);
+      border: 1px solid rgba(28, 28, 28, 0.08);
+    }
+    #lazy-load-overlay img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #lazy-load-overlay .lazy-copy {
+      max-width: 420px;
+      color: rgba(28, 28, 28, 0.65);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    #lazy-load-overlay #lazy-load-btn {
+      pointer-events: auto;
+      margin-top: 4px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      border: none;
+      background: #14B8A6;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(20, 184, 166, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #lazy-load-overlay #lazy-load-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(20, 184, 166, 0.45);
+    }
+
     
     /* During resize animation, fade slightly to hide transition */
     #canvas-container.resizing canvas {
@@ -226,8 +284,16 @@
 <body>
   <div id="container">
     <div id="canvas-container"></div>
-    
-    <div class="loading" id="loading">
+
+    <div id="lazy-load-overlay">
+      <div class="poster-wrap">
+        <img src="./Thumbnail.png" alt="" width="960" height="600" decoding="async" fetchpriority="high" />
+      </div>
+      <p class="lazy-copy">Das interaktive 3D-Modell lädt erst beim Tippen — weniger Daten beim ersten Laden.</p>
+      <button type="button" id="lazy-load-btn">3D-Ansicht laden</button>
+    </div>
+
+    <div class="loading hidden" id="loading">
       <div class="spinner"></div>
       <p>Loading 3D Model...</p>
       <p id="progress" style="font-size: 12px; margin-top: 8px; opacity: 0.7;"></p>
@@ -308,6 +374,24 @@
     const triangleCountEl = document.getElementById('triangle-count');
     
     clock = new THREE.Clock();
+    function wireLazyModelLoad() {
+      const lazyOverlay = document.getElementById('lazy-load-overlay');
+      const lazyBtn = document.getElementById('lazy-load-btn');
+      if (!lazyOverlay || !lazyBtn) return;
+      lazyBtn.addEventListener('click', () => {
+        lazyOverlay.classList.add('hidden');
+        loadingEl.classList.remove('hidden');
+        const result = loadModel();
+        if (result && typeof result.then === 'function') {
+          result.catch(() => {
+            loadingEl.classList.add('hidden');
+            lazyOverlay.classList.remove('hidden');
+          });
+        }
+      });
+    }
+
+
 
     function init() {
       // Scene with dark gray gradient background (like the render)
@@ -448,8 +532,7 @@
       scene.add(groundPlane);
 
       // Load Model
-      loadModel();
-
+      wireLazyModelLoad();
       // Handle resize
       window.addEventListener('resize', onResize);
 

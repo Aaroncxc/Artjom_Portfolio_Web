@@ -153,6 +153,17 @@ function ModalProjectFacts({ date, tools, references }: Pick<Project, 'date' | '
   );
 }
 
+/** One–two sentences under the active medium; omitted when empty (no layout jump). */
+function MediaCaption({ caption }: { caption?: string }) {
+  const text = caption?.trim();
+  if (!text) return null;
+  return (
+    <p className="min-h-0 px-0.5 text-sm leading-relaxed text-mk-text-secondary md:text-[15px] md:leading-[1.55]">
+      {text}
+    </p>
+  );
+}
+
 /** Title block — matches site headings (Arial / brand-tight rhythm). */
 function StaircaseTitle({ title }: { title: string }) {
   const words = title.trim().split(/\s+/);
@@ -185,11 +196,6 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
   }, [project, groupsConfig]);
   const activeAsset = assets[Math.min(activeAssetIndex, Math.max(assets.length - 1, 0))];
 
-
-  const highlights = useMemo(() => {
-    if (project.highlights && project.highlights.length > 0) return project.highlights;
-    return (project.tags ?? []).slice(0, 4);
-  }, [project.highlights, project.tags]);
 
   const explanation = project.explanation?.trim() || project.description;
   const hireHref = project.ctaHref || buildHireMailto(`Hire me — ${project.title}`);
@@ -226,9 +232,10 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
   const hireButton = (
     <a
       href={hireHref}
+      style={{ width: 152, height: 64 }}
       className={clsx(
-        'inline-flex shrink-0 items-center gap-2 rounded-[12px] px-6 py-3',
-        'bg-system-blue text-sm font-semibold text-white md:text-[15px]',
+        'inline-flex shrink-0 items-center justify-center gap-2 rounded-[10px]',
+        'bg-system-blue text-sm font-semibold text-white',
         'shadow-sm transition-[transform,opacity,background-color] duration-200',
         'hover:bg-[#0077ED] active:bg-system-blue-pressed active:opacity-95',
         'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue'
@@ -244,13 +251,13 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
   return (
     <div
       key={slideKey ?? project.id}
-      className="relative mx-auto w-full max-w-6xl font-sans text-mk-text antialiased"
+      className="relative mx-auto w-full max-w-7xl font-sans text-mk-text antialiased"
       onClick={(e) => e.stopPropagation()}
     >
       <div
         className={clsx(
           'flex flex-col overflow-hidden rounded-[20px]',
-          'max-h-[calc(100dvh-1rem)] lg:h-[min(720px,calc(100dvh-2rem))]',
+          'max-h-[calc(100dvh-1rem)]',
           'border border-black/[0.10]',
           'bg-white',
           'shadow-[0_4px_24px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04)]'
@@ -320,8 +327,8 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
           </div>
         </div>
 
-        {/* Body — media + copy share one visual row (items-start: no stretch gap under thumbnails); Focus + CTA span full width below */}
-        <div className="relative flex flex-1 flex-col overflow-y-auto px-4 pb-6 pt-5 sm:px-6 sm:pb-8 sm:pt-6 lg:min-h-0 lg:overflow-hidden">
+        {/* Body — media + copy share one visual row (items-start: no stretch gap under thumbnails). */}
+        <div className="relative flex flex-1 flex-col overflow-y-auto px-4 py-3 sm:px-5 sm:py-3.5 lg:min-h-0 lg:overflow-hidden">
           <AnimatePresence mode="wait" initial={false}>
             {activeTab === 'private' ? (
               <motion.div
@@ -332,11 +339,11 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
                 transition={{ duration: 0.18, ease: [0.25, 0.1, 0.25, 1] }}
                 className="flex min-h-0 flex-1 flex-col gap-6 lg:gap-8"
               >
-                <div className="grid gap-6 lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1.52fr)_minmax(320px,1fr)] lg:items-stretch lg:gap-10 xl:gap-12">
-                  <div className="flex min-w-0 flex-col gap-3">
+                <div className="grid gap-6 lg:grid-cols-[minmax(0,1.68fr)_minmax(300px,1fr)] lg:items-start lg:gap-10 xl:gap-12">
+                  <div className="flex min-w-0 flex-col gap-2.5 sm:gap-3">
                     <div
                       className={clsx(
-                        'aspect-video w-full overflow-hidden rounded-2xl',
+                        'aspect-video w-full overflow-hidden rounded-2xl lg:aspect-[16/10]',
                         'bg-[#F2F2F7]',
                         'p-2 sm:p-2.5',
                         'ring-1 ring-black/[0.06]',
@@ -360,12 +367,7 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
                         </div>
                       )}
                     </div>
-                    <ProjectMediaThumbs
-                      assets={assets}
-                      activeIndex={activeAssetIndex}
-                      onSelect={setActiveAssetIndex}
-                      groupsConfig={groupsConfig}
-                    />
+                    <MediaCaption caption={activeAsset?.caption} />
                   </div>
 
                   <div className="flex min-w-0 flex-col gap-5 lg:gap-6">
@@ -409,28 +411,19 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
                         />
                       </svg>
                     </button>
+
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-5 border-t border-black/[0.06] pt-6 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
-                  {highlights.length > 0 && (
-                    <div className="min-w-0 flex-1">
-                      <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-mk-text-muted">
-                        Focus
-                      </p>
-                      <ul className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-2 sm:max-w-none sm:grid-cols-2">
-                        {highlights.map((item) => (
-                          <li
-                            key={item}
-                            className="flex items-start gap-2 text-sm font-medium leading-relaxed text-mk-text-secondary"
-                          >
-                            <span className="mt-2 h-[3px] w-[3px] shrink-0 rounded-full bg-mk-text-muted" aria-hidden />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                <div className="flex items-end gap-3 sm:justify-between sm:gap-4">
+                  <div className="min-w-0 flex-1">
+                    <ProjectMediaThumbs
+                      assets={assets}
+                      activeIndex={activeAssetIndex}
+                      onSelect={setActiveAssetIndex}
+                      groupsConfig={groupsConfig}
+                    />
+                  </div>
                   <div className="flex shrink-0 justify-end">{hireButton}</div>
                 </div>
               </motion.div>

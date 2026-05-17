@@ -217,6 +217,7 @@ async function main() {
     model3dMaterialColor: p.meta.model3dMaterialColor,
     model3dOffsetY: p.meta.model3dOffsetY,
     unrealBlueprints: p.meta.unrealBlueprints,
+    mediaCaptions: p.meta.mediaCaptions,
   }));
 
   const output: OutputPostsData = {

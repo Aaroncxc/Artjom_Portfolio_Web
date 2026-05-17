@@ -1,0 +1,64 @@
+TITLE:
+Lexsolar Digital Learning Kit
+
+SHORT TEXT:
+Together with Lexsolar, we developed a digital prototype based on their physical solar learning kits. The real kits and components were recreated in Blender and transformed into an interactive browser-based learning experience.
+
+LONG TEXT:
+For the German Academy of Digital Education, we collaborated with Lexsolar to explore how physical solar learning kits could be translated into a digital environment. The original kits, including solar modules, measuring devices, cables, plugs, and experiment components, were recreated inhouse as detailed 3D assets in Blender.
+
+My role was focused on partner communication, project coordination, and strategic preparation. I visited Lexsolar in Dresden several times to understand the product, the production environment, and the didactic logic behind the learning kits. Based on this, we developed an implementation strategy together with internal departments, experts, and the production team.
+
+The result was a fully playable browser prototype that allowed users to interact with digital versions of the solar learning components and understand basic experiments around solar energy in a virtual learning environment.
+
+BULLETS:
+• Partner Coordination with Lexsolar
+• 1:1 Digital Recreation of Physical Learning Kits
+• 3D Asset Production in Blender
+• Interactive Browser Prototype
+• Solar Energy Learning Experience
+
+DADB_Lexsolar_Digital_Learning_Kit
+
+Kurzbeschreibung:
+Für die German Academy of Digital Education entstand gemeinsam mit Lexsolar ein digitaler Prototyp auf Basis eines physischen Solar-Lernkoffers. Die realen Lernkoffer und ihre einzelnen Komponenten wurden inhouse eins zu eins in Blender nachgebaut und anschließend in eine interaktive digitale Lernanwendung übersetzt.
+
+Das Projekt diente dazu, ein haptisches Experimentiersystem für Solarenergie als spielbare digitale Learning Experience erlebbar zu machen.
+
+Ziel:
+Ziel war es, den physischen Solar-Lernkoffer von Lexsolar digital nachzubilden und seine Experimentierlogik in eine interaktive Anwendung zu übertragen. Nutzer sollten Solarmodule, Messgeräte, Kabel, Stecker und weitere Bauteile virtuell verwenden können, um grundlegende technische Zusammenhänge im Bereich Solarenergie praktisch nachzuvollziehen.
+
+Dabei sollte geprüft werden, wie reale Bildungsprodukte und technische Lernmaterialien in ein digitales, spielbares Format übersetzt werden können.
+
+Meine Rolle:
+Ich war für die Partnerabstimmung, strategische Vorbereitung und Projektbegleitung mitverantwortlich. Dafür bin ich mehrfach nach Dresden in die Produktionswerkstatt von Lexsolar gefahren, um die Lernkoffer, Bauteile, Experimente und die didaktische Logik des Produkts direkt vor Ort kennenzulernen.
+
+Auf Basis dieser Termine habe ich gemeinsam mit Lexsolar, internen Departments und Fachexperten eine Strategie für die digitale Umsetzung entwickelt. Ich habe die Kommunikation zwischen externem Partner, Produktion und internen Teams begleitet und das Projekt in seiner Entwicklung mit koordiniert und überwacht.
+
+Umsetzung:
+Die physischen Lexsolar-Koffer und ihre Komponenten wurden inhouse möglichst originalgetreu in Blender nachgebaut. Dazu gehörten unter anderem Solarmodule, Messgeräte, Kabel, Stromversorgungen, Stecker, Experimentierplatten und weitere technische Bauteile.
+
+Aus diesen digitalen Assets entstand ein interaktiver Prototyp, in dem Nutzer die Komponenten virtuell betrachten, verwenden und innerhalb einer digitalen Lernumgebung ausprobieren konnten.
+
+Tools:
+Blender, Unreal Engine, Browser-Anwendung, Projektmanagement, Partnerkommunikation, digitale Lernkonzeption
+
+Partner / Beteiligte:
+German Academy of Digital Education, Lexsolar, interne Produktionsteams, Fachexperten, Entwicklerteam
+
+Ergebnis:
+Entstanden ist ein voll spielbarer digitaler Prototyp eines Solar-Lernkoffers. Die Anwendung übertrug zentrale Elemente des physischen Lernsystems in eine interaktive digitale Umgebung und machte die Funktionsweise der Experimente virtuell erfahrbar.
+
+Besondere Punkte:
+Besonders an diesem Projekt war die direkte Übersetzung eines realen physischen Lernsystems in eine digitale Learning Experience. Die Herausforderung lag nicht nur im 3D-Nachbau der Bauteile, sondern auch darin, die didaktische Struktur, Experimentierlogik und praktische Nutzbarkeit des Koffers digital nachvollziehbar zu machen.
+
+Das Projekt brachte externe Partner, interne Departments und technische Experten zusammen und zeigte, wie physische Lernmaterialien in spielbare digitale Anwendungen übertragen werden können.
+
+Januar-Mai 2026
+
+Status:
+Prototyp abgeschlossen
+
+Together with Lexsolar, we developed a digital prototype based on their physical solar learning kits. The real kits and components were recreated in Blender and transformed into an interactive browser-based learning experience.
+
+I supported the project through partner communication, strategic planning, and coordination between Lexsolar, internal departments, and expert teams. After several visits to Lexsolar’s production workshop in Dresden, we translated the physical product logic into a fully playable digital prototype focused on solar energy experiments.

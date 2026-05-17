@@ -10,6 +10,17 @@ export interface ProjectMedia {
   type: 'video' | 'image' | 'html' | 'model3d';
   src: string;
   title?: string;
+  /** Short description shown under the active medium in the project modal (1–2 sentences). */
+  caption?: string;
+}
+
+/** Interactive Unreal Engine blueprint embed (blueprintue.com render URL). */
+export interface UnrealBlueprintMedia {
+  url: string;
+  title?: string;
+  /** One-line purpose of this blueprint, shown under the viewer when active. */
+  caption?: string;
+  previewImage?: string;
 }
 
 export interface Project {
@@ -61,8 +72,13 @@ export interface Project {
   videoPortrait?: boolean; // If true, video is displayed in portrait (9:16) layout
   // Additional media gallery for projects with multiple assets
   gallery?: ProjectMedia[];
+  /**
+   * Captions keyed by media `src` (video URL, image path, html path, model path, blueprint URL).
+   * Used when a slide is not represented in `gallery` / `unrealBlueprints` with its own `caption`.
+   */
+  mediaCaptions?: Record<string, string>;
   /** Interactive Unreal Engine blueprint embeds (blueprintue.com render URLs). */
-  unrealBlueprints?: { url: string; title?: string }[];
+  unrealBlueprints?: UnrealBlueprintMedia[];
   // Long-form description shown in the "Explanation" tab of the project modal.
   // Falls back to `description` when omitted.
   explanation?: string;

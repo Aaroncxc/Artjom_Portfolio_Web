@@ -25,7 +25,9 @@ export interface DrivePostMeta {
   /** Libraries / apps (optional `icon` is a public URL path). */
   tools?: { name: string; icon?: string }[];
   /** Interactive Unreal blueprint embed URLs (passed through to posts.json). */
-  unrealBlueprints?: { url: string; title?: string }[];
+  unrealBlueprints?: { url: string; title?: string; caption?: string; previewImage?: string }[];
+  /** Captions keyed by media src (video, image paths, etc.). */
+  mediaCaptions?: Record<string, string>;
 }
 
 // Internal representation of a project during processing
@@ -81,7 +83,8 @@ export interface OutputPost {
   model3dRotationX?: number;
   model3dMaterialColor?: string;
   model3dOffsetY?: number;
-  unrealBlueprints?: { url: string; title?: string }[];
+  unrealBlueprints?: { url: string; title?: string; caption?: string; previewImage?: string }[];
+  mediaCaptions?: Record<string, string>;
 }
 
 export interface OutputPostsData {

@@ -5,6 +5,12 @@
       "static/chunks/_app-pages-browser_node_modules_three_build_three_module_js.js"
     ]
   },
+  "components\\Project3DPreview.tsx -> three/examples/jsm/libs/meshopt_decoder.module.js": {
+    "id": "components\\Project3DPreview.tsx -> three/examples/jsm/libs/meshopt_decoder.module.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_three_examples_jsm_libs_meshopt_decoder_module_js.js"
+    ]
+  },
   "components\\Project3DPreview.tsx -> three/examples/jsm/loaders/DRACOLoader.js": {
     "id": "components\\Project3DPreview.tsx -> three/examples/jsm/loaders/DRACOLoader.js",
     "files": [

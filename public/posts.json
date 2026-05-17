@@ -1,6 +1,109 @@
 {
   "posts": [
     {
+      "id": "24",
+      "slug": "lexsolar-digital-learning-kit",
+      "title": "Lexsolar Digital Learning Kit",
+      "description": "Together with Lexsolar, we developed a digital prototype based on their physical solar learning kits. The real kits and components were recreated in Blender and transformed into an interactive browser-based learning experience.",
+      "date": "2026-05-15",
+      "tags": [
+        "video",
+        "3D",
+        "education",
+        "solar",
+        "prototype",
+        "partnership",
+        "project management",
+        "Learning Experience"
+      ],
+      "type": "video",
+      "thumbnail": "/projects/lexsolar-digital-learning-kit/ingame-05.webp",
+      "images": [
+        "/projects/lexsolar-digital-learning-kit/ingame-05.webp"
+      ],
+      "videoUrl": "/projects/lexsolar-digital-learning-kit/whole-exercise-gameplay.webm",
+      "tools": [
+        {
+          "name": "Blender",
+          "icon": "/tool-icons/blender.png"
+        },
+        {
+          "name": "Unreal Engine",
+          "icon": "/tool-icons/unreal-engine.png"
+        }
+      ],
+      "tile3dBadge": true,
+      "highlights": [
+        "Partner coordination with Lexsolar",
+        "1:1 digital recreation of physical kits",
+        "Blender asset production",
+        "Interactive browser prototype",
+        "Solar energy learning experience"
+      ],
+      "explanation": "For the German Academy of Digital Education, we collaborated with Lexsolar to explore how physical solar learning kits could be translated into a digital environment. The original kits — solar modules, measuring devices, cables, plugs, and experiment components — were recreated inhouse as detailed 3D assets in Blender.\n\nGoal: digitally replicate Lexsolar's physical learning case and transfer its experiment logic into an interactive application so learners could use components virtually and understand core solar-energy relationships hands-on.\n\nMy role focused on partner communication, strategic preparation, and project coordination. I visited Lexsolar in Dresden several times to understand the product, production environment, and didactic logic behind the kits. Together with Lexsolar, internal departments, experts, and the production team we defined an implementation strategy and kept partner, production, and internal teams aligned through delivery.\n\nThe physical cases and components were rebuilt as faithfully as possible in Blender — modules, meters, cabling, power supplies, connectors, experiment boards, and related hardware. From these assets we built a fully playable browser prototype where users explore and try basic solar experiments in a virtual learning space.\n\nOutcome: a completed digital prototype that makes the physical learning system's core experiments tangible online — bridging haptic education hardware and a playable digital learning experience.\n\nTimeline: January–May 2026 — prototype completed.",
+      "author": "AaronCxC",
+      "gallery": [
+        {
+          "type": "image",
+          "src": "/projects/lexsolar-digital-learning-kit/ingame-01.webp",
+          "title": "In-game prototype — view 1",
+          "caption": "Screenshot from the interactive Lexsolar browser prototype showing the digital learning kit in use."
+        },
+        {
+          "type": "image",
+          "src": "/projects/lexsolar-digital-learning-kit/ingame-02.webp",
+          "title": "In-game prototype — view 2",
+          "caption": "Screenshot from the interactive Lexsolar browser prototype showing the digital learning kit in use."
+        },
+        {
+          "type": "image",
+          "src": "/projects/lexsolar-digital-learning-kit/ingame-03.webp",
+          "title": "In-game prototype — view 3",
+          "caption": "Screenshot from the interactive Lexsolar browser prototype showing the digital learning kit in use."
+        },
+        {
+          "type": "image",
+          "src": "/projects/lexsolar-digital-learning-kit/ingame-04.webp",
+          "title": "In-game prototype — view 4",
+          "caption": "Screenshot from the interactive Lexsolar browser prototype showing the digital learning kit in use."
+        },
+        {
+          "type": "image",
+          "src": "/projects/lexsolar-digital-learning-kit/ingame-05.webp",
+          "title": "In-game prototype — view 5",
+          "caption": "Screenshot from the interactive Lexsolar browser prototype showing the digital learning kit in use."
+        },
+        {
+          "type": "image",
+          "src": "/projects/lexsolar-digital-learning-kit/ingame-06.webp",
+          "title": "In-game prototype — view 6",
+          "caption": "Screenshot from the interactive Lexsolar browser prototype showing the digital learning kit in use."
+        },
+        {
+          "type": "video",
+          "src": "/projects/lexsolar-digital-learning-kit/case-footage.webm",
+          "title": "Physical learning case — reference footage",
+          "caption": "Reference footage of the physical Lexsolar learning case used to align the digital recreation."
+        },
+        {
+          "type": "video",
+          "src": "/projects/lexsolar-digital-learning-kit/ui-examples.webm",
+          "title": "UI & interaction examples",
+          "caption": "UI and interaction examples from the browser-based solar learning prototype."
+        },
+        {
+          "type": "video",
+          "src": "/projects/lexsolar-digital-learning-kit/expert-exercise-explanation.webm",
+          "title": "Expert walkthrough — Exercise 9",
+          "caption": "Video explanation from a domain expert for Exercise 9, used as a reference to rebuild the workflow correctly in the digital prototype."
+        }
+      ],
+      "mediaCaptions": {
+        "/projects/lexsolar-digital-learning-kit/whole-exercise-gameplay.webm": "Full gameplay capture of the browser prototype — virtual solar experiments built from 1:1 Blender recreations of the physical Lexsolar kit.",
+        "/projects/lexsolar-digital-learning-kit/expert-exercise-explanation.webm": "Expert walkthrough for Exercise 9 — reference material from a specialist used to mirror the real learning procedure in the Lexsolar prototype."
+      }
+    },
+    {
       "id": "23",
       "slug": "elearning-africa-dakar-senegal-2023",
       "title": "E-Learning Africa Dakar 2023 — VR booth experience",
@@ -13,7 +116,8 @@
         "trade fair",
         "3D",
         "visualization",
-        "project management"
+        "project management",
+        "Learning Experience"
       ],
       "type": "video",
       "thumbnail": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-07-thumb.jpg",
@@ -48,127 +152,152 @@
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-00.webp",
-          "title": "VR scene — hero shot"
+          "title": "VR scene — hero shot",
+          "caption": "Hero view of the VR training space with the inverter and companion bot in frame."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-01.webp",
-          "title": "VR scene — interaction view"
+          "title": "VR scene — interaction view",
+          "caption": "Visitor perspective during an interaction with the training hardware."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-02.webp",
-          "title": "VR scene — inverter close-up"
+          "title": "VR scene — inverter close-up",
+          "caption": "Close-up of the inverter unit used for the hands-on lesson steps."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-03.webp",
-          "title": "VR scene — environment"
+          "title": "VR scene — environment",
+          "caption": "Environmental lighting and booth layout inside the Unreal scene."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-04.webp",
-          "title": "VR scene — instruction overlay"
+          "title": "VR scene — instruction overlay",
+          "caption": "Instruction overlay guiding the user through the current training step."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-05.webp",
-          "title": "VR scene — wide angle"
+          "title": "VR scene — wide angle",
+          "caption": "Wide-angle view of the full VR booth composition."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-06.webp",
-          "title": "VR scene — perspective"
+          "title": "VR scene — perspective",
+          "caption": "Alternate camera angle highlighting depth and scale of the stand."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-07.webp",
-          "title": "VR scene — detail"
+          "title": "VR scene — detail",
+          "caption": "Detail shot of props and signage inside the experience."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-08.webp",
-          "title": "VR scene — step view"
+          "title": "VR scene — step view",
+          "caption": "Step-focused framing for one stage of the inverter workflow."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-09.webp",
-          "title": "VR scene — step view 2"
+          "title": "VR scene — step view 2",
+          "caption": "Follow-up step view continuing the guided training sequence."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-10.webp",
-          "title": "VR scene — step view 3"
+          "title": "VR scene — step view 3",
+          "caption": "Additional step view before the lesson completes."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/vr-scene-11.webp",
-          "title": "VR scene — final pose"
+          "title": "VR scene — final pose",
+          "caption": "Final pose of the scene after the training flow finishes."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Visualisation_1.webp",
-          "title": "Booth visualization 1"
+          "title": "Booth visualization 1",
+          "caption": "Archicad pre-visualization of the booth layout for client review."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Visualisation_2.webp",
-          "title": "Booth visualization 2"
+          "title": "Booth visualization 2",
+          "caption": "Second visualization pass refining materials and visitor flow."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_DADBBOT_1.webp",
-          "title": "DADB-Bot — render 1"
+          "title": "DADB-Bot — render 1",
+          "caption": "DADB-Bot character render — primary hero angle."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_DADBBOT_2.webp",
-          "title": "DADB-Bot — render 2"
+          "title": "DADB-Bot — render 2",
+          "caption": "DADB-Bot render highlighting proportions and readable silhouette."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_DADBBOT_3.webp",
-          "title": "DADB-Bot — render 3"
+          "title": "DADB-Bot — render 3",
+          "caption": "DADB-Bot detail render for marketing and on-site signage."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_DADBBOT_5.webp",
-          "title": "DADB-Bot — render 5"
+          "title": "DADB-Bot — render 5",
+          "caption": "Additional DADB-Bot render used across pavilion graphics."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Proffesional_1.jpg",
-          "title": "On site — booth"
+          "title": "On site — booth",
+          "caption": "On-site photo of the finished booth at the German Pavilion."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Proffesional_2.jpg",
-          "title": "On site — visitors"
+          "title": "On site — visitors",
+          "caption": "Visitors trying the VR experience during the event."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Proffesional_3.jpg",
-          "title": "On site — presentation"
+          "title": "On site — presentation",
+          "caption": "Presentation moment with partners at the stand."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Proffesional_5.jpg",
-          "title": "On site — hardware setup"
+          "title": "On site — hardware setup",
+          "caption": "Hardware setup and headsets ready for demos."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_Proffesional_6.jpg",
-          "title": "On site — German Pavilion"
+          "title": "On site — German Pavilion",
+          "caption": "German Pavilion context with the project integrated into the hall."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_8.jpg",
-          "title": "Dakar — impression"
+          "title": "Dakar — impression",
+          "caption": "Impression from Dakar — atmosphere around the conference."
         },
         {
           "type": "image",
           "src": "/projects/elearning-africa-dakar-senegal-2023/Senegal_Dakar_13.jpg",
-          "title": "Dakar — impression 2"
+          "title": "Dakar — impression 2",
+          "caption": "Second on-location impression from the event week."
         }
       ],
       "references": [
@@ -180,9 +309,24 @@
       "unrealBlueprints": [
         {
           "url": "https://blueprintue.com/render/el7bkue9/",
-          "title": "Grab Component"
+          "title": "Grab Component",
+          "caption": "Reusable grab component so visitors can pick up and release interactive booth objects in VR."
+        },
+        {
+          "url": "https://blueprintue.com/render/3tvtt5ab/",
+          "title": "Grab logic (in-game)",
+          "caption": "In-game grab logic that wires player input, physics, and feedback for the inverter training sequence."
+        },
+        {
+          "url": "https://blueprintue.com/render/z40q5_un/",
+          "title": "Companion BOT",
+          "previewImage": "/projects/elearning-africa-dakar-senegal-2023/companion-bot-blueprint.webp",
+          "caption": "Companion bot blueprint that guides visitors through setup steps and reacts to lesson progress."
         }
-      ]
+      ],
+      "mediaCaptions": {
+        "/projects/elearning-africa-dakar-senegal-2023/linkedin-vr-trailer.webm": "Showreel of the VR booth experience built for E-Learning Africa Dakar 2023 — inverter training in Unreal Engine."
+      }
     },
     {
       "id": "22",
@@ -197,7 +341,8 @@
         "trade fair",
         "3D",
         "visualization",
-        "project management"
+        "project management",
+        "Learning Experience"
       ],
       "type": "video",
       "thumbnail": "/projects/elearning-africa-kigali-2024/Kigali_Gameplay_Thumbnail.jpg",
@@ -876,5 +1021,5 @@
       "model3dAnimationProgress": 0
     }
   ],
-  "lastUpdated": "2026-05-16T19:45:00Z"
+  "lastUpdated": "2026-05-17T23:25:59.314Z"
 }
