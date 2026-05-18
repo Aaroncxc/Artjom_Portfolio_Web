@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import LightLeaksBackground from '@/components/LightLeaksBackground';
 import { Navigation } from '@/components/Navigation';
 import { AboutSection } from '@/components/AboutSection';
+import { HighlightBentoSection } from '@/components/HighlightBentoSection';
 import { ProjectsGrid } from '@/components/ProjectsGrid';
 import { ToolsGamesGrid } from '@/components/ToolsGamesGrid';
 import { TextPointCloudHero } from '@/components/TextPointCloudHero';
@@ -47,6 +48,7 @@ export default function Home() {
       const offset = 200;
 
       const aboutSection = document.getElementById('about');
+      const highlightsSection = document.getElementById('highlights');
       const projectsSection = document.getElementById('projects');
       const toolsGamesSection = document.getElementById('tools-games');
 
@@ -54,6 +56,8 @@ export default function Home() {
         setCurrentSection('tools-games');
       } else if (projectsSection && scrollY >= projectsSection.offsetTop - offset) {
         setCurrentSection('projects');
+      } else if (highlightsSection && scrollY >= highlightsSection.offsetTop - offset) {
+        setCurrentSection('highlights');
       } else if (aboutSection && scrollY >= aboutSection.offsetTop - offset) {
         setCurrentSection('about');
       } else {
@@ -123,6 +127,8 @@ export default function Home() {
       >
         {/* About Section - first content the visitor sees */}
         <AboutSection visible={true} />
+
+        <HighlightBentoSection visible={true} />
 
         {/* Projects Section - Instagram-style Grid */}
         <ProjectsGrid visible={true} />

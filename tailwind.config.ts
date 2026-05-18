@@ -5,6 +5,7 @@ const config: Config = {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './lib/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -78,6 +79,7 @@ const config: Config = {
         'float': 'float 6s ease-in-out infinite',
         'pulse-slow': 'pulse 4s ease-in-out infinite',
         'marquee': 'marquee 55s linear infinite',
+        'highlight-bento-glow-spin': 'highlightBentoGlowSpin 26s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -105,6 +107,10 @@ const config: Config = {
         marquee: {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
+        },
+        highlightBentoGlowSpin: {
+          '0%': { transform: 'translate(-50%, -50%) rotate(0deg)' },
+          '100%': { transform: 'translate(-50%, -50%) rotate(360deg)' },
         },
       },
     },

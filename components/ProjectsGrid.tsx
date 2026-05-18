@@ -83,7 +83,6 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState<Record<string, { x: number; y: number }>>({});
   const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
-  const [showSwipeHint, setShowSwipeHint] = useState(true);
   
   // Touch swipe state
   const touchStartX = useRef<number>(0);
@@ -223,7 +222,6 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     setSlideDirection(direction === 'next' ? 'right' : 'left');
     setSelectedProject(filteredProjects[newIndex]);
     setSelectedIndex(newIndex);
-    setShowSwipeHint(false); // Hide hint after first navigation
   }, [selectedIndex, filteredProjects]);
 
   // Touch swipe handlers for mobile navigation
@@ -554,29 +552,10 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
               </svg>
             </button>
 
-            {/* Project Counter with Swipe Hint on mobile */}
-            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center gap-2">
-              {/* Swipe hint - only on mobile, disappears after first swipe */}
-              <AnimatePresence>
-                {showSwipeHint && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="md:hidden flex max-w-[18rem] items-center gap-2 rounded-full border border-black/[0.06] bg-[rgba(118,118,128,0.12)] px-3 py-1.5 text-[11px] font-medium leading-tight text-[#48484A]"
-                  >
-                    <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m-12 5h12m-12 5h12M4 7h.01M4 12h.01M4 17h.01" />
-                    </svg>
-                    <span>
-                      Bilder wischen im Player. Projekt wechseln am Rand.
-                    </span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              
-              <div className="hidden md:block rounded-full border border-black/[0.08] bg-white/92 px-4 py-2 text-[13px] font-semibold tracking-[-0.01em] text-[#48484A] shadow-[0_2px_10px_rgba(0,0,0,0.06)] backdrop-blur-md">
-                  {selectedIndex + 1} / {filteredProjects.length}
+            {/* Project counter — desktop only (mobile uses swipe + arrow buttons hidden, so no counter overlay). */}
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] hidden md:block">
+              <div className="rounded-full border border-black/[0.08] bg-white/92 px-4 py-2 text-[13px] font-semibold tracking-[-0.01em] text-[#48484A] shadow-[0_2px_10px_rgba(0,0,0,0.06)] backdrop-blur-md">
+                {selectedIndex + 1} / {filteredProjects.length}
               </div>
             </div>
 

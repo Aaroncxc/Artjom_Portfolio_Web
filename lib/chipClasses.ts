@@ -6,9 +6,9 @@
 export const metaChipClass =
   'rounded-full border border-[rgba(28,28,28,0.1)] bg-[rgba(255,255,255,0.9)] px-2 py-0.5 text-[10px] font-medium text-mk-text shadow-sm backdrop-blur-sm sm:px-2.5 sm:py-1 sm:text-[11px]';
 
-/** Project tile: “Learning Experience” — solid green pill (matches white tags in size/typography). */
+/** Project tile: “Learning Experience” — lime (#A2D149), dark label for contrast. */
 export const chipLearningExperienceClass =
-  'rounded-full border border-green-700/20 bg-green-500 px-2 py-0.5 text-[10px] font-medium text-white shadow-sm sm:px-2.5 sm:py-1 sm:text-[11px]';
+  'rounded-full border border-[rgba(28,28,28,0.16)] bg-[#A2D149] px-2 py-0.5 text-[10px] font-semibold leading-tight text-[rgba(28,28,28,0.82)] shadow-sm sm:px-2.5 sm:py-1 sm:text-[11px]';
 
 /** “Live” on tool/game tiles — indigo. */
 export const liveChipClass =

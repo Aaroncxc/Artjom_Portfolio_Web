@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Project, ProjectReference, ProjectTool } from '@/lib/types';
 import { buildHireMailto } from '@/lib/contact';
@@ -17,10 +17,14 @@ import { LightboxModal } from '../projectSlide/LightboxModal';
 
 type TabId = 'private' | 'explanation';
 
+export type PortfolioProjectModalVariant = 'modal' | 'inline';
+
 interface PortfolioProjectModalProps {
   project: Project;
   slideKey?: string;
   onClose?: () => void;
+  /** Embedded in Highlight bento — fixed height parent, scroll inside; back control instead of ×. */
+  variant?: PortfolioProjectModalVariant;
 }
 
 const TABS: { id: TabId; label: string }[] = [
@@ -178,12 +182,25 @@ function StaircaseTitle({ title }: { title: string }) {
   );
 }
 
-export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioProjectModalProps) {
+export function PortfolioProjectModal({
+  project,
+  slideKey,
+  onClose,
+  variant = 'modal',
+}: PortfolioProjectModalProps) {
+  const inline = variant === 'inline';
+  const backBtnRef = useRef<HTMLButtonElement>(null);
   const [activeTab, setActiveTab] = useState<TabId>('private');
   const [activeAssetIndex, setActiveAssetIndex] = useState(0);
   const [lightbox, setLightbox] = useState<string | null>(null);
   /** Once the user opens Explanation we drop the attention dot on its tab button. */
   const [hasSeenExplanation, setHasSeenExplanation] = useState(false);
+
+  useEffect(() => {
+    if (!inline || !onClose) return;
+    const t = window.setTimeout(() => backBtnRef.current?.focus(), 0);
+    return () => window.clearTimeout(t);
+  }, [inline, onClose, project.id]);
 
   const groupsConfig = useMemo(
     () => getProjectMediaGroupsConfig(project.slug),
@@ -257,20 +274,42 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
   return (
     <div
       key={slideKey ?? project.id}
-      className="relative mx-auto w-full max-w-7xl font-sans text-mk-text antialiased"
+      className={clsx(
+        'relative mx-auto w-full font-sans text-mk-text antialiased',
+        inline ? 'flex h-full min-h-0 max-w-none flex-col' : 'max-w-7xl',
+      )}
       onClick={(e) => e.stopPropagation()}
     >
       <div
         className={clsx(
-          'flex flex-col overflow-hidden rounded-[20px]',
-          'max-h-[calc(100dvh-1rem)]',
+          'flex flex-col rounded-[20px]',
+          inline ? 'overflow-visible' : 'overflow-hidden max-h-[calc(100dvh-1rem)]',
           'border border-black/[0.10]',
           'bg-white',
-          'shadow-[0_4px_24px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04)]'
+          'shadow-[0_4px_24px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04)]',
         )}
       >
-        {/* Header: segmented tabs (HIG) + close */}
-        <div className="flex flex-wrap items-center gap-3 border-b border-black/[0.08] px-4 py-3 sm:px-5 sm:py-3.5">
+        {/* Header: back (inline) + segmented tabs + close (modal) */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-black/[0.08] px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3 md:px-5 md:py-3.5">
+          {inline && onClose ? (
+            <button
+              ref={backBtnRef}
+              type="button"
+              onClick={onClose}
+              aria-label="Back to highlights"
+              className={clsx(
+                'inline-flex shrink-0 items-center gap-1.5 rounded-full border border-black/[0.08] bg-white/92 px-2.5 py-2 text-xs font-semibold text-mk-text-secondary shadow-sm sm:px-3',
+                'transition-colors hover:bg-white hover:text-mk-text',
+                'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue',
+              )}
+            >
+              <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
+              </svg>
+              <span className="max-sm:hidden">Back to highlights</span>
+              <span className="sm:hidden">Back</span>
+            </button>
+          ) : null}
           <div
             className="inline-flex shrink-0 rounded-[9px] bg-[rgba(118,118,128,0.12)] p-0.5"
             role="tablist"
@@ -291,7 +330,7 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
                     if (tab.id === 'explanation') setHasSeenExplanation(true);
                   }}
                   className={clsx(
-                    'relative inline-flex min-w-[6.75rem] items-center justify-center gap-1.5 rounded-[8px] px-4 py-1.5 text-sm font-semibold transition-[color,background,box-shadow] duration-175',
+                    'relative inline-flex min-w-[5.125rem] items-center justify-center gap-1.5 rounded-[8px] px-3 py-1.5 text-[13px] font-semibold transition-[color,background,box-shadow] duration-175 sm:min-w-[6.75rem] sm:px-4 sm:text-sm',
                     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue',
                     isActive
                       ? 'bg-white text-mk-text shadow-[0_1px_3px_rgba(0,0,0,0.12),0_1px_1px_rgba(0,0,0,0.04)]'
@@ -314,7 +353,7 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
           </div>
 
           <div className="ml-auto flex items-center shrink-0">
-            {onClose && (
+            {onClose && !inline && (
               <button
                 type="button"
                 onClick={onClose}
@@ -322,7 +361,7 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
                 className={clsx(
                   'flex h-8 w-8 items-center justify-center rounded-full',
                   'text-mk-text-secondary transition-colors hover:bg-black/[0.06] active:bg-black/[0.08]',
-                  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue'
+                  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue',
                 )}
               >
                 <svg className="h-[17px] w-[17px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.25}>
@@ -334,7 +373,12 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
         </div>
 
         {/* Body — media + copy share one visual row (items-start: no stretch gap under thumbnails). */}
-        <div className="relative flex flex-1 flex-col overflow-y-auto px-4 py-3 sm:px-5 sm:py-3.5 lg:min-h-0 lg:overflow-hidden">
+        <div
+          className={clsx(
+            'relative flex flex-1 flex-col px-3 py-2.5 sm:px-4 sm:py-3 md:px-5 md:py-3.5',
+            inline ? '' : 'overflow-y-auto lg:min-h-0 lg:overflow-hidden',
+          )}
+        >
           <AnimatePresence mode="wait" initial={false}>
             {activeTab === 'private' ? (
               <motion.div
