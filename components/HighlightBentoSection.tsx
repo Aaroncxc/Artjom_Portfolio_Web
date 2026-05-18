@@ -20,6 +20,8 @@ import { findPostBySlug } from '@/lib/loadPosts';
 import type { Project } from '@/lib/types';
 
 const SECTION_TITLE = 'Head of Production at DADB';
+/** CV-style staircase: each line steps right; subtitle sits on row 3, flush right. */
+const SECTION_HEADLINE_STAIRS = ['Head of', 'Production', 'at DADB'] as const;
 const SECTION_SUBTITLE = '2021–2025';
 const SECTION_BODY_P1 =
   'Highlights from leading production at DADB: aligning stakeholders, then guiding 3D, cinematic, XR, and editorial work from brief through release—so narratives stay clear and delivery stays predictable.';
@@ -373,10 +375,21 @@ export function HighlightBentoSection({ visible = true }: HighlightBentoSectionP
                     <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
                       Highlights
                     </span>
-                    <h2 className="brand-tight text-[clamp(1.5rem,4.6vw,1.85rem)] font-semibold leading-[1.12] tracking-tight text-mk-text sm:text-3xl sm:leading-normal md:text-4xl lg:text-[2.2rem]">
-                      {SECTION_TITLE}
+                    <h2
+                      aria-label={SECTION_TITLE}
+                      className="brand-tight max-w-[min(100%,26rem)] text-[clamp(1.35rem,4.2vw,1.72rem)] font-semibold leading-[1] tracking-tight text-mk-text sm:text-[clamp(1.6rem,2.8vw,2rem)] sm:leading-[1.02] md:text-[clamp(2rem,2.4vw,2.35rem)] lg:text-[2.25rem]"
+                    >
+                      <span className="block">{SECTION_HEADLINE_STAIRS[0]}</span>
+                      <span className="block pl-[2rem] pt-[0.2em] sm:pl-[2.5rem] md:pl-[3rem] lg:pl-[3.25rem]">
+                        {SECTION_HEADLINE_STAIRS[1]}
+                      </span>
+                      <div className="flex flex-row flex-wrap items-baseline justify-between gap-x-3 gap-y-1 pt-[0.2em] pl-[4rem] sm:pl-[5.25rem] md:pl-[6.25rem] lg:pl-[6.75rem]">
+                        <span className="min-w-0">{SECTION_HEADLINE_STAIRS[2]}</span>
+                        <span className="shrink-0 text-[0.6875rem] font-medium tabular-nums tracking-normal text-mk-text sm:text-[0.8125rem] md:text-sm">
+                          {SECTION_SUBTITLE}
+                        </span>
+                      </div>
                     </h2>
-                    <p className="text-sm tabular-nums text-mk-text-muted sm:text-[0.9375rem]">{SECTION_SUBTITLE}</p>
                     <div className="max-w-none space-y-2 text-[0.9375rem] leading-relaxed text-mk-text-secondary sm:max-w-md sm:text-[15px] sm:leading-relaxed lg:text-base">
                       <p>{SECTION_BODY_P1}</p>
                       <p>{SECTION_BODY_P2}</p>
