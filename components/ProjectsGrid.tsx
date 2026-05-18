@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import clsx from 'clsx';
 import { PortfolioProjectModal } from './portfolio/PortfolioProjectModal';
 import { Project3DPreview } from './Project3DPreview';
 import { Project, ProjectType } from '@/lib/types';
@@ -482,10 +483,15 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   )}
                   
                   {/* Tag chips: medium, tools, optional 3D — replaces hover text + author/type/3D badges */}
-                  <div className="pointer-events-none absolute left-2 top-2 right-2 z-20 flex flex-wrap gap-1">
+                  {/*
+                    On mobile (<sm) the tile is ~50vw so we hide tool-name chips
+                    and only keep the type chip + immersion chips + the green
+                    Learning-Experience pill so the artwork is not buried.
+                  */}
+                  <div className="pointer-events-none absolute left-1.5 top-1.5 right-1.5 z-20 flex flex-wrap gap-1 sm:left-2 sm:top-2 sm:right-2">
                     <span className={metaChipClass}>{typeChipLabel[project.type]}</span>
                     {project.tools?.map((tool) => (
-                      <span key={tool.name} className={metaChipClass}>
+                      <span key={tool.name} className={clsx(metaChipClass, 'hidden sm:inline-flex')}>
                         {tool.name}
                       </span>
                     ))}

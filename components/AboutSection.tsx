@@ -490,7 +490,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                       aria-expanded={isCvOpen}
                                       aria-controls={`cv-detail-${cvKey}`}
                                       className={clsx(
-                                        'mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-system-blue transition-opacity hover:opacity-80',
+                                        'mt-1.5 inline-flex min-h-[32px] items-center gap-1 rounded-md px-1.5 -ml-1.5 text-[11px] font-semibold uppercase tracking-wider text-system-blue transition-opacity hover:opacity-80',
                                         'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue',
                                       )}
                                     >
@@ -533,7 +533,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                                   {' '}
                                                   <a
                                                     href={toolDeepLink(entry.toolLink.id)}
-                                                    className="font-semibold text-system-blue underline decoration-system-blue/30 underline-offset-2 transition-opacity hover:opacity-80"
+                                                    className="inline-block py-0.5 font-semibold text-system-blue underline decoration-system-blue/30 underline-offset-2 transition-opacity hover:opacity-80"
                                                     onClick={(e) => {
                                                       e.preventDefault();
                                                       const url = new URL(window.location.href);
@@ -571,7 +571,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                               <iframe
                                                 src={`${entry.pdfPath}#view=FitH&toolbar=0`}
                                                 title={`${entry.role} — Zertifikat`}
-                                                className="block h-[420px] w-full border-0 bg-white"
+                                                className="block h-[300px] w-full border-0 bg-white sm:h-[420px]"
                                               />
                                             </div>
                                           ) : null}

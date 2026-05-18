@@ -229,12 +229,18 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
     }
   };
 
+  /**
+   * Hire Me button — on mobile we render a full-width pill below the thumb strip
+   * (matches the height of a thumb tile), on `sm:` and up we lock back to the
+   * 152×64 box so it visually aligns with the grouped thumb tiles on desktop.
+   */
   const hireButton = (
     <a
       href={hireHref}
-      style={{ width: 152, height: 64 }}
       className={clsx(
-        'inline-flex shrink-0 items-center justify-center gap-2 rounded-[10px]',
+        'inline-flex w-full items-center justify-center gap-2 rounded-[10px]',
+        'h-14 sm:h-16',
+        'sm:w-[152px] sm:shrink-0',
         'bg-system-blue text-sm font-semibold text-white',
         'shadow-sm transition-[transform,opacity,background-color] duration-200',
         'hover:bg-[#0077ED] active:bg-system-blue-pressed active:opacity-95',
@@ -415,8 +421,8 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
                   </div>
                 </div>
 
-                <div className="flex items-end gap-3 sm:justify-between sm:gap-4">
-                  <div className="min-w-0 flex-1">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+                  <div className="min-w-0 sm:flex-1">
                     <ProjectMediaThumbs
                       assets={assets}
                       activeIndex={activeAssetIndex}
@@ -424,7 +430,7 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
                       groupsConfig={groupsConfig}
                     />
                   </div>
-                  <div className="flex shrink-0 justify-end">{hireButton}</div>
+                  <div className="flex w-full justify-end sm:w-auto sm:shrink-0">{hireButton}</div>
                 </div>
               </motion.div>
             ) : (
@@ -449,7 +455,7 @@ export function PortfolioProjectModal({ project, slideKey, onClose }: PortfolioP
                     ))}
                   </div>
                 </div>
-                <div className="flex shrink-0 justify-end">{hireButton}</div>
+                <div className="flex w-full shrink-0 justify-end sm:w-auto">{hireButton}</div>
               </motion.div>
             )}
           </AnimatePresence>
