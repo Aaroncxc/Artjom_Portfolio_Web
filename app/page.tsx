@@ -15,6 +15,8 @@ export default function Home() {
   const [heroDismissed, setHeroDismissed] = useState(false);
   const [introKey, setIntroKey] = useState(0);
   const [currentSection, setCurrentSection] = useState<string>('');
+  /** Sub-`md` viewports get a shorter hero-gate dissolve (faster disconnect of intro canvas after tap). */
+  const [narrowViewport, setNarrowViewport] = useState(false);
 
   // Allow skipping the cinematic intro via ?skipHero=true or hash deep-link (#projects, #about, …).
   // Useful on mobile where the canvas sometimes swallows the first tap, and for direct deep links.
@@ -26,6 +28,15 @@ export default function Home() {
     if (skipParam === 'true' || skipParam === '1' || hasHashTarget) {
       setHeroDismissed(true);
     }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(max-width: 767px)');
+    const sync = () => setNarrowViewport(mq.matches);
+    sync();
+    mq.addEventListener?.('change', sync);
+    return () => mq.removeEventListener?.('change', sync);
   }, []);
 
   // Lock scroll while the intro hero is up — also blocks touch scroll on iOS/Android
@@ -94,7 +105,7 @@ export default function Home() {
               scale: 1.04,
               filter: 'blur(10px)',
             }}
-            transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: narrowViewport ? 0.55 : 0.95, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-[100]"
             style={{ willChange: 'opacity, transform, filter' }}
           >

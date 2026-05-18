@@ -202,6 +202,9 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
   const morphChaosRef = useRef(0);
   const lastMoveRef = useRef({ x: 0, y: 0, t: 0 });
   const lastMotionRef = useRef(0);
+  /** Morph idle/decay RAF — must stop chaining after hero activation (handled in pointer handler + cleanup). */
+  const morphIdleRafRef = useRef(0);
+  const activateGateTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => onReady?.(), 100);
@@ -236,7 +239,6 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
   useEffect(() => {
     if (!containerRef.current) return;
 
-    let raf = 0;
     const coarse = () =>
       typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
@@ -270,8 +272,10 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
           if (morphChaosRef.current < 0.003) morphChaosRef.current = 0;
           applyMorphToCloud();
         }
+        morphIdleRafRef.current = requestAnimationFrame(tick);
+      } else {
+        morphIdleRafRef.current = 0;
       }
-      raf = requestAnimationFrame(tick);
     };
 
     const feedMorph = (clientX: number, clientY: number, t: number) => {
@@ -304,7 +308,7 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
       feedMorph(t.clientX, t.clientY, performance.now());
     };
 
-    raf = requestAnimationFrame(tick);
+    morphIdleRafRef.current = requestAnimationFrame(tick);
 
     const optsCap = { passive: true, capture: true } as const;
 
@@ -315,7 +319,8 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
     window.visualViewport?.addEventListener('resize', onVpResize);
 
     return () => {
-      cancelAnimationFrame(raf);
+      cancelAnimationFrame(morphIdleRafRef.current);
+      morphIdleRafRef.current = 0;
       window.removeEventListener('pointermove', onPointerMove, optsCap);
       window.removeEventListener('touchmove', onTouchMove, optsCap);
       window.visualViewport?.removeEventListener('resize', onVpResize);
@@ -346,12 +351,23 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
       const target = e.target as HTMLElement | null;
       if (target?.closest?.('[data-hero-no-activate]')) return;
 
+      cancelAnimationFrame(morphIdleRafRef.current);
+      morphIdleRafRef.current = 0;
+
+      const coarsePointer =
+        typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+      const activateDelayMs = coarsePointer ? 750 : 1100;
+
       activatedRef.current = true;
       armFreeParticles();
       setActivated(true);
-      window.setTimeout(() => {
+      if (activateGateTimeoutRef.current !== null) {
+        window.clearTimeout(activateGateTimeoutRef.current);
+      }
+      activateGateTimeoutRef.current = window.setTimeout(() => {
+        activateGateTimeoutRef.current = null;
         onActivate?.();
-      }, 1500);
+      }, activateDelayMs);
     };
 
     function handle(ev: Event) {
@@ -359,7 +375,13 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
     }
 
     node.addEventListener('pointerdown', handle);
-    return () => node.removeEventListener('pointerdown', handle);
+    return () => {
+      node.removeEventListener('pointerdown', handle);
+      if (activateGateTimeoutRef.current !== null) {
+        window.clearTimeout(activateGateTimeoutRef.current);
+        activateGateTimeoutRef.current = null;
+      }
+    };
   }, [onActivate]);
 
   const {

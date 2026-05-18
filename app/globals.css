@@ -370,6 +370,16 @@ audio {
 .leaks-animate .leaks-b { animation: leaksFloatB 19s ease-in-out infinite; }
 .leaks-animate .leaks-c { animation: leaksFloatC 22s ease-in-out infinite; }
 
+/* Mobile: blobs stay composited once; no drifting keyframes (better battery / cooler device). Aligns with Tailwind `md` (768px). */
+@media (max-width: 767px) {
+  .leaks-animate .leaks-a,
+  .leaks-animate .leaks-b,
+  .leaks-animate .leaks-c {
+    animation: none;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 @keyframes leaksFloatA {
   0%,100% { transform: translate(0px,0px) scale(1); }
   50%     { transform: translate(40px,30px) scale(1.06); }
