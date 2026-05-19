@@ -1,6 +1,14 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef, useMemo, type CSSProperties } from 'react';
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useMemo,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { toolMatchesPortfolioOwner } from '@/lib/portfolioOwnerFilter';
@@ -33,6 +41,191 @@ interface ToolGame {
 
 function toolModalSlideCount(tool: ToolGame): number {
   return (tool.modalTrailer ? 1 : 0) + tool.screenshots.length;
+}
+
+/** Shared dark media shell — rounded inset frame like Occupied VFX detail view. */
+function ToolModalMediaShell({ children }: { children: ReactNode }) {
+  return (
+    <div className="relative w-full bg-[#0d0e11]">
+      <div className="relative mx-auto aspect-video w-full min-h-[200px] max-h-[min(52vh,440px)] sm:max-h-[min(58vh,520px)]">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function ToolModalMediaFrame({ children }: { children: ReactNode }) {
+  return (
+    <div
+      className={clsx(
+        'absolute inset-x-2 top-2 bottom-9 sm:inset-x-4 sm:top-3.5 sm:bottom-11',
+        'overflow-visible rounded-xl sm:rounded-2xl',
+      )}
+    >
+      <div
+        aria-hidden
+        className={clsx(
+          'pointer-events-none absolute inset-0 overflow-hidden rounded-xl bg-[#050607]',
+          'shadow-[inset_0_0_0_1px_rgba(255,255,255,0.07)] sm:rounded-2xl',
+        )}
+      />
+      <div className="relative z-[1] h-full w-full">{children}</div>
+    </div>
+  );
+}
+
+/** Inset screenshot/video card — rounded corners + drop shadow (all tool slides). */
+function ToolModalMediaSlide({ children }: { children: ReactNode }) {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-3">
+      <div
+        className={clsx(
+          'max-h-full max-w-full overflow-hidden rounded-[10px] sm:rounded-xl',
+          'shadow-[0_14px_44px_rgba(0,0,0,0.55),0_4px_14px_rgba(0,0,0,0.4)]',
+          'ring-1 ring-white/[0.08]',
+        )}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+const toolModalMediaClass =
+  'block h-auto max-h-[min(40vh,360px)] w-auto max-w-full object-contain sm:max-h-[min(46vh,420px)]';
+
+function ToolModalEmbedPanel({ tool }: { tool: ToolGame }) {
+  return (
+    <ToolModalMediaShell>
+      <ToolModalMediaFrame>
+        <ToolModalMediaSlide>
+          <iframe
+            src={tool.url}
+            className="aspect-video w-[min(100%,720px)] max-w-full border-0"
+            title={tool.title}
+            allow="autoplay; fullscreen; gamepad"
+            allowFullScreen
+          />
+        </ToolModalMediaSlide>
+      </ToolModalMediaFrame>
+    </ToolModalMediaShell>
+  );
+}
+
+function ToolModalCarouselPanel({
+  tool,
+  currentScreenshot,
+  onScreenshotChange,
+  onNavigateScreenshot,
+  fallbackIcon,
+}: {
+  tool: ToolGame;
+  currentScreenshot: number;
+  onScreenshotChange: (index: number) => void;
+  onNavigateScreenshot: (direction: 'prev' | 'next') => void;
+  fallbackIcon: ReactNode;
+}) {
+  const slideCount = toolModalSlideCount(tool);
+  const hasTrailer = Boolean(tool.modalTrailer);
+  const isTrailerSlide = hasTrailer && currentScreenshot === 0;
+  const screenshotIndex = hasTrailer ? currentScreenshot - 1 : currentScreenshot;
+  const activeScreenshot = tool.screenshots[screenshotIndex];
+  const videoOnly =
+    Boolean(tool.thumbnailVideo) && tool.screenshots.length === 0 && !tool.modalTrailer;
+  const hasVisibleMedia = videoOnly || isTrailerSlide || Boolean(activeScreenshot);
+
+  return (
+    <ToolModalMediaShell>
+      <ToolModalMediaFrame>
+        {!hasVisibleMedia ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-[#0a0b0d]">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/[0.06] text-mk-text-muted">
+              {fallbackIcon}
+            </div>
+          </div>
+        ) : null}
+
+        {videoOnly ? (
+          <ToolModalMediaSlide>
+            <video
+              src={tool.thumbnailVideo}
+              controls
+              autoPlay
+              muted
+              loop
+              playsInline
+              className={toolModalMediaClass}
+            />
+          </ToolModalMediaSlide>
+        ) : isTrailerSlide ? (
+          <ToolModalMediaSlide>
+            <video
+              key="modal-trailer"
+              src={tool.modalTrailer}
+              controls
+              autoPlay
+              playsInline
+              className={toolModalMediaClass}
+            />
+          </ToolModalMediaSlide>
+        ) : activeScreenshot ? (
+          <ToolModalMediaSlide>
+            <img
+              key={activeScreenshot}
+              src={activeScreenshot}
+              alt={`${tool.title} screenshot ${screenshotIndex + 1}`}
+              className={toolModalMediaClass}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          </ToolModalMediaSlide>
+        ) : null}
+      </ToolModalMediaFrame>
+
+      {slideCount > 1 ? (
+        <>
+          <button
+            type="button"
+            onClick={() => onNavigateScreenshot('prev')}
+            aria-label="Previous slide"
+            className="absolute left-1 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-black/[0.06] bg-white/90 shadow-md backdrop-blur-sm transition-colors hover:bg-white sm:left-3 sm:h-10 sm:w-10"
+          >
+            <svg className="h-4 w-4 text-mk-text sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => onNavigateScreenshot('next')}
+            aria-label="Next slide"
+            className="absolute right-1 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-black/[0.06] bg-white/90 shadow-md backdrop-blur-sm transition-colors hover:bg-white sm:right-3 sm:h-10 sm:w-10"
+          >
+            <svg className="h-4 w-4 text-mk-text sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          <motion.div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 gap-1.5 sm:bottom-3.5 sm:gap-2">
+            {Array.from({ length: slideCount }, (_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => onScreenshotChange(i)}
+                aria-label={hasTrailer && i === 0 ? 'Trailer' : `Screenshot ${hasTrailer ? i : i + 1}`}
+                className={clsx(
+                  'flex min-h-[22px] min-w-[22px] items-center justify-center rounded-full p-0 transition-all sm:min-h-[24px] sm:min-w-[24px]',
+                  i === currentScreenshot
+                    ? 'w-5 bg-white sm:w-6'
+                    : 'h-2 w-2 bg-white/45 hover:bg-white/75 sm:h-3 sm:w-3',
+                )}
+              />
+            ))}
+          </motion.div>
+        </>
+      ) : null}
+    </ToolModalMediaShell>
+  );
 }
 
 // Static data for tools and games
@@ -522,123 +715,16 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
               onTouchEnd={(e) => e.stopPropagation()}
             >
               <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-[rgba(28,28,28,0.08)]">
-                {/* Media Preview - Embedded Game, Video, or Screenshot Carousel */}
                 {selectedTool.embeddable ? (
-                  <div className="relative bg-black" style={{ aspectRatio: '16/9' }}>
-                    <iframe
-                      src={selectedTool.url}
-                      className="w-full h-full border-0"
-                      title={selectedTool.title}
-                      allow="autoplay; fullscreen; gamepad"
-                      allowFullScreen
-                    />
-                  </div>
+                  <ToolModalEmbedPanel tool={selectedTool} />
                 ) : (
-                  <div className="relative aspect-video bg-gradient-to-br from-[rgba(99,102,241,0.1)] to-[rgba(20,184,166,0.1)]">
-                    {/* Placeholder */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="w-20 h-20 rounded-2xl bg-[rgba(99,102,241,0.2)] flex items-center justify-center mx-auto mb-4">
-                          {typeIcons[selectedTool.type]}
-                        </div>
-                        <p className="text-mk-text-muted text-sm">
-                          {selectedTool.thumbnailVideo ? 'Video Preview' : `Screenshot ${currentScreenshot + 1}`}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    {/* Video Preview — only when there is no screenshot gallery */}
-                    {selectedTool.thumbnailVideo &&
-                    selectedTool.screenshots.length === 0 &&
-                    !selectedTool.modalTrailer ? (
-                      <video
-                        src={selectedTool.thumbnailVideo}
-                        controls
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
-                    ) : (
-                      (() => {
-                        const slideCount = toolModalSlideCount(selectedTool);
-                        const hasTrailer = Boolean(selectedTool.modalTrailer);
-                        const isTrailerSlide = hasTrailer && currentScreenshot === 0;
-                        const screenshotIndex = hasTrailer ? currentScreenshot - 1 : currentScreenshot;
-                        const activeScreenshot = selectedTool.screenshots[screenshotIndex];
-
-                        return (
-                          <>
-                            {isTrailerSlide ? (
-                              <video
-                                key="modal-trailer"
-                                src={selectedTool.modalTrailer}
-                                controls
-                                autoPlay
-                                playsInline
-                                className="absolute inset-0 h-full w-full bg-black object-contain"
-                              />
-                            ) : activeScreenshot ? (
-                              <img
-                                key={activeScreenshot}
-                                src={activeScreenshot}
-                                alt={`${selectedTool.title} screenshot ${screenshotIndex + 1}`}
-                                className="absolute inset-0 h-full w-full object-cover"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = 'none';
-                                }}
-                              />
-                            ) : null}
-
-                        {slideCount > 1 && (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => navigateScreenshot('prev')}
-                              aria-label="Previous slide"
-                              className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-colors hover:bg-white"
-                            >
-                              <svg className="w-5 h-5 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
-                              </svg>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => navigateScreenshot('next')}
-                              aria-label="Next slide"
-                              className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-colors hover:bg-white"
-                            >
-                              <svg className="w-5 h-5 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </button>
-                            
-                            <motion.div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2">
-                              {Array.from({ length: slideCount }, (_, i) => (
-                                <button
-                                  key={i}
-                                  type="button"
-                                  onClick={() => setCurrentScreenshot(i)}
-                                  aria-label={
-                                    hasTrailer && i === 0 ? 'Trailer' : `Screenshot ${hasTrailer ? i : i + 1}`
-                                  }
-                                  className={clsx(
-                                    'flex min-h-[24px] min-w-[24px] items-center justify-center rounded-full p-0 transition-all',
-                                    i === currentScreenshot
-                                      ? 'w-6 bg-white'
-                                      : 'h-3 w-3 bg-white/50 hover:bg-white/80',
-                                  )}
-                                />
-                              ))}
-                            </motion.div>
-                          </>
-                        )}
-                          </>
-                        );
-                      })()
-                    )}
-                  </div>
+                  <ToolModalCarouselPanel
+                    tool={selectedTool}
+                    currentScreenshot={currentScreenshot}
+                    onScreenshotChange={setCurrentScreenshot}
+                    onNavigateScreenshot={navigateScreenshot}
+                    fallbackIcon={typeIcons[selectedTool.type]}
+                  />
                 )}
 
                 {/* Content */}
