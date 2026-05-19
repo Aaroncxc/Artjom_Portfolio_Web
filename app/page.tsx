@@ -148,7 +148,7 @@ export default function Home() {
         <ToolsGamesGrid visible={true} />
 
         {/* Footer */}
-        <footer className="relative z-10 py-12 sm:py-16 px-4 sm:px-6">
+        <footer className="relative z-10 px-4 pt-8 pb-10 sm:px-6 sm:pt-10 sm:pb-14">
           <div className="max-w-7xl mx-auto">
             <div className="glass-panel p-6 sm:p-8">
               <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">

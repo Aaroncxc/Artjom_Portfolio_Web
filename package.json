@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "next lint",
     "convert:3d": "node scripts/convert-fbx-to-glb.js",
-    "audit:public": "node scripts/find-unused-public-files.mjs"
+    "audit:public": "node scripts/find-unused-public-files.mjs",
+    "compress:occupied": "node scripts/compress-occupied-tool-assets.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.99.0",

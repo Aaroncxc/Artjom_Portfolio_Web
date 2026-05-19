@@ -27,6 +27,12 @@ interface ToolGame {
   tileOverlayTitle?: string;
   /** >1 zooms the tile image (object-cover + scale) to hide letterboxing / gray gaps; clips inside 16:9. */
   tileThumbnailScale?: number;
+  /** Optional trailer in the detail modal — first carousel slide (before screenshots). */
+  modalTrailer?: string;
+}
+
+function toolModalSlideCount(tool: ToolGame): number {
+  return (tool.modalTrailer ? 1 : 0) + tool.screenshots.length;
 }
 
 // Static data for tools and games
@@ -45,16 +51,27 @@ const toolsGamesData: ToolGame[] = [
     author: 'Artjom N.',
   },
   {
-    id: 'occupiedvfx',
-    title: 'OCCUPIEDVFX',
-    description: 'Digital Art VFX showcase featuring stunning visual effects and motion graphics. Explore our collection of experimental visual works.',
+    id: 'occupied',
+    title: 'Occupied VFX',
+    description:
+      'Occupied is a browser-based visual effects engine for real-time creative expression. Built with WebGL2, Three.js, and GLSL, it routes videos, images, webcam feeds, audio, and 3D models through modular GPU-powered effects—made for VJing, projection, music visuals, experimental media, and creative coding, directly in the browser without a heavy setup. Started as a personal passion project and shipped within one month; since launch it has reached 40+ users and keeps growing. A real-time visual instrument for artists, performers, and creative technologists.',
     url: 'https://occupiedvfx-v3-30-01-2026-2c75.vercel.app',
     type: 'tool',
-    thumbnail: '/tools/occupiedvfx-video.mp4',
-    thumbnailVideo: '/tools/occupiedvfx-video.mp4',
-    screenshots: [],
-    tags: ['vfx', 'art', 'visual'],
-    author: 'oxxupe',
+    thumbnail: '/tools/occupied/thumbnail.webp',
+    thumbnailVideo: '/tools/occupied/tile-preview.mp4',
+    modalTrailer: '/tools/occupied/trailer.mp4',
+    screenshots: [
+      '/tools/occupied/workspace.webp',
+      '/tools/occupied/login.webp',
+      '/tools/occupied/screen-2.webp',
+      '/tools/occupied/screen-3.webp',
+      '/tools/occupied/screen-4.webp',
+      '/tools/occupied/screen-5.webp',
+    ],
+    tags: ['WebGL2', 'Three.js', 'GLSL', 'VJing', 'real-time', 'creative coding'],
+    author: 'Artjom N.',
+    tileOverlayTitle: 'Occupied VFX',
+    tileThumbnailScale: 1.12,
   },
   {
     id: 'ryuk-pp',
@@ -191,14 +208,12 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
 
   const navigateScreenshot = useCallback((direction: 'prev' | 'next') => {
     if (!selectedTool) return;
-    
-    const totalScreenshots = selectedTool.screenshots.length;
-    if (totalScreenshots === 0) return;
-    
-    setCurrentScreenshot(prev => 
-      direction === 'next' 
-        ? (prev + 1) % totalScreenshots
-        : (prev - 1 + totalScreenshots) % totalScreenshots
+
+    const total = toolModalSlideCount(selectedTool);
+    if (total === 0) return;
+
+    setCurrentScreenshot((prev) =>
+      direction === 'next' ? (prev + 1) % total : (prev - 1 + total) % total,
     );
   }, [selectedTool]);
 
@@ -248,7 +263,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
   if (!visible) return null;
 
   return (
-    <div id="tools-games" className="relative min-h-screen px-4 pb-12 pt-24 sm:px-6">
+    <div id="tools-games" className="relative px-4 pb-6 pt-24 sm:px-6 sm:pb-8">
       {/* Section Header */}
       <div className="mx-auto mb-10 max-w-7xl sm:mb-14">
         <div className="max-w-3xl">
@@ -532,8 +547,10 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                       </div>
                     </div>
                     
-                    {/* Video Preview */}
-                    {selectedTool.thumbnailVideo ? (
+                    {/* Video Preview — only when there is no screenshot gallery */}
+                    {selectedTool.thumbnailVideo &&
+                    selectedTool.screenshots.length === 0 &&
+                    !selectedTool.modalTrailer ? (
                       <video
                         src={selectedTool.thumbnailVideo}
                         controls
@@ -544,56 +561,82 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                         className="absolute inset-0 w-full h-full object-cover"
                       />
                     ) : (
-                      <>
-                        {/* Screenshot Image */}
-                        {selectedTool.screenshots[currentScreenshot] && (
-                          <img
-                            src={selectedTool.screenshots[currentScreenshot]}
-                            alt={`${selectedTool.title} screenshot ${currentScreenshot + 1}`}
-                            className="absolute inset-0 w-full h-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                            }}
-                          />
-                        )}
+                      (() => {
+                        const slideCount = toolModalSlideCount(selectedTool);
+                        const hasTrailer = Boolean(selectedTool.modalTrailer);
+                        const isTrailerSlide = hasTrailer && currentScreenshot === 0;
+                        const screenshotIndex = hasTrailer ? currentScreenshot - 1 : currentScreenshot;
+                        const activeScreenshot = selectedTool.screenshots[screenshotIndex];
 
-                        {/* Screenshot Navigation */}
-                        {selectedTool.screenshots.length > 1 && (
+                        return (
+                          <>
+                            {isTrailerSlide ? (
+                              <video
+                                key="modal-trailer"
+                                src={selectedTool.modalTrailer}
+                                controls
+                                autoPlay
+                                playsInline
+                                className="absolute inset-0 h-full w-full bg-black object-contain"
+                              />
+                            ) : activeScreenshot ? (
+                              <img
+                                key={activeScreenshot}
+                                src={activeScreenshot}
+                                alt={`${selectedTool.title} screenshot ${screenshotIndex + 1}`}
+                                className="absolute inset-0 h-full w-full object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                              />
+                            ) : null}
+
+                        {slideCount > 1 && (
                           <>
                             <button
+                              type="button"
                               onClick={() => navigateScreenshot('prev')}
-                              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+                              aria-label="Previous slide"
+                              className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-colors hover:bg-white"
                             >
                               <svg className="w-5 h-5 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
                               </svg>
                             </button>
                             <button
+                              type="button"
                               onClick={() => navigateScreenshot('next')}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+                              aria-label="Next slide"
+                              className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-colors hover:bg-white"
                             >
                               <svg className="w-5 h-5 text-mk-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                               </svg>
                             </button>
                             
-                            {/* Screenshot Dots */}
-                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                              {selectedTool.screenshots.map((_, i) => (
+                            <motion.div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+                              {Array.from({ length: slideCount }, (_, i) => (
                                 <button
                                   key={i}
+                                  type="button"
                                   onClick={() => setCurrentScreenshot(i)}
-                                  className={`w-3 h-3 rounded-full transition-all p-0 min-w-[24px] min-h-[24px] flex items-center justify-center ${
-                                    i === currentScreenshot 
-                                      ? 'bg-white w-6' 
-                                      : 'bg-white/50 hover:bg-white/80'
-                                  }`}
+                                  aria-label={
+                                    hasTrailer && i === 0 ? 'Trailer' : `Screenshot ${hasTrailer ? i : i + 1}`
+                                  }
+                                  className={clsx(
+                                    'flex min-h-[24px] min-w-[24px] items-center justify-center rounded-full p-0 transition-all',
+                                    i === currentScreenshot
+                                      ? 'w-6 bg-white'
+                                      : 'h-3 w-3 bg-white/50 hover:bg-white/80',
+                                  )}
                                 />
                               ))}
-                            </div>
+                            </motion.div>
                           </>
                         )}
-                      </>
+                          </>
+                        );
+                      })()
                     )}
                   </div>
                 )}

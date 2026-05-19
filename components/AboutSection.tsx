@@ -28,6 +28,7 @@ const PROFILE_CAROUSEL_SLIDES: { src: string; focus: string }[] = [
   { src: '/about/carousel/profile-primary.png', focus: '50% 42%' },
   { src: '/about/carousel/DADB_Elearning_2023_22.jpg', focus: '52% 44%' },
   { src: '/about/carousel/DADB_Elearning_2023_55.jpg', focus: '48% 38%' },
+  { src: '/about/carousel/Artjom_MocapSuit_Xsense.jpg', focus: '50% 35%' },
 ];
 
 const CAROUSEL_INTERVAL_MS = 5500;
