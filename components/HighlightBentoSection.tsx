@@ -11,32 +11,31 @@ import {
   metaChipClass,
 } from '@/lib/chipClasses';
 import {
-  HIGHLIGHT_PROJECTS,
   highlightById,
   type HighlightProject,
   type HighlightProjectId,
 } from '@/lib/highlightProjects';
+import {
+  ARCHITECTURE_HIGHLIGHT_SECTION,
+  HIGHLIGHT_GLOW_THEMES,
+  MULTIKUNST_HIGHLIGHT_SECTION,
+  PRODUCTION_HIGHLIGHT_SECTION,
+  type HighlightBentoSectionConfig,
+} from '@/lib/highlightSections';
 import { findPostBySlug } from '@/lib/loadPosts';
 import type { Project } from '@/lib/types';
-
-const SECTION_TITLE = 'Head of Production at DADB';
-/** CV-style staircase: each line steps right; subtitle sits on row 3, flush right. */
-const SECTION_HEADLINE_STAIRS = ['Head of', 'Production', 'at DADB'] as const;
-const SECTION_SUBTITLE = '2021–2025';
-const SECTION_BODY_P1 =
-  'Highlights from leading production at DADB: aligning stakeholders, then guiding 3D, cinematic, XR, and editorial work from brief through release—so narratives stay clear and delivery stays predictable.';
-const SECTION_BODY_P2 =
-  'A core part of the role was guarding on-time releases while several course productions ran in parallel—sequencing priorities, dependencies, and handoffs so timelines stayed credible even when workloads stacked or briefs leaned into XR installs, booth loops, and motion-led modules. Internal tooling for pipeline health and KPIs helped keep that multi-track pressure legible for leadership; a few representative projects below.';
+import { useMobilePerformance } from '@/lib/useMobilePerformance';
+import { ViewportAutoplayVideo } from '@/components/ViewportAutoplayVideo';
 
 interface HighlightBentoSectionProps {
   visible?: boolean;
+  config?: HighlightBentoSectionConfig;
 }
 
 function layoutSpring(reduceMotion: boolean) {
   if (reduceMotion) return { duration: 0.01 };
   return { type: 'spring' as const, stiffness: 280, damping: 32, mass: 0.85 };
 }
-
 
 function InlineSkeleton() {
   return (
@@ -52,7 +51,7 @@ function InlineSkeleton() {
   );
 }
 
-function InlineNotFound({ onBack }: { onBack: () => void }) {
+function InlineNotFound({ onBack, backLabel }: { onBack: () => void; backLabel: string }) {
   return (
     <div className="flex flex-col items-start gap-4 p-4 sm:p-6">
       <p className="text-sm text-mk-text-secondary">Project data could not be loaded.</p>
@@ -68,13 +67,21 @@ function InlineNotFound({ onBack }: { onBack: () => void }) {
         <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
         </svg>
-        Back to highlights
+        {backLabel}
       </button>
     </div>
   );
 }
 
-function InlineProjectView({ slug, onBack }: { slug: string; onBack: () => void }) {
+function InlineProjectView({
+  slug,
+  onBack,
+  backLabel,
+}: {
+  slug: string;
+  onBack: () => void;
+  backLabel: string;
+}) {
   const [post, setPost] = React.useState<Project | null | 'loading'>('loading');
 
   React.useEffect(() => {
@@ -88,11 +95,11 @@ function InlineProjectView({ slug, onBack }: { slug: string; onBack: () => void 
   }, [slug]);
 
   if (post === 'loading') return <InlineSkeleton />;
-  if (!post) return <InlineNotFound onBack={onBack} />;
+  if (!post) return <InlineNotFound onBack={onBack} backLabel={backLabel} />;
 
   return (
     <div className="px-px">
-      <PortfolioProjectModal project={post} onClose={onBack} variant="inline" />
+      <PortfolioProjectModal project={post} onClose={onBack} variant="inline" backLabel={backLabel} />
     </div>
   );
 }
@@ -122,36 +129,21 @@ function highlightAsProject(h: HighlightProject): Project {
   };
 }
 
-function SyntheticProjectView({ highlight, onBack }: { highlight: HighlightProject; onBack: () => void }) {
+function SyntheticProjectView({
+  highlight,
+  onBack,
+  backLabel,
+}: {
+  highlight: HighlightProject;
+  onBack: () => void;
+  backLabel: string;
+}) {
   const project = React.useMemo(() => highlightAsProject(highlight), [highlight]);
   return (
     <div className="px-px">
-      <PortfolioProjectModal project={project} onClose={onBack} variant="inline" />
+      <PortfolioProjectModal project={project} onClose={onBack} variant="inline" backLabel={backLabel} />
     </div>
   );
-}
-
-/** Desktop / large screens: screenshot-like bento. Mobile: featured full-width first, then 2×2. */
-function tileCellClass(project: HighlightProject): string {
-  if (project.span === 'featured') {
-    return clsx(
-      'relative min-h-[176px]',
-      'col-span-2 row-span-1 order-first sm:min-h-[200px]',
-      'lg:col-span-1 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:min-h-0 lg:order-none',
-    );
-  }
-  switch (project.id) {
-    case 'lexsolar':
-      return clsx('relative min-h-[118px]', 'sm:min-h-[132px] md:min-h-[148px]', 'order-2 lg:col-start-1 lg:row-start-1 lg:order-none lg:min-h-0');
-    case 'kigali':
-      return clsx('relative min-h-[118px]', 'sm:min-h-[132px] md:min-h-[148px]', 'order-3 lg:col-start-2 lg:row-start-1 lg:order-none lg:min-h-0');
-    case 'dakar':
-      return clsx('relative min-h-[118px]', 'sm:min-h-[132px] md:min-h-[148px]', 'order-4 lg:col-start-1 lg:row-start-2 lg:order-none lg:min-h-0');
-    case 'emobility':
-      return clsx('relative min-h-[118px]', 'sm:min-h-[132px] md:min-h-[148px]', 'order-5 lg:col-start-2 lg:row-start-2 lg:order-none lg:min-h-0');
-    default:
-      return '';
-  }
 }
 
 /** Tile chips: tags first, then content tags, then VR/AR/3D immersion (always last). */
@@ -196,11 +188,13 @@ function TileFace({
   registerTileRef,
   onPick,
   reduceMotion,
+  preferStaticTileVideo,
 }: {
   project: HighlightProject;
   registerTileRef: (id: HighlightProjectId, el: HTMLButtonElement | null) => void;
   onPick: (id: HighlightProjectId) => void;
   reduceMotion: boolean;
+  preferStaticTileVideo: boolean;
 }) {
   const isFeatured = project.span === 'featured';
   const titleWords = project.title.trim().split(/\s+/);
@@ -220,7 +214,15 @@ function TileFace({
       )}
     >
       <div className="absolute inset-0 overflow-hidden">
-        {project.thumb ? (
+        {project.tileVideo ? (
+          <ViewportAutoplayVideo
+            src={project.tileVideo}
+            poster={project.thumb}
+            title={project.title}
+            staticOnly={reduceMotion || preferStaticTileVideo}
+            className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
+          />
+        ) : project.thumb ? (
           <img
             src={project.thumb}
             alt={project.title}
@@ -264,11 +266,15 @@ function BentoGridCell({
   onPick,
   reduceMotion,
   registerTileRef,
+  tileCellClass,
+  preferStaticTileVideo,
 }: {
   project: HighlightProject;
   onPick: (id: HighlightProjectId) => void;
   reduceMotion: boolean;
   registerTileRef: (id: HighlightProjectId, el: HTMLButtonElement | null) => void;
+  tileCellClass: (project: HighlightProject) => string;
+  preferStaticTileVideo: boolean;
 }) {
   return (
     <div className={clsx(tileCellClass(project), 'h-full')}>
@@ -277,15 +283,23 @@ function BentoGridCell({
         registerTileRef={registerTileRef}
         onPick={onPick}
         reduceMotion={reduceMotion}
+        preferStaticTileVideo={preferStaticTileVideo}
       />
     </div>
   );
 }
 
-export function HighlightBentoSection({ visible = true }: HighlightBentoSectionProps) {
+export function HighlightBentoSection({
+  visible = true,
+  config = PRODUCTION_HIGHLIGHT_SECTION,
+}: HighlightBentoSectionProps) {
   const [activeId, setActiveId] = React.useState<HighlightProjectId | null>(null);
   const reduceMotion = useReducedMotion() ?? false;
+  const { limitContinuousEffects, preferStaticTileVideo } = useMobilePerformance();
   const tileRefs = React.useRef(new Map<HighlightProjectId, HTMLButtonElement>());
+  const glow = HIGHLIGHT_GLOW_THEMES[config.glow];
+  const backLabel = config.backLabel ?? 'Back to highlights';
+  const useStaticGlow = reduceMotion || limitContinuousEffects;
 
   const registerTileRef = React.useCallback((id: HighlightProjectId, el: HTMLButtonElement | null) => {
     if (el) tileRefs.current.set(id, el);
@@ -310,8 +324,8 @@ export function HighlightBentoSection({ visible = true }: HighlightBentoSectionP
   }, [activeId, onClose]);
 
   React.useEffect(() => {
-    if (activeId !== null && !highlightById(activeId)) setActiveId(null);
-  }, [activeId]);
+    if (activeId !== null && !config.projects.some((p) => p.id === activeId)) setActiveId(null);
+  }, [activeId, config.projects]);
 
   const spring = layoutSpring(reduceMotion);
 
@@ -325,34 +339,19 @@ export function HighlightBentoSection({ visible = true }: HighlightBentoSectionP
 
   return (
     <section
-      id="highlights"
+      id={config.id}
       className="overflow-x-clip pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pb-10 pt-8 sm:px-6 sm:pb-12 sm:pt-10 md:pt-16"
     >
-      <div
-        className={clsx(
-          'relative mx-auto max-w-7xl rounded-2xl p-px sm:rounded-3xl',
-          'shadow-[0_0_16px_-16px_rgba(250,204,21,0.22),0_0_0_1px_rgba(250,204,21,0.12)] sm:shadow-[0_0_28px_-12px_rgba(250,204,21,0.28),0_0_0_1px_rgba(250,204,21,0.18)]',
-        )}
-      >
-        {!reduceMotion ? (
+      <div className={clsx('relative mx-auto max-w-7xl rounded-2xl p-px sm:rounded-3xl', glow.wrapperShadow)}>
+        {!useStaticGlow ? (
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 isolate overflow-hidden rounded-2xl sm:rounded-3xl"
           >
-            <div
-              className={clsx(
-                'absolute left-1/2 top-1/2 aspect-square w-auto animate-highlight-bento-glow-spin bg-[conic-gradient(from_0deg,rgba(250,204,21,0)_0deg_282deg,rgba(250,204,21,0.12)_292deg,rgba(254,240,138,0.65)_304deg,rgba(253,224,71,0.88)_312deg,rgba(251,191,36,0.35)_322deg,rgba(250,204,21,0.06)_336deg,rgba(250,204,21,0)_360deg)]',
-                'min-h-[min(130vw,520px)] h-[185%]',
-                'sm:min-h-[min(115vw,720px)] sm:h-[220%]',
-                'md:min-h-[800px]',
-              )}
-            />
+            <div className={glow.conicGradient} />
           </div>
         ) : (
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-200/[0.06] via-transparent to-amber-200/[0.04] sm:rounded-3xl sm:from-amber-200/[0.07] sm:to-amber-200/[0.05]"
-          />
+          <div aria-hidden className={glow.reducedMotionBg} />
         )}
         <GlassPanel
           variant="heavy"
@@ -360,11 +359,11 @@ export function HighlightBentoSection({ visible = true }: HighlightBentoSectionP
           rounded="2xl"
           className="relative z-[1] rounded-[calc(1rem-1px)] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] sm:rounded-[calc(1.5rem-1px)] !p-5 sm:!p-6 lg:!p-8"
         >
-          <motion.div layout transition={spring}>
+          <motion.div layout={!limitContinuousEffects} transition={spring}>
             <AnimatePresence mode="wait" initial={false}>
               {!isActive ? (
                 <motion.div
-                  key="highlights-grid"
+                  key={`${config.id}-grid`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0, transition: { duration: reduceMotion ? 0 : 0.16 } }}
@@ -373,49 +372,46 @@ export function HighlightBentoSection({ visible = true }: HighlightBentoSectionP
                 >
                   <div className="flex flex-col gap-3 sm:gap-4 lg:sticky lg:top-28 lg:self-start">
                     <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
-                      Highlights
+                      {config.eyebrow ?? 'Highlights'}
                     </span>
                     <h2
-                      aria-label={SECTION_TITLE}
+                      aria-label={config.sectionTitle}
                       className="brand-tight max-w-[min(100%,26rem)] text-[clamp(1.35rem,4.2vw,1.72rem)] font-semibold leading-[1] tracking-tight text-mk-text sm:text-[clamp(1.6rem,2.8vw,2rem)] sm:leading-[1.02] md:text-[clamp(2rem,2.4vw,2.35rem)] lg:text-[2.25rem]"
                     >
-                      <span className="block">{SECTION_HEADLINE_STAIRS[0]}</span>
+                      <span className="block">{config.headlineStairs[0]}</span>
                       <span className="block pl-[2rem] pt-[0.2em] sm:pl-[2.5rem] md:pl-[3rem] lg:pl-[3.25rem]">
-                        {SECTION_HEADLINE_STAIRS[1]}
+                        {config.headlineStairs[1]}
                       </span>
                       <div className="flex flex-row flex-wrap items-baseline justify-between gap-x-3 gap-y-1 pt-[0.2em] pl-[4rem] sm:pl-[5.25rem] md:pl-[6.25rem] lg:pl-[6.75rem]">
-                        <span className="min-w-0">{SECTION_HEADLINE_STAIRS[2]}</span>
+                        <span className="min-w-0">{config.headlineStairs[2]}</span>
                         <span className="shrink-0 text-[0.6875rem] font-medium tabular-nums tracking-normal text-mk-text sm:text-[0.8125rem] md:text-sm">
-                          {SECTION_SUBTITLE}
+                          {config.subtitle}
                         </span>
                       </div>
                     </h2>
                     <div className="max-w-none space-y-2 text-[0.9375rem] leading-relaxed text-mk-text-secondary sm:max-w-md sm:text-[15px] sm:leading-relaxed lg:text-base">
-                      <p>{SECTION_BODY_P1}</p>
-                      <p>{SECTION_BODY_P2}</p>
+                      <p>{config.bodyP1}</p>
+                      <p>{config.bodyP2}</p>
                     </div>
                   </div>
 
-                  <div
-                    className={clsx(
-                      'grid gap-2.5 sm:gap-3 md:gap-5',
-                      'grid-cols-2 lg:min-h-[560px] lg:grid-cols-3 lg:grid-rows-2 lg:gap-5',
-                    )}
-                  >
-                    {HIGHLIGHT_PROJECTS.map((project) => (
+                  <div className={clsx('grid gap-2.5 sm:gap-3 md:gap-5', config.gridClass)}>
+                    {config.projects.map((project) => (
                       <BentoGridCell
                         key={project.id}
                         project={project}
                         onPick={setActiveId}
                         reduceMotion={reduceMotion}
                         registerTileRef={registerTileRef}
+                        tileCellClass={config.tileCellClass}
+                        preferStaticTileVideo={preferStaticTileVideo}
                       />
                     ))}
                   </div>
                 </motion.div>
               ) : activeProject ? (
                 <motion.div
-                  key={`highlights-detail-${activeProject.id}`}
+                  key={`${config.id}-detail-${activeProject.id}`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0, transition: { duration: reduceMotion ? 0 : 0.16 } }}
@@ -426,9 +422,17 @@ export function HighlightBentoSection({ visible = true }: HighlightBentoSectionP
                   )}
                 >
                   {activeProject.projectSlug ? (
-                    <InlineProjectView slug={activeProject.projectSlug} onBack={onClose} />
+                    <InlineProjectView
+                      slug={activeProject.projectSlug}
+                      onBack={onClose}
+                      backLabel={backLabel}
+                    />
                   ) : (
-                    <SyntheticProjectView highlight={activeProject} onBack={onClose} />
+                    <SyntheticProjectView
+                      highlight={activeProject}
+                      onBack={onClose}
+                      backLabel={backLabel}
+                    />
                   )}
                 </motion.div>
               ) : null}
@@ -439,3 +443,9 @@ export function HighlightBentoSection({ visible = true }: HighlightBentoSectionP
     </section>
   );
 }
+
+export {
+  ARCHITECTURE_HIGHLIGHT_SECTION,
+  MULTIKUNST_HIGHLIGHT_SECTION,
+  PRODUCTION_HIGHLIGHT_SECTION,
+};

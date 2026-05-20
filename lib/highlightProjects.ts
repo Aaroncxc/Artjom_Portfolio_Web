@@ -6,7 +6,12 @@ export type HighlightProjectId =
   | 'kigali'
   | 'course-overview'
   | 'dakar'
-  | 'emobility';
+  | 'emobility'
+  | 'solar-tech-campus'
+  | 'the-house-highlight'
+  | 'multikunst-multiply'
+  | 'multikunst-multiwatch'
+  | 'multikunst-occupied';
 
 export interface HighlightProject {
   id: HighlightProjectId;
@@ -18,6 +23,8 @@ export interface HighlightProject {
   role: string;
   tools: string[];
   thumb?: string;
+  /** Looping preview video on the bento tile (autoplay, muted). */
+  tileVideo?: string;
   gallery?: string[];
   projectSlug?: string;
   toolDeeplinkId?: string;
@@ -138,7 +145,120 @@ export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
   },
 ];
 
+export const ARCHITECTURE_HIGHLIGHT_PROJECTS: HighlightProject[] = [
+  {
+    id: 'solar-tech-campus',
+    title: 'DADB Solar Technician Digital Campus',
+    year: '2026',
+    category: 'Education · Digital campus',
+    description:
+      'Archicad campus planning synced into Unreal — lecture rooms, hub, and a gamified solarpark learners navigate as a walkable training world rather than a static course shell.',
+    role:
+      'Led cross-team delivery and co-designed the campus structure — from Archicad pre-vis and spatial planning through Unreal production, interactive modules, and stakeholder alignment.',
+    tools: ['Archicad', 'Unreal Engine', 'Twinmotion'],
+    thumb: '/projects/dadb-solar-technician-digital-campus/thumbnail.webp',
+    gallery: [
+      '/projects/dadb-solar-technician-digital-campus/campus-hero.webp',
+      '/projects/dadb-solar-technician-digital-campus/solarpark-manage-01.webp',
+      '/projects/dadb-solar-technician-digital-campus/hub-table-01.webp',
+    ],
+    projectSlug: 'dadb-solar-technician-digital-campus',
+    tileTags: ['Archicad', 'Unreal Engine'],
+    tileBadges: ['3D', 'Learning Experience'],
+    span: 'normal',
+  },
+  {
+    id: 'the-house-highlight',
+    title: 'The House',
+    year: '2025',
+    category: 'Architecture · Cinematic',
+    description:
+      'Residential architecture authored in Archicad, refined in Unreal — cinematic interior/exterior staging with a live 3D viewer so space, light, and material reads interactively.',
+    role:
+      'Architectural design through Archicad modelling, Unreal scene assembly, lighting, and realtime presentation — bridging built-form logic with an explorable digital twin.',
+    tools: ['Archicad', 'Unreal Engine', 'Twinmotion'],
+    thumb: '/projects/the-house/The_House_Thumbnail.png',
+    gallery: [
+      '/projects/the-house/architecture-enhanced-01.webp',
+      '/projects/the-house/architecture-enhanced-02.webp',
+      '/projects/the-house/architecture-enhanced-03.webp',
+    ],
+    projectSlug: 'the-house',
+    tileTags: ['Archicad', 'Unreal Engine'],
+    tileBadges: ['3D'],
+    span: 'normal',
+  },
+];
+
+export const MULTIKUNST_HIGHLIGHT_PROJECTS: HighlightProject[] = [
+  {
+    id: 'multikunst-multiply',
+    title: 'Multiply',
+    year: '2023',
+    category: 'Product · Motion',
+    description:
+      'Conceptual fragrance campaign — industrial precision meets luxury product design, with custom typography and ball-bearing-inspired packaging brought to life in motion.',
+    role:
+      'Co-created under the Multikunst collective — concept direction, 3D product staging, and cinematic trailer production with the team.',
+    tools: ['Blender', 'After Effects'],
+    thumb: '/projects/multiply/Thumbnail.png',
+    tileVideo: '/projects/multiply/Trailer.webm',
+    projectSlug: 'multiply',
+    tileTags: ['Blender', 'Motion'],
+    tileBadges: ['3D'],
+    span: 'normal',
+  },
+  {
+    id: 'multikunst-multiwatch',
+    title: 'Multi Watch',
+    year: '2023',
+    category: 'Product · 3D film',
+    description:
+      'Wristwatch product film exploring layered dials, materials, and mechanical detail — a Multikunst visual study in precision product storytelling.',
+    role:
+      'Collective production — 3D modelling, lighting, and edit for a short launch-style product clip.',
+    tools: ['Blender', 'After Effects'],
+    thumb: '/projects/multi-watch/Thumbnail.png',
+    tileVideo: '/projects/multi-watch/Final%20Multiwatch%20Clip.webm',
+    projectSlug: 'multi-watch',
+    tileTags: ['Blender', '3D'],
+    tileBadges: ['3D'],
+    span: 'normal',
+  },
+  {
+    id: 'multikunst-occupied',
+    title: 'Occupied VFX',
+    year: '2024',
+    category: 'Tool · Realtime VFX',
+    description:
+      'Browser-based visual effects engine for real-time creative expression — WebGL2, Three.js, and GLSL routing video, audio, webcam, and 3D through modular GPU effects for VJing and live visuals.',
+    role:
+      'Built and shipped under Multikunst — product design, shader pipeline, and UI for a live visual instrument used by performers and creative technologists.',
+    tools: ['WebGL2', 'Three.js', 'GLSL'],
+    thumb: '/tools/occupied/thumbnail.webp',
+    tileVideo: '/tools/occupied/trailer.mp4',
+    gallery: [
+      '/tools/occupied/workspace.webp',
+      '/tools/occupied/login.webp',
+      '/tools/occupied/screen-2.webp',
+      '/tools/occupied/screen-3.webp',
+      '/tools/occupied/screen-4.webp',
+    ],
+    toolDeeplinkId: 'occupied',
+    toolExternalUrl: 'https://occupiedvfx-v3-30-01-2026-2c75.vercel.app',
+    tileTags: ['Three.js', 'GLSL'],
+    tileBadges: ['Tool', '3D'],
+    span: 'normal',
+  },
+];
+
+export const ALL_HIGHLIGHT_PROJECTS: HighlightProject[] = [
+  ...HIGHLIGHT_PROJECTS,
+  ...ARCHITECTURE_HIGHLIGHT_PROJECTS,
+  ...MULTIKUNST_HIGHLIGHT_PROJECTS,
+];
+
 export function highlightById(id: HighlightProjectId | null): HighlightProject | undefined {
   if (!id) return undefined;
-  return HIGHLIGHT_PROJECTS.find((p) => p.id === id);
+  return ALL_HIGHLIGHT_PROJECTS.find((p) => p.id === id);
 }

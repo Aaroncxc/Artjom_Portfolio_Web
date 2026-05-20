@@ -5,7 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import LightLeaksBackground from '@/components/LightLeaksBackground';
 import { Navigation } from '@/components/Navigation';
 import { AboutSection } from '@/components/AboutSection';
-import { HighlightBentoSection } from '@/components/HighlightBentoSection';
+import {
+  HighlightBentoSection,
+  ARCHITECTURE_HIGHLIGHT_SECTION,
+  MULTIKUNST_HIGHLIGHT_SECTION,
+} from '@/components/HighlightBentoSection';
 import { ProjectsGrid } from '@/components/ProjectsGrid';
 import { ToolsGamesGrid } from '@/components/ToolsGamesGrid';
 import { TextPointCloudHero } from '@/components/TextPointCloudHero';
@@ -50,35 +54,54 @@ export default function Home() {
     };
   }, [heroDismissed]);
 
-  // Scroll-spy: detect current section once the hero is gone
+  // Scroll-spy via IntersectionObserver — cheaper than scroll listeners on mobile.
   useEffect(() => {
     if (!heroDismissed) return;
 
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const offset = 200;
+    const sectionIds = [
+      'about',
+      'highlights',
+      'highlights-architecture',
+      'highlights-multikunst',
+      'projects',
+      'tools-games',
+    ] as const;
 
-      const aboutSection = document.getElementById('about');
-      const highlightsSection = document.getElementById('highlights');
-      const projectsSection = document.getElementById('projects');
-      const toolsGamesSection = document.getElementById('tools-games');
+    const elements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el != null);
 
-      if (toolsGamesSection && scrollY >= toolsGamesSection.offsetTop - offset) {
-        setCurrentSection('tools-games');
-      } else if (projectsSection && scrollY >= projectsSection.offsetTop - offset) {
-        setCurrentSection('projects');
-      } else if (highlightsSection && scrollY >= highlightsSection.offsetTop - offset) {
-        setCurrentSection('highlights');
-      } else if (aboutSection && scrollY >= aboutSection.offsetTop - offset) {
-        setCurrentSection('about');
-      } else {
-        setCurrentSection('about');
+    if (elements.length === 0) return;
+
+    const ratios = new Map<string, number>();
+
+    const pickActive = () => {
+      let bestId = 'about';
+      let bestRatio = -1;
+      for (const id of sectionIds) {
+        const ratio = ratios.get(id) ?? 0;
+        if (ratio > bestRatio) {
+          bestRatio = ratio;
+          bestId = id;
+        }
       }
+      setCurrentSection(bestRatio > 0 ? bestId : 'about');
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          ratios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
+        }
+        pickActive();
+      },
+      { rootMargin: '-22% 0px -55% 0px', threshold: [0, 0.08, 0.2, 0.35] },
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    pickActive();
+
+    return () => observer.disconnect();
   }, [heroDismissed]);
 
   const openIntro = useCallback(() => {
@@ -140,6 +163,10 @@ export default function Home() {
         <AboutSection visible={true} />
 
         <HighlightBentoSection visible={true} />
+
+        <HighlightBentoSection visible={true} config={ARCHITECTURE_HIGHLIGHT_SECTION} />
+
+        <HighlightBentoSection visible={true} config={MULTIKUNST_HIGHLIGHT_SECTION} />
 
         {/* Projects Section - Instagram-style Grid */}
         <ProjectsGrid visible={true} />

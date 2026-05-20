@@ -10,6 +10,7 @@ import {
   isUnrealBlueprintAsset,
   type ProjectMediaGroupsConfig,
 } from '@/lib/projectMediaGroups';
+import { useMobilePerformance } from '@/lib/useMobilePerformance';
 
 /** Optional miniature GLB thumb for modal strip (live HTML tile). */
 export interface ModalThumbModelPreview {
@@ -283,6 +284,7 @@ export function ProjectMediaCanvas({
   model3dPoster,
   model3dAnimationProgress,
 }: ProjectMediaCanvasProps) {
+  const { limitContinuousEffects } = useMobilePerformance();
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -291,12 +293,12 @@ export function ProjectMediaCanvas({
   const [modelMouseNdc, setModelMouseNdc] = useState({ x: 0.5, y: 0.5 });
 
   useEffect(() => {
-    if (asset.kind !== 'video') return;
+    if (asset.kind !== 'video' || limitContinuousEffects) return;
     const v = videoRef.current;
     if (!v) return;
     v.muted = true;
     v.play().catch(() => {});
-  }, [asset.kind, asset.src]);
+  }, [asset.kind, asset.src, limitContinuousEffects]);
 
   useEffect(() => {
     setModelMouseNdc({ x: 0.5, y: 0.5 });
@@ -349,10 +351,11 @@ export function ProjectMediaCanvas({
             src={asset.src}
             poster={asset.poster}
             controls
-            autoPlay
+            autoPlay={!limitContinuousEffects}
             muted
             playsInline
             loop
+            preload={limitContinuousEffects ? 'none' : 'metadata'}
             className="h-full w-full object-contain"
           >
             Your browser does not support the video tag.
@@ -500,6 +503,8 @@ interface MediaThumbButtonProps {
 
 /** Single asset thumbnail button used by both the linear strip and grouped strip. */
 function MediaThumbButton({ asset, index, isActive, onSelect }: MediaThumbButtonProps) {
+  const { limitContinuousEffects } = useMobilePerformance();
+
   return (
     <button
       type="button"
@@ -514,7 +519,7 @@ function MediaThumbButton({ asset, index, isActive, onSelect }: MediaThumbButton
       aria-label={`Asset ${index + 1}`}
       aria-current={isActive}
     >
-      {asset.thumbModelPreview ? (
+      {asset.thumbModelPreview && !limitContinuousEffects ? (
         <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[linear-gradient(135deg,rgba(248,250,252,1)_0%,rgba(241,245,249,1)_100%)]">
           <Project3DPreview
             modelPath={asset.thumbModelPreview.src}

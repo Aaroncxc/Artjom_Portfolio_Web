@@ -59,6 +59,8 @@ export interface Project {
   showTile3dHover?: boolean;
   /** Grid tile: show a neutral gray “3D” chip when there is no `model3dPath` (still / render-only 3D work). */
   tile3dBadge?: boolean;
+  /** Big brand-tight “staircase” overlay on the grid tile only (first word, then indented rest). */
+  tileOverlayTitle?: string;
   /**
    * When false, the project modal omits carousel slides for `model3dPath` / gallery model3d.
    * The grid tile still uses `model3dPath` for hover/badge when enabled. Default true (omit).

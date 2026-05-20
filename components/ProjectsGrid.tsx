@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { PortfolioProjectModal } from './portfolio/PortfolioProjectModal';
 import { Project3DPreview } from './Project3DPreview';
+import { CollapsibleSectionBar } from './CollapsibleSectionBar';
 import { Project, ProjectType } from '@/lib/types';
 import { projectMatchesPortfolioOwner } from '@/lib/portfolioOwnerFilter';
+import { useMobilePerformance } from '@/lib/useMobilePerformance';
 import {
   chipLearningExperienceClass,
   chipTileImmersionClass,
@@ -76,6 +78,8 @@ interface ProjectsGridProps {
 export function ProjectsGrid({ visible }: ProjectsGridProps) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { isMobile, isCoarsePointer } = useMobilePerformance();
   const [selectedType, setSelectedType] = useState<ProjectType | 'all'>('all');
   const [selectedTag, setSelectedTag] = useState<string>('all');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -145,11 +149,11 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     return Array.from(tagSet).sort();
   }, [portfolioOwnerProjects]);
 
-  // Warm visible tile assets in idle time for snappier hover transitions.
+  // Warm visible tile assets in idle time — desktop only, avoids decode storms on phones.
   useEffect(() => {
-    if (!visible || filteredProjects.length === 0) return;
+    if (!visible || !isExpanded || isMobile || filteredProjects.length === 0) return;
     const warm = () => {
-      filteredProjects.slice(0, 12).forEach((project) => {
+      filteredProjects.slice(0, 6).forEach((project) => {
         if (project.type === 'video' && project.videoUrl) warmVideoAsset(project.videoUrl);
         if (project.model3dPath && project.showTile3dHover !== false) warmModelAsset(project.model3dPath);
       });
@@ -165,7 +169,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     }
     const timeoutId = window.setTimeout(warm, 200);
     return () => window.clearTimeout(timeoutId);
-  }, [visible, filteredProjects]);
+  }, [visible, isExpanded, isMobile, filteredProjects]);
 
   // Type filter options
   const typeFilters: { value: ProjectType | 'all'; label: string }[] = [
@@ -204,12 +208,24 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     const handler = (e: Event) => {
       const slug = (e as CustomEvent).detail?.slug;
       if (!slug) return;
+      setIsExpanded(true);
       const idx = filteredProjects.findIndex((p) => p.slug === slug);
       if (idx >= 0) openProject(filteredProjects[idx], idx);
     };
     window.addEventListener('open-project', handler);
     return () => window.removeEventListener('open-project', handler);
   }, [filteredProjects, openProject]);
+
+  // Deep-link #projects — expand when user navigates here explicitly.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const syncFromHash = () => {
+      if (window.location.hash === '#projects') setIsExpanded(true);
+    };
+    syncFromHash();
+    window.addEventListener('hashchange', syncFromHash);
+    return () => window.removeEventListener('hashchange', syncFromHash);
+  }, []);
 
   // Navigate to next/previous project
   const navigateProject = useCallback((direction: 'prev' | 'next') => {
@@ -320,69 +336,89 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
   if (!visible) return null;
 
   return (
-    <div id="projects" className="relative min-h-screen scroll-mt-20 px-4 pb-12 pt-8 sm:scroll-mt-[5.5rem] sm:px-6 sm:pt-10 md:scroll-mt-24 md:pt-12">
-      {/* Section Header */}
-      <div className="mx-auto mb-8 max-w-7xl sm:mb-10">
-        <div className="max-w-3xl">
-          <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
-            Portfolio
-          </span>
-          <h2 className="mb-5 text-4xl font-semibold tracking-tight text-mk-text brand-tight leading-[1.05] sm:text-5xl lg:text-6xl">
-            Projects
-          </h2>
-          <p className="text-base leading-relaxed text-mk-text-secondary sm:text-lg">
-            A collection of interactive experiences, visual explorations, and sonic experiments.
-          </p>
-        </div>
+    <div
+      id="projects"
+      className={clsx(
+        'relative scroll-mt-20 px-4 pt-8 sm:scroll-mt-[5.5rem] sm:px-6 sm:pt-10 md:scroll-mt-24 md:pt-12',
+        isExpanded ? 'min-h-screen pb-12' : 'pb-3',
+      )}
+    >
+      {/* Expand / collapse bar */}
+      <div className={clsx('mx-auto max-w-7xl', isExpanded ? 'mb-6 sm:mb-8' : 'mb-0')}>
+        <CollapsibleSectionBar
+          eyebrow="Portfolio"
+          headlineStairs={['Project', 'Archive', '2020 — today']}
+          description="A curated selection of my chosen work — interactive experiences, film, 3D, education, and architecture projects from 2020 to today."
+          meta={
+            !loading && portfolioOwnerProjects.length > 0
+              ? `${portfolioOwnerProjects.length} project${portfolioOwnerProjects.length === 1 ? '' : 's'} · tap to ${isExpanded ? 'collapse' : 'browse the full grid'}`
+              : undefined
+          }
+          isExpanded={isExpanded}
+          onToggle={() => setIsExpanded((v) => !v)}
+          ariaControls="projects-expandable"
+          accent="cyan"
+          expandLabel="Show all projects"
+          collapseLabel="Hide projects"
+        />
       </div>
 
-      {/* Filters */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex flex-wrap gap-2">
-          {typeFilters.map((filter) => (
-            <button
-              key={filter.value}
-              onClick={() => handleTypeChange(filter.value)}
-              className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 min-h-[44px] ${
-                selectedType === filter.value
-                  ? 'bg-[rgba(20,184,166,0.15)] border border-accent-cyan text-accent-cyan'
-                  : 'bg-[rgba(255,255,255,0.6)] border border-[rgba(28,28,28,0.08)] text-mk-text-secondary hover:bg-[rgba(255,255,255,0.9)] hover:text-mk-text'
-              }`}
-            >
-              {filter.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Grid */}
-      <div className="max-w-7xl mx-auto">
-        {loading ? (
-          <div className="flex items-center justify-center py-24">
-            <div className="text-mk-text-secondary">Loading projects...</div>
-          </div>
-        ) : filteredProjects.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24">
-            <p className="text-mk-text-secondary mb-4">No projects match your filters.</p>
-            <button
-              onClick={() => {
-                setSelectedType('all');
-                setSelectedTag('all');
-              }}
-              className="glass-button"
-            >
-              Clear filters
-            </button>
-          </div>
-        ) : (
-          <motion.div 
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-2"
-            layout
+      <AnimatePresence initial={false}>
+        {isExpanded && (
+          <motion.div
+            id="projects-expandable"
+            key="projects-expandable"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
+            className="overflow-hidden"
           >
-            <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project, index) => {
+            {/* Filters */}
+            <div className="mx-auto mb-8 max-w-7xl">
+              <div className="flex flex-wrap gap-2">
+                {typeFilters.map((filter) => (
+                  <button
+                    key={filter.value}
+                    onClick={() => handleTypeChange(filter.value)}
+                    className={`min-h-[44px] rounded-full px-3 py-2.5 text-xs font-medium transition-all duration-200 sm:px-4 sm:py-2 sm:text-sm ${
+                      selectedType === filter.value
+                        ? 'border border-accent-cyan bg-[rgba(20,184,166,0.15)] text-accent-cyan'
+                        : 'border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.6)] text-mk-text-secondary hover:bg-[rgba(255,255,255,0.9)] hover:text-mk-text'
+                    }`}
+                  >
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Grid */}
+            <div className="mx-auto max-w-7xl">
+              {loading ? (
+                <div className="flex items-center justify-center py-24">
+                  <div className="text-mk-text-secondary">Loading projects...</div>
+                </div>
+              ) : filteredProjects.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-24">
+                  <p className="mb-4 text-mk-text-secondary">No projects match your filters.</p>
+                  <button
+                    onClick={() => {
+                      setSelectedType('all');
+                      setSelectedTag('all');
+                    }}
+                    className="glass-button"
+                  >
+                    Clear filters
+                  </button>
+                </div>
+              ) : (
+                <motion.div className="grid grid-cols-2 gap-1 md:grid-cols-3 md:gap-2 lg:grid-cols-4" layout={!isMobile}>
+                  <AnimatePresence mode="popLayout">
+                    {filteredProjects.map((project, index) => {
                 /** When false (`showTile3dHover`), tile behaves like plain video/thumbnail hover even if modal has a separate 3D asset. */
-                const tileUses3dHover = Boolean(project.model3dPath && project.showTile3dHover !== false);
+                const tileUses3dHover =
+                  Boolean(project.model3dPath && project.showTile3dHover !== false) && !isCoarsePointer;
                 const modalOnly3dBadge =
                   Boolean(project.model3dPath?.trim()) &&
                   project.showTile3dHover === false;
@@ -399,11 +435,11 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                 return (
                 <motion.div
                   key={project.id}
-                  layout
+                  layout={!isMobile}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3, delay: index * 0.03 }}
+                  transition={{ duration: isMobile ? 0.15 : 0.3, delay: isMobile ? 0 : index * 0.03 }}
                   className="relative aspect-square cursor-pointer group overflow-hidden bg-[rgba(28,28,28,0.03)] rounded-sm md:rounded-lg"
                   role="button"
                   tabIndex={0}
@@ -415,12 +451,12 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                       openProject(project, index);
                     }
                   }}
-                  onMouseEnter={() => handleProjectHoverStart(project)}
+                  onMouseEnter={() => !isCoarsePointer && handleProjectHoverStart(project)}
                   onMouseLeave={() => setHoveredProject(null)}
                   onMouseMove={(e) => tileUses3dHover && handleTileMouseMove(e, project.id)}
                   onTouchStart={() => {
                     if (tileUses3dHover) handleTileTouchStart(project.id);
-                    handleProjectHoverStart(project);
+                    if (!isCoarsePointer) handleProjectHoverStart(project);
                   }}
                   onTouchMove={(e) => tileUses3dHover && handleTileTouchMove(e, project.id)}
                   onTouchEnd={() => tileUses3dHover && handleTileTouchEnd()}
@@ -437,7 +473,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                       ) : (
                         <div className="absolute inset-0 z-[1] bg-[rgba(28,28,28,0.08)]" aria-hidden />
                       )}
-                      {hoveredProject === project.id && (
+                      {hoveredProject === project.id && !isCoarsePointer && (
                         <HoverPlayVideo
                           src={project.videoUrl}
                           className="absolute inset-0 z-[2] h-full w-full object-cover group-hover:scale-105"
@@ -480,6 +516,22 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                     </>
                   )}
                   
+                  {project.tileOverlayTitle &&
+                    (() => {
+                      const words = project.tileOverlayTitle.trim().split(/\s+/);
+                      const [first, ...rest] = words;
+                      return (
+                        <div className="pointer-events-none absolute inset-0 z-[15] flex flex-col items-start justify-end p-3 sm:justify-center sm:p-4 md:p-5">
+                          <div className="brand-tight max-w-[min(100%,19rem)] text-left text-xl font-semibold leading-[1.06] tracking-tight text-mk-text [text-shadow:0_1px_0_rgba(255,255,255,0.9),0_2px_14px_rgba(255,255,255,0.65),0_2px_18px_rgba(0,0,0,0.12)] sm:max-w-[min(100%,26rem)] sm:text-2xl md:text-3xl lg:text-4xl">
+                            <span className="block">{first}</span>
+                            {rest.length > 0 ? (
+                              <span className="block pl-4 pt-0.5 sm:pl-6 sm:pt-1">{rest.join(' ')}</span>
+                            ) : null}
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                   {/* Tag chips: medium, tools, optional 3D — replaces hover text + author/type/3D badges */}
                   {/*
                     On mobile (<sm) the tile is ~50vw so we hide tool-name chips
@@ -507,10 +559,13 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                 </motion.div>
                 );
               })}
-            </AnimatePresence>
+                  </AnimatePresence>
+                </motion.div>
+              )}
+            </div>
           </motion.div>
         )}
-      </div>
+      </AnimatePresence>
 
       {/* Project Modal */}
       <AnimatePresence>
@@ -528,7 +583,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
             onTouchEnd={handleTouchEnd}
           >
             {/* Backdrop */}
-            <div className="fixed inset-0 bg-black/25 backdrop-blur-md" aria-hidden />
+            <div className="fixed inset-0 bg-black/30 backdrop-blur-md max-md:bg-black/35 max-md:backdrop-blur-none" aria-hidden />
 
             {/* Previous Project Button - hidden on mobile */}
             <button

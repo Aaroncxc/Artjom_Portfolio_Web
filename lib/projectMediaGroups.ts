@@ -242,6 +242,76 @@ const lexsolarConfig: ProjectMediaGroupsConfig = {
 };
 
 /**
+ * DADB Solar Technician Digital Campus — campus stills, solarpark module, hub, Archicad planning, videos.
+ */
+const solarTechCampusConfig: ProjectMediaGroupsConfig = {
+  groups: [
+    {
+      key: 'campus',
+      label: 'Digital Campus',
+      match: (a) => {
+        if (isVideoAsset(a)) return false;
+        return filenameMatches(a, /campus-hero|thumbnail/);
+      },
+    },
+    {
+      key: 'solarpark',
+      label: 'Solarpark Module',
+      match: (a) => filenameMatches(a, /solarpark/),
+    },
+    {
+      key: 'hub',
+      label: 'Campus Hub',
+      match: (a) => filenameMatches(a, /hub-table/),
+    },
+    {
+      key: 'planning',
+      label: 'Archicad Planning',
+      match: (a) => filenameMatches(a, /archicad-footage/),
+    },
+    { key: 'videos', label: 'Videos', match: isVideoAsset },
+  ],
+};
+
+/**
+ * DADB Course Production — one strip group per released course (poster + trailer).
+ */
+const dadbCourseProductionConfig: ProjectMediaGroupsConfig = {
+  groups: [
+    {
+      key: '5g',
+      label: '5G Communication',
+      match: (a) => filenameMatches(a, /5g-communication/),
+    },
+    {
+      key: 'emobility',
+      label: 'E-Mobility',
+      match: (a) => filenameMatches(a, /e-mobility/),
+    },
+    {
+      key: 'hydrogen',
+      label: 'Hydrogen Technology',
+      match: (a) => filenameMatches(a, /hydrogen-technology/),
+    },
+    {
+      key: 'iot',
+      label: 'Internet of Things',
+      match: (a) => filenameMatches(a, /internet-of-things/),
+    },
+    {
+      key: 'solar',
+      label: 'Solar Electricity',
+      match: (a) => filenameMatches(a, /solar-electricity/),
+    },
+    {
+      key: 'wind',
+      label: 'Wind Power',
+      match: (a) => filenameMatches(a, /wind-power/),
+    },
+  ],
+};
+
+/**
  * Pocket Multipass — product renders, motion / detail videos.
  */
 const pocketMultipassConfig: ProjectMediaGroupsConfig = {
@@ -277,6 +347,8 @@ const PROJECT_MEDIA_GROUPS: Record<string, ProjectMediaGroupsConfig> = {
   'pult-vacuum': pultVacuumConfig,
   'the-house': theHouseConfig,
   'lexsolar-digital-learning-kit': lexsolarConfig,
+  'dadb-solar-technician-digital-campus': solarTechCampusConfig,
+  'dadb-course-production-trailers': dadbCourseProductionConfig,
   'pocket-multipass': pocketMultipassConfig,
 };
 

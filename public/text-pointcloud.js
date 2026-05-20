@@ -728,7 +728,10 @@ class TextPointcloud extends HTMLElement {
 
   resize() {
     const r = this.getBoundingClientRect();
-    this.state.dpr = clamp(window.devicePixelRatio || 1, 1, 2.5);
+    const maxDprPreset = Number(this.preset.maxDpr);
+    const maxDpr =
+      Number.isFinite(maxDprPreset) && maxDprPreset > 0 ? maxDprPreset : 2.5;
+    this.state.dpr = clamp(window.devicePixelRatio || 1, 1, maxDpr);
     const w = Math.floor(r.width * this.state.dpr);
     const h = Math.floor(r.height * this.state.dpr);
     if (w < 8 || h < 8) {

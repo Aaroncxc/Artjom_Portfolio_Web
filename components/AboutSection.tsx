@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { GlassPanel } from './GlassPanel';
 import { projectMatchesPortfolioOwner } from '@/lib/portfolioOwnerFilter';
 import { DADB_COURSE_OVERVIEW_TOOL_ID, toolDeepLink } from '@/lib/toolLinks';
+import { useMobilePerformance } from '@/lib/useMobilePerformance';
 import type { Project } from '@/lib/types';
 
 // ── Artjom profile ────────────────────────────────────────────
@@ -253,8 +254,8 @@ function ProfilePortraitCarousel({
   );
 }
 
-function ProjectMarquee({ thumbnails }: { thumbnails: string[] }) {
-  if (thumbnails.length === 0) return null;
+function ProjectMarquee({ thumbnails, enabled }: { thumbnails: string[]; enabled: boolean }) {
+  if (!enabled || thumbnails.length === 0) return null;
 
   const items = [...thumbnails, ...thumbnails];
 
@@ -276,13 +277,14 @@ function ProjectMarquee({ thumbnails }: { thumbnails: string[] }) {
               style={{ filter: 'blur(1px) grayscale(0.3)' }}
             >
               {isVideo ? (
-                <video
-                  src={src}
-                  muted
-                  playsInline
-                  autoPlay
-                  loop
+                <img
+                  src={src.replace(/\.mp4$/i, '.webp')}
+                  alt=""
+                  loading="lazy"
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
                 />
               ) : (
                 <img src={src} alt="" className="w-full h-full object-cover" loading="lazy" />
@@ -306,6 +308,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
   const [profileCarouselHover, setProfileCarouselHover] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [openCvDetails, setOpenCvDetails] = useState<Record<string, boolean>>({});
+  const { limitContinuousEffects } = useMobilePerformance();
 
   const toggleCvDetail = (key: string) => {
     setOpenCvDetails((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -355,7 +358,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
             padding="none"
             className="relative overflow-hidden rounded-3xl"
           >
-            <ProjectMarquee thumbnails={thumbnails} />
+            <ProjectMarquee thumbnails={thumbnails} enabled={!limitContinuousEffects} />
 
             <div className="relative z-10 grid gap-6 p-5 sm:p-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-10 lg:p-8">
               {/* Left: headline + bio */}

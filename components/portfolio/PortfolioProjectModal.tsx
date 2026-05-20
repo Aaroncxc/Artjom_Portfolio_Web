@@ -25,6 +25,8 @@ interface PortfolioProjectModalProps {
   onClose?: () => void;
   /** Embedded in Highlight bento — fixed height parent, scroll inside; back control instead of ×. */
   variant?: PortfolioProjectModalVariant;
+  /** Inline variant back button label (defaults to “Back to highlights”). */
+  backLabel?: string;
 }
 
 const TABS: { id: TabId; label: string }[] = [
@@ -187,6 +189,7 @@ export function PortfolioProjectModal({
   slideKey,
   onClose,
   variant = 'modal',
+  backLabel = 'Back to highlights',
 }: PortfolioProjectModalProps) {
   const inline = variant === 'inline';
   const backBtnRef = useRef<HTMLButtonElement>(null);
@@ -296,7 +299,7 @@ export function PortfolioProjectModal({
               ref={backBtnRef}
               type="button"
               onClick={onClose}
-              aria-label="Back to highlights"
+              aria-label={backLabel}
               className={clsx(
                 'inline-flex shrink-0 items-center gap-1.5 rounded-full border border-black/[0.08] bg-white/92 px-2.5 py-2 text-xs font-semibold text-mk-text-secondary shadow-sm sm:px-3',
                 'transition-colors hover:bg-white hover:text-mk-text',
@@ -306,7 +309,7 @@ export function PortfolioProjectModal({
               <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
               </svg>
-              <span className="max-sm:hidden">Back to highlights</span>
+              <span className="max-sm:hidden">{backLabel}</span>
               <span className="sm:hidden">Back</span>
             </button>
           ) : null}

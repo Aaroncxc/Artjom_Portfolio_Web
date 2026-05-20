@@ -11,7 +11,10 @@ import {
 } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
+import { CollapsibleSectionBar } from '@/components/CollapsibleSectionBar';
+import { ViewportAutoplayVideo } from '@/components/ViewportAutoplayVideo';
 import { toolMatchesPortfolioOwner } from '@/lib/portfolioOwnerFilter';
+import { useMobilePerformance } from '@/lib/useMobilePerformance';
 import {
   contentTagTintAt,
   liveChipClass,
@@ -118,12 +121,15 @@ function ToolModalCarouselPanel({
   onScreenshotChange,
   onNavigateScreenshot,
   fallbackIcon,
+  allowVideoAutoplay = true,
 }: {
   tool: ToolGame;
   currentScreenshot: number;
   onScreenshotChange: (index: number) => void;
   onNavigateScreenshot: (direction: 'prev' | 'next') => void;
   fallbackIcon: ReactNode;
+  /** Off on mobile — user taps play; saves decode/battery. */
+  allowVideoAutoplay?: boolean;
 }) {
   const slideCount = toolModalSlideCount(tool);
   const hasTrailer = Boolean(tool.modalTrailer);
@@ -150,10 +156,11 @@ function ToolModalCarouselPanel({
             <video
               src={tool.thumbnailVideo}
               controls
-              autoPlay
+              autoPlay={allowVideoAutoplay}
               muted
               loop
               playsInline
+              preload={allowVideoAutoplay ? 'metadata' : 'none'}
               className={toolModalMediaClass}
             />
           </ToolModalMediaSlide>
@@ -163,8 +170,9 @@ function ToolModalCarouselPanel({
               key="modal-trailer"
               src={tool.modalTrailer}
               controls
-              autoPlay
+              autoPlay={allowVideoAutoplay}
               playsInline
+              preload={allowVideoAutoplay ? 'metadata' : 'none'}
               className={toolModalMediaClass}
             />
           </ToolModalMediaSlide>
@@ -317,6 +325,8 @@ interface ToolsGamesGridProps {
 }
 
 export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { preferStaticTileVideo, isMobile, limitContinuousEffects } = useMobilePerformance();
   const [selectedTool, setSelectedTool] = useState<ToolGame | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [currentScreenshot, setCurrentScreenshot] = useState<number>(0);
@@ -367,12 +377,16 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
 
     const openToolFromUrl = () => {
       const url = new URL(window.location.href);
+      const hash = window.location.hash.replace(/^#/, '');
+      if (hash === 'tools-games') setIsExpanded(true);
+
       const toolId = url.searchParams.get('tool')?.trim();
-      if (!toolId || window.location.hash.replace(/^#/, '') !== 'tools-games') return;
+      if (!toolId || hash !== 'tools-games') return;
 
       const tool = toolsGamesForOwner.find((t) => t.id === toolId);
       if (!tool) return;
 
+      setIsExpanded(true);
       setSelectedType('all');
       const index = toolsGamesForOwner.findIndex((t) => t.id === toolId);
       openTool(tool, index >= 0 ? index : 0);
@@ -456,56 +470,77 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
   if (!visible) return null;
 
   return (
-    <div id="tools-games" className="relative px-4 pb-6 pt-24 sm:px-6 sm:pb-8">
-      {/* Section Header */}
-      <div className="mx-auto mb-10 max-w-7xl sm:mb-14">
-        <div className="max-w-3xl">
-          <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
-            Playground
-          </span>
-          <h2 className="mb-5 text-4xl font-semibold tracking-tight text-mk-text brand-tight leading-[1.05] sm:text-5xl lg:text-6xl">
-            Tools & Games
-          </h2>
-          <p className="text-base leading-relaxed text-mk-text-secondary sm:text-lg">
-            Interactive web experiences, games, and tools we've built. Click to explore them live.
-          </p>
-        </div>
+    <div
+      id="tools-games"
+      className={clsx(
+        'relative px-4 sm:px-6',
+        isExpanded ? 'pb-8 pt-8' : 'pb-3 pt-3',
+      )}
+    >
+      <div className={clsx('mx-auto max-w-7xl', isExpanded ? 'mb-6 sm:mb-8' : 'mb-0')}>
+        <CollapsibleSectionBar
+          eyebrow="Playground"
+          headlineStairs={['Tools', '& Games', 'Live builds']}
+          description="Interactive web tools and games I've built and shipped — playable demos, dashboards, and realtime experiments."
+          meta={
+            toolsGamesForOwner.length > 0
+              ? `${toolsGamesForOwner.length} item${toolsGamesForOwner.length === 1 ? '' : 's'} · tap to ${isExpanded ? 'collapse' : 'explore the playground'}`
+              : undefined
+          }
+          isExpanded={isExpanded}
+          onToggle={() => setIsExpanded((v) => !v)}
+          ariaControls="tools-games-expandable"
+          accent="purple"
+          expandLabel="Show all tools and games"
+          collapseLabel="Hide tools and games"
+        />
       </div>
 
-      {/* Filters */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex flex-wrap gap-2">
-          {typeFilters.map((filter) => (
-            <button
-              key={filter.value}
-              onClick={() => setSelectedType(filter.value)}
-              className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 min-h-[44px] ${
-                selectedType === filter.value
-                  ? 'bg-[rgba(99,102,241,0.15)] border border-[rgba(99,102,241,0.5)] text-[rgb(99,102,241)]'
-                  : 'bg-[rgba(255,255,255,0.6)] border border-[rgba(28,28,28,0.08)] text-mk-text-secondary hover:bg-[rgba(255,255,255,0.9)] hover:text-mk-text'
-              }`}
-            >
-              {filter.label}
-            </button>
-          ))}
-        </div>
-      </div>
+      <AnimatePresence initial={false}>
+        {isExpanded && (
+          <motion.div
+            id="tools-games-expandable"
+            key="tools-games-expandable"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
+            className="overflow-hidden"
+          >
+            {/* Filters */}
+            <div className="mx-auto mb-8 max-w-7xl">
+              <div className="flex flex-wrap gap-2">
+                {typeFilters.map((filter) => (
+                  <button
+                    key={filter.value}
+                    onClick={() => setSelectedType(filter.value)}
+                    className={`min-h-[44px] rounded-full px-3 py-2.5 text-xs font-medium transition-all duration-200 sm:px-4 sm:py-2 sm:text-sm ${
+                      selectedType === filter.value
+                        ? 'border border-[rgba(99,102,241,0.5)] bg-[rgba(99,102,241,0.15)] text-[rgb(99,102,241)]'
+                        : 'border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.6)] text-mk-text-secondary hover:bg-[rgba(255,255,255,0.9)] hover:text-mk-text'
+                    }`}
+                  >
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-      {/* Grid */}
-      <div className="max-w-7xl mx-auto">
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
-          layout
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredItems.map((item, index) => (
+            {/* Grid */}
+            <div className="mx-auto max-w-7xl">
+              <motion.div
+                className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
+                layout={!isMobile}
+              >
+                <AnimatePresence mode="popLayout">
+                  {filteredItems.map((item, index) => (
               <motion.div
                 key={item.id}
-                layout
+                layout={!isMobile}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
+                transition={{ duration: isMobile ? 0.15 : 0.3, delay: isMobile ? 0 : index * 0.05 }}
                 className="relative cursor-pointer group overflow-hidden bg-[rgba(28,28,28,0.03)] rounded-xl border border-[rgba(28,28,28,0.08)] hover:border-[rgba(99,102,241,0.3)] transition-all duration-300"
                 onClick={() => openTool(item, index)}
                 onMouseEnter={() => setHoveredTool(item.id)}
@@ -542,12 +577,11 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                       }
                     >
                       {item.thumbnailVideo ? (
-                        <video
+                        <ViewportAutoplayVideo
                           src={item.thumbnailVideo}
-                          muted
-                          loop
-                          playsInline
-                          autoPlay
+                          poster={item.thumbnail}
+                          title={item.title}
+                          staticOnly={preferStaticTileVideo || !isExpanded}
                           className="h-full w-full object-cover object-center"
                         />
                       ) : (
@@ -633,22 +667,22 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                 </div>
               </motion.div>
             ))}
-          </AnimatePresence>
-        </motion.div>
+                </AnimatePresence>
+              </motion.div>
 
-        {/* Empty State */}
-        {filteredItems.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-24">
-            <p className="text-mk-text-secondary mb-4">No items match your filter.</p>
-            <button
-              onClick={() => setSelectedType('all')}
-              className="glass-button"
-            >
-              Show all
-            </button>
-          </div>
+              {/* Empty State */}
+              {filteredItems.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-24">
+                  <p className="mb-4 text-mk-text-secondary">No items match your filter.</p>
+                  <button onClick={() => setSelectedType('all')} className="glass-button">
+                    Show all
+                  </button>
+                </div>
+              )}
+            </div>
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
 
       {/* Detail Modal */}
       <AnimatePresence>
@@ -665,7 +699,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
             onTouchEnd={handleTouchEnd}
           >
             {/* Backdrop */}
-            <div className="fixed inset-0 bg-[rgba(250,250,255,0.9)] backdrop-blur-md" />
+            <div className="fixed inset-0 bg-[rgba(250,250,255,0.92)] backdrop-blur-md md:backdrop-blur-md max-md:backdrop-blur-none" />
             
             {/* Close Button */}
             <button
@@ -724,6 +758,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                     onScreenshotChange={setCurrentScreenshot}
                     onNavigateScreenshot={navigateScreenshot}
                     fallbackIcon={typeIcons[selectedTool.type]}
+                    allowVideoAutoplay={!limitContinuousEffects}
                   />
                 )}
 

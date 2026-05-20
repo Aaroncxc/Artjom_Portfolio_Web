@@ -393,13 +393,16 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
   } = presetOverrides;
 
   const heroPrimaryText = stackedHeroName ? 'Artjom\nNaninjan' : 'Artjom Naninjan';
+  const mobileHero = stackedHeroName || presetOverrides.fontSize < 72;
+  const roleLayers = mobileHero ? INTRO_ROLE_LAYERS.slice(0, 3) : INTRO_ROLE_LAYERS;
 
   const preset = {
     interactFullCanvas: true,
-    layers: [{ text: heroPrimaryText }, ...INTRO_ROLE_LAYERS],
+    layers: [{ text: heroPrimaryText }, ...roleLayers],
     ...sizePreset,
     weight: 700,
-    spacing: 2,
+    spacing: mobileHero ? 11 : 2,
+    maxDpr: mobileHero ? 1.25 : 2,
     color: '#1C1C1C',
     bg: 'transparent',
     centerMode: 'center',

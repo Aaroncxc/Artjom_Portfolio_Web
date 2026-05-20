@@ -1,0 +1,51 @@
+DADB_Solar_Technician_Digital_Campus
+
+Kurzbeschreibung:
+Für die German Academy of Digital Education entstand ein digitaler Campus für das Solar Technician Program. Das Projekt wurde gemeinsam mit mehreren internen Departments, dem Redaktionsteam, Produktion, 3D/Unreal-Teams sowie externen Partnern wie SMA und Offenburg umgesetzt.
+
+Die Idee war, eine digitale Lernumgebung zu schaffen, in der Studierende nicht nur Kursinhalte konsumieren, sondern sich aktiv durch einen virtuellen Campus bewegen, Lernräume besuchen und spielerisch verstehen, wie ein Solarpark aufgebaut, betrieben und gewartet wird.
+
+Ziel:
+Ziel war es, den Einstieg in den Beruf des Solar Technicians als immersive digitale Learning Experience zu gestalten. Studierende sollten in einem virtuellen Campus ankommen, verschiedene Lernbereiche entdecken und schrittweise Inhalte zu Photovoltaik, Solarpark-Aufbau, Installation, Wartung, Health & Safety und technischen Grundlagen kennenlernen.
+
+Neben klassischen Vorlesungsräumen sollte der Campus auch interaktive Bereiche enthalten, darunter ein Hub für Begegnung, digitale Lernstationen und spielerische Übungen wie das Planen und Managen eines eigenen Solarparks.
+
+Meine Rolle:
+Ich habe das Projekt als Leitungsperson begleitet und die wichtigsten Departments zusammengeführt. Dazu gehörten Redaktion, Produktion, 3D/Unreal-Team, Fachexperten und externe Partner. Ich war verantwortlich für die Koordination der Beteiligten, die Abstimmung der Inhalte, die Überwachung des Fortschritts und die Kommunikation zwischen Teams, Stakeholdern und Management.
+
+Zusätzlich habe ich den Online Campus konzipiert und visuell mitentwickelt. Dazu gehörten die Grundidee des digitalen Campus, die Struktur der Lernbereiche, das Hub-Konzept, die Vorlesungsräume sowie die spielerische Idee, dass Studierende sich innerhalb der Umgebung bewegen und über interaktive Aufgaben lernen.
+
+Umsetzung:
+Der digitale Campus wurde als 3D-Umgebung aufgebaut und enthielt mehrere Lernbereiche. Dazu gehörten Vorlesungsräume, ein zentraler Hub, technische Trainingsbereiche, Solarpark-Szenen und interaktive Elemente. Studierende sollten sich im Campus bewegen, Zeit dort verbringen und verschiedene Lerninhalte im Kontext einer realitätsnahen Umgebung entdecken.
+
+Ein wichtiger Bestandteil war die Idee, den Aufbau und Betrieb eines Solarparks spielerisch erfahrbar zu machen. Nutzer sollten Solarpanels platzieren, technische Komponenten verstehen, Sicherheitsaspekte beachten und lernen, welche Bestandteile für die Arbeit als Solar Technician wichtig sind.
+
+Tools:
+Unreal Engine, Blender, 3D-Production, Projektmanagement, Learning Experience Design, Stakeholder-Kommunikation
+
+Partner / Beteiligte:
+German Academy of Digital Education, SMA, Offenburg, Redaktion, Produktion, 3D/Unreal-Team, Fachexperten, Management / Stakeholder
+
+Ergebnis:
+Entstanden ist ein digitaler Campus-Prototyp für das Solar Technician Program. Die Anwendung verband virtuelle Lernräume, Campus-Navigation, technische Trainingsinhalte und spielerische Solarpark-Interaktionen zu einer immersiven Lernumgebung.
+
+Der Trailer und die Ingame-Szenen zeigten, wie Studierende in einen digitalen Campus eintreten, Lernstationen besuchen, Grundlagen der Photovoltaik kennenlernen und sich spielerisch mit dem Aufbau und Betrieb eines Solarparks auseinandersetzen können.
+
+Besondere Punkte:
+Besonders an diesem Projekt war die Verbindung aus digitalem Campus, Learning Experience Design, technischer Ausbildung und Gamification. Es ging nicht nur um die Visualisierung eines Kurses, sondern um die Entwicklung einer begehbaren Lernwelt, in der technische Inhalte räumlich, interaktiv und spielerisch erfahrbar werden.
+
+Das Projekt brachte mehrere Teams und externe Partner zusammen und zeigte, wie moderne Berufsbildung durch 3D, Realtime-Technologie und interaktive Lernumgebungen erweitert werden kann.
+
+Datum / Zeitraum:
+06.2026
+
+Status:
+Prototyp / abgeschlossen
+
+DADB_Solar_Technician_Digital_Campus
+
+Für die German Academy of Digital Education entstand ein digitaler Campus für das Solar Technician Program. Gemeinsam mit Redaktion, Produktion, 3D/Unreal-Team, SMA und Offenburg wurde eine immersive Lernumgebung entwickelt, in der Studierende technische Inhalte rund um Photovoltaik, Solarparks, Installation, Wartung und Health & Safety interaktiv erleben konnten.
+
+Meine Rolle lag in der Leitung und Zusammenführung der beteiligten Departments. Ich habe die Teams koordiniert, die Kommunikation zwischen internen Bereichen, externen Partnern und Stakeholdern unterstützt und den Projektfortschritt überwacht. Zusätzlich habe ich den Online Campus konzipiert und designt – inklusive Hub, Vorlesungsräumen, Trainingsbereichen und spielerischen Solarpark-Elementen.
+
+Das Ergebnis war ein digitaler Campus-Prototyp, der klassische Kursinhalte mit einer begehbaren 3D-Welt, interaktiven Lernstationen und gamifizierten Aufgaben verbindet.

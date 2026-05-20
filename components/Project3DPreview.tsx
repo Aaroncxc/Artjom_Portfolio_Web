@@ -206,18 +206,21 @@ export function Project3DPreview({
 
         const width = containerRef.current.clientWidth;
         const height = containerRef.current.clientHeight;
+        const liteGpu =
+          window.matchMedia('(max-width: 767px)').matches ||
+          window.matchMedia('(pointer: coarse)').matches;
         const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 1000);
         camera.position.set(0, 0, 5.5);
         camera.lookAt(0, 0, 0);
         cameraRef.current = camera;
 
-        const renderer = new THREE.WebGLRenderer({ 
-          antialias: true, 
+        const renderer = new THREE.WebGLRenderer({
+          antialias: !liteGpu,
           alpha: true,
-          powerPreference: 'high-performance'
+          powerPreference: liteGpu ? 'low-power' : 'high-performance',
         });
         renderer.setSize(width, height);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setPixelRatio(liteGpu ? 1 : Math.min(window.devicePixelRatio, 2));
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.toneMappingExposure = 1.2;
         renderer.outputColorSpace = THREE.SRGBColorSpace;
