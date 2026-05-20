@@ -348,7 +348,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
         <CollapsibleSectionBar
           eyebrow="Portfolio"
           headlineStairs={['Project', 'Archive', '2020 — today']}
-          description="A curated selection of my chosen work — interactive experiences, film, 3D, education, and architecture projects from 2020 to today."
+          description="A **curated selection** of my chosen work — **interactive experiences**, **film**, **3D**, **education**, and **architecture projects** from **2020 to today**."
           meta={
             !loading && portfolioOwnerProjects.length > 0
               ? `${portfolioOwnerProjects.length} project${portfolioOwnerProjects.length === 1 ? '' : 's'} · tap to ${isExpanded ? 'collapse' : 'browse the full grid'}`
@@ -631,7 +631,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   x: slideDirection === 'right' ? -100 : 100,
                 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="relative z-[55] mx-auto my-2 w-full max-w-[min(92rem,calc(100vw-1.5rem))] px-2 sm:my-10 sm:px-4 md:my-14 md:px-12 lg:px-16 xl:px-20"
+                className="relative z-[55] mx-auto my-1 w-full max-w-[min(92rem,calc(100vw-0.75rem))] px-1 sm:my-10 sm:px-4 md:my-14 md:px-12 lg:px-16 xl:px-20"
                 onClick={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onTouchMove={(e) => e.stopPropagation()}

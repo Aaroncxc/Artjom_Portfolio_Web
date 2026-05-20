@@ -265,6 +265,8 @@ export function applyMediaGroupAssignment(
 interface ProjectMediaCanvasProps {
   asset: ModalAsset;
   projectTitle: string;
+  /** Mobile: crop media to fill the viewer (no top/bottom letterboxing). */
+  fillFrame?: boolean;
   onImageZoom?: (src: string) => void;
   /** Passed through when asset.kind === 'model3d' */
   model3dRotationX?: number;
@@ -277,6 +279,7 @@ interface ProjectMediaCanvasProps {
 export function ProjectMediaCanvas({
   asset,
   projectTitle,
+  fillFrame = false,
   onImageZoom,
   model3dRotationX,
   model3dMaterialColor,
@@ -284,7 +287,7 @@ export function ProjectMediaCanvas({
   model3dPoster,
   model3dAnimationProgress,
 }: ProjectMediaCanvasProps) {
-  const { limitContinuousEffects } = useMobilePerformance();
+  const { isMobile, limitContinuousEffects } = useMobilePerformance();
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -315,19 +318,60 @@ export function ProjectMediaCanvas({
   }, []);
 
   const requestFullscreen = () => {
-    const target = containerRef.current;
-    if (!target) return;
-    if (!document.fullscreenElement) {
-      target.requestFullscreen?.().catch(() => {});
-    } else {
+    const container = containerRef.current;
+    const video = videoRef.current;
+    if (!container) return;
+
+    if (document.fullscreenElement) {
       document.exitFullscreen?.();
+      return;
     }
+
+    const webkitVideo = video as (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null;
+    if (asset.kind === 'video' && webkitVideo?.webkitEnterFullscreen) {
+      webkitVideo.webkitEnterFullscreen();
+      return;
+    }
+    if (asset.kind === 'video' && video?.requestFullscreen) {
+      video.requestFullscreen().catch(() => container.requestFullscreen?.().catch(() => {}));
+      return;
+    }
+
+    container.requestFullscreen?.().catch(() => {});
   };
+
+  const handleMobileViewerTap = (e: React.MouseEvent<HTMLElement>) => {
+    if (!isMobile) return;
+    if ((e.target as HTMLElement).closest('button')) return;
+
+    if (asset.kind === 'video') {
+      const video = e.currentTarget as HTMLVideoElement;
+      const rect = video.getBoundingClientRect();
+      const y = e.clientY - rect.top;
+      if (y > rect.height - 52) return;
+      requestFullscreen();
+      return;
+    }
+
+    if (asset.kind === 'html' && (e.target as HTMLElement).tagName === 'IFRAME') return;
+
+    requestFullscreen();
+  };
+
+  const overlayFullscreenBtnClass =
+    'absolute right-3 top-3 z-10 hidden h-10 w-10 items-center justify-center rounded-full border border-[rgba(28,28,28,0.1)] bg-white/90 text-mk-text shadow-lg backdrop-blur-sm transition hover:scale-105 hover:bg-white lg:flex';
+
+  const mediaFitClass = fillFrame ? 'object-cover lg:object-contain' : 'object-contain';
 
   return (
     <div
       ref={containerRef}
-      className="relative h-full w-full overflow-hidden rounded-[10px] bg-[#FAFAFA]"
+      className={clsx(
+        'relative h-full w-full overflow-hidden bg-[#FAFAFA]',
+        fillFrame ? 'max-lg:rounded-none max-lg:bg-black lg:rounded-[10px]' : 'rounded-[10px]',
+        isMobile && asset.kind !== 'image' && asset.kind !== 'audio' && 'cursor-pointer',
+      )}
+      onClick={asset.kind === 'html' || asset.kind === 'model3d' ? handleMobileViewerTap : undefined}
     >
       {asset.kind === 'image' && (
         <button
@@ -339,7 +383,7 @@ export function ProjectMediaCanvas({
           <img
             src={asset.src}
             alt={asset.title || projectTitle}
-            className="h-full w-full object-contain"
+            className={clsx('h-full w-full', mediaFitClass)}
           />
         </button>
       )}
@@ -356,14 +400,15 @@ export function ProjectMediaCanvas({
             playsInline
             loop
             preload={limitContinuousEffects ? 'none' : 'metadata'}
-            className="h-full w-full object-contain"
+            className={clsx('h-full w-full', mediaFitClass)}
+            onClick={handleMobileViewerTap}
           >
             Your browser does not support the video tag.
           </video>
           <button
             type="button"
             onClick={requestFullscreen}
-            className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(28,28,28,0.1)] bg-white/90 text-mk-text shadow-lg backdrop-blur-sm transition hover:scale-105 hover:bg-white"
+            className={overlayFullscreenBtnClass}
             aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
           >
             {isFullscreen ? (
@@ -396,7 +441,7 @@ export function ProjectMediaCanvas({
           <button
             type="button"
             onClick={requestFullscreen}
-            className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(28,28,28,0.1)] bg-white/90 text-mk-text shadow-lg backdrop-blur-sm transition hover:scale-105 hover:bg-white"
+            className={overlayFullscreenBtnClass}
             aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -455,6 +500,7 @@ export function ProjectMediaCanvas({
         <>
           <div
             className="relative h-full min-h-[260px] w-full"
+            onClick={handleMobileViewerTap}
             onMouseMove={(e) => {
               const r = e.currentTarget.getBoundingClientRect();
               const w = Math.max(r.width, 1);
@@ -481,7 +527,7 @@ export function ProjectMediaCanvas({
           <button
             type="button"
             onClick={requestFullscreen}
-            className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(28,28,28,0.1)] bg-white/90 text-mk-text shadow-lg backdrop-blur-sm transition hover:scale-105 hover:bg-white"
+            className={overlayFullscreenBtnClass}
             aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

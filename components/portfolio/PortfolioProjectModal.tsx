@@ -1,7 +1,8 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { RichParagraphs, RichText, stripBoldMarkers } from '@/lib/formatRichText';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Project, ProjectReference, ProjectTool } from '@/lib/types';
 import { buildHireMailto } from '@/lib/contact';
@@ -13,7 +14,8 @@ import {
   type ModalAsset,
 } from './ProjectMediaCanvas';
 import { getProjectMediaGroupsConfig } from '@/lib/projectMediaGroups';
-import { LightboxModal } from '../projectSlide/LightboxModal';
+import { MediaGalleryLightbox } from '../projectSlide/LightboxModal';
+import { useHorizontalSwipe } from '@/lib/useHorizontalSwipe';
 
 type TabId = 'private' | 'explanation';
 
@@ -160,12 +162,13 @@ function ModalProjectFacts({ date, tools, references }: Pick<Project, 'date' | '
 }
 
 /** One–two sentences under the active medium; omitted when empty (no layout jump). */
-function MediaCaption({ caption }: { caption?: string }) {
+function MediaCaption({ caption, plainText }: { caption?: string; plainText?: boolean }) {
   const text = caption?.trim();
   if (!text) return null;
+  const display = plainText ? stripBoldMarkers(text) : text;
   return (
     <p className="min-h-0 px-0.5 text-sm leading-relaxed text-mk-text-secondary md:text-[15px] md:leading-[1.55]">
-      {text}
+      {plainText ? display : <RichText>{display}</RichText>}
     </p>
   );
 }
@@ -195,7 +198,7 @@ export function PortfolioProjectModal({
   const backBtnRef = useRef<HTMLButtonElement>(null);
   const [activeTab, setActiveTab] = useState<TabId>('private');
   const [activeAssetIndex, setActiveAssetIndex] = useState(0);
-  const [lightbox, setLightbox] = useState<string | null>(null);
+  const [lightboxAssetIndex, setLightboxAssetIndex] = useState<number | null>(null);
   /** Once the user opens Explanation we drop the attention dot on its tab button. */
   const [hasSeenExplanation, setHasSeenExplanation] = useState(false);
 
@@ -220,34 +223,33 @@ export function PortfolioProjectModal({
   const explanation = project.explanation?.trim() || project.description;
   const hireHref = project.ctaHref || buildHireMailto(`Hire me — ${project.title}`);
 
-  /**
-   * Touch swipe to step through `assets` while staying inside the modal.
-   * Mounted on the media frame so it doesn't compete with vertical scroll
-   * elsewhere in the modal. Horizontal-only — vertical drags are ignored.
-   */
-  const swipeStart = useRef<{ x: number; y: number } | null>(null);
-  const handleMediaTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    const t = e.touches[0];
-    if (!t) return;
-    swipeStart.current = { x: t.clientX, y: t.clientY };
-  };
-  const handleMediaTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    const start = swipeStart.current;
-    swipeStart.current = null;
-    if (!start) return;
-    const t = e.changedTouches[0];
-    if (!t) return;
-    const dx = t.clientX - start.x;
-    const dy = t.clientY - start.y;
-    const horizontal = Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4;
-    if (!horizontal) return;
-    if (assets.length <= 1) return;
-    if (dx < 0) {
-      setActiveAssetIndex((i) => (i + 1) % assets.length);
-    } else {
-      setActiveAssetIndex((i) => (i - 1 + assets.length) % assets.length);
-    }
-  };
+  const stepAsset = useCallback(
+    (dir: 'prev' | 'next') => {
+      if (assets.length <= 1) return;
+      setActiveAssetIndex((i) =>
+        dir === 'next' ? (i + 1) % assets.length : (i - 1 + assets.length) % assets.length,
+      );
+    },
+    [assets.length],
+  );
+
+  const mediaSwipe = useHorizontalSwipe(
+    () => stepAsset('next'),
+    () => stepAsset('prev'),
+    assets.length > 1 && activeTab === 'private',
+  );
+
+  const openGalleryAt = useCallback(
+    (src: string) => {
+      const idx = assets.findIndex((a) => a.src === src);
+      if (idx < 0) return;
+      const kind = assets[idx]?.kind;
+      if (kind !== 'image' && kind !== 'video') return;
+      setLightboxAssetIndex(idx);
+      setActiveAssetIndex(idx);
+    },
+    [assets],
+  );
 
   /**
    * Hire Me button — on mobile we render a full-width pill below the thumb strip
@@ -286,7 +288,7 @@ export function PortfolioProjectModal({
       <div
         className={clsx(
           'flex flex-col rounded-[20px]',
-          inline ? 'overflow-visible' : 'overflow-hidden max-h-[calc(100dvh-1rem)]',
+          inline ? 'overflow-visible' : 'overflow-hidden max-h-[calc(100dvh-0.5rem)]',
           'border border-black/[0.10]',
           'bg-white',
           'shadow-[0_4px_24px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04)]',
@@ -378,7 +380,7 @@ export function PortfolioProjectModal({
         {/* Body — media + copy share one visual row (items-start: no stretch gap under thumbnails). */}
         <div
           className={clsx(
-            'relative flex flex-1 flex-col px-3 py-2.5 sm:px-4 sm:py-3 md:px-5 md:py-3.5',
+            'relative flex flex-1 flex-col px-2 py-2 sm:px-4 sm:py-3 md:px-5 md:py-3.5',
             inline ? '' : 'overflow-y-auto lg:min-h-0 lg:overflow-hidden',
           )}
         >
@@ -390,27 +392,29 @@ export function PortfolioProjectModal({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.18, ease: [0.25, 0.1, 0.25, 1] }}
-                className="flex min-h-0 flex-1 flex-col gap-6 lg:gap-8"
+                className="flex min-h-0 flex-1 flex-col gap-3 sm:gap-4 lg:gap-8"
               >
-                <div className="grid gap-6 lg:grid-cols-[minmax(0,1.68fr)_minmax(300px,1fr)] lg:items-start lg:gap-10 xl:gap-12">
-                  <div className="flex min-w-0 flex-col gap-2.5 sm:gap-3">
+                <div className="grid gap-3 sm:gap-4 lg:grid-cols-[minmax(0,1.68fr)_minmax(300px,1fr)] lg:items-start lg:gap-10 xl:gap-12">
+                  <div className="flex min-w-0 flex-col gap-1.5 sm:gap-2 lg:gap-3">
                     <div
                       className={clsx(
-                        'aspect-video w-full overflow-hidden rounded-2xl lg:aspect-[16/10]',
-                        'bg-[#F2F2F7]',
-                        'p-2 sm:p-2.5',
-                        'ring-1 ring-black/[0.06]',
-                        'touch-pan-y select-none'
+                        'relative w-full overflow-hidden rounded-xl sm:rounded-2xl lg:aspect-[16/10]',
+                        'max-lg:aspect-[4/3] max-lg:min-h-[min(52dvh,380px)]',
+                        'bg-[#F2F2F7] max-lg:bg-black',
+                        'max-lg:p-0 p-1 sm:p-2 lg:p-2.5',
+                        'ring-1 ring-black/[0.06] max-lg:ring-0',
+                        'touch-pan-y select-none',
                       )}
-                      onTouchStart={handleMediaTouchStart}
-                      onTouchEnd={handleMediaTouchEnd}
+                      onTouchStartCapture={mediaSwipe.onTouchStart}
+                      onTouchEndCapture={mediaSwipe.onTouchEnd}
                     >
                       {activeAsset && (
-                        <div className="h-full w-full overflow-hidden rounded-[12px] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]">
+                        <div className="h-full w-full overflow-hidden max-lg:rounded-none max-lg:bg-transparent max-lg:shadow-none rounded-[10px] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] sm:rounded-[12px]">
                           <ProjectMediaCanvas
                             asset={activeAsset}
                             projectTitle={project.title}
-                            onImageZoom={setLightbox}
+                            fillFrame
+                            onImageZoom={openGalleryAt}
                             model3dRotationX={project.model3dRotationX}
                             model3dMaterialColor={project.model3dMaterialColor}
                             model3dOffsetY={project.model3dOffsetY}
@@ -419,11 +423,27 @@ export function PortfolioProjectModal({
                           />
                         </div>
                       )}
+                      {assets.length > 1 ? (
+                        <p className="pointer-events-none absolute bottom-1.5 left-0 right-0 text-center text-[10px] font-medium tracking-wide text-white/75 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)] lg:hidden">
+                          Swipe for next media
+                        </p>
+                      ) : null}
                     </div>
-                    <MediaCaption caption={activeAsset?.caption} />
+                    <MediaCaption caption={activeAsset?.caption} plainText={inline} />
+
+                    {assets.length > 1 ? (
+                      <div className="lg:hidden">
+                        <ProjectMediaThumbs
+                          assets={assets}
+                          activeIndex={activeAssetIndex}
+                          onSelect={setActiveAssetIndex}
+                          groupsConfig={groupsConfig}
+                        />
+                      </div>
+                    ) : null}
                   </div>
 
-                  <div className="flex min-w-0 flex-col gap-5 lg:gap-6">
+                  <div className="flex min-w-0 flex-col gap-4 sm:gap-5 lg:gap-6">
                     <div className="space-y-3">
                       <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.24em] text-mk-text-muted">
                         Overview
@@ -468,7 +488,7 @@ export function PortfolioProjectModal({
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+                <div className="hidden flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4 lg:flex">
                   <div className="min-w-0 sm:flex-1">
                     <ProjectMediaThumbs
                       assets={assets}
@@ -479,6 +499,8 @@ export function PortfolioProjectModal({
                   </div>
                   <div className="flex w-full justify-end sm:w-auto sm:shrink-0">{hireButton}</div>
                 </div>
+
+                <div className="flex justify-end lg:hidden">{hireButton}</div>
               </motion.div>
             ) : (
               <motion.div
@@ -496,11 +518,21 @@ export function PortfolioProjectModal({
                   <StaircaseTitle title={project.title} />
                 </div>
                 <div className="mk-scroll pr-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
-                  <div className="max-w-3xl space-y-5 text-base font-normal leading-relaxed text-mk-text-secondary md:text-lg">
-                    {explanation.split(/\n{2,}/).map((paragraph, i) => (
-                      <p key={i}>{paragraph}</p>
-                    ))}
-                  </div>
+                  {inline ? (
+                    <div className="max-w-3xl space-y-5 text-base font-normal leading-relaxed text-mk-text-secondary md:text-lg">
+                      {stripBoldMarkers(explanation)
+                        .split(/\n{2,}/)
+                        .map((paragraph, i) => (
+                          <p key={i}>{paragraph.replace(/\n/g, ' ')}</p>
+                        ))}
+                    </div>
+                  ) : (
+                    <RichParagraphs
+                      text={explanation}
+                      className="max-w-3xl space-y-5"
+                      paragraphClassName="text-base font-normal leading-relaxed text-mk-text-secondary md:text-lg"
+                    />
+                  )}
                 </div>
                 <div className="flex w-full shrink-0 justify-end sm:w-auto">{hireButton}</div>
               </motion.div>
@@ -509,7 +541,16 @@ export function PortfolioProjectModal({
         </div>
       </div>
 
-      <LightboxModal image={lightbox} onClose={() => setLightbox(null)} alt={project.title} />
+      <MediaGalleryLightbox
+        assets={assets}
+        activeIndex={lightboxAssetIndex}
+        onClose={() => setLightboxAssetIndex(null)}
+        onNavigate={(index) => {
+          setLightboxAssetIndex(index);
+          setActiveAssetIndex(index);
+        }}
+        alt={project.title}
+      />
     </div>
   );
 }

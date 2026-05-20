@@ -1,6 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
+import { RichText } from '@/lib/formatRichText';
 
 export type CollapsibleSectionAccent = 'cyan' | 'purple';
 
@@ -77,7 +78,7 @@ export function CollapsibleSectionBar({
 
         <div className="min-w-0 flex-1 sm:border-l sm:border-black/[0.06] sm:pl-6 lg:pl-8">
           <p className="text-[0.9375rem] leading-relaxed text-mk-text-secondary sm:text-[15px] lg:text-base">
-            {description}
+            <RichText>{description}</RichText>
           </p>
           {meta ? <p className="mt-2 text-xs text-mk-text-muted sm:text-sm">{meta}</p> : null}
         </div>

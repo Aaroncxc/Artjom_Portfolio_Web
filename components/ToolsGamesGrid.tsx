@@ -15,6 +15,7 @@ import { CollapsibleSectionBar } from '@/components/CollapsibleSectionBar';
 import { ViewportAutoplayVideo } from '@/components/ViewportAutoplayVideo';
 import { toolMatchesPortfolioOwner } from '@/lib/portfolioOwnerFilter';
 import { useMobilePerformance } from '@/lib/useMobilePerformance';
+import { RichText } from '@/lib/formatRichText';
 import {
   contentTagTintAt,
   liveChipClass,
@@ -241,7 +242,8 @@ const toolsGamesData: ToolGame[] = [
   {
     id: 'coincraft',
     title: 'CoinCraft',
-    description: 'A colorful match-3 puzzle game with addictive gameplay mechanics. Combine coins, unlock power-ups, and climb the leaderboards!',
+    description:
+      'A colorful **match-3 puzzle game** with addictive gameplay mechanics. Combine coins, unlock **power-ups**, and climb the **leaderboards**!',
     url: 'https://coincraft-main.vercel.app',
     type: 'game',
     thumbnail: '/tools/coincraft-thumb.png',
@@ -255,7 +257,7 @@ const toolsGamesData: ToolGame[] = [
     id: 'occupied',
     title: 'Occupied VFX',
     description:
-      'Occupied is a browser-based visual effects engine for real-time creative expression. Built with WebGL2, Three.js, and GLSL, it routes videos, images, webcam feeds, audio, and 3D models through modular GPU-powered effects—made for VJing, projection, music visuals, experimental media, and creative coding, directly in the browser without a heavy setup. Started as a personal passion project and shipped within one month; since launch it has reached 40+ users and keeps growing. A real-time visual instrument for artists, performers, and creative technologists.',
+      '**Occupied** is a **browser-based visual effects engine** for **real-time creative expression**. Built with **WebGL2**, **Three.js**, and **GLSL**, it routes **videos**, **images**, **webcam feeds**, **audio**, and **3D models** through modular **GPU-powered effects**—made for **VJing**, **projection**, **music visuals**, **experimental media**, and **creative coding**, directly in the **browser** without a heavy setup. Started as a personal passion project and **shipped within one month**; since launch it has reached **40+ users** and keeps growing. A **real-time visual instrument** for artists, performers, and creative technologists.',
     url: 'https://occupiedvfx-v3-30-01-2026-2c75.vercel.app',
     type: 'tool',
     thumbnail: '/tools/occupied/thumbnail.webp',
@@ -277,7 +279,8 @@ const toolsGamesData: ToolGame[] = [
   {
     id: 'ryuk-pp',
     title: 'Ryuk PP',
-    description: 'A pixel-art 2D platformer built with Godot. Run, jump and collect bones while exploring hand-crafted levels. Use WASD or arrow keys to play!',
+    description:
+      'A **pixel-art 2D platformer** built with **Godot**. Run, jump and collect bones while exploring **hand-crafted levels**. Use **WASD** or **arrow keys** to play!',
     url: '/tools/ryuk-pp/index.html',
     type: 'game',
     thumbnail: '/tools/ryuk-pp/thumbnail.png',
@@ -292,7 +295,7 @@ const toolsGamesData: ToolGame[] = [
     id: 'dadb-course-overview',
     title: 'Course Overview Tool',
     description:
-      "Internal production-analytics dashboard I coded in Cursor while leading the DADB course production. Project managers logged status into Excel sheets, and the tool synced them every day at 06:00 and 18:00 — so team, stakeholders, shareholders and the CEO could watch the entire content pipeline live: courses, modules, team workloads, delays, completion rates and weekly KPIs.",
+      "Internal **production-analytics dashboard** I coded in **Cursor** while leading the **DADB course production**. Project managers logged status into **Excel sheets**, and the tool synced them every day at **06:00** and **18:00** — so team, **stakeholders**, **shareholders** and the **CEO** could watch the entire **content pipeline** live: **courses**, **modules**, **team workloads**, **delays**, **completion rates** and weekly **KPIs**.",
     url: 'https://v0-image-analysis-taupe-beta.vercel.app',
     type: 'tool',
     thumbnail: '/tools/dadb-course-overview/thumbnail.jpg',
@@ -481,7 +484,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
         <CollapsibleSectionBar
           eyebrow="Playground"
           headlineStairs={['Tools', '& Games', 'Live builds']}
-          description="Interactive web tools and games I've built and shipped — playable demos, dashboards, and realtime experiments."
+          description="**Interactive web tools** and **games** I've built and shipped — **playable demos**, **dashboards**, and **realtime experiments**."
           meta={
             toolsGamesForOwner.length > 0
               ? `${toolsGamesForOwner.length} item${toolsGamesForOwner.length === 1 ? '' : 's'} · tap to ${isExpanded ? 'collapse' : 'explore the playground'}`
@@ -653,7 +656,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                     {item.title}
                   </h3>
                   <p className="mb-3 line-clamp-2 text-base leading-relaxed text-mk-text-secondary sm:text-lg">
-                    {item.description}
+                    <RichText>{item.description}</RichText>
                   </p>
 
                   {/* Tags */}
@@ -776,7 +779,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                   </div>
 
                   <p className="text-mk-text-secondary mb-6 leading-relaxed">
-                    {selectedTool.description}
+                    <RichText>{selectedTool.description}</RichText>
                   </p>
 
                   {/* Tags */}

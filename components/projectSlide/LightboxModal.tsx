@@ -1,44 +1,184 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
+import clsx from 'clsx';
+import { useCallback, useMemo } from 'react';
+import type { ModalAsset } from '@/components/portfolio/ProjectMediaCanvas';
+import { useHorizontalSwipe } from '@/lib/useHorizontalSwipe';
 
-interface LightboxModalProps {
-  image: string | null;
+interface MediaGalleryLightboxProps {
+  assets: ModalAsset[];
+  activeIndex: number | null;
   onClose: () => void;
+  onNavigate: (index: number) => void;
   alt?: string;
 }
 
-export function LightboxModal({ image, onClose, alt = 'Enlarged view' }: LightboxModalProps) {
+/** Fullscreen gallery for modal images/videos — swipe or arrow to step through assets. */
+export function MediaGalleryLightbox({
+  assets,
+  activeIndex,
+  onClose,
+  onNavigate,
+  alt = 'Gallery view',
+}: MediaGalleryLightboxProps) {
+  const open = activeIndex !== null && activeIndex >= 0 && activeIndex < assets.length;
+  const asset = open ? assets[activeIndex!] : null;
+
+  const navigableIndices = useMemo(
+    () =>
+      assets
+        .map((a, i) => ({ a, i }))
+        .filter(({ a }) => a.kind === 'image' || a.kind === 'video')
+        .map(({ i }) => i),
+    [assets],
+  );
+
+  const step = useCallback(
+    (dir: 'prev' | 'next') => {
+      if (activeIndex === null || navigableIndices.length <= 1) return;
+      const pos = navigableIndices.indexOf(activeIndex);
+      if (pos < 0) return;
+      const nextPos =
+        dir === 'next'
+          ? (pos + 1) % navigableIndices.length
+          : (pos - 1 + navigableIndices.length) % navigableIndices.length;
+      onNavigate(navigableIndices[nextPos]);
+    },
+    [activeIndex, navigableIndices, onNavigate],
+  );
+
+  const swipe = useHorizontalSwipe(
+    () => step('next'),
+    () => step('prev'),
+    open && navigableIndices.length > 1,
+  );
+
+  const posInGallery =
+    activeIndex !== null ? navigableIndices.indexOf(activeIndex) : -1;
+  const hasPrev = posInGallery > 0;
+  const hasNext = posInGallery >= 0 && posInGallery < navigableIndices.length - 1;
+
   return (
     <AnimatePresence>
-      {image && (
+      {open && asset && (asset.kind === 'image' || asset.kind === 'video') ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 cursor-pointer"
+          className="fixed inset-0 z-[100] flex touch-pan-y flex-col bg-black/92"
           onClick={onClose}
+          onTouchStart={swipe.onTouchStart}
+          onTouchEnd={swipe.onTouchEnd}
         >
-          <motion.img
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            src={image}
-            alt={alt}
-            className="max-w-full max-h-full object-contain rounded-lg"
+          <div
+            className="relative flex min-h-0 flex-1 items-center justify-center p-3 pt-14 pb-16 sm:p-6"
             onClick={(e) => e.stopPropagation()}
-          />
-          <button
-            className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-colors"
-            onClick={onClose}
-            aria-label="Schließen"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {asset.kind === 'image' ? (
+              <motion.img
+                key={asset.src}
+                initial={{ scale: 0.96, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.96, opacity: 0 }}
+                src={asset.src}
+                alt={alt}
+                className="max-h-[min(78dvh,900px)] w-auto max-w-full object-contain"
+                draggable={false}
+              />
+            ) : (
+              <motion.video
+                key={asset.src}
+                initial={{ scale: 0.96, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.96, opacity: 0 }}
+                src={asset.src}
+                poster={asset.poster}
+                controls
+                autoPlay
+                muted
+                playsInline
+                className="max-h-[min(78dvh,900px)] w-full max-w-full object-contain"
+                onClick={(e) => e.stopPropagation()}
+              />
+            )}
+
+            {navigableIndices.length > 1 ? (
+              <>
+                <button
+                  type="button"
+                  disabled={!hasPrev}
+                  onClick={() => step('prev')}
+                  aria-label="Previous"
+                  className={clsx(
+                    'absolute left-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full',
+                    'bg-white/12 text-white backdrop-blur-sm transition hover:bg-white/20',
+                    'disabled:pointer-events-none disabled:opacity-30 sm:left-4',
+                  )}
+                >
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  disabled={!hasNext}
+                  onClick={() => step('next')}
+                  aria-label="Next"
+                  className={clsx(
+                    'absolute right-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full',
+                    'bg-white/12 text-white backdrop-blur-sm transition hover:bg-white/20',
+                    'disabled:pointer-events-none disabled:opacity-30 sm:right-4',
+                  )}
+                >
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </>
+            ) : null}
+          </div>
+
+          {navigableIndices.length > 1 ? (
+            <p className="pointer-events-none absolute bottom-5 left-0 right-0 text-center text-xs text-white/55">
+              Swipe for next · {posInGallery + 1} / {navigableIndices.length}
+            </p>
+          ) : null}
+
+          <button
+            type="button"
+            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-sm transition hover:bg-white/20 sm:right-6 sm:top-6"
+            onClick={onClose}
+            aria-label="Close"
+          >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </motion.div>
-      )}
+      ) : null}
     </AnimatePresence>
+  );
+}
+
+/** @deprecated Use MediaGalleryLightbox — kept for any legacy single-image usage. */
+export function LightboxModal({
+  image,
+  onClose,
+  alt,
+}: {
+  image: string | null;
+  onClose: () => void;
+  alt?: string;
+}) {
+  const assets = image ? [{ kind: 'image' as const, src: image, thumb: image }] : [];
+  return (
+    <MediaGalleryLightbox
+      assets={assets}
+      activeIndex={image ? 0 : null}
+      onClose={onClose}
+      onNavigate={() => {}}
+      alt={alt}
+    />
   );
 }

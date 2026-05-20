@@ -44,9 +44,9 @@ export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2026',
     category: 'Education · XR prototype',
     description:
-      'Digital twin of Lexsolar’s physical solar learning cases — Blender assets, UE workflow hooks, and a browser prototype aligning stakeholders on how hands-on labs could scale digitally.',
+      ' of  —  assets,  hooks, and a  aligning stakeholders on how  could scale digitally.',
     role:
-      'Production lead from partner workshops through asset scope, prototyping milestones, and cross-team delivery with editorial and SMEs.',
+      ' from  through , , and  with  and .',
     tools: ['Blender', 'Unreal Engine'],
     thumb: '/projects/lexsolar-digital-learning-kit/ingame-05.webp',
     gallery: [
@@ -65,9 +65,9 @@ export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2024',
     category: 'Trade fair · AR',
     description:
-      'Trade-fair demo translating electrical safety and inverter narratives into spatial AR builds — storyboarding, pacing, and on-site rollout with the exhibiting team.',
+      ' translating  and  into spatial  — , , and  with the exhibiting team.',
     role:
-      'Head of Production owning booth narrative, XR build coordination with 3D, and stakeholder timelines across rehearsal to live floor.',
+      ' owning ,  with , and  across rehearsal to .',
     tools: ['Archicad', 'Blender', 'Unreal Engine'],
     thumb: '/projects/elearning-africa-kigali-2024/Kigali_Gameplay_Thumbnail.jpg',
     gallery: ['/projects/elearning-africa-kigali-2024/Kigali_AR_2.webp', '/projects/elearning-africa-kigali-2024/Kigali_Messestand_2.webp'],
@@ -82,9 +82,9 @@ export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2024',
     category: 'Internal tool · Ops',
     description:
-      'A live dashboard for course production KPIs — pipeline status, ownership, and risk signals surfaced for management without chasing spreadsheets. Project managers logged status into Excel sheets; the tool synced them every day at 06:00 and 18:00 so team, stakeholders, shareholders and the CEO could watch the entire content pipeline live.',
+      'A  for  — , , and  surfaced for management without chasing spreadsheets. Project managers logged status into ; the tool synced them every day at  and  so team, ,  and the  could watch the entire  live.',
     role:
-      'Product direction, UX iteration with leadership, and production roll-in so teams could rely on one source of truth during delivery.',
+      ',  with leadership, and  so teams could rely on  during delivery.',
     tools: ['React', 'Next.js', 'Tailwind', 'Cursor', 'Excel sync'],
     thumb: '/tools/dadb-course-overview/thumbnail.jpg',
     gallery: [
@@ -109,9 +109,9 @@ export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2023',
     category: 'Trade fair · VR',
     description:
-      'VR pavilion experience unpacking learning modules in an immersive booth loop — choreography of scenes, onboarding flow, and live operator support.',
+      ' unpacking learning modules in an  — , , and .',
     role:
-      'Production orchestration across 3D cinematics, Unreal deployment, editorial sign-off, and event-day technical readiness.',
+      ' across , , , and .',
     tools: ['Archicad', 'Blender', 'Unreal Engine'],
     thumb: '/projects/elearning-africa-dakar-senegal-2023/vr-scene-07-thumb.jpg',
     gallery: [
@@ -129,9 +129,9 @@ export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2024',
     category: 'Education · Animation',
     description:
-      'Cinematic explainer on rekuperation in e‑mobility — translating technical scripts into paced 3D storytelling for learners and faculty review.',
+      ' on  — translating  into paced  for learners and faculty review.',
     role:
-      'Production planning with subject experts, Blender-to-Unreal handoff rhythms, reviews, and sign-off milestones for course integration.',
+      ' with ,  rhythms, reviews, and  for .',
     tools: ['Blender', 'Unreal Engine'],
     thumb: '/projects/rekuperation-education/rekuperation-edu-video.webp',
     gallery: [
@@ -152,9 +152,9 @@ export const ARCHITECTURE_HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2026',
     category: 'Education · Digital campus',
     description:
-      'Archicad campus planning synced into Unreal — lecture rooms, hub, and a gamified solarpark learners navigate as a walkable training world rather than a static course shell.',
+      ' synced into  — , , and a  learners navigate as a  rather than a static course shell.',
     role:
-      'Led cross-team delivery and co-designed the campus structure — from Archicad pre-vis and spatial planning through Unreal production, interactive modules, and stakeholder alignment.',
+      'Led  and co-designed the  — from  and  through , , and .',
     tools: ['Archicad', 'Unreal Engine', 'Twinmotion'],
     thumb: '/projects/dadb-solar-technician-digital-campus/thumbnail.webp',
     gallery: [
@@ -173,9 +173,9 @@ export const ARCHITECTURE_HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2025',
     category: 'Architecture · Cinematic',
     description:
-      'Residential architecture authored in Archicad, refined in Unreal — cinematic interior/exterior staging with a live 3D viewer so space, light, and material reads interactively.',
+      ' authored in , refined in  —  with a  so , , and  reads interactively.',
     role:
-      'Architectural design through Archicad modelling, Unreal scene assembly, lighting, and realtime presentation — bridging built-form logic with an explorable digital twin.',
+      ' through , , , and  — bridging  with an .',
     tools: ['Archicad', 'Unreal Engine', 'Twinmotion'],
     thumb: '/projects/the-house/The_House_Thumbnail.png',
     gallery: [
@@ -197,9 +197,9 @@ export const MULTIKUNST_HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2023',
     category: 'Product · Motion',
     description:
-      'Conceptual fragrance campaign — industrial precision meets luxury product design, with custom typography and ball-bearing-inspired packaging brought to life in motion.',
+      'Conceptual  —  meets , with  and  brought to life in .',
     role:
-      'Co-created under the Multikunst collective — concept direction, 3D product staging, and cinematic trailer production with the team.',
+      'Co-created under the  — , , and  with the team.',
     tools: ['Blender', 'After Effects'],
     thumb: '/projects/multiply/Thumbnail.png',
     tileVideo: '/projects/multiply/Trailer.webm',
@@ -214,9 +214,9 @@ export const MULTIKUNST_HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2023',
     category: 'Product · 3D film',
     description:
-      'Wristwatch product film exploring layered dials, materials, and mechanical detail — a Multikunst visual study in precision product storytelling.',
+      ' exploring , , and  — a  in .',
     role:
-      'Collective production — 3D modelling, lighting, and edit for a short launch-style product clip.',
+      ' — , , and  for a short .',
     tools: ['Blender', 'After Effects'],
     thumb: '/projects/multi-watch/Thumbnail.png',
     tileVideo: '/projects/multi-watch/Final%20Multiwatch%20Clip.webm',
@@ -231,9 +231,9 @@ export const MULTIKUNST_HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2024',
     category: 'Tool · Realtime VFX',
     description:
-      'Browser-based visual effects engine for real-time creative expression — WebGL2, Three.js, and GLSL routing video, audio, webcam, and 3D through modular GPU effects for VJing and live visuals.',
+      ' for  — , , and  routing , , , and  through modular  for  and .',
     role:
-      'Built and shipped under Multikunst — product design, shader pipeline, and UI for a live visual instrument used by performers and creative technologists.',
+      'Built and shipped under  — , , and  for a  used by  and .',
     tools: ['WebGL2', 'Three.js', 'GLSL'],
     thumb: '/tools/occupied/thumbnail.webp',
     tileVideo: '/tools/occupied/trailer.mp4',
