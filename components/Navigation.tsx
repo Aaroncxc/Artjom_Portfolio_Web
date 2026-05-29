@@ -15,6 +15,7 @@ interface NavigationProps {
 const NAV_ITEMS = [
   { id: 'about', label: 'About' },
   { id: 'highlights', label: 'Highlights' },
+  { id: 'highlights-skyhaven', label: 'Skyhaven' },
   { id: 'projects', label: 'Projects' },
   { id: 'tools-games', label: 'Tools & Games' },
 ];

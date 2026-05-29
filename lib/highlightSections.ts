@@ -2,10 +2,11 @@ import {
   HIGHLIGHT_PROJECTS,
   ARCHITECTURE_HIGHLIGHT_PROJECTS,
   MULTIKUNST_HIGHLIGHT_PROJECTS,
+  SKYHAVEN_HIGHLIGHT_PROJECTS,
   type HighlightProject,
 } from '@/lib/highlightProjects';
 
-export type HighlightGlowTheme = 'amber' | 'sky' | 'purple';
+export type HighlightGlowTheme = 'amber' | 'sky' | 'purple' | 'emerald';
 
 export interface HighlightBentoSectionConfig {
   id: string;
@@ -22,6 +23,8 @@ export interface HighlightBentoSectionConfig {
   /** Per-tile placement within the grid. */
   tileCellClass: (project: HighlightProject) => string;
   backLabel?: string;
+  /** Optional compact try-build link shown inline after body copy (keeps layout height flat). */
+  tryBuildLink?: { href: string; label: string };
 }
 
 const ARCHITECTURE_TILE_CLASS =
@@ -62,6 +65,28 @@ export const PRODUCTION_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
     }
   },
   backLabel: 'Back to highlights',
+};
+
+export const SKYHAVEN_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
+  id: 'highlights-skyhaven',
+  sectionTitle: 'Skyhaven — Desktop widget game',
+  headlineStairs: ['Skyhaven', 'Desktop', 'widget game'],
+  subtitle: 'In development',
+  bodyP1:
+    'Skyhaven is a compact desktop widget game I build alongside client work: a floating isometric island you keep at the edge of your screen while you focus on real tasks. I own art direction, 3D production, and code end to end.',
+  bodyP2:
+    'The pipeline is deliberately AI-native — sketches and visual rules first, then Meshy for 3D iteration, Cursor for gameplay in React, Three.js, and Tauri 2. Every prop, character, and tile starts from my own look-and-feel before it lands in the engine. The build already covers focus sessions, inventory & equipment, farming, custom island building, profile loadouts, and a playable mining combat slice — with more systems on the way.',
+  eyebrow: 'Skyhaven',
+  projects: SKYHAVEN_HIGHLIGHT_PROJECTS,
+  glow: 'emerald',
+  gridClass: 'grid-cols-1 lg:min-h-[280px]',
+  tileCellClass: () =>
+    'relative min-h-[200px] sm:min-h-[240px] md:min-h-[280px] lg:min-h-[320px]',
+  backLabel: 'Back to Skyhaven',
+  tryBuildLink: {
+    href: 'https://github.com/Aaroncxc/Coincraft_Skyhaven/releases',
+    label: 'Try v0.2.0 on GitHub Releases',
+  },
 };
 
 const MULTIKUNST_TILE_CLASS =
@@ -139,5 +164,13 @@ export const HIGHLIGHT_GLOW_THEMES: Record<
       'absolute left-1/2 top-1/2 aspect-square w-auto animate-highlight-bento-glow-spin bg-[conic-gradient(from_0deg,rgba(167,139,250,0)_0deg_282deg,rgba(167,139,250,0.14)_292deg,rgba(196,181,253,0.72)_304deg,rgba(139,92,246,0.92)_312deg,rgba(167,139,250,0.4)_322deg,rgba(196,181,253,0.1)_336deg,rgba(167,139,250,0)_360deg)] min-h-[min(130vw,520px)] h-[185%] sm:min-h-[min(115vw,720px)] sm:h-[220%] md:min-h-[800px]',
     reducedMotionBg:
       'pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-violet-200/[0.1] via-transparent to-purple-300/[0.08] sm:rounded-3xl sm:from-violet-200/[0.12] sm:to-purple-300/[0.09]',
+  },
+  emerald: {
+    wrapperShadow:
+      'shadow-[0_0_16px_-16px_rgba(52,211,153,0.28),0_0_0_1px_rgba(52,211,153,0.14)] sm:shadow-[0_0_28px_-12px_rgba(16,185,129,0.34),0_0_0_1px_rgba(52,211,153,0.2)]',
+    conicGradient:
+      'absolute left-1/2 top-1/2 aspect-square w-auto animate-highlight-bento-glow-spin bg-[conic-gradient(from_0deg,rgba(52,211,153,0)_0deg_282deg,rgba(52,211,153,0.12)_292deg,rgba(167,243,208,0.7)_304deg,rgba(16,185,129,0.88)_312deg,rgba(52,211,153,0.38)_322deg,rgba(167,243,208,0.1)_336deg,rgba(52,211,153,0)_360deg)] min-h-[min(130vw,520px)] h-[185%] sm:min-h-[min(115vw,720px)] sm:h-[220%] md:min-h-[800px]',
+    reducedMotionBg:
+      'pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-200/[0.09] via-transparent to-teal-200/[0.07] sm:rounded-3xl sm:from-emerald-200/[0.11] sm:to-teal-200/[0.08]',
   },
 };

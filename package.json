@@ -11,7 +11,9 @@
     "lint": "next lint",
     "convert:3d": "node scripts/convert-fbx-to-glb.js",
     "audit:public": "node scripts/find-unused-public-files.mjs",
-    "compress:occupied": "node scripts/compress-occupied-tool-assets.mjs"
+    "compress:occupied": "node scripts/compress-occupied-tool-assets.mjs",
+    "compress:skyhaven": "node scripts/compress-skyhaven-assets.mjs",
+    "cleanup:skyhaven": "node scripts/cleanup-skyhaven-assets.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.99.0",

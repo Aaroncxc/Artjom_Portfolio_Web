@@ -15,11 +15,13 @@ import {
   type HighlightProject,
   type HighlightProjectId,
 } from '@/lib/highlightProjects';
+import { SkyhavenHighlightDetail } from '@/components/highlights/SkyhavenHighlightDetail';
 import {
   ARCHITECTURE_HIGHLIGHT_SECTION,
   HIGHLIGHT_GLOW_THEMES,
   MULTIKUNST_HIGHLIGHT_SECTION,
   PRODUCTION_HIGHLIGHT_SECTION,
+  SKYHAVEN_HIGHLIGHT_SECTION,
   type HighlightBentoSectionConfig,
 } from '@/lib/highlightSections';
 import { findPostBySlug } from '@/lib/loadPosts';
@@ -233,7 +235,7 @@ function TileFace({
         ) : (
           <div className="h-full w-full bg-[linear-gradient(135deg,rgba(248,250,252,1)_0%,rgba(241,245,249,1)_52%,rgba(0,122,255,0.06)_100%)]" />
         )}
-        {isFeatured ? (
+        {isFeatured && !project.tileHideFeaturedFade ? (
           <div
             className="absolute inset-0 bg-gradient-to-t from-white/[0.6] via-white/[0.22] to-transparent"
             aria-hidden
@@ -245,7 +247,14 @@ function TileFace({
 
       {isFeatured ? (
         <div className="pointer-events-none relative z-10 mt-auto p-3 sm:p-4 md:p-5">
-          <div className="brand-tight max-w-[18rem] text-left text-[1.25rem] font-semibold leading-[1.06] tracking-tight text-mk-text [text-shadow:0_1px_0_rgba(255,255,255,0.9),0_2px_14px_rgba(255,255,255,0.65),0_2px_18px_rgba(0,0,0,0.12)] sm:text-2xl md:text-3xl xl:text-[2.1rem]">
+          <div
+            className={clsx(
+              'brand-tight max-w-[18rem] text-left text-[1.25rem] font-semibold leading-[1.06] tracking-tight sm:text-2xl md:text-3xl xl:text-[2.1rem]',
+              project.tileFeaturedLightTitle
+                ? 'text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_14px_rgba(0,0,0,0.75)]'
+                : 'text-mk-text [text-shadow:0_1px_0_rgba(255,255,255,0.9),0_2px_14px_rgba(255,255,255,0.65),0_2px_18px_rgba(0,0,0,0.12)]',
+            )}
+          >
             <span className="block">{firstWord}</span>
             {restWords.length > 0 ? (
               <span className="block pl-5 pt-0.5 sm:pl-7 sm:pt-1">{restWords.join(' ')}</span>
@@ -393,6 +402,18 @@ export function HighlightBentoSection({
                     <div className="max-w-none space-y-2 text-[0.9375rem] leading-relaxed text-mk-text-secondary sm:max-w-md sm:text-[15px] sm:leading-relaxed lg:text-base">
                       <p>{config.bodyP1}</p>
                       <p>{config.bodyP2}</p>
+                      {config.tryBuildLink ? (
+                        <p>
+                          <a
+                            href={config.tryBuildLink.href}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            className="font-semibold text-system-blue underline decoration-system-blue/35 underline-offset-2 transition-colors hover:text-[#0077ED]"
+                          >
+                            {config.tryBuildLink.label}
+                          </a>
+                        </p>
+                      ) : null}
                     </div>
                   </div>
 
@@ -422,7 +443,15 @@ export function HighlightBentoSection({
                     'border border-black/[0.06] shadow-[0_8px_32px_rgba(28,28,28,0.08)] ring-1 ring-black/[0.04]',
                   )}
                 >
-                  {activeProject.projectSlug ? (
+                  {activeProject.detailMode === 'skyhaven' ? (
+                    <div className="px-px">
+                      <SkyhavenHighlightDetail
+                        highlight={activeProject}
+                        onBack={onClose}
+                        backLabel={backLabel}
+                      />
+                    </div>
+                  ) : activeProject.projectSlug ? (
                     <InlineProjectView
                       slug={activeProject.projectSlug}
                       onBack={onClose}
@@ -449,4 +478,5 @@ export {
   ARCHITECTURE_HIGHLIGHT_SECTION,
   MULTIKUNST_HIGHLIGHT_SECTION,
   PRODUCTION_HIGHLIGHT_SECTION,
+  SKYHAVEN_HIGHLIGHT_SECTION,
 };

@@ -11,7 +11,8 @@ export type HighlightProjectId =
   | 'the-house-highlight'
   | 'multikunst-multiply'
   | 'multikunst-multiwatch'
-  | 'multikunst-occupied';
+  | 'multikunst-occupied'
+  | 'skyhaven';
 
 export interface HighlightProject {
   id: HighlightProjectId;
@@ -31,7 +32,15 @@ export interface HighlightProject {
   /** External URL — when set the inline detail CTA opens it directly (target=_blank). */
   toolExternalUrl?: string;
   /** Top-left tile chips (immersion / category badges). Rendered with chip classes from `ProjectsGrid`. */
-  tileBadges?: Array<'3D' | 'VR' | 'AR' | 'Learning Experience' | 'Tool' | 'Dashboard' | 'Internal'>;
+  tileBadges?: Array<'3D' | 'VR' | 'AR' | 'Learning Experience' | 'Tool' | 'Dashboard' | 'Internal' | 'Game'>;
+  /** Custom inline detail UI (e.g. Skyhaven asset codex). */
+  detailMode?: 'skyhaven';
+  /** Long-form copy for the Description tab (when set, used instead of description + role). */
+  explanation?: string;
+  /** Featured tile: skip white bottom fade (dark video / poster thumbs). */
+  tileHideFeaturedFade?: boolean;
+  /** Featured tile: light title on dark media instead of dark text + white wash. */
+  tileFeaturedLightTitle?: boolean;
   /** Top-left tile chips — neutral (tool names etc.). */
   tileTags?: string[];
   span: 'featured' | 'normal';
@@ -140,6 +149,38 @@ export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
     tileTags: ['Blender', 'Unreal Engine'],
     tileBadges: ['3D'],
     span: 'normal',
+  },
+];
+
+export const SKYHAVEN_HIGHLIGHT_PROJECTS: HighlightProject[] = [
+  {
+    id: 'skyhaven',
+    title: 'Skyhaven',
+    year: '2025–2026',
+    category: 'Game · Desktop widget',
+    description:
+      'Skyhaven is a compact desktop widget game I build alongside client work: a floating isometric island you keep at the edge of your screen while you focus on real tasks. The build already covers focus sessions, inventory & equipment, farming, custom island building, profile loadouts, and a playable mining combat slice.',
+    explanation: `Skyhaven is a desktop widget game for Windows and macOS — inspired by the calm of games like Rusty's Retirement, but with clearer action POIs (mine, farm, shrine, tavern) and a stronger sense of place. You run a focus session (30, 60, or 120 minutes) while your character works on the island; when you're done, you collect rewards, materials, and small surprises — without fail-state pressure or click grinding.
+
+Technically it's a Tauri 2 shell around a React 19 UI and a Three.js / React Three Fiber world: data-driven floating islands, day/night lighting, autonomous movement, NPCs, audio (music, ambience, SFX), and persistent local saves.
+
+Already playable in the prototype: focus timer & status UI, HUD and sidebar, inventory & equipment, profile loadout (character preview + slots), daily quests / planner, farming (till, plant, grow, harvest), toolbox build mode on custom home islands (multi-cell footprints, valid/invalid placement), island switching (home, farming, mining layouts), third-person combat on the mining island (enemy robots, telegraphs, block/dodge, hit feedback), character selection, POI interactions, and internal Tile Lab / walk-surface tooling for production.
+
+UI scaffolding, not full gameplay yet: in-game shop listings and the achievements entry (menus exist; economy/trophy logic is still to come).
+
+I designed and integrated the full stack myself — concept, UI, 3D pipeline, and engineering — using ChatGPT and Cursor as accelerators, with every merge reviewed in Git.`,
+    role:
+      'Art direction, 3D production, and code end to end — sketches and visual rules first, then Meshy for 3D iteration, Cursor for gameplay in React, Three.js, and Tauri 2. Every prop, character, and tile starts from my own look-and-feel before it lands in the engine.',
+    tools: ['Tauri', 'React', 'Three.js', 'Meshy', 'Cursor'],
+    thumb: '/projects/skyhaven/posters/intro-electro.webp',
+    tileVideo: '/projects/skyhaven/tile-preview.mp4',
+    tileTags: ['Tauri', 'React', 'Three.js', 'Meshy', 'Cursor'],
+    tileBadges: ['Game', '3D'],
+    toolExternalUrl: 'https://github.com/Aaroncxc/Coincraft_Skyhaven/releases',
+    tileHideFeaturedFade: true,
+    tileFeaturedLightTitle: true,
+    span: 'featured',
+    detailMode: 'skyhaven',
   },
 ];
 
@@ -252,6 +293,7 @@ export const MULTIKUNST_HIGHLIGHT_PROJECTS: HighlightProject[] = [
 
 export const ALL_HIGHLIGHT_PROJECTS: HighlightProject[] = [
   ...HIGHLIGHT_PROJECTS,
+  ...SKYHAVEN_HIGHLIGHT_PROJECTS,
   ...ARCHITECTURE_HIGHLIGHT_PROJECTS,
   ...MULTIKUNST_HIGHLIGHT_PROJECTS,
 ];
