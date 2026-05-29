@@ -44,3 +44,5 @@ __MACOSX
 .cache
 .eslintcache
 .tslintcache
+documents/.portfolio-pdf-cache
+documents/.generate-portfolio-pdf-tmp.cjs

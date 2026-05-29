@@ -16,7 +16,7 @@ export const liveChipClass =
 
 /** Project tile: 3D / VR / AR — solid brand blue (same as modal-only project pills). */
 export const chipTileImmersionClass =
-  'rounded-full bg-system-blue px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white shadow-sm backdrop-blur-sm';
+  'inline-flex items-center justify-center self-center rounded-full bg-system-blue px-2 py-0.5 text-[10px] font-semibold leading-tight text-white shadow-sm sm:px-2.5 sm:py-1 sm:text-[11px]';
 
 /** Aliases kept for backward-compatible imports — all match `chipTileImmersionClass`. */
 export const chip3dInteractiveClass = chipTileImmersionClass;

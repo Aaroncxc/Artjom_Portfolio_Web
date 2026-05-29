@@ -538,7 +538,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                     and only keep the type chip + immersion chips + the green
                     Learning-Experience pill so the artwork is not buried.
                   */}
-                  <div className="pointer-events-none absolute left-1.5 top-1.5 right-1.5 z-20 flex flex-wrap gap-1 sm:left-2 sm:top-2 sm:right-2">
+                  <div className="pointer-events-none absolute left-1.5 top-1.5 right-1.5 z-20 flex flex-wrap items-center gap-1 sm:left-2 sm:top-2 sm:right-2">
                     <span className={metaChipClass}>{typeChipLabel[project.type]}</span>
                     {project.tools?.map((tool) => (
                       <span key={tool.name} className={clsx(metaChipClass, 'hidden sm:inline-flex')}>

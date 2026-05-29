@@ -33,7 +33,7 @@ interface PortfolioProjectModalProps {
 
 const TABS: { id: TabId; label: string }[] = [
   { id: 'private', label: 'Private' },
-  { id: 'explanation', label: 'Explanation' },
+  { id: 'explanation', label: 'Description' },
 ];
 
 /** `yyyy-mm` or full ISO — stable local calendar month/year for display */
@@ -199,7 +199,7 @@ export function PortfolioProjectModal({
   const [activeTab, setActiveTab] = useState<TabId>('private');
   const [activeAssetIndex, setActiveAssetIndex] = useState(0);
   const [lightboxAssetIndex, setLightboxAssetIndex] = useState<number | null>(null);
-  /** Once the user opens Explanation we drop the attention dot on its tab button. */
+  /** Once the user opens Description we drop the attention dot on its tab button. */
   const [hasSeenExplanation, setHasSeenExplanation] = useState(false);
 
   useEffect(() => {
@@ -513,7 +513,7 @@ export function PortfolioProjectModal({
               >
                 <div className="space-y-3">
                   <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.24em] text-mk-text-muted">
-                    Explanation
+                    Description
                   </span>
                   <StaircaseTitle title={project.title} />
                 </div>

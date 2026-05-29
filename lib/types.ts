@@ -81,7 +81,7 @@ export interface Project {
   mediaCaptions?: Record<string, string>;
   /** Interactive Unreal Engine blueprint embeds (blueprintue.com render URLs). */
   unrealBlueprints?: UnrealBlueprintMedia[];
-  // Long-form description shown in the "Explanation" tab of the project modal.
+  // Long-form description shown in the "Description" tab of the project modal.
   // Falls back to `description` when omitted.
   explanation?: string;
   // Short bullet list shown in the "Private" tab info column.

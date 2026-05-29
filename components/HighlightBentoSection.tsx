@@ -118,7 +118,8 @@ function highlightAsProject(h: HighlightProject): Project {
     tools: h.tools.map((name) => ({ name })),
     tags: [h.category, ...(h.tileBadges ?? []).map(String)],
     type: 'image',
-    thumbnail: h.thumb,
+    // Prefer first gallery still for the modal hero (e.g. course-overview’s thumb was a blurred teaser).
+    thumbnail: h.gallery?.[0] ?? h.thumb,
     images: h.gallery,
     gallery: galleryMedia.length > 0 ? galleryMedia : undefined,
     explanation: `${h.description}\n\nMy role: ${h.role}`,
@@ -154,7 +155,7 @@ function TileBadgeRow({ project }: { project: HighlightProject }) {
   const immersionBadges = badges.filter(isImmersion);
 
   return (
-    <div className="pointer-events-none absolute left-1.5 top-1.5 right-1.5 z-20 flex flex-wrap gap-1 sm:left-2 sm:top-2 sm:right-2">
+    <div className="pointer-events-none absolute left-1.5 top-1.5 right-1.5 z-20 flex flex-wrap items-center gap-1 sm:left-2 sm:top-2 sm:right-2">
       {project.tileTags?.map((tag) => (
         <span key={`tag-${tag}`} className={clsx(metaChipClass, 'hidden sm:inline-flex')}>
           {tag}

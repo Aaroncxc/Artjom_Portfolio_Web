@@ -306,8 +306,6 @@ const toolsGamesData: ToolGame[] = [
       '/tools/dadb-course-overview/course-4.jpg',
       '/tools/dadb-course-overview/course-5.jpg',
       '/tools/dadb-course-overview/course-6.jpg',
-      '/tools/dadb-course-overview/team-1.jpg',
-      '/tools/dadb-course-overview/team-2.jpg',
     ],
     tags: [
       'German Academy of Digital Education',
