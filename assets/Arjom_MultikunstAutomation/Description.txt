@@ -1,0 +1,10 @@
+multiautomation OS is a modular workflow builder for creating custom business automations and digital tools.
+
+The app provides a clean node-based interface for building workflows with inputs, scripts, web tools, APIs, LLMs, file outputs, lead research, SEO audits and future integrations.
+
+Users can visually connect nodes, run processes, inspect results, save generated files and extend the system with new node types over time. It is designed to make technical workflows understandable, editable and reusable!!
+Without unnecessary complexity.
+
+Built as an internal foundation for creating tailored tools for companies, multiautomation  OS combines automation logic, scripting, AI support and modular tool-building in one focused web interface.
+
+A visual system for building custom workflows, company tools and repeatable digital processes.

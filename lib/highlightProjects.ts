@@ -12,7 +12,9 @@ export type HighlightProjectId =
   | 'multikunst-multiply'
   | 'multikunst-multiwatch'
   | 'multikunst-occupied'
-  | 'skyhaven';
+  | 'skyhaven'
+  | 'flasher'
+  | 'multikunst-automation';
 
 export interface HighlightProject {
   id: HighlightProjectId;
@@ -43,6 +45,12 @@ export interface HighlightProject {
   tileFeaturedLightTitle?: boolean;
   /** Top-left tile chips — neutral (tool names etc.). */
   tileTags?: string[];
+  /** Bottom-right status on the tile thumbnail (live URL vs try/test build). */
+  tileAvailability?: 'live' | 'test' | 'demo-live';
+  /** Show stair-step title on the tile (for normal-span tiles without featured layout). */
+  tileShowTitle?: boolean;
+  /** Title scale on the tile — `prominent` matches standard bento cells; `featured` for hero tiles. */
+  tileTitleSize?: 'prominent' | 'featured';
   span: 'featured' | 'normal';
 }
 
@@ -106,6 +114,9 @@ export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
     ],
     toolDeeplinkId: DADB_COURSE_OVERVIEW_TOOL_ID,
     toolExternalUrl: DADB_COURSE_OVERVIEW_TOOL_URL,
+    tileAvailability: 'live',
+    tileShowTitle: true,
+    tileTitleSize: 'prominent',
     tileTags: ['Cursor', 'Next.js'],
     tileBadges: ['Tool', 'Dashboard'],
     span: 'featured',
@@ -177,6 +188,7 @@ I designed and integrated the full stack myself — concept, UI, 3D pipeline, an
     tileTags: ['Tauri', 'React', 'Three.js', 'Meshy', 'Cursor'],
     tileBadges: ['Game', '3D'],
     toolExternalUrl: 'https://github.com/Aaroncxc/Coincraft_Skyhaven/releases',
+    tileAvailability: 'demo-live',
     tileHideFeaturedFade: true,
     tileFeaturedLightTitle: true,
     span: 'featured',
@@ -285,9 +297,76 @@ export const MULTIKUNST_HIGHLIGHT_PROJECTS: HighlightProject[] = [
     ],
     toolDeeplinkId: 'occupied',
     toolExternalUrl: 'https://occupiedvfx-v3-30-01-2026-2c75.vercel.app',
+    tileAvailability: 'live',
     tileTags: ['Three.js', 'GLSL'],
     tileBadges: ['Tool', '3D'],
     span: 'normal',
+  },
+];
+
+export const FLASHER_HIGHLIGHT_PROJECT: HighlightProject = {
+  id: 'flasher',
+  title: 'FlashR',
+  year: '2024',
+  category: 'iOS · Learning app',
+  description:
+    'Swift flashcard app for fast, personal study — AI-assisted card generation, swipe sessions, quizzes, folders, and progress stats in a clean mobile UI.',
+  role:
+    'Solo product design and iOS development — Swift UI, data model, onboarding, and AI workflows for question/answer/explanation cards.',
+  tools: ['Swift', 'AI APIs', 'Cursor'],
+  thumb: '/tools/flasher/thumbnail.webp',
+  gallery: [
+    '/tools/flasher/screen-002.webp',
+    '/tools/flasher/screen-003.webp',
+    '/tools/flasher/screen-004.webp',
+  ],
+  tileTags: ['Swift', 'AI'],
+  tileBadges: ['Tool'],
+  span: 'normal',
+};
+
+export const MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT: HighlightProject = {
+  id: 'multikunst-automation',
+  title: 'Multikunst Automation',
+  year: '2024',
+  category: 'Workflow · Internal platform',
+  description:
+    'Node-based workflow OS for company automations — connect scripts, web tools, APIs, and LLM steps; inspect runs, save outputs, and extend with new node types over time.',
+  role:
+    'Designed and built the modular builder under Multikunst — visual graph editor, execution plumbing, and AI hooks for repeatable client tooling.',
+  tools: ['React', 'Node.js', 'LLMs', 'Cursor'],
+  thumb: '/tools/multikunst-automation/thumbnail.webp',
+  gallery: [
+    '/tools/multikunst-automation/screen-001.webp',
+    '/tools/multikunst-automation/screen-002.webp',
+    '/tools/multikunst-automation/screen-003.webp',
+    '/tools/multikunst-automation/screen-004.webp',
+    '/tools/multikunst-automation/screen-005.webp',
+  ],
+  tileTags: ['Cursor', 'LLMs'],
+  tileBadges: ['Tool', 'Dashboard'],
+  span: 'normal',
+};
+
+const courseOverviewForAi = HIGHLIGHT_PROJECTS.find((p) => p.id === 'course-overview')!;
+const occupiedForAi = MULTIKUNST_HIGHLIGHT_PROJECTS.find((p) => p.id === 'multikunst-occupied')!;
+
+export const AI_APP_DEV_HIGHLIGHT_PROJECTS: HighlightProject[] = [
+  SKYHAVEN_HIGHLIGHT_PROJECTS[0],
+  {
+    ...courseOverviewForAi,
+    span: 'normal',
+    description:
+      'Live course-production dashboard — Excel syncs twice daily into KPI views so PMs, stakeholders, and leadership read pipeline health without chasing spreadsheets. Built with AI-assisted iteration in Cursor.',
+    tileTags: ['Cursor', 'GPT', 'Next.js'],
+  },
+  FLASHER_HIGHLIGHT_PROJECT,
+  MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT,
+  {
+    ...occupiedForAi,
+    description:
+      'Browser VFX engine for live visuals — GPU effect chains over video, audio, webcam, and 3D. Shipped with AI-accelerated shader and UI iteration in Cursor.',
+    tileTags: ['Cursor', 'Three.js', 'GLSL'],
   },
 ];
 
@@ -296,6 +375,8 @@ export const ALL_HIGHLIGHT_PROJECTS: HighlightProject[] = [
   ...SKYHAVEN_HIGHLIGHT_PROJECTS,
   ...ARCHITECTURE_HIGHLIGHT_PROJECTS,
   ...MULTIKUNST_HIGHLIGHT_PROJECTS,
+  FLASHER_HIGHLIGHT_PROJECT,
+  MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT,
 ];
 
 export function highlightById(id: HighlightProjectId | null): HighlightProject | undefined {

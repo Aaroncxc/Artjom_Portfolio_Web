@@ -3,10 +3,11 @@ import {
   ARCHITECTURE_HIGHLIGHT_PROJECTS,
   MULTIKUNST_HIGHLIGHT_PROJECTS,
   SKYHAVEN_HIGHLIGHT_PROJECTS,
+  AI_APP_DEV_HIGHLIGHT_PROJECTS,
   type HighlightProject,
 } from '@/lib/highlightProjects';
 
-export type HighlightGlowTheme = 'amber' | 'sky' | 'purple' | 'emerald';
+export type HighlightGlowTheme = 'amber' | 'sky' | 'purple' | 'emerald' | 'indigo';
 
 export interface HighlightBentoSectionConfig {
   id: string;
@@ -65,6 +66,43 @@ export const PRODUCTION_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
     }
   },
   backLabel: 'Back to highlights',
+};
+
+export const AI_APP_DEV_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
+  id: 'highlights-ai-apps',
+  sectionTitle: 'App Development with AI',
+  headlineStairs: ['App Development', 'with AI', ''],
+  subtitle: 'DADB production · Personal builds',
+  bodyP1:
+    'From the start of my production work at DADB, I have pushed AI into how we ship courses — using ElevenLabs, Synthesia, and HeyGen to accelerate voice, presenter, and video pipelines while keeping editorial control in-house.',
+  bodyP2:
+    'The same mindset runs through private work: Replit for my first project-manager apps, then GPT and Claude in Cursor for dashboards, games, and creative tools. I genuinely enjoy building this way — Skyhaven, Course Overview, FlashR, Multikunst Automation, and Occupied below are representative AI-native or AI-accelerated releases.',
+  eyebrow: 'AI · Apps',
+  projects: AI_APP_DEV_HIGHLIGHT_PROJECTS,
+  glow: 'indigo',
+  gridClass: 'grid-cols-2 lg:min-h-[560px] lg:grid-cols-3 lg:grid-rows-2 lg:gap-5',
+  tileCellClass(project) {
+    if (project.span === 'featured') {
+      return [
+        'relative min-h-[176px]',
+        'col-span-2 row-span-1 order-first sm:min-h-[200px]',
+        'lg:col-span-1 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:min-h-0 lg:order-none',
+      ].join(' ');
+    }
+    switch (project.id) {
+      case 'course-overview':
+        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-2 lg:col-start-1 lg:row-start-1 lg:order-none lg:min-h-0';
+      case 'flasher':
+        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-3 lg:col-start-2 lg:row-start-1 lg:order-none lg:min-h-0';
+      case 'multikunst-automation':
+        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-4 lg:col-start-1 lg:row-start-2 lg:order-none lg:min-h-0';
+      case 'multikunst-occupied':
+        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-5 lg:col-start-2 lg:row-start-2 lg:order-none lg:min-h-0';
+      default:
+        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px]';
+    }
+  },
+  backLabel: 'Back to AI highlights',
 };
 
 export const SKYHAVEN_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
@@ -172,5 +210,13 @@ export const HIGHLIGHT_GLOW_THEMES: Record<
       'absolute left-1/2 top-1/2 aspect-square w-auto animate-highlight-bento-glow-spin bg-[conic-gradient(from_0deg,rgba(52,211,153,0)_0deg_282deg,rgba(52,211,153,0.12)_292deg,rgba(167,243,208,0.7)_304deg,rgba(16,185,129,0.88)_312deg,rgba(52,211,153,0.38)_322deg,rgba(167,243,208,0.1)_336deg,rgba(52,211,153,0)_360deg)] min-h-[min(130vw,520px)] h-[185%] sm:min-h-[min(115vw,720px)] sm:h-[220%] md:min-h-[800px]',
     reducedMotionBg:
       'pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-200/[0.09] via-transparent to-teal-200/[0.07] sm:rounded-3xl sm:from-emerald-200/[0.11] sm:to-teal-200/[0.08]',
+  },
+  indigo: {
+    wrapperShadow:
+      'shadow-[0_0_16px_-16px_rgba(99,102,241,0.32),0_0_0_1px_rgba(99,102,241,0.16)] sm:shadow-[0_0_28px_-12px_rgba(79,70,229,0.38),0_0_0_1px_rgba(99,102,241,0.22)]',
+    conicGradient:
+      'absolute left-1/2 top-1/2 aspect-square w-auto animate-highlight-bento-glow-spin bg-[conic-gradient(from_0deg,rgba(99,102,241,0)_0deg_282deg,rgba(99,102,241,0.14)_292deg,rgba(165,180,252,0.72)_304deg,rgba(79,70,229,0.9)_312deg,rgba(99,102,241,0.4)_322deg,rgba(165,180,252,0.1)_336deg,rgba(99,102,241,0)_360deg)] min-h-[min(130vw,520px)] h-[185%] sm:min-h-[min(115vw,720px)] sm:h-[220%] md:min-h-[800px]',
+    reducedMotionBg:
+      'pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-200/[0.1] via-transparent to-violet-200/[0.08] sm:rounded-3xl sm:from-indigo-200/[0.12] sm:to-violet-200/[0.09]',
   },
 };

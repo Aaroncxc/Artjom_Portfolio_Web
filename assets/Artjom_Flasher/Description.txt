@@ -1,0 +1,13 @@
+flashr is an iOS flashcard app built with Swift, designed for fast, personalized and AI-supported learning.
+
+The app allows users to create, organize and study flashcards in a clean mobile interface. 
+
+Cards can be generated manually or with AI support, including questions, answers, explanations and optional image-based cards.
+
+FlashR combines swipe-based learning, quizzes, favorites, folders, personal profiles, learning statistics and topic-based libraries into one simple learning experience. 
+
+The onboarding flow lets users select their language, interests and profile information, so the app can adapt to different learning goals.
+
+Built as a modern mobile learning tool, FlashR focuses on speed, clarity and daily use,  making it easy to create knowledge, repeat it and track progress over time.
+
+A Swift-based flashcard app for smarter, faster and more personal learning.

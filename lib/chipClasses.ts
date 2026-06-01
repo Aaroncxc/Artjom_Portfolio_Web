@@ -14,6 +14,14 @@ export const chipLearningExperienceClass =
 export const liveChipClass =
   'flex items-center gap-1 rounded-full bg-[rgba(99,102,241,0.9)] px-2.5 py-1 text-[11px] font-medium uppercase tracking-wider text-white shadow-sm backdrop-blur-sm sm:text-xs';
 
+/** “Test now” on highlight tiles — playable build / GitHub release. */
+export const testNowChipClass =
+  'flex items-center gap-1 rounded-full bg-[rgba(0,122,255,0.92)] px-2.5 py-1 text-[11px] font-semibold tracking-wide text-white shadow-sm backdrop-blur-sm sm:text-xs';
+
+/** “Demo live” on highlight tiles — public demo / early access build. */
+export const demoLiveChipClass =
+  'flex items-center gap-1 rounded-full bg-[rgba(16,185,129,0.92)] px-2.5 py-1 text-[11px] font-semibold tracking-wide text-white shadow-sm backdrop-blur-sm sm:text-xs';
+
 /** Project tile: 3D / VR / AR — solid brand blue (same as modal-only project pills). */
 export const chipTileImmersionClass =
   'inline-flex items-center justify-center self-center rounded-full bg-system-blue px-2 py-0.5 text-[10px] font-semibold leading-tight text-white shadow-sm sm:px-2.5 sm:py-1 sm:text-[11px]';

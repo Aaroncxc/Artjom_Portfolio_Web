@@ -7,6 +7,7 @@ import { Navigation } from '@/components/Navigation';
 import { AboutSection } from '@/components/AboutSection';
 import {
   HighlightBentoSection,
+  AI_APP_DEV_HIGHLIGHT_SECTION,
   ARCHITECTURE_HIGHLIGHT_SECTION,
   MULTIKUNST_HIGHLIGHT_SECTION,
   SKYHAVEN_HIGHLIGHT_SECTION,
@@ -62,6 +63,7 @@ export default function Home() {
     const sectionIds = [
       'about',
       'highlights',
+      'highlights-ai-apps',
       'highlights-architecture',
       'highlights-skyhaven',
       'highlights-multikunst',
@@ -165,6 +167,8 @@ export default function Home() {
         <AboutSection visible={true} />
 
         <HighlightBentoSection visible={true} />
+
+        <HighlightBentoSection visible={true} config={AI_APP_DEV_HIGHLIGHT_SECTION} />
 
         <HighlightBentoSection visible={true} config={ARCHITECTURE_HIGHLIGHT_SECTION} />
 

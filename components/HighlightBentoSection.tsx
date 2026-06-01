@@ -8,7 +8,9 @@ import { PortfolioProjectModal } from '@/components/portfolio/PortfolioProjectMo
 import {
   chipLearningExperienceClass,
   chipTileImmersionClass,
+  liveChipClass,
   metaChipClass,
+  testNowChipClass,
 } from '@/lib/chipClasses';
 import {
   highlightById,
@@ -17,6 +19,7 @@ import {
 } from '@/lib/highlightProjects';
 import { SkyhavenHighlightDetail } from '@/components/highlights/SkyhavenHighlightDetail';
 import {
+  AI_APP_DEV_HIGHLIGHT_SECTION,
   ARCHITECTURE_HIGHLIGHT_SECTION,
   HIGHLIGHT_GLOW_THEMES,
   MULTIKUNST_HIGHLIGHT_SECTION,
@@ -149,6 +152,80 @@ function SyntheticProjectView({
   );
 }
 
+function TileAvailabilityPill({ status }: { status: 'live' | 'test' | 'demo-live' }) {
+  const label =
+    status === 'live' ? 'Live' : status === 'demo-live' ? 'Demo Live' : 'Test now';
+  const useLiveStyle = status === 'live' || status === 'demo-live';
+
+  return (
+    <span className={clsx('shrink-0', useLiveStyle ? liveChipClass : testNowChipClass)}>
+      {useLiveStyle ? (
+        <>
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-white/95" aria-hidden />
+          {label}
+        </>
+      ) : (
+        label
+      )}
+    </span>
+  );
+}
+
+/** Matches absolute badge inset on tiles that only show availability (e.g. Occupied). */
+const TILE_AVAILABILITY_INSET =
+  'bottom-2 right-2 sm:bottom-2.5 sm:right-2.5' as const;
+const TILE_FOOTER_BADGE_PADDING = 'pb-2 pr-2 sm:pb-2.5 sm:pr-2.5' as const;
+const TILE_FOOTER_TITLE_PADDING = 'pb-2 pl-3 sm:pb-2.5 sm:pl-4 md:pl-5' as const;
+
+function TileAvailabilityBadge({ status }: { status: 'live' | 'test' | 'demo-live' }) {
+  return (
+    <div
+      className={clsx(
+        'pointer-events-none absolute z-30',
+        TILE_AVAILABILITY_INSET,
+      )}
+    >
+      <TileAvailabilityPill status={status} />
+    </div>
+  );
+}
+
+function TileTitleWithAvailabilityRow({
+  project,
+  variant,
+}: {
+  project: HighlightProject;
+  variant: 'featured' | 'prominent';
+}) {
+  const isProminent = variant === 'prominent';
+
+  return (
+    <div className="pointer-events-none relative z-10 mt-auto w-full">
+      <div className="flex w-full items-end justify-between gap-2 sm:gap-3">
+        <p
+          className={clsx(
+            'brand-tight min-w-0 flex-1 text-left font-semibold leading-[1.06] tracking-tight',
+            TILE_FOOTER_TITLE_PADDING,
+            isProminent
+              ? 'text-[1.2rem] sm:text-[1.65rem] md:text-[1.85rem] lg:text-[2rem]'
+              : 'text-[1.25rem] sm:text-2xl md:text-3xl xl:text-[2.1rem]',
+            project.tileFeaturedLightTitle
+              ? 'text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_14px_rgba(0,0,0,0.75)]'
+              : 'text-mk-text [text-shadow:0_1px_0_rgba(255,255,255,0.9),0_2px_14px_rgba(255,255,255,0.65),0_2px_18px_rgba(0,0,0,0.12)]',
+          )}
+        >
+          {project.title}
+        </p>
+        {project.tileAvailability ? (
+          <div className={clsx('shrink-0', TILE_FOOTER_BADGE_PADDING)}>
+            <TileAvailabilityPill status={project.tileAvailability} />
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 /** Tile chips: tags first, then content tags, then VR/AR/3D immersion (always last). */
 function TileBadgeRow({ project }: { project: HighlightProject }) {
   const badges = project.tileBadges ?? [];
@@ -186,6 +263,51 @@ function TileBadgeRow({ project }: { project: HighlightProject }) {
   );
 }
 
+function TileTitleOverlay({
+  project,
+  variant,
+}: {
+  project: HighlightProject;
+  variant: 'featured' | 'prominent';
+}) {
+  const titleWords = project.title.trim().split(/\s+/);
+  const [firstWord, ...restWords] = titleWords;
+  const isProminent = variant === 'prominent';
+
+  return (
+    <div
+      className={clsx(
+        'pointer-events-none relative z-10 mt-auto',
+        isProminent ? 'p-3 sm:p-3.5 md:p-4' : 'p-3 sm:p-4 md:p-5',
+      )}
+    >
+      <div
+        className={clsx(
+          'brand-tight max-w-full text-left font-semibold leading-[1.06] tracking-tight',
+          isProminent
+            ? 'text-[1.2rem] sm:text-[1.65rem] md:text-[1.85rem] lg:text-[2rem]'
+            : 'max-w-[18rem] text-[1.25rem] sm:text-2xl md:text-3xl xl:text-[2.1rem]',
+          project.tileFeaturedLightTitle
+            ? 'text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_14px_rgba(0,0,0,0.75)]'
+            : 'text-mk-text [text-shadow:0_1px_0_rgba(255,255,255,0.9),0_2px_14px_rgba(255,255,255,0.65),0_2px_18px_rgba(0,0,0,0.12)]',
+        )}
+      >
+        <span className="block">{firstWord}</span>
+        {restWords.length > 0 ? (
+          <span
+            className={clsx(
+              'block pt-0.5 sm:pt-1',
+              isProminent ? 'pl-4 sm:pl-6 md:pl-7' : 'pl-5 sm:pl-7',
+            )}
+          >
+            {restWords.join(' ')}
+          </span>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 function TileFace({
   project,
   registerTileRef,
@@ -200,8 +322,18 @@ function TileFace({
   preferStaticTileVideo: boolean;
 }) {
   const isFeatured = project.span === 'featured';
-  const titleWords = project.title.trim().split(/\s+/);
-  const [firstWord, ...restWords] = titleWords;
+  const showTileTitle = isFeatured || project.tileShowTitle;
+  const showTitleWash =
+    showTileTitle &&
+    !project.tileHideFeaturedFade &&
+    !project.tileFeaturedLightTitle;
+  const titleVariant =
+    isFeatured || project.tileTitleSize === 'featured' ? 'featured' : 'prominent';
+  const inlineTitleWithAvailability =
+    showTileTitle &&
+    isFeatured &&
+    project.tileFeaturedLightTitle &&
+    Boolean(project.tileAvailability);
 
   return (
     <button
@@ -235,9 +367,14 @@ function TileFace({
         ) : (
           <div className="h-full w-full bg-[linear-gradient(135deg,rgba(248,250,252,1)_0%,rgba(241,245,249,1)_52%,rgba(0,122,255,0.06)_100%)]" />
         )}
-        {isFeatured && !project.tileHideFeaturedFade ? (
+        {showTitleWash ? (
           <div
-            className="absolute inset-0 bg-gradient-to-t from-white/[0.6] via-white/[0.22] to-transparent"
+            className={clsx(
+              'absolute inset-0 bg-gradient-to-t to-transparent',
+              isFeatured
+                ? 'from-white/[0.6] via-white/[0.22]'
+                : 'from-white/[0.72] via-white/[0.28]',
+            )}
             aria-hidden
           />
         ) : null}
@@ -245,22 +382,14 @@ function TileFace({
 
       <TileBadgeRow project={project} />
 
-      {isFeatured ? (
-        <div className="pointer-events-none relative z-10 mt-auto p-3 sm:p-4 md:p-5">
-          <div
-            className={clsx(
-              'brand-tight max-w-[18rem] text-left text-[1.25rem] font-semibold leading-[1.06] tracking-tight sm:text-2xl md:text-3xl xl:text-[2.1rem]',
-              project.tileFeaturedLightTitle
-                ? 'text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_14px_rgba(0,0,0,0.75)]'
-                : 'text-mk-text [text-shadow:0_1px_0_rgba(255,255,255,0.9),0_2px_14px_rgba(255,255,255,0.65),0_2px_18px_rgba(0,0,0,0.12)]',
-            )}
-          >
-            <span className="block">{firstWord}</span>
-            {restWords.length > 0 ? (
-              <span className="block pl-5 pt-0.5 sm:pl-7 sm:pt-1">{restWords.join(' ')}</span>
-            ) : null}
-          </div>
-        </div>
+      {project.tileAvailability && !inlineTitleWithAvailability ? (
+        <TileAvailabilityBadge status={project.tileAvailability} />
+      ) : null}
+
+      {inlineTitleWithAvailability ? (
+        <TileTitleWithAvailabilityRow project={project} variant={titleVariant} />
+      ) : showTileTitle ? (
+        <TileTitleOverlay project={project} variant={titleVariant} />
       ) : null}
 
       <div
@@ -475,6 +604,7 @@ export function HighlightBentoSection({
 }
 
 export {
+  AI_APP_DEV_HIGHLIGHT_SECTION,
   ARCHITECTURE_HIGHLIGHT_SECTION,
   MULTIKUNST_HIGHLIGHT_SECTION,
   PRODUCTION_HIGHLIGHT_SECTION,
