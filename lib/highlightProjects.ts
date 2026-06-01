@@ -172,7 +172,7 @@ I designed and integrated the full stack myself — concept, UI, 3D pipeline, an
     role:
       'Art direction, 3D production, and code end to end — sketches and visual rules first, then Meshy for 3D iteration, Cursor for gameplay in React, Three.js, and Tauri 2. Every prop, character, and tile starts from my own look-and-feel before it lands in the engine.',
     tools: ['Tauri', 'React', 'Three.js', 'Meshy', 'Cursor'],
-    thumb: '/projects/skyhaven/posters/intro-electro.webp',
+    thumb: '/projects/skyhaven/posters/fullfarming.webp',
     tileVideo: '/projects/skyhaven/tile-preview.mp4',
     tileTags: ['Tauri', 'React', 'Three.js', 'Meshy', 'Cursor'],
     tileBadges: ['Game', '3D'],

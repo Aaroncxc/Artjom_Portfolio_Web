@@ -26,9 +26,18 @@ const MAX_SOURCE_MB = 800;
 
 const SKYHAVEN_VIDEO_MAP = [
   {
-    src: 'IntroScreen_Electro_reAL.mp4',
+    src: 'Fullfarming Skyhaven.mp4',
     dest: 'tile-preview.mp4',
-    poster: 'posters/intro-electro.webp',
+    poster: 'posters/fullfarming.webp',
+    maxHeight: 720,
+    crf: 22,
+    /** Shorter loop for the autoplay bento tile (full clip stays in Videos tab). */
+    maxDurationSec: 20,
+  },
+  {
+    src: 'Fullfarming Skyhaven.mp4',
+    dest: 'videos/fullfarming.mp4',
+    poster: 'posters/fullfarming.webp',
     maxHeight: 720,
     crf: 22,
   },
@@ -155,7 +164,15 @@ async function toWebp(src, dest, maxEdge) {
   console.log(`[webp] ${path.basename(dest)}: ${meta.width}×${meta.height}, ${fmtMB(before)} → ${fmtMB(after)}`);
 }
 
-async function compressVideoEntry({ src: srcName, dest: destRel, poster, maxHeight = 720, crf = 22, optional = false }) {
+async function compressVideoEntry({
+  src: srcName,
+  dest: destRel,
+  poster,
+  maxHeight = 720,
+  crf = 22,
+  maxDurationSec,
+  optional = false,
+}) {
   if (!ffmpegPath) {
     console.error('ffmpeg-static not available');
     process.exit(1);
@@ -176,29 +193,28 @@ async function compressVideoEntry({ src: srcName, dest: destRel, poster, maxHeig
     return;
   }
   mkdirSync(path.dirname(dest), { recursive: true });
-  console.log(`\n[mp4] ${srcName} (${fmtMB(before)}) → ${destRel}`);
-  await exec(
-    ffmpegPath,
-    [
-      '-y',
-      '-hide_banner',
-      '-i',
-      src,
-      '-vf',
-      `scale=-2:${maxHeight}`,
-      '-c:v',
-      'libx264',
-      '-preset',
-      'medium',
-      '-crf',
-      String(crf),
-      '-movflags',
-      '+faststart',
-      '-an',
-      dest,
-    ],
-    { maxBuffer: 128 * 1024 * 1024 },
-  );
+  const durationNote = maxDurationSec ? ` (first ${maxDurationSec}s)` : '';
+  console.log(`\n[mp4] ${srcName} (${fmtMB(before)}) → ${destRel}${durationNote}`);
+  const args = [
+    '-y',
+    '-hide_banner',
+    '-i',
+    src,
+    ...(maxDurationSec ? ['-t', String(maxDurationSec)] : []),
+    '-vf',
+    `scale=-2:${maxHeight}`,
+    '-c:v',
+    'libx264',
+    '-preset',
+    'medium',
+    '-crf',
+    String(crf),
+    '-movflags',
+    '+faststart',
+    '-an',
+    dest,
+  ];
+  await exec(ffmpegPath, args, { maxBuffer: 128 * 1024 * 1024 });
   const after = statSync(dest).size;
   console.log(`  → ${fmtMB(after)}`);
 

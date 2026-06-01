@@ -29,7 +29,7 @@ const PREVIEW_MODEL_IDS = new Set([
 ]);
 
 const KEEP_SOURCE_VIDEOS = new Set([
-  'IntroScreen_Electro_reAL.mp4',
+  'Fullfarming Skyhaven.mp4',
   'IntroScreen_Fighting.webm',
   'Farming.mp4',
   'Skyhaven Widget Highlight.webm',

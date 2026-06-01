@@ -1,7 +1,7 @@
 Skyhaven portfolio sources (npm run compress:skyhaven → public/projects/skyhaven).
 
 Videos (root):
-  IntroScreen_Electro_reAL.mp4   → tile-preview.mp4 + posters/intro-electro.webp
+  Fullfarming Skyhaven.mp4       → tile-preview.mp4 (20s loop) + videos/fullfarming.mp4 + poster
   IntroScreen_Fighting.webm      → videos/fighting.mp4
   Farming.mp4                    → videos/farming.mp4
   Skyhaven Widget Highlight.webm → videos/widget-highlight.mp4

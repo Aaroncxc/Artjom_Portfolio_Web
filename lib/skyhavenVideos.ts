@@ -2,7 +2,7 @@
 
 export const SKYHAVEN_TILE_VIDEO = '/projects/skyhaven/tile-preview.mp4';
 
-export const SKYHAVEN_TILE_POSTER = '/projects/skyhaven/posters/intro-electro.webp';
+export const SKYHAVEN_TILE_POSTER = '/projects/skyhaven/posters/fullfarming.webp';
 
 export interface SkyhavenVideoClip {
   id: string;
@@ -14,11 +14,11 @@ export interface SkyhavenVideoClip {
 
 export const SKYHAVEN_VIDEO_CLIPS: SkyhavenVideoClip[] = [
   {
-    id: 'intro-electro',
-    title: 'Intro · Electro island',
+    id: 'fullfarming',
+    title: 'Full farming showcase',
     description:
-      'Opening beat on the electro home island — focus UI, island layout, and the calm desktop-widget framing.',
-    src: SKYHAVEN_TILE_VIDEO,
+      'Complete farming loop on the agriculture island — till, plant, grow, harvest, and island ambience in one take.',
+    src: '/projects/skyhaven/videos/fullfarming.mp4',
     poster: SKYHAVEN_TILE_POSTER,
   },
   {
