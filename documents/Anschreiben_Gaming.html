@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anschreiben — Artjom Naninjan · Gaming</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #475569;
+      --soft: #64748b;
+      --accent: #1e4d7b;
+      --accent-soft: #EEF4F9;
+      --line: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page { size: A4; margin: 0; }
+
+    html, body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: #eef2f6;
+      line-height: 1.46;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      background: #fff;
+      padding: 17mm 20mm 22mm 22mm;
+      page-break-after: always;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page:last-child { page-break-after: auto; }
+
+    .page-body { flex: 1; }
+
+    .page-footer {
+      margin-top: auto;
+      padding-top: 6mm;
+    }
+
+    .sender {
+      font-size: 10.5pt;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-bottom: 4.5mm;
+    }
+
+    .sender strong {
+      display: block;
+      font-size: 12pt;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 1mm;
+    }
+
+    .recipient {
+      font-size: 10.5pt;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-bottom: 5mm;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6mm;
+      margin-bottom: 8mm;
+      font-size: 10.5pt;
+      color: var(--soft);
+    }
+
+    .meta strong {
+      font-size: 11.5pt;
+      color: var(--accent);
+      font-weight: 700;
+      text-align: right;
+      max-width: 96mm;
+      line-height: 1.32;
+    }
+
+    p {
+      font-size: 12.5pt;
+      color: var(--muted);
+      margin-bottom: 3.2mm;
+      text-align: left;
+      hyphens: none;
+      -webkit-hyphens: none;
+      line-height: 1.46;
+    }
+
+    p strong { color: var(--ink); font-weight: 600; }
+
+    a {
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .sender a { font-weight: 400; }
+
+    p.greeting { margin-bottom: 3.2mm; }
+    p.closing { margin-bottom: 4mm; }
+
+    .page-2-head {
+      margin-bottom: 5mm;
+      padding-bottom: 2.5mm;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .page-2-head .rule {
+      width: 12mm;
+      height: 2px;
+      background: var(--accent);
+      margin-bottom: 2mm;
+    }
+
+    .page-2-head strong {
+      display: block;
+      font-size: 12pt;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.5mm;
+    }
+
+    .page-2-head span {
+      font-size: 10pt;
+      color: var(--soft);
+    }
+
+    .signature {
+      font-size: 12.5pt;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .links-panel {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--accent-soft);
+      padding: 3mm 4.5mm;
+    }
+
+    .links-panel .lbl {
+      font-size: 8.5pt;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2mm;
+    }
+
+    .links-panel .items {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5mm 4mm;
+      font-size: 10pt;
+      color: var(--muted);
+    }
+
+    .links-panel .item strong {
+      display: block;
+      font-size: 9pt;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.2mm;
+    }
+
+    @media print {
+      html, body { background: white; }
+      .page { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SEITE 1 -->
+  <div class="page page-1">
+    <div class="page-body">
+      <div class="sender">
+        <strong>Artjom Naninjan</strong>
+        Reinickendorfer Str. 65 · 13347 Berlin<br>
+        a.naninjan@googlemail.com · 0152 58407540<br>
+        <a href="https://artjomnaninjan.vercel.app">artjomnaninjan.vercel.app</a>
+      </div>
+
+      <div class="recipient">
+        z. Hd. der Personalabteilung<br>
+        Deutschland
+      </div>
+
+      <div class="meta">
+        <span>Berlin, 17. Juli 2026</span>
+        <strong>Bewerbung als Technical Producer / Level Designer</strong>
+      </div>
+
+      <p class="greeting">Sehr geehrte Damen und Herren,</p>
+
+      <p>als IHK-zertifizierter Projektleiter und 3D Generalist mit einem Hintergrund in der Architektur verbinde ich kreative Vision mit technischer Umsetzbarkeit. Mein Ziel ist es, meine Erfahrung in der Leitung komplexer Produktionspipelines und meine Leidenschaft für immersive Welten in Ihr Team einzubringen, um technologisch wegweisende Gaming-Erlebnisse zu schaffen.</p>
+
+      <p>In den letzten Jahren habe ich als <strong>Head of Production</strong> bei der DADB cross-funktionale Teams (3D, Cinematic, XR, Editorial) geleitet und sichergestellt, dass auch bei parallelen Produktionen Qualität und Deadlines gewahrt bleiben. Dabei habe ich technische Hürden frühzeitig identifiziert und durch interne Toolings — wie einem KI-gestützten Monitoring-Dashboard — die Effizienz der gesamten Pipeline gesteigert.</p>
+
+      <p>Parallel dazu entwickle ich derzeit mein eigenes Game: <strong><a href="https://github.com/Aaroncxc/Coincraft_Skyhaven">Skyhaven</a></strong> — ein Desktop-Widget-Game, das ich solo konzipiere, art-direigiere und technisch umsetze (Tauri, React, Three.js). Den Entwicklungsprozess streame ich <strong>täglich auf Twitch</strong> (<a href="https://twitch.tv/AaronCxC">twitch.tv/AaronCxC</a>) — live, iterativ und nah an echter Player-Perspektive. So verbinde ich Produktionsdisziplin mit dem hands-on Mindset, das moderne Spieleteams brauchen.</p>
+
+      <p><strong>Beherrschung der Realtime-Pipeline</strong> — durch mein Architekturstudium und meine Arbeit mit Unreal Engine und Blender entwickle ich Umgebungen nicht als statische Kulissen, sondern als interaktive Räume. Projekte wie der <strong>Solar Technician Campus</strong> zeigen meine Fähigkeit, komplexe Welten in Unreal zum Leben zu erwecken.</p>
+    </div>
+  </div>
+
+  <!-- SEITE 2 -->
+  <div class="page page-2">
+    <div class="page-body">
+      <div class="page-2-head">
+        <div class="rule"></div>
+        <strong>Artjom Naninjan</strong>
+        <span>Fortsetzung · Bewerbung Technical Producer / Level Designer</span>
+      </div>
+
+      <p><strong>Technical Art &amp; Tooling</strong> — mit der Entwicklung der <strong>Occupied VFX Engine</strong> habe ich bewiesen, dass ich komplexe GPU-Pipelines und Shader (GLSL/Three.js) eigenständig konzipieren und für Nutzer zugänglich machen kann.</p>
+
+      <p><strong>Methodische Führung</strong> — mein IHK-Zertifikat als Projektleiter und meine Erfahrung in der direkten Zusammenarbeit mit Partnern wie Tesla oder der TU Berlin ermöglichen es mir, die Brücke zwischen Stakeholdern, Designern und Developern zu schlagen.</p>
+
+      <p>Ich suche eine Herausforderung, bei der ich meine Fähigkeiten an der Schnittstelle von Design und Code einsetzen kann — sei es in der Steuerung von Produktionsprozessen oder in der technischen Umsetzung von Spielwelten. Da ich in Berlin ansässig bin, freue ich mich besonders über Möglichkeiten in der Hauptstadt, bin aber gleichermaßen offen für Remote-Modelle.</p>
+
+      <p>Meine Gehaltsvorstellung liegt bei einem Bruttojahresgehalt von ca. 75.000 €. Gerne überzeuge ich Sie in einem persönlichen Gespräch, durch eine Demo meiner Projekte oder live auf Twitch.</p>
+    </div>
+
+    <div class="page-footer">
+      <p class="closing">Mit freundlichen Grüßen</p>
+      <div class="signature">Artjom Naninjan</div>
+
+      <div class="links-panel">
+        <p class="lbl">Anlagen &amp; Links</p>
+        <div class="items">
+          <div class="item">
+            <strong>Portfolio</strong>
+            artjomnaninjan.vercel.app
+          </div>
+          <div class="item">
+            <strong>Skyhaven (GitHub)</strong>
+            github.com/Aaroncxc/Coincraft_Skyhaven
+          </div>
+          <div class="item">
+            <strong>Twitch</strong>
+            twitch.tv/AaronCxC
+          </div>
+          <div class="item">
+            <strong>LinkedIn</strong>
+            linkedin.com/in/artjom-naninjan
+          </div>
+          <div class="item">
+            <strong>ArtStation</strong>
+            artstation.com/aaron_cxc
+          </div>
+          <div class="item">
+            <strong>GitHub</strong>
+            github.com/Aaroncxc
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

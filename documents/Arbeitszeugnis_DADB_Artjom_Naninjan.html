@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arbeitszeugnis — Artjom Naninjan · DADB</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --body: #2b2b2b;
+      --muted: #555;
+      --rule: #1a1a1a;
+      --rule-light: #bbb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page { size: A4; margin: 0; }
+
+    html, body {
+      font-family: 'Times New Roman', Times, Georgia, serif;
+      color: var(--body);
+      background: #e8e8e8;
+      line-height: 1.5;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      background: #fff;
+      padding: 18mm 22mm 16mm 25mm;
+      page-break-after: always;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page:last-child { page-break-after: auto; }
+
+    .letterhead {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10mm;
+      margin-bottom: 5mm;
+    }
+
+    .letterhead .logo {
+      width: 20mm;
+      height: auto;
+      display: block;
+    }
+
+    .company {
+      text-align: right;
+      font-size: 9pt;
+      color: var(--muted);
+      line-height: 1.4;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .company .name {
+      display: block;
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 1mm;
+      letter-spacing: 0.02em;
+    }
+
+    .head-rule {
+      border: none;
+      border-top: 1.5pt solid var(--rule);
+      margin-bottom: 1mm;
+    }
+
+    .head-rule-thin {
+      border: none;
+      border-top: 0.5pt solid var(--rule-light);
+      margin-bottom: 9mm;
+    }
+
+    .doc-title {
+      text-align: center;
+      font-size: 14pt;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 9mm;
+    }
+
+    .content { flex: 1; }
+
+    p {
+      font-size: 11pt;
+      color: var(--body);
+      margin-bottom: 3.8mm;
+      text-align: left;
+      hyphens: none;
+      -webkit-hyphens: none;
+    }
+
+    p strong { font-weight: 700; color: var(--ink); }
+
+    .nowrap { white-space: nowrap; }
+
+    .section-label {
+      font-size: 11pt;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 4.5mm 0 2mm;
+      font-variant: small-caps;
+      letter-spacing: 0.04em;
+    }
+
+    .page-2 .continued {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 8.5pt;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6mm;
+      padding-bottom: 2mm;
+      border-bottom: 0.5pt solid var(--rule-light);
+    }
+
+    .page-2 p {
+      font-size: 10.5pt;
+      margin-bottom: 3.2mm;
+      line-height: 1.48;
+    }
+
+    .page-2 .section-label {
+      margin: 3.5mm 0 2mm;
+      font-size: 10.5pt;
+    }
+
+    .closing-block { margin-top: 4mm; }
+    .closing-block p { font-size: 10.5pt; }
+
+    .sign-block {
+      margin-top: 10mm;
+    }
+
+    .sign-block .place-date {
+      font-size: 10.5pt;
+      margin-bottom: 12mm;
+    }
+
+    .sign-block .line {
+      width: 52mm;
+      border-top: 0.5pt solid var(--ink);
+      margin-bottom: 1.5mm;
+    }
+
+    .sign-block .name {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .sign-block .role {
+      font-size: 9.5pt;
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+      margin-top: 0.5mm;
+    }
+
+    .page-footer {
+      margin-top: auto;
+      padding-top: 4mm;
+      border-top: 0.5pt solid var(--rule-light);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 7.5pt;
+      color: #777;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    @media print {
+      html, body { background: white; }
+      .page { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SEITE 1 -->
+  <div class="page">
+    <div class="letterhead">
+      <img class="logo" src="02_DADB_isotype_no_background.png" alt="DADB" />
+      <div class="company">
+        <span class="name">German Academy of Digital Education GmbH</span>
+        Nuthedamm 9 · 14974 Ludwigsfelde<br>
+        Tel. +49 (0)337 8515 9880 · mail@dadb.com<br>
+        www.dadb.com
+      </div>
+    </div>
+    <hr class="head-rule" />
+    <hr class="head-rule-thin" />
+
+    <div class="doc-title">Arbeitszeugnis</div>
+
+    <div class="content">
+      <p>Herr <strong class="nowrap">Artjom Naninjan</strong> war vom <strong class="nowrap">1. Mai 2021</strong> bis zum <strong class="nowrap">31. Oktober 2025</strong> in unserem Unternehmen beschäftigt.</p>
+
+      <p>Er durchlief im Rahmen seines beruflichen Werdegangs bei uns mehrere verantwortungsvolle Funktionen und war zuletzt als <strong>Head of Production (Produktionsleiter)</strong> tätig. Zuvor wirkte er als Head of 3D, Mixed-Reality Lead sowie 3D Environment Artist in der digitalen Kursproduktion mit.</p>
+
+      <p class="section-label">Tätigkeitsbeschreibung</p>
+
+      <p>In seiner letzten Funktion als Produktionsleiter trug Herr Naninjan die Gesamtverantwortung für die operative Steuerung der digitalen Kursproduktion der DADB. Er koordinierte disziplinübergreifende Teams aus den Bereichen Redaktion, 2D, 3D, Cinematic, Postproduktion, XR und interaktive Unreal-Engine-Inhalte und stellte sicher, dass Kurse, Module und Lernformate termingerecht, qualitätsgesichert und für Management sowie Stakeholder transparent ausgeliefert wurden.</p>
+
+      <p>Zu seinen Kernaufgaben gehörten die Planung und Überwachung paralleler Produktionspipelines, die Einführung und Pflege von Projektmanagement-Strukturen, die Abstimmung mit der Geschäftsführung und dem operativen Management sowie die Kommunikation mit internen Fachbereichen, Hochschulpartnern und externen Industriepartnern — unter anderem aus den Bereichen Erneuerbare Energien, E-Mobilität und Telekommunikation.</p>
+
+      <p>Er etablierte gemeinsam mit der Unternehmensleitung ein wöchentliches KPI-Reporting und ein Live-Monitoring-System zur Produktionssteuerung, mit dem Fortschritt, Engpässe, Workloads und Qualitätsstatus über mehrere Departments hinweg nachvollziehbar gemacht wurden. Darüber hinaus entwickelte er ein internes digitales Übersichtstool, das manuelle Statusprozesse ersetzte und als zentrale Informationsbasis für Projektmanager, Teams und Führungskräfte diente.</p>
+    </div>
+
+    <div class="page-footer">
+      German Academy of Digital Education GmbH · Nuthedamm 9 · 14974 Ludwigsfelde · Registergericht: AG Charlottenburg HRB 19369
+    </div>
+  </div>
+
+  <!-- SEITE 2 -->
+  <div class="page page-2">
+    <div class="continued">Fortsetzung · Arbeitszeugnis · Herr Artjom Naninjan</div>
+
+    <div class="content">
+      <p>Über den Produktionsbetrieb hinaus verantwortete Herr Naninjan internationale Messeauftritte im Rahmen der E-Learning Africa in Dakar (2023) und Kigali (2024) — VR- und AR-Erlebnisse im German Pavilion, Vorvisualisierung der Messestände in Archicad und Unreal Engine sowie technische Betreuung vor Ort.</p>
+
+      <p>Als Head of 3D leitete er zuvor die visuelle Produktion technischer Lerninhalte von Blender-Assets bis zum cinematic Rendering in Unreal Engine, in enger Abstimmung mit Redaktion, Hochschulpartnern und Industrie. Er trieb KI-gestützte Produktionsprozesse voran, baute ein internes KI-Department auf und absolvierte erfolgreich die Weiterbildung zum <strong>IHK-zertifizierten Projektleiter</strong>.</p>
+
+      <p class="section-label">Leistungs- und Verhaltensbeurteilung</p>
+
+      <p>Herr Naninjan erledigte alle ihm übertragenen Aufgaben <strong>stets zu unserer vollsten Zufriedenheit</strong>. Er überzeugte durch Verantwortungsbewusstsein, hohe Einsatzbereitschaft und strukturiertes Denken sowie die Fähigkeit, komplexe Produktionszusammenhänge auch unter hoher Parallelität beherrschbar zu halten. Sein Umgang mit Mitarbeitenden, Führungskräften und Partnern war jederzeit vorbildlich und lösungsorientiert. Wir schätzen ihn als zuverlässige Führungspersönlichkeit mit Hands-on-Mentalität, die unsere Produktionsqualität messbar weiterentwickelt hat.</p>
+
+      <div class="closing-block">
+        <p>Das Arbeitsverhältnis endete am <strong>31. Oktober 2025</strong> im Zuge der <strong>Insolvenz</strong> der German Academy of Digital Education GmbH — aus betrieblichen Gründen, in keinem Zusammenhang mit seiner Person oder seinen Leistungen. Wir danken Herrn Naninjan für seine wertvolle Mitarbeit und wünschen ihm für die Zukunft alles Gute und viel Erfolg.</p>
+      </div>
+
+      <div class="sign-block">
+        <p class="place-date">Ludwigsfelde, den 31. Oktober 2025</p>
+        <div class="line"></div>
+        <div class="name">Torsten Herfert</div>
+        <div class="role">Geschäftsführer · German Academy of Digital Education GmbH</div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      German Academy of Digital Education GmbH · Nuthedamm 9 · 14974 Ludwigsfelde · Registergericht: AG Charlottenburg HRB 19369
+    </div>
+  </div>
+
+</body>
+</html>

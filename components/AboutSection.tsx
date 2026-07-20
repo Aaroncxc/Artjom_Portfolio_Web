@@ -13,8 +13,8 @@ import type { Project } from '@/lib/types';
 // ── Artjom profile ────────────────────────────────────────────
 
 const ROLES = [
-  '3D Generalist',
   'Project Manager',
+  '3D Generalist',
   'App Developer',
   'Art Director',
 ];

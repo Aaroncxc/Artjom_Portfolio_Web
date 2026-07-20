@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Empfehlungsschreiben — Artjom Naninjan · Denver Harris · DADB</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --body: #2b2b2b;
+      --muted: #555;
+      --rule: #1a1a1a;
+      --rule-light: #bbb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page { size: A4; margin: 0; }
+
+    html, body {
+      font-family: 'Times New Roman', Times, Georgia, serif;
+      color: var(--body);
+      background: #e8e8e8;
+      line-height: 1.5;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      background: #fff;
+      padding: 18mm 22mm 16mm 25mm;
+      page-break-after: always;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page:last-child { page-break-after: auto; }
+
+    .letterhead {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10mm;
+      margin-bottom: 5mm;
+    }
+
+    .letterhead .logo {
+      width: 20mm;
+      height: auto;
+      display: block;
+    }
+
+    .company {
+      text-align: right;
+      font-size: 9pt;
+      color: var(--muted);
+      line-height: 1.4;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .company .name {
+      display: block;
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 1mm;
+      letter-spacing: 0.02em;
+    }
+
+    .head-rule {
+      border: none;
+      border-top: 1.5pt solid var(--rule);
+      margin-bottom: 1mm;
+    }
+
+    .head-rule-thin {
+      border: none;
+      border-top: 0.5pt solid var(--rule-light);
+      margin-bottom: 8mm;
+    }
+
+    .letter-meta {
+      margin-bottom: 8mm;
+      font-size: 10.5pt;
+    }
+
+    .letter-meta .author {
+      margin-bottom: 5mm;
+    }
+
+    .letter-meta .author strong {
+      display: block;
+      font-size: 11pt;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.5mm;
+    }
+
+    .letter-meta .author span {
+      font-size: 10pt;
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .letter-meta .date-place {
+      text-align: right;
+      color: var(--body);
+      margin-bottom: 6mm;
+    }
+
+    .letter-meta .subject {
+      font-weight: 700;
+      color: var(--ink);
+      padding-top: 3mm;
+      border-top: 0.5pt solid var(--rule-light);
+    }
+
+    .content { flex: 1; }
+
+    p {
+      font-size: 11pt;
+      color: var(--body);
+      margin-bottom: 3.8mm;
+      text-align: left;
+      hyphens: none;
+      -webkit-hyphens: none;
+      line-height: 1.52;
+    }
+
+    p strong { font-weight: 700; color: var(--ink); }
+
+    p.greeting { margin-bottom: 4mm; }
+
+    .page-2 .continued {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 8.5pt;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6mm;
+      padding-bottom: 2mm;
+      border-bottom: 0.5pt solid var(--rule-light);
+    }
+
+    .page-2 p {
+      font-size: 10.5pt;
+      margin-bottom: 3.5mm;
+      line-height: 1.48;
+    }
+
+    .closing-wrap { margin-top: 8mm; }
+
+    p.closing { margin-bottom: 14mm; font-size: 10.5pt; }
+
+    .sign-block .line {
+      width: 52mm;
+      border-top: 0.5pt solid var(--ink);
+      margin-bottom: 1.5mm;
+    }
+
+    .sign-block .name {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .sign-block .role {
+      font-size: 9.5pt;
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+      margin-top: 0.5mm;
+    }
+
+    .page-footer {
+      margin-top: auto;
+      padding-top: 4mm;
+      border-top: 0.5pt solid var(--rule-light);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 7.5pt;
+      color: #777;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    @media print {
+      html, body { background: white; }
+      .page { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SEITE 1 -->
+  <div class="page">
+    <div class="letterhead">
+      <img class="logo" src="02_DADB_isotype_no_background.png" alt="DADB" />
+      <div class="company">
+        <span class="name">German Academy of Digital Education GmbH</span>
+        Nuthedamm 9 · 14974 Ludwigsfelde<br>
+        Tel. +49 (0)337 8515 9880 · mail@dadb.com<br>
+        www.dadb.com
+      </div>
+    </div>
+    <hr class="head-rule" />
+    <hr class="head-rule-thin" />
+
+    <div class="letter-meta">
+      <div class="author">
+        <strong>Denver Harris</strong>
+        <span>ehemaliger Chief Technology Officer (CTO)<br>German Academy of Digital Education (DADB)</span>
+      </div>
+      <div class="date-place">Berlin, den 29. Mai 2026</div>
+      <div class="subject">Betreff: Empfehlungsschreiben für Herrn Artjom Naninjan</div>
+    </div>
+
+    <div class="content">
+      <p class="greeting">Sehr geehrte Damen und Herren,</p>
+
+      <p>hiermit empfehle ich <strong>Artjom Naninjan</strong> ausdrücklich und ohne Einschränkung. In meiner Zeit als CTO der German Academy of Digital Education (DADB) habe ich mit Artjom auf Augenhöhe daran gearbeitet, unsere gesamte Kursproduktion innerhalb eines Jahres auf einen völlig neuen operativen Standard zu heben — messbar in Qualität, Geschwindigkeit und Transparenz gegenüber dem Leadership.</p>
+
+      <p>Artjom war mein zentraler Operations-Partner als <strong>Head of Production</strong>. Er verantwortete Abläufe und Deadlines über disziplinübergreifende Teams hinweg — von 3D und Cinematic über XR bis Editorial — und koordinierte Produktionen in <strong>Deutschland, Afrika und Indien</strong>. In diesem internationalen Setup hat er nicht nur Projekte gesteuert, sondern Strukturen geschaffen, die auch unter hoher Parallelität belastbar blieben.</p>
+
+      <p>Gemeinsam haben wir eine <strong>professionelle Projektmanagement-Struktur</strong> etabliert: dedizierte Projektmanager, die ihre Teams klar führten, verbindliche Prozesse und eine Kultur von Ownership statt Ad-hoc-Feuerlöschen. Parallel hat Artjom <strong>KI-basiertes Arbeiten</strong> im Produktionsalltag verankert — von AI-gestützten Workflows bis zum Aufbau eines KI-Departments, das unsere Effizienz spürbar verbessert hat.</p>
+    </div>
+
+    <div class="page-footer">
+      German Academy of Digital Education GmbH · Nuthedamm 9 · 14974 Ludwigsfelde · Registergericht: AG Charlottenburg HRB 19369
+    </div>
+  </div>
+
+  <!-- SEITE 2 -->
+  <div class="page page-2">
+    <div class="continued">Fortsetzung · Empfehlungsschreiben · Herr Artjom Naninjan</div>
+
+    <div class="content">
+      <p>Besonders hervorheben möchte ich das von Artjom konzipierte und eingeführte <strong>Course Overview Tool</strong>: ein Live-Dashboard, das den Status unserer Kursproduktion für Team, Projektmanager, Stakeholder, Shareholder und CEO nahezu in Echtzeit transparent machte. Excel-basierte Statusmeldungen wurden strukturiert synchronisiert — damit entfiel das permanente Nachfragen in Tabellen und alle Entscheidungsträger arbeiteten mit derselben, aktuellen Datengrundlage.</p>
+
+      <p>Artjom verbindet strategisches Denken mit Hands-on-Umsetzung. Er erkennt Engpässe früh, übersetzt sie in klare Prioritäten und bringt Initiativen zuverlässig ins Ziel. Seine Kommunikation gegenüber C-Level, Fachbereichen und internationalen Teams ist direkt, respektvoll und lösungsorientiert — auch in anspruchsvollen Change-Phasen.</p>
+
+      <p>Für Rollen an der Schnittstelle von Operations, Technologie, Daten und Skalierung halte ich ihn für eine außergewöhnlich passende Besetzung. Ich würde ihn jederzeit wieder in eine verantwortungsvolle Führungs- und Umsetzungsrolle berufen. Bei Rückfragen stehe ich gerne zur Verfügung.</p>
+
+      <div class="closing-wrap">
+        <p class="closing">Mit freundlichen Grüßen</p>
+        <div class="sign-block">
+          <div class="line"></div>
+          <div class="name">Denver Harris</div>
+          <div class="role">ehemaliger CTO · German Academy of Digital Education (DADB)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      German Academy of Digital Education GmbH · Nuthedamm 9 · 14974 Ludwigsfelde · Registergericht: AG Charlottenburg HRB 19369
+    </div>
+  </div>
+
+</body>
+</html>
