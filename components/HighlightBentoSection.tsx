@@ -245,14 +245,20 @@ function TileFace({
             poster={project.thumb}
             title={project.title}
             staticOnly={reduceMotion || preferStaticTileVideo}
-            className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
+            className={clsx(
+              'h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]',
+              project.tileThumbAnchor === 'top' && 'object-top origin-top',
+            )}
           />
         ) : project.thumb ? (
           <img
             src={project.thumb}
             alt={project.title}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
+            className={clsx(
+              'h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]',
+              project.tileThumbAnchor === 'top' && 'object-top origin-top',
+            )}
           />
         ) : (
           <div className="h-full w-full bg-[linear-gradient(135deg,rgba(248,250,252,1)_0%,rgba(241,245,249,1)_52%,rgba(0,122,255,0.06)_100%)]" />

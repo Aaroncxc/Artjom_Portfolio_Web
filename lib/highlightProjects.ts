@@ -52,6 +52,8 @@ export interface HighlightProject {
   tileShowTitle?: boolean;
   /** Title scale on the tile — `prominent` matches standard bento cells; `featured` for hero tiles. */
   tileTitleSize?: 'prominent' | 'featured';
+  /** Keep the top of a portrait thumb visible in landscape bento cells (`object-cover` default is center). */
+  tileThumbAnchor?: 'center' | 'top';
   span: 'featured' | 'normal';
 }
 
@@ -352,6 +354,7 @@ Built under Multikunst with Sahachat Sonnenburg. Native Swift/SwiftUI, TestFligh
   ],
   toolExternalUrl: 'https://www.agatajournal.com/',
   tileAvailability: 'demo-live',
+  tileThumbAnchor: 'top',
   tileTags: ['Swift', 'OpenRouter'],
   tileBadges: ['Tool'],
   span: 'normal',

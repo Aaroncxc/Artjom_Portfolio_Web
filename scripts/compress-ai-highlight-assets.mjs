@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Compress Flasher + Multikunst Automation assets → public/tools/
+ * Compress Flasher + Agata + Multikunst Automation assets → public/tools/
  * Usage: node scripts/compress-ai-highlight-assets.mjs
  */
 import { existsSync, mkdirSync, statSync } from 'node:fs';
@@ -25,6 +25,19 @@ const TOOL_PACKS = [
     ],
   },
   {
+    srcDir: path.join(repoRoot, 'assets', 'Artjom_AgataJournal'),
+    outDir: path.join(repoRoot, 'public', 'tools', 'agata'),
+    images: [
+      ['post_joiniosbeta.png', 'thumbnail.webp', { cropTopAspect: 3 / 2 }],
+      ['home-voice.png', 'screen-home.webp'],
+      ['hub.png', 'screen-hub.webp'],
+      ['journal-02.png', 'screen-journal-01.webp'],
+      ['journal-03.png', 'screen-journal-02.webp'],
+      ['onboarding.png', 'screen-onboarding.webp'],
+      ['join-beta.png', 'screen-beta.webp'],
+    ],
+  },
+  {
     srcDir: path.join(repoRoot, 'assets', 'Arjom_MultikunstAutomation'),
     outDir: path.join(repoRoot, 'public', 'tools', 'multikunst-automation'),
     images: [
@@ -38,10 +51,17 @@ const TOOL_PACKS = [
   },
 ];
 
-async function toWebp(src, dest) {
+async function toWebp(src, dest, opts = {}) {
   const before = statSync(src).size;
-  await sharp(src)
-    .rotate()
+  let pipeline = sharp(src).rotate();
+  if (opts.cropTopAspect) {
+    const meta = await pipeline.metadata();
+    const width = meta.width ?? 0;
+    const height = meta.height ?? 0;
+    const cropH = Math.min(height, Math.round(width / opts.cropTopAspect));
+    pipeline = pipeline.extract({ left: 0, top: 0, width, height: cropH });
+  }
+  await pipeline
     .resize(MAX_EDGE, MAX_EDGE, { fit: 'inside', withoutEnlargement: true })
     .webp({ quality: WEBP_QUALITY, effort: 6 })
     .toFile(dest);
@@ -60,13 +80,13 @@ async function main() {
     }
     mkdirSync(pack.outDir, { recursive: true });
     console.log(`\n→ ${path.relative(repoRoot, pack.outDir)}`);
-    for (const [srcName, destName] of pack.images) {
+    for (const [srcName, destName, opts] of pack.images) {
       const src = path.join(pack.srcDir, srcName);
       if (!existsSync(src)) {
         console.warn(`[skip] missing ${srcName}`);
         continue;
       }
-      await toWebp(src, path.join(pack.outDir, destName));
+      await toWebp(src, path.join(pack.outDir, destName), opts);
     }
   }
   console.log('\nDone.');
