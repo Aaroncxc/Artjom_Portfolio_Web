@@ -23,6 +23,32 @@ export interface UnrealBlueprintMedia {
   previewImage?: string;
 }
 
+/** Media item inside a case-study story section. */
+export interface CaseSectionMedia {
+  src: string;
+  kind: 'image' | 'video' | 'html' | 'model3d';
+  caption?: string;
+  title?: string;
+}
+
+/**
+ * Editorial story block for the dedicated project case-study page.
+ * Layouts control how text and media share the viewport.
+ */
+export type CaseSectionLayout =
+  | 'text-left'
+  | 'text-right'
+  | 'full-media'
+  | 'gallery'
+  | 'live-embed';
+
+export interface CaseSection {
+  heading?: string;
+  body?: string;
+  media?: CaseSectionMedia[];
+  layout?: CaseSectionLayout;
+}
+
 export interface Project {
   id: string;
   slug: string;
@@ -41,6 +67,26 @@ export interface Project {
   images?: string[];
   author?: string;
   featured?: boolean;
+  /**
+   * Curated sort weight for the portfolio grid (lower = earlier).
+   * When omitted, grid falls back to date descending.
+   */
+  order?: number;
+  /** Role on the project — shown on case-study pages and grid tiles. */
+  role?: string;
+  /** Client / context (e.g. “DADB”, “Multikunst”). */
+  client?: string;
+  /** Human-readable timeframe (e.g. “Jan–May 2023”). */
+  timeframe?: string;
+  /** Team size / composition note. */
+  team?: string;
+  /** 2–4 outcome bullets for recruiters (belegbare Ergebnisse only). */
+  outcomes?: string[];
+  /**
+   * Editorial story sections for the dedicated `/project/[slug]` page.
+   * When omitted, the page builds a fallback from explanation + gallery.
+   */
+  caseSections?: CaseSection[];
   model3dPath?: string;
   model3dRotationX?: number; // Rotation in degrees on X axis (default: -90 for upright)
   model3dMaterialColor?: string; // Override color for plastic/transparent materials

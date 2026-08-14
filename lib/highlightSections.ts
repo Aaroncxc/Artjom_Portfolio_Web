@@ -76,7 +76,7 @@ export const AI_APP_DEV_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
   bodyP1:
     'From the start of my production work at DADB, I have pushed AI into how we ship courses — using ElevenLabs, Synthesia, and HeyGen to accelerate voice, presenter, and video pipelines while keeping editorial control in-house.',
   bodyP2:
-    'The same mindset runs through private work: Replit for my first project-manager apps, then GPT and Claude in Cursor for dashboards, games, and creative tools. I genuinely enjoy building this way — Skyhaven, Course Overview, FlashR, Multikunst Automation, and Occupied below are representative AI-native or AI-accelerated releases.',
+    'The same mindset runs through private work: Replit for my first project-manager apps, then GPT and Claude in Cursor for dashboards, games, and creative tools. I genuinely enjoy building this way — Skyhaven, Course Overview, FlashR, Multikunst Automation, and Agata Journal below are representative AI-native or AI-accelerated releases.',
   eyebrow: 'AI · Apps',
   projects: AI_APP_DEV_HIGHLIGHT_PROJECTS,
   glow: 'indigo',
@@ -96,7 +96,7 @@ export const AI_APP_DEV_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
         return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-3 lg:col-start-2 lg:row-start-1 lg:order-none lg:min-h-0';
       case 'multikunst-automation':
         return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-4 lg:col-start-1 lg:row-start-2 lg:order-none lg:min-h-0';
-      case 'multikunst-occupied':
+      case 'agata-journal':
         return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-5 lg:col-start-2 lg:row-start-2 lg:order-none lg:min-h-0';
       default:
         return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px]';

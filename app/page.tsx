@@ -205,9 +205,9 @@ export default function Home() {
                 <div>
                   <h4 className="text-sm font-medium mb-3 sm:mb-4 text-mk-text-muted uppercase tracking-wider">Connect</h4>
                   <ul className="space-y-1">
-                    <li><a href="#" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Instagram</a></li>
-                    <li><a href="#" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Behance</a></li>
-                    <li><a href="#" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">LinkedIn</a></li>
+                    <li><a href="https://www.linkedin.com/in/artjom-naninjan-5136b1203" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">LinkedIn</a></li>
+                    <li><a href="https://multikunst.vercel.app" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Multikunst</a></li>
+                    <li><a href={CONTACT_MAILTO} className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Email</a></li>
                   </ul>
                 </div>
               </div>

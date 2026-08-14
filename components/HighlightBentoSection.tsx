@@ -127,10 +127,10 @@ function highlightAsProject(h: HighlightProject): Project {
     thumbnail: h.gallery?.[0] ?? h.thumb,
     images: h.gallery,
     gallery: galleryMedia.length > 0 ? galleryMedia : undefined,
-    explanation: `${h.description}\n\nMy role: ${h.role}`,
+    explanation: `${(h.explanation?.trim() || h.description).trim()}\n\nMy role: ${h.role}`,
     ctaHref: h.toolExternalUrl,
     references: h.toolExternalUrl
-      ? [{ url: h.toolExternalUrl, label: 'Open Tool' }]
+      ? [{ url: h.toolExternalUrl, label: h.id === 'agata-journal' ? 'agatajournal.com' : 'Open Tool' }]
       : undefined,
   };
 }

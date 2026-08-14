@@ -14,7 +14,8 @@ export type HighlightProjectId =
   | 'multikunst-occupied'
   | 'skyhaven'
   | 'flasher'
-  | 'multikunst-automation';
+  | 'multikunst-automation'
+  | 'agata-journal';
 
 export interface HighlightProject {
   id: HighlightProjectId;
@@ -58,7 +59,7 @@ export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
   {
     id: 'lexsolar',
     title: 'Lexsolar Digital Learning Kit',
-    year: '2026',
+    year: '2025',
     category: 'Education · XR prototype',
     description:
       'Digital twin of Lexsolar’s physical solar learning cases — Blender assets, UE workflow hooks, and a browser prototype aligning stakeholders on how hands-on labs could scale digitally.',
@@ -200,7 +201,7 @@ export const ARCHITECTURE_HIGHLIGHT_PROJECTS: HighlightProject[] = [
   {
     id: 'solar-tech-campus',
     title: 'DADB Solar Technician Digital Campus',
-    year: '2026',
+    year: '2025',
     category: 'Education · Digital campus',
     description:
       'Archicad campus planning synced into Unreal — lecture rooms, hub, and a gamified solarpark learners navigate as a walkable training world rather than a static course shell.',
@@ -325,6 +326,37 @@ export const FLASHER_HIGHLIGHT_PROJECT: HighlightProject = {
   span: 'normal',
 };
 
+export const AGATA_JOURNAL_HIGHLIGHT_PROJECT: HighlightProject = {
+  id: 'agata-journal',
+  title: 'Agata Journal',
+  year: '2025–2026',
+  category: 'iOS · Voice journal',
+  description:
+    'Private AI journal for iOS — speak a thought, add a note or photo, and Agata turns the day into a readable page with source-aware reflections and patterns over time.',
+  explanation: `Agata is a voice-first private journal: capture a moment by speaking, writing, or dropping in an image, then revisit it as a daily page. Reflections stay linked to the notes, recordings, and photos they came from — so the AI companion can talk about your day without inventing it.
+
+The product is local-first. Audio and original journal text stay on device; you choose whether generated wraps, insights, chat, or a profile image sync through Supabase. AI runs through OpenRouter with your own key, plus a separate native admin app for operations.
+
+Built under Multikunst with Sahachat Sonnenburg. Native Swift/SwiftUI, TestFlight beta, and the public site at agatajournal.com.`,
+  role:
+    'Co-created under Multikunst with Sahachat Sonnenburg — product, visual language, and launch of a voice-first private journal (Speak. Reflect. Grow.).',
+  tools: ['Swift', 'SwiftUI', 'OpenRouter', 'Supabase'],
+  thumb: '/tools/agata/thumbnail.webp',
+  gallery: [
+    '/tools/agata/screen-home.webp',
+    '/tools/agata/screen-hub.webp',
+    '/tools/agata/screen-journal-01.webp',
+    '/tools/agata/screen-journal-02.webp',
+    '/tools/agata/screen-onboarding.webp',
+    '/tools/agata/screen-beta.webp',
+  ],
+  toolExternalUrl: 'https://www.agatajournal.com/',
+  tileAvailability: 'demo-live',
+  tileTags: ['Swift', 'OpenRouter'],
+  tileBadges: ['Tool'],
+  span: 'normal',
+};
+
 export const MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT: HighlightProject = {
   id: 'multikunst-automation',
   title: 'Multikunst Automation',
@@ -349,7 +381,6 @@ export const MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT: HighlightProject = {
 };
 
 const courseOverviewForAi = HIGHLIGHT_PROJECTS.find((p) => p.id === 'course-overview')!;
-const occupiedForAi = MULTIKUNST_HIGHLIGHT_PROJECTS.find((p) => p.id === 'multikunst-occupied')!;
 
 export const AI_APP_DEV_HIGHLIGHT_PROJECTS: HighlightProject[] = [
   SKYHAVEN_HIGHLIGHT_PROJECTS[0],
@@ -362,12 +393,7 @@ export const AI_APP_DEV_HIGHLIGHT_PROJECTS: HighlightProject[] = [
   },
   FLASHER_HIGHLIGHT_PROJECT,
   MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT,
-  {
-    ...occupiedForAi,
-    description:
-      'Browser VFX engine for live visuals — GPU effect chains over video, audio, webcam, and 3D. Shipped with AI-accelerated shader and UI iteration in Cursor.',
-    tileTags: ['Cursor', 'Three.js', 'GLSL'],
-  },
+  AGATA_JOURNAL_HIGHLIGHT_PROJECT,
 ];
 
 export const ALL_HIGHLIGHT_PROJECTS: HighlightProject[] = [
@@ -377,6 +403,7 @@ export const ALL_HIGHLIGHT_PROJECTS: HighlightProject[] = [
   ...MULTIKUNST_HIGHLIGHT_PROJECTS,
   FLASHER_HIGHLIGHT_PROJECT,
   MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT,
+  AGATA_JOURNAL_HIGHLIGHT_PROJECT,
 ];
 
 export function highlightById(id: HighlightProjectId | null): HighlightProject | undefined {

@@ -58,11 +58,11 @@ interface CvEntry {
   location?: string;
   /** Subtle standout card styling for short creds — no heading or badge text. */
   highlight?: boolean;
-  /** Ausklappbare Rollenbeschreibung („Mehr“ / „Weniger“). */
+  /** Expandable role description ("More" / "Less"). */
   description?: string;
   /** Optional link to a Tools & Games entry (opens modal after scroll). */
   toolLink?: { id: string; label: string };
-  /** Inline-Zertifikat (PDF unter `/public`). */
+  /** Inline certificate (PDF under `/public`). */
   pdfPath?: string;
   pdfLabel?: string;
 }
@@ -70,9 +70,11 @@ interface CvEntry {
 const CV: CvEntry[] = [
   {
     role: 'Creative Director',
-    org: 'Multikunst',
+    org: 'Multikunst — creative collective since 2023',
     period: 'Jan 2026 — present',
     location: 'Berlin',
+    description:
+      'Multikunst is a creative collective I co-founded with friends in 2023 — a shared name for visual experiments, product concepts, and interactive tools. Since January 2026 I lead it creatively: art direction and visual quality assurance for interactive projects, motion, 3D, and browser-based realtime visuals.',
   },
   {
     role: 'Head of Production',
@@ -118,7 +120,7 @@ const CV: CvEntry[] = [
     period: 'Nov 2024',
     highlight: true,
     pdfPath: '/about/certificates/ihk-projektleiter.pdf',
-    pdfLabel: 'Zertifikat ansehen',
+    pdfLabel: 'View certificate',
   },
   {
     role: 'Revit Grundlagen (Autodesk)',
@@ -500,11 +502,11 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                     >
                                       {entry.pdfPath
                                         ? isCvOpen
-                                          ? 'Zertifikat ausblenden'
-                                          : (entry.pdfLabel ?? 'Zertifikat ansehen')
+                                          ? 'Hide certificate'
+                                          : (entry.pdfLabel ?? 'View certificate')
                                         : isCvOpen
-                                          ? 'Weniger'
-                                          : 'Mehr'}
+                                          ? 'Less'
+                                          : 'More'}
                                       <svg
                                         className={clsx('h-3 w-3 transition-transform duration-200', isCvOpen && 'rotate-180')}
                                         fill="none"
@@ -561,7 +563,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                             <div className="overflow-hidden rounded-lg border border-[rgba(28,28,28,0.1)] bg-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
                                               <div className="flex items-center justify-between gap-3 border-b border-[rgba(28,28,28,0.08)] bg-white/80 px-3 py-2">
                                                 <span className="text-[11px] font-semibold uppercase tracking-wider text-mk-text-muted">
-                                                  IHK-Zertifikat (PDF)
+                                                  IHK certificate (PDF)
                                                 </span>
                                                 <a
                                                   href={entry.pdfPath}
@@ -574,7 +576,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                               </div>
                                               <iframe
                                                 src={`${entry.pdfPath}#view=FitH&toolbar=0`}
-                                                title={`${entry.role} — Zertifikat`}
+                                                title={`${entry.role} — Certificate`}
                                                 className="block h-[300px] w-full border-0 bg-white sm:h-[420px]"
                                               />
                                             </div>

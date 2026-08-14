@@ -1,14 +1,15 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
-import { PortfolioProjectModal } from './portfolio/PortfolioProjectModal';
 import { Project3DPreview } from './Project3DPreview';
 import { CollapsibleSectionBar } from './CollapsibleSectionBar';
 import { Project, ProjectType } from '@/lib/types';
 import { projectMatchesPortfolioOwner } from '@/lib/portfolioOwnerFilter';
 import { useMobilePerformance } from '@/lib/useMobilePerformance';
+import { projectYear, sortProjectsForPortfolio } from '@/lib/caseStudy';
 import {
   chipLearningExperienceClass,
   chipTileImmersionClass,
@@ -76,22 +77,15 @@ interface ProjectsGridProps {
 }
 
 export function ProjectsGrid({ visible }: ProjectsGridProps) {
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
   const { isMobile, isCoarsePointer } = useMobilePerformance();
   const [selectedType, setSelectedType] = useState<ProjectType | 'all'>('all');
   const [selectedTag, setSelectedTag] = useState<string>('all');
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState<Record<string, { x: number; y: number }>>({});
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
-  
-  // Touch swipe state
-  const touchStartX = useRef<number>(0);
-  const touchEndX = useRef<number>(0);
-  const modalRef = useRef<HTMLDivElement>(null);
 
   // Fetch projects
   useEffect(() => {
@@ -121,8 +115,11 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
   }, []);
 
   const portfolioOwnerProjects = useMemo(
-    () => (Array.isArray(projects) ? projects : []).filter(projectMatchesPortfolioOwner),
-    [projects]
+    () =>
+      sortProjectsForPortfolio(
+        (Array.isArray(projects) ? projects : []).filter(projectMatchesPortfolioOwner),
+      ),
+    [projects],
   );
 
   // Filter projects (only listings attributed to Artjom / AaronCxC)
@@ -134,19 +131,33 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     }
 
     if (selectedTag !== 'all') {
-      result = result.filter((p) => (p.tags ?? []).includes(selectedTag));
+      const needle = selectedTag.toLowerCase();
+      result = result.filter((p) =>
+        (p.tags ?? []).some((t) => t.toLowerCase() === needle),
+      );
     }
 
     return result;
   }, [portfolioOwnerProjects, selectedType, selectedTag]);
 
-  // Get all unique tags from the owner-filtered set
-  const allTags = useMemo(() => {
-    const tagSet = new Set<string>();
-    portfolioOwnerProjects.forEach((p) =>
-      (p.tags ?? []).forEach((t) => tagSet.add(t))
+  /** Curated tag chips — recruiter-friendly subset of available tags. */
+  const featuredTags = useMemo(() => {
+    const preferred = [
+      'Learning Experience',
+      'VR',
+      'AR',
+      '3D',
+      'architecture',
+      'project management',
+      'education',
+      'product design',
+      'interactive',
+    ];
+    return preferred.filter((tag) =>
+      portfolioOwnerProjects.some((p) =>
+        (p.tags ?? []).some((t) => t.toLowerCase() === tag.toLowerCase()),
+      ),
     );
-    return Array.from(tagSet).sort();
   }, [portfolioOwnerProjects]);
 
   // Warm visible tile assets in idle time — desktop only, avoids decode storms on phones.
@@ -197,24 +208,24 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     setSelectedTag(tag);
   }, []);
 
-  // Navigate to project and set index
-  const openProject = useCallback((project: Project, index: number) => {
-    setSelectedProject(project);
-    setSelectedIndex(index);
-  }, []);
+  /** Open dedicated case-study page (shareable URL). */
+  const openProject = useCallback(
+    (project: Project) => {
+      router.push(`/project/${project.slug}`);
+    },
+    [router],
+  );
 
   // Listen for external open-project events (e.g. from in-page links)
   useEffect(() => {
     const handler = (e: Event) => {
-      const slug = (e as CustomEvent).detail?.slug;
+      const slug = (e as CustomEvent).detail?.slug as string | undefined;
       if (!slug) return;
-      setIsExpanded(true);
-      const idx = filteredProjects.findIndex((p) => p.slug === slug);
-      if (idx >= 0) openProject(filteredProjects[idx], idx);
+      router.push(`/project/${slug}`);
     };
     window.addEventListener('open-project', handler);
     return () => window.removeEventListener('open-project', handler);
-  }, [filteredProjects, openProject]);
+  }, [router]);
 
   // Deep-link #projects — expand when user navigates here explicitly.
   useEffect(() => {
@@ -226,44 +237,6 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
     window.addEventListener('hashchange', syncFromHash);
     return () => window.removeEventListener('hashchange', syncFromHash);
   }, []);
-
-  // Navigate to next/previous project
-  const navigateProject = useCallback((direction: 'prev' | 'next') => {
-    if (selectedIndex === -1 || filteredProjects.length === 0) return;
-
-    const newIndex = direction === 'next'
-      ? (selectedIndex + 1) % filteredProjects.length
-      : (selectedIndex - 1 + filteredProjects.length) % filteredProjects.length;
-    
-    setSlideDirection(direction === 'next' ? 'right' : 'left');
-    setSelectedProject(filteredProjects[newIndex]);
-    setSelectedIndex(newIndex);
-  }, [selectedIndex, filteredProjects]);
-
-  // Touch swipe handlers for mobile navigation
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchEndX.current = e.touches[0].clientX;
-  }, []);
-
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX;
-  }, []);
-
-  const handleTouchEnd = useCallback(() => {
-    const diff = touchStartX.current - touchEndX.current;
-    const minSwipeDistance = 50;
-    
-    if (Math.abs(diff) > minSwipeDistance) {
-      if (diff > 0) {
-        // Swiped left -> next
-        navigateProject('next');
-      } else {
-        // Swiped right -> prev
-        navigateProject('prev');
-      }
-    }
-  }, [navigateProject]);
 
   // Handle mouse move on tile for 3D rotation
   const handleTileMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>, projectId: string) => {
@@ -301,37 +274,6 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
       setHoveredProject(null);
     }, 300);
   }, []);
-
-  // Close modal on escape, arrow keys for navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setSelectedProject(null);
-        setSelectedIndex(-1);
-      } else if (e.key === 'ArrowRight' && selectedProject) {
-        navigateProject('next');
-      } else if (e.key === 'ArrowLeft' && selectedProject) {
-        navigateProject('prev');
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedProject, navigateProject]);
-
-  // Lock body scroll and hide navigation when modal is open
-  useEffect(() => {
-    if (selectedProject) {
-      document.body.style.overflow = 'hidden';
-      document.body.setAttribute('data-modal-open', 'true');
-    } else {
-      document.body.style.overflow = '';
-      document.body.removeAttribute('data-modal-open');
-    }
-    return () => {
-      document.body.style.overflow = '';
-      document.body.removeAttribute('data-modal-open');
-    };
-  }, [selectedProject]);
 
   if (!visible) return null;
 
@@ -375,7 +317,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
             className="overflow-hidden"
           >
             {/* Filters */}
-            <div className="mx-auto mb-8 max-w-7xl">
+            <div className="mx-auto mb-8 max-w-7xl space-y-3">
               <div className="flex flex-wrap gap-2">
                 {typeFilters.map((filter) => (
                   <button
@@ -391,6 +333,35 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   </button>
                 ))}
               </div>
+              {featuredTags.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleTagChange('all')}
+                    className={`min-h-[40px] rounded-full px-3 py-2 text-xs font-medium transition-all duration-200 sm:text-sm ${
+                      selectedTag === 'all'
+                        ? 'border border-mk-text bg-mk-text text-white'
+                        : 'border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.6)] text-mk-text-secondary hover:bg-[rgba(255,255,255,0.9)]'
+                    }`}
+                  >
+                    All topics
+                  </button>
+                  {featuredTags.map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => handleTagChange(tag)}
+                      className={`min-h-[40px] rounded-full px-3 py-2 text-xs font-medium transition-all duration-200 sm:text-sm ${
+                        selectedTag.toLowerCase() === tag.toLowerCase()
+                          ? 'border border-accent-cyan bg-[rgba(20,184,166,0.15)] text-accent-cyan'
+                          : 'border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.6)] text-mk-text-secondary hover:bg-[rgba(255,255,255,0.9)]'
+                      }`}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
             </div>
 
             {/* Grid */}
@@ -441,14 +412,14 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: isMobile ? 0.15 : 0.3, delay: isMobile ? 0 : index * 0.03 }}
                   className="relative aspect-square cursor-pointer group overflow-hidden bg-[rgba(28,28,28,0.03)] rounded-sm md:rounded-lg"
-                  role="button"
+                  role="link"
                   tabIndex={0}
-                  aria-label={`Open ${project.title}`}
-                  onClick={() => openProject(project, index)}
+                  aria-label={`Open case study: ${project.title}`}
+                  onClick={() => openProject(project)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      openProject(project, index);
+                      openProject(project);
                     }
                   }}
                   onMouseEnter={() => !isCoarsePointer && handleProjectHoverStart(project)}
@@ -532,6 +503,20 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                       );
                     })()}
 
+                  {/* Bottom meta: role + year for recruiters scanning the grid */}
+                  {(project.role || projectYear(project.date)) && (
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[18] bg-gradient-to-t from-black/55 via-black/25 to-transparent px-2 pb-2 pt-8 sm:px-2.5 sm:pb-2.5">
+                      <p className="truncate text-[10px] font-semibold uppercase tracking-wider text-white/90 sm:text-[11px]">
+                        {[project.role, projectYear(project.date)].filter(Boolean).join(' · ')}
+                      </p>
+                      {!project.tileOverlayTitle ? (
+                        <p className="mt-0.5 truncate text-xs font-semibold text-white sm:text-sm">
+                          {project.title}
+                        </p>
+                      ) : null}
+                    </div>
+                  )}
+
                   {/* Tag chips: medium, tools, optional 3D — replaces hover text + author/type/3D badges */}
                   {/*
                     On mobile (<sm) the tile is ~50vw so we hide tool-name chips
@@ -563,89 +548,6 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                 </motion.div>
               )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Project Modal */}
-      <AnimatePresence>
-        {selectedProject && (
-          <motion.div
-            ref={modalRef}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto touch-pan-y"
-            onClick={() => { setSelectedProject(null); setSelectedIndex(-1); }}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            {/* Backdrop */}
-            <div className="fixed inset-0 bg-black/30 backdrop-blur-md max-md:bg-black/35 max-md:backdrop-blur-none" aria-hidden />
-
-            {/* Previous Project Button - hidden on mobile */}
-            <button
-              onClick={(e) => { e.stopPropagation(); navigateProject('prev'); }}
-              className="group fixed left-6 top-1/2 z-[60] hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black/[0.08] bg-white/92 text-[#3C3C43] shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md transition-[background,box-shadow,color] hover:bg-white hover:text-[#1D1D1F] hover:shadow-md md:flex"
-              aria-label="Previous project"
-            >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            {/* Next Project Button - hidden on mobile */}
-            <button
-              onClick={(e) => { e.stopPropagation(); navigateProject('next'); }}
-              className="group fixed right-6 top-1/2 z-[60] hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black/[0.08] bg-white/92 text-[#3C3C43] shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md transition-[background,box-shadow,color] hover:bg-white hover:text-[#1D1D1F] hover:shadow-md md:flex"
-              aria-label="Next project"
-            >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            {/* Project counter — desktop only (mobile uses swipe + arrow buttons hidden, so no counter overlay). */}
-            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] hidden md:block">
-              <div className="rounded-full border border-black/[0.08] bg-white/92 px-4 py-2 text-[13px] font-semibold tracking-[-0.01em] text-[#48484A] shadow-[0_2px_10px_rgba(0,0,0,0.06)] backdrop-blur-md">
-                {selectedIndex + 1} / {filteredProjects.length}
-              </div>
-            </div>
-
-            {/* Modal Content with Slide Animation */}
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={selectedProject.id}
-                initial={{
-                  opacity: 0,
-                  x: slideDirection === 'right' ? 100 : -100,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  x: slideDirection === 'right' ? -100 : 100,
-                }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="relative z-[55] mx-auto my-1 w-full max-w-[min(92rem,calc(100vw-0.75rem))] px-1 sm:my-10 sm:px-4 md:my-14 md:px-12 lg:px-16 xl:px-20"
-                onClick={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-                onTouchMove={(e) => e.stopPropagation()}
-                onTouchEnd={(e) => e.stopPropagation()}
-              >
-                <PortfolioProjectModal
-                  project={selectedProject}
-                  onClose={() => {
-                    setSelectedProject(null);
-                    setSelectedIndex(-1);
-                  }}
-                />
-              </motion.div>
-            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>

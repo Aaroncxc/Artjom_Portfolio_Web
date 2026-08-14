@@ -25,7 +25,7 @@ import { metaChipClass } from '@/lib/chipClasses';
 type TabId = 'private' | 'videos' | 'explanation';
 
 const TABS: { id: TabId; label: string }[] = [
-  { id: 'private', label: 'Private' },
+  { id: 'private', label: 'Overview' },
   { id: 'videos', label: 'Videos' },
   { id: 'explanation', label: 'Description' },
 ];

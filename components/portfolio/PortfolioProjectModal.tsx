@@ -32,7 +32,7 @@ interface PortfolioProjectModalProps {
 }
 
 const TABS: { id: TabId; label: string }[] = [
-  { id: 'private', label: 'Private' },
+  { id: 'private', label: 'Overview' },
   { id: 'explanation', label: 'Description' },
 ];
 
@@ -362,7 +362,7 @@ export function PortfolioProjectModal({
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Schließen"
+                aria-label="Close"
                 className={clsx(
                   'flex h-8 w-8 items-center justify-center rounded-full',
                   'text-mk-text-secondary transition-colors hover:bg-black/[0.06] active:bg-black/[0.08]',
@@ -457,6 +457,34 @@ export function PortfolioProjectModal({
                       references={project.references}
                     />
 
+                    {(project.order != null ||
+                      (project.outcomes?.length ?? 0) > 0 ||
+                      (project.caseSections?.length ?? 0) > 0) && (
+                      <a
+                        href={`/project/${project.slug}`}
+                        className={clsx(
+                          'group inline-flex items-center gap-1.5 self-start text-xs font-semibold uppercase tracking-[0.18em] text-system-blue',
+                          'transition-opacity hover:opacity-80',
+                          'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue'
+                        )}
+                      >
+                        Open full case study
+                        <svg
+                          className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2.25}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 12h14m0 0l-6-6m6 6l-6 6"
+                          />
+                        </svg>
+                      </a>
+                    )}
+
                     <button
                       type="button"
                       onClick={() => {
@@ -464,12 +492,12 @@ export function PortfolioProjectModal({
                         setHasSeenExplanation(true);
                       }}
                       className={clsx(
-                        'group inline-flex items-center gap-1.5 self-start text-xs font-semibold uppercase tracking-[0.18em] text-system-blue',
-                        'transition-opacity hover:opacity-80',
+                        'group inline-flex items-center gap-1.5 self-start text-xs font-semibold uppercase tracking-[0.18em] text-mk-text-secondary',
+                        'transition-opacity hover:opacity-80 hover:text-mk-text',
                         'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue'
                       )}
                     >
-                      Read full story
+                      Read short description
                       <svg
                         className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
                         fill="none"
