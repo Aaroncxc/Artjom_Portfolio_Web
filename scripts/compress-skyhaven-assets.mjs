@@ -62,6 +62,13 @@ const SKYHAVEN_VIDEO_MAP = [
     maxHeight: 720,
     crf: 24,
   },
+  {
+    src: 'Cinematic_Styles_In_a_fantasy_art_style_a_solitary_figure_sits_W_Yal_Oi.mp4',
+    dest: 'videos/cinematic.mp4',
+    poster: 'posters/cinematic.webp',
+    maxHeight: 720,
+    crf: 22,
+  },
 ];
 
 const MODEL_MAX_EDGE = 384;

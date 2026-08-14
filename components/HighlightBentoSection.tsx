@@ -398,16 +398,19 @@ export function HighlightBentoSection({
                 <div className="max-w-none space-y-2 text-[0.9375rem] leading-relaxed text-mk-text-secondary sm:max-w-md sm:text-[15px] sm:leading-relaxed lg:text-base">
                   <p>{config.bodyP1}</p>
                   <p>{config.bodyP2}</p>
-                  {config.tryBuildLink ? (
-                    <p>
-                      <a
-                        href={config.tryBuildLink.href}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="font-semibold text-system-blue underline decoration-system-blue/35 underline-offset-2 transition-colors hover:text-[#0077ED]"
-                      >
-                        {config.tryBuildLink.label}
-                      </a>
+                  {config.tryBuildLinks?.length ? (
+                    <p className="flex flex-wrap gap-x-4 gap-y-1">
+                      {config.tryBuildLinks.map((link) => (
+                        <a
+                          key={link.href}
+                          href={link.href}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="font-semibold text-system-blue underline decoration-system-blue/35 underline-offset-2 transition-colors hover:text-[#0077ED]"
+                        >
+                          {link.label}
+                        </a>
+                      ))}
                     </p>
                   ) : null}
                 </div>

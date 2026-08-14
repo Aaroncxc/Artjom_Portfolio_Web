@@ -6,6 +6,7 @@ import {
   AI_APP_DEV_HIGHLIGHT_PROJECTS,
   type HighlightProject,
 } from '@/lib/highlightProjects';
+import { SKYHAVEN_RELEASES_URL, SKYHAVEN_SITE_URL } from '@/lib/toolLinks';
 
 export type HighlightGlowTheme = 'amber' | 'sky' | 'purple' | 'emerald' | 'indigo';
 
@@ -24,8 +25,8 @@ export interface HighlightBentoSectionConfig {
   /** Per-tile placement within the grid. */
   tileCellClass: (project: HighlightProject) => string;
   backLabel?: string;
-  /** Optional compact try-build link shown inline after body copy (keeps layout height flat). */
-  tryBuildLink?: { href: string; label: string };
+  /** Optional compact outbound links shown inline after body copy (keeps layout height flat). */
+  tryBuildLinks?: { href: string; label: string }[];
 }
 
 const ARCHITECTURE_TILE_CLASS =
@@ -113,7 +114,7 @@ export const SKYHAVEN_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
   bodyP1:
     'Skyhaven is a compact desktop widget game I build alongside client work: a floating isometric island you keep at the edge of your screen while you focus on real tasks. I own art direction, 3D production, and code end to end.',
   bodyP2:
-    'The pipeline is deliberately AI-native — sketches and visual rules first, then Meshy for 3D iteration, Cursor for gameplay in React, Three.js, and Tauri 2. Every prop, character, and tile starts from my own look-and-feel before it lands in the engine. The build already covers focus sessions, inventory & equipment, farming, custom island building, profile loadouts, and a playable mining combat slice — with more systems on the way.',
+    'The pipeline is deliberately AI-native — sketches and visual rules first, then Meshy for 3D iteration, Cursor for gameplay in React, Three.js, and Tauri 2. Every prop, character, and tile starts from my own look-and-feel before it lands in the engine. The build already covers focus sessions, inventory & equipment, farming, custom island building, profile loadouts, and a playable mining combat slice — with more systems on the way. The public site is part of the same project: arena roster, 3D inspector, wiki, and downloads.',
   eyebrow: 'Skyhaven',
   projects: SKYHAVEN_HIGHLIGHT_PROJECTS,
   glow: 'emerald',
@@ -121,10 +122,10 @@ export const SKYHAVEN_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
   tileCellClass: () =>
     'relative min-h-[200px] sm:min-h-[240px] md:min-h-[280px] lg:min-h-[320px]',
   backLabel: 'Back to Skyhaven',
-  tryBuildLink: {
-    href: 'https://github.com/Aaroncxc/Coincraft_Skyhaven/releases',
-    label: 'Try v0.2.0 on GitHub Releases',
-  },
+  tryBuildLinks: [
+    { href: SKYHAVEN_SITE_URL, label: 'Open the Skyhaven website' },
+    { href: SKYHAVEN_RELEASES_URL, label: 'Try v0.2.0 on GitHub Releases' },
+  ],
 };
 
 const MULTIKUNST_TILE_CLASS =

@@ -259,16 +259,28 @@ export function SkyhavenHighlightDetail({
                     <p className="text-sm leading-relaxed text-mk-text-secondary md:text-[15px]">
                       {highlight.description}
                     </p>
-                    {highlight.toolExternalUrl ? (
-                      <p>
-                        <a
-                          href={highlight.toolExternalUrl}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          className="text-sm font-semibold text-system-blue underline decoration-system-blue/35 underline-offset-2 transition-colors hover:text-[#0077ED] md:text-[15px]"
-                        >
-                          Try v0.2.0 on GitHub Releases
-                        </a>
+                    {highlight.siteUrl || highlight.toolExternalUrl ? (
+                      <p className="flex flex-col gap-1.5">
+                        {highlight.siteUrl ? (
+                          <a
+                            href={highlight.siteUrl}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            className="text-sm font-semibold text-system-blue underline decoration-system-blue/35 underline-offset-2 transition-colors hover:text-[#0077ED] md:text-[15px]"
+                          >
+                            Open the Skyhaven website
+                          </a>
+                        ) : null}
+                        {highlight.toolExternalUrl ? (
+                          <a
+                            href={highlight.toolExternalUrl}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            className="text-sm font-semibold text-system-blue underline decoration-system-blue/35 underline-offset-2 transition-colors hover:text-[#0077ED] md:text-[15px]"
+                          >
+                            Try v0.2.0 on GitHub Releases
+                          </a>
+                        ) : null}
                       </p>
                     ) : null}
                     <div className="flex flex-wrap gap-1.5">

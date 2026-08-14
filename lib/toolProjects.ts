@@ -1,5 +1,5 @@
 import type { Project } from '@/lib/types';
-import { DADB_COURSE_OVERVIEW_TOOL_URL } from '@/lib/toolLinks';
+import { DADB_COURSE_OVERVIEW_TOOL_URL, SKYHAVEN_RELEASES_URL, SKYHAVEN_SITE_URL } from '@/lib/toolLinks';
 
 /**
  * Tool / game case studies that are not part of `posts.json` (Drive ingest).
@@ -284,13 +284,14 @@ export const TOOL_PROJECTS: Project[] = [
     slug: 'skyhaven',
     title: 'Skyhaven',
     description:
-      'A compact desktop widget game — a floating isometric island at the edge of your screen while you focus: focus sessions, inventory, farming, island building, and a playable mining combat slice.',
+      'A compact desktop widget game — a floating isometric island at the edge of your screen while you focus: focus sessions, inventory, farming, island building, and a playable mining combat slice. The public site (arena roster, 3D inspector, wiki, downloads) is part of the same project.',
     date: '2025-06-01',
     author: 'Artjom N.',
     tools: [
       { name: 'Tauri' },
       { name: 'React' },
       { name: 'Three.js' },
+      { name: 'Next.js' },
       { name: 'Meshy' },
       { name: 'Cursor' },
     ],
@@ -306,20 +307,27 @@ export const TOOL_PROJECTS: Project[] = [
     outcomes: [
       'Shipped a Tauri 2 + React + Three.js desktop widget prototype',
       'Playable focus timer, farming, build mode, and mining combat slice',
+      'Designed and shipped the public Skyhaven site — arena roster, 3D inspector, wiki, and launcher downloads',
     ],
     explanation: `Skyhaven is a desktop widget game for Windows and macOS — inspired by the calm of games like Rusty's Retirement, but with clearer action POIs and a stronger sense of place.
 
-Technically it's a Tauri 2 shell around a React 19 UI and a Three.js / React Three Fiber world. Already playable: focus timer, inventory & equipment, farming, toolbox build mode, island switching, and third-person combat on the mining island.`,
+Technically it's a Tauri 2 shell around a React 19 UI and a Three.js / React Three Fiber world. Already playable: focus timer, inventory & equipment, farming, toolbox build mode, island switching, and third-person combat on the mining island.
+
+The public website is part of the same build: bilingual landing page, arena roster with an in-browser 3D inspector for real game models, build-mode loop, wiki, FAQ, and Windows / macOS downloads.`,
     references: [
       {
-        url: 'https://github.com/Aaroncxc/Coincraft_Skyhaven/releases',
+        url: SKYHAVEN_SITE_URL,
+        label: 'Open the Skyhaven website',
+      },
+      {
+        url: SKYHAVEN_RELEASES_URL,
         label: 'Try on GitHub Releases',
       },
     ],
     caseSections: [
       {
         heading: 'Brief',
-        body: 'A calm **desktop widget game**—focus sessions while your character works on a floating island, without fail-state pressure.',
+        body: 'A calm **desktop widget game**—focus sessions while your character works on a floating island, without fail-state pressure. The public site is the same project, not a separate case study.',
         layout: 'text-left',
       },
     ],

@@ -1,4 +1,9 @@
-import { DADB_COURSE_OVERVIEW_TOOL_ID, DADB_COURSE_OVERVIEW_TOOL_URL } from '@/lib/toolLinks';
+import {
+  DADB_COURSE_OVERVIEW_TOOL_ID,
+  DADB_COURSE_OVERVIEW_TOOL_URL,
+  SKYHAVEN_RELEASES_URL,
+  SKYHAVEN_SITE_URL,
+} from '@/lib/toolLinks';
 
 /** Highlight IDs for the bento rail under About (not tied to posts.json schema). */
 export type HighlightProjectId =
@@ -34,6 +39,8 @@ export interface HighlightProject {
   toolDeeplinkId?: string;
   /** External URL — when set the inline detail CTA opens it directly (target=_blank). */
   toolExternalUrl?: string;
+  /** Public marketing / product site for the same project (not a separate highlight). */
+  siteUrl?: string;
   /** Top-left tile chips (immersion / category badges). Rendered with chip classes from `ProjectsGrid`. */
   tileBadges?: Array<'3D' | 'VR' | 'AR' | 'Learning Experience' | 'Tool' | 'Dashboard' | 'Internal' | 'Game'>;
   /** Custom inline detail UI (e.g. Skyhaven asset codex). */
@@ -174,7 +181,7 @@ export const SKYHAVEN_HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2025–2026',
     category: 'Game · Desktop widget',
     description:
-      'Skyhaven is a compact desktop widget game I build alongside client work: a floating isometric island you keep at the edge of your screen while you focus on real tasks. The build already covers focus sessions, inventory & equipment, farming, custom island building, profile loadouts, and a playable mining combat slice.',
+      'Skyhaven is a compact desktop widget game I build alongside client work: a floating isometric island you keep at the edge of your screen while you focus on real tasks. The build already covers focus sessions, inventory & equipment, farming, custom island building, profile loadouts, and a playable mining combat slice. I also designed and shipped the public site — arena roster, 3D inspector, wiki, and downloads.',
     explanation: `Skyhaven is a desktop widget game for Windows and macOS — inspired by the calm of games like Rusty's Retirement, but with clearer action POIs (mine, farm, shrine, tavern) and a stronger sense of place. You run a focus session (30, 60, or 120 minutes) while your character works on the island; when you're done, you collect rewards, materials, and small surprises — without fail-state pressure or click grinding.
 
 Technically it's a Tauri 2 shell around a React 19 UI and a Three.js / React Three Fiber world: data-driven floating islands, day/night lighting, autonomous movement, NPCs, audio (music, ambience, SFX), and persistent local saves.
@@ -183,15 +190,18 @@ Already playable in the prototype: focus timer & status UI, HUD and sidebar, inv
 
 UI scaffolding, not full gameplay yet: in-game shop listings and the achievements entry (menus exist; economy/trophy logic is still to come).
 
-I designed and integrated the full stack myself — concept, UI, 3D pipeline, and engineering — using ChatGPT and Cursor as accelerators, with every merge reviewed in Git.`,
+The public site is part of the same project: a bilingual landing page with the arena roster, an in-browser 3D inspector for real game models, build-mode loop, wiki, FAQ, and Windows / macOS downloads.
+
+I designed and integrated the full stack myself — concept, UI, 3D pipeline, engineering, and the website — using ChatGPT and Cursor as accelerators, with every merge reviewed in Git.`,
     role:
-      'Art direction, 3D production, and code end to end — sketches and visual rules first, then Meshy for 3D iteration, Cursor for gameplay in React, Three.js, and Tauri 2. Every prop, character, and tile starts from my own look-and-feel before it lands in the engine.',
-    tools: ['Tauri', 'React', 'Three.js', 'Meshy', 'Cursor'],
+      'Art direction, 3D production, and code end to end — sketches and visual rules first, then Meshy for 3D iteration, Cursor for gameplay in React, Three.js, and Tauri 2, plus the public Next.js site. Every prop, character, and tile starts from my own look-and-feel before it lands in the engine.',
+    tools: ['Tauri', 'React', 'Three.js', 'Next.js', 'Meshy', 'Cursor'],
     thumb: '/projects/skyhaven/posters/fullfarming.webp',
     tileVideo: '/projects/skyhaven/tile-preview.mp4',
-    tileTags: ['Tauri', 'React', 'Three.js', 'Meshy', 'Cursor'],
+    tileTags: ['Tauri', 'React', 'Three.js', 'Next.js', 'Meshy', 'Cursor'],
     tileBadges: ['Game', '3D'],
-    toolExternalUrl: 'https://github.com/Aaroncxc/Coincraft_Skyhaven/releases',
+    toolExternalUrl: SKYHAVEN_RELEASES_URL,
+    siteUrl: SKYHAVEN_SITE_URL,
     tileAvailability: 'demo-live',
     tileHideFeaturedFade: true,
     tileFeaturedLightTitle: true,

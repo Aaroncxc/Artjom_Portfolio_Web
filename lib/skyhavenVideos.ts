@@ -4,6 +4,12 @@ export const SKYHAVEN_TILE_VIDEO = '/projects/skyhaven/tile-preview.mp4';
 
 export const SKYHAVEN_TILE_POSTER = '/projects/skyhaven/posters/fullfarming.webp';
 
+export const SKYHAVEN_CINEMATIC_VIDEO = '/projects/skyhaven/videos/cinematic.mp4';
+
+export const SKYHAVEN_CINEMATIC_POSTER = '/projects/skyhaven/posters/cinematic.webp';
+
+export const SKYHAVEN_LOGO = '/projects/skyhaven/logo.webp';
+
 export interface SkyhavenVideoClip {
   id: string;
   title: string;

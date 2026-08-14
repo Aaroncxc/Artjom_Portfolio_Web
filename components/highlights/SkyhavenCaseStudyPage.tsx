@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import clsx from 'clsx';
 import type { Project } from '@/lib/types';
 import { buildHireMailto, CONTACT_MAILTO } from '@/lib/contact';
@@ -8,7 +9,9 @@ import { RichText } from '@/lib/formatRichText';
 import { formatProjectMonthYear, projectYear } from '@/lib/caseStudy';
 import LightLeaksBackground from '@/components/LightLeaksBackground';
 import { SkyhavenHighlightDetail } from '@/components/highlights/SkyhavenHighlightDetail';
+import { SkyhavenWebsitePanel } from '@/components/highlights/SkyhavenWebsitePanel';
 import { highlightById } from '@/lib/highlightProjects';
+import { SKYHAVEN_LOGO } from '@/lib/skyhavenVideos';
 
 interface SkyhavenCaseStudyPageProps {
   project: Project;
@@ -33,7 +36,6 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
   const year = projectYear(project.date);
   const monthYear = formatProjectMonthYear(project.date);
   const hireHref = buildHireMailto(`Hire me — ${project.title}`);
-  const liveRef = project.references?.find((r) => r.url?.trim());
 
   const chip = (text: string) => (
     <span
@@ -72,23 +74,33 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
       </header>
 
       <main className="relative z-[5] pb-24">
-        <section className="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 sm:pb-14 sm:pt-12">
-          <div className="space-y-6">
+        <section className="relative overflow-hidden bg-[#0b0d12]">
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_70%_40%,rgba(212,160,64,0.16),transparent_62%)]"
+            aria-hidden
+          />
+          <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 sm:pb-16 sm:pt-12 md:pb-20">
             <div className="flex flex-wrap gap-2">
               {project.role ? chip(project.role) : null}
               {project.client ? chip(project.client) : null}
               {project.timeframe ? chip(project.timeframe) : year ? chip(year) : null}
             </div>
-            <h1 className="brand-tight max-w-4xl text-[clamp(2rem,5.5vw,3.75rem)] font-semibold leading-[1.05] tracking-tight text-mk-text">
-              {project.title}
-            </h1>
-            <div className="max-w-3xl text-base leading-relaxed text-mk-text-secondary md:text-lg md:leading-[1.65]">
+            <h1 className="sr-only">{project.title}</h1>
+            <Image
+              src={SKYHAVEN_LOGO}
+              alt="CoinCraft Skyhaven"
+              width={1776}
+              height={608}
+              priority
+              className="mt-8 h-auto w-full max-w-5xl drop-shadow-[0_18px_40px_rgba(0,0,0,0.45)] sm:mt-10"
+            />
+            <div className="mt-8 max-w-3xl text-base leading-relaxed text-white/75 md:mt-10 md:text-lg md:leading-[1.65]">
               <RichText as="p">{project.description}</RichText>
             </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 sm:px-6">
+        <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 sm:pt-14">
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] lg:items-start lg:gap-10">
             <div className="rounded-[20px] border border-black/[0.08] bg-white/85 p-5 shadow-[0_4px_24px_rgba(0,0,0,0.04)] sm:p-7 lg:sticky lg:top-20">
               <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-mk-text-muted">
@@ -156,6 +168,10 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
           </div>
         </section>
 
+        <div className="mt-12 sm:mt-16">
+          <SkyhavenWebsitePanel />
+        </div>
+
         {highlight ? (
           <section className="mx-auto mt-12 max-w-7xl px-4 sm:mt-16 sm:px-6">
             <SkyhavenHighlightDetail highlight={highlight} variant="page" />
@@ -171,16 +187,19 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
               I lead production, 3D, and interactive builds from brief to release.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-              {liveRef ? (
-                <a
-                  href={liveRef.url}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="inline-flex min-h-[48px] items-center rounded-full border border-black/[0.1] bg-white px-6 text-sm font-semibold text-mk-text hover:bg-[#F2F2F7]"
-                >
-                  {liveRef.label || 'Open live'}
-                </a>
-              ) : null}
+              {project.references
+                ?.filter((r) => r.url?.trim())
+                .map((r) => (
+                  <a
+                    key={r.url}
+                    href={r.url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex min-h-[48px] items-center rounded-full border border-black/[0.1] bg-white px-6 text-sm font-semibold text-mk-text hover:bg-[#F2F2F7]"
+                  >
+                    {r.label || 'Open live'}
+                  </a>
+                ))}
               <a
                 href={hireHref}
                 className="inline-flex min-h-[48px] items-center rounded-full bg-system-blue px-6 text-sm font-semibold text-white hover:bg-[#0077ED]"
