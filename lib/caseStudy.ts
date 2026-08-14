@@ -34,6 +34,36 @@ export function sortProjectsForPortfolio(projects: Project[]): Project[] {
   });
 }
 
+/**
+ * Collapse thumb/full variants and encoding noise into one key so the same
+ * shot is not listed twice (e.g. `vr-scene-07-thumb.jpg` vs `vr-scene-07.webp`).
+ */
+export function normalizeMediaKey(src: string): string {
+  try {
+    const decoded = decodeURIComponent(src.trim());
+    return decoded
+      .toLowerCase()
+      .replace(/\\/g, '/')
+      .replace(/-thumb(?=\.[a-z0-9]+$)/i, '')
+      .replace(/_thumb(?=\.[a-z0-9]+$)/i, '')
+      .replace(/\.(jpe?g|png|webp|gif|avif|mp4|webm|mov)$/i, '');
+  } catch {
+    return src.trim().toLowerCase();
+  }
+}
+
+export function dedupeMediaByKey<T extends { src: string }>(items: T[]): T[] {
+  const seen = new Set<string>();
+  const out: T[] = [];
+  for (const item of items) {
+    const key = normalizeMediaKey(item.src);
+    if (!item.src || seen.has(key)) continue;
+    seen.add(key);
+    out.push(item);
+  }
+  return out;
+}
+
 function mediaFromGalleryItem(item: ProjectMedia): CaseSectionMedia {
   const kind =
     item.type === 'video'
@@ -51,6 +81,23 @@ function mediaFromGalleryItem(item: ProjectMedia): CaseSectionMedia {
   };
 }
 
+/** Hero key visual: prefer video, else thumbnail / first image. */
+export function resolveHeroMedia(project: Project): CaseSectionMedia | null {
+  if (project.videoUrl) {
+    return {
+      src: project.videoUrl,
+      kind: 'video',
+      caption: project.description,
+    };
+  }
+  if (project.thumbnail) {
+    return { src: project.thumbnail, kind: 'image' };
+  }
+  const firstImage = project.images?.[0] ?? project.gallery?.find((g) => g.type === 'image')?.src;
+  if (firstImage) return { src: firstImage, kind: 'image' };
+  return null;
+}
+
 /**
  * Build editorial sections when a project has no explicit `caseSections`.
  * Uses explanation (or description) as intro, then groups gallery media.
@@ -58,6 +105,8 @@ function mediaFromGalleryItem(item: ProjectMedia): CaseSectionMedia {
 export function buildFallbackCaseSections(project: Project): CaseSection[] {
   const sections: CaseSection[] = [];
   const story = (project.explanation?.trim() || project.description || '').trim();
+  const hero = resolveHeroMedia(project);
+  const heroKey = hero ? normalizeMediaKey(hero.src) : null;
 
   if (story) {
     sections.push({
@@ -69,27 +118,31 @@ export function buildFallbackCaseSections(project: Project): CaseSection[] {
 
   const gallery = project.gallery ?? [];
   const groupsConfig = getProjectMediaGroupsConfig(project.slug);
-  const usedSrcs = new Set<string>();
+  const usedKeys = new Set<string>();
+  if (heroKey) usedKeys.add(heroKey);
 
   if (groupsConfig?.groups?.length && gallery.length) {
     for (const group of groupsConfig.groups) {
-      const media = gallery
-        .filter((g) => {
-          if (usedSrcs.has(g.src)) return false;
-          const kind =
-            g.type === 'video'
-              ? 'video'
-              : g.type === 'html'
-                ? 'html'
-                : g.type === 'model3d'
-                  ? 'model3d'
-                  : 'image';
-          return group.match({ kind, src: g.src });
-        })
-        .map(mediaFromGalleryItem);
+      const media = dedupeMediaByKey(
+        gallery
+          .filter((g) => {
+            const key = normalizeMediaKey(g.src);
+            if (usedKeys.has(key)) return false;
+            const kind =
+              g.type === 'video'
+                ? 'video'
+                : g.type === 'html'
+                  ? 'html'
+                  : g.type === 'model3d'
+                    ? 'model3d'
+                    : 'image';
+            return group.match({ kind, src: g.src });
+          })
+          .map(mediaFromGalleryItem),
+      );
 
       if (!media.length) continue;
-      media.forEach((m) => usedSrcs.add(m.src));
+      media.forEach((m) => usedKeys.add(normalizeMediaKey(m.src)));
       sections.push({
         heading: group.label,
         media,
@@ -98,9 +151,11 @@ export function buildFallbackCaseSections(project: Project): CaseSection[] {
     }
   }
 
-  const leftover = gallery
-    .filter((g) => !usedSrcs.has(g.src))
-    .map(mediaFromGalleryItem);
+  const leftover = dedupeMediaByKey(
+    gallery
+      .filter((g) => !usedKeys.has(normalizeMediaKey(g.src)))
+      .map(mediaFromGalleryItem),
+  );
 
   if (leftover.length) {
     sections.push({
@@ -110,7 +165,6 @@ export function buildFallbackCaseSections(project: Project): CaseSection[] {
     });
   }
 
-  // Interactive embeds
   const liveMedia: CaseSectionMedia[] = [];
   if (project.htmlPath) {
     liveMedia.push({
@@ -136,7 +190,6 @@ export function buildFallbackCaseSections(project: Project): CaseSection[] {
     });
   }
 
-  // Blueprints as full-media iframes (html kind via url)
   if (project.unrealBlueprints?.length) {
     sections.push({
       heading: 'Unreal blueprints',
@@ -154,24 +207,53 @@ export function buildFallbackCaseSections(project: Project): CaseSection[] {
   return sections;
 }
 
-export function resolveCaseSections(project: Project): CaseSection[] {
-  if (project.caseSections?.length) return project.caseSections;
-  return buildFallbackCaseSections(project);
+/** Drop media that already appears as the page hero (avoid double presentation). */
+function stripHeroFromSections(
+  sections: CaseSection[],
+  hero: CaseSectionMedia | null,
+): CaseSection[] {
+  if (!hero) return sections;
+  const heroKey = normalizeMediaKey(hero.src);
+  return sections
+    .map((section) => {
+      if (!section.media?.length) return section;
+      const media = section.media.filter((m) => normalizeMediaKey(m.src) !== heroKey);
+      if (media.length === section.media.length) return section;
+      if (!media.length && !section.body && !section.heading) return null;
+      if (!media.length && section.body) {
+        return { ...section, media: undefined, layout: 'text-left' as const };
+      }
+      if (!media.length) return null;
+      return { ...section, media };
+    })
+    .filter((s): s is CaseSection => s != null);
 }
 
-/** Hero key visual: prefer video, else thumbnail / first image. */
-export function resolveHeroMedia(project: Project): CaseSectionMedia | null {
-  if (project.videoUrl) {
-    return {
-      src: project.videoUrl,
-      kind: 'video',
-      caption: project.description,
-    };
-  }
-  if (project.thumbnail) {
-    return { src: project.thumbnail, kind: 'image' };
-  }
-  const firstImage = project.images?.[0] ?? project.gallery?.find((g) => g.type === 'image')?.src;
-  if (firstImage) return { src: firstImage, kind: 'image' };
-  return null;
+function dedupeWithinSections(sections: CaseSection[]): CaseSection[] {
+  const used = new Set<string>();
+  return sections
+    .map((section) => {
+      if (!section.media?.length) return section;
+      const media: CaseSectionMedia[] = [];
+      for (const item of section.media) {
+        const key = normalizeMediaKey(item.src);
+        if (used.has(key)) continue;
+        used.add(key);
+        media.push(item);
+      }
+      if (!media.length && !section.body) return null;
+      if (!media.length) {
+        return { ...section, media: undefined, layout: 'text-left' as const };
+      }
+      return { ...section, media };
+    })
+    .filter((s): s is CaseSection => s != null);
+}
+
+export function resolveCaseSections(project: Project): CaseSection[] {
+  const hero = resolveHeroMedia(project);
+  const raw = project.caseSections?.length
+    ? project.caseSections
+    : buildFallbackCaseSections(project);
+  return dedupeWithinSections(stripHeroFromSections(raw, hero));
 }

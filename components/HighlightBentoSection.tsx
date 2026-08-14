@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { GlassPanel } from '@/components/GlassPanel';
@@ -27,7 +28,6 @@ import {
   SKYHAVEN_HIGHLIGHT_SECTION,
   type HighlightBentoSectionConfig,
 } from '@/lib/highlightSections';
-import { findPostBySlug } from '@/lib/loadPosts';
 import type { Project } from '@/lib/types';
 import { useMobilePerformance } from '@/lib/useMobilePerformance';
 import { ViewportAutoplayVideo } from '@/components/ViewportAutoplayVideo';
@@ -40,116 +40,6 @@ interface HighlightBentoSectionProps {
 function layoutSpring(reduceMotion: boolean) {
   if (reduceMotion) return { duration: 0.01 };
   return { type: 'spring' as const, stiffness: 280, damping: 32, mass: 0.85 };
-}
-
-function InlineSkeleton() {
-  return (
-    <div className="flex flex-col gap-4 p-4 sm:p-5" aria-busy="true" aria-label="Loading project">
-      <div className="h-9 w-44 animate-pulse rounded-full bg-black/[0.06]" />
-      <div className="aspect-video w-full animate-pulse rounded-2xl bg-black/[0.06]" />
-      <div className="space-y-2">
-        <div className="h-4 w-3/4 max-w-md animate-pulse rounded bg-black/[0.06]" />
-        <div className="h-4 w-1/2 max-w-sm animate-pulse rounded bg-black/[0.06]" />
-        <div className="h-4 w-2/3 max-w-lg animate-pulse rounded bg-black/[0.06]" />
-      </div>
-    </div>
-  );
-}
-
-function InlineNotFound({ onBack, backLabel }: { onBack: () => void; backLabel: string }) {
-  return (
-    <div className="flex flex-col items-start gap-4 p-4 sm:p-6">
-      <p className="text-sm text-mk-text-secondary">Project data could not be loaded.</p>
-      <button
-        type="button"
-        onClick={onBack}
-        className={clsx(
-          'inline-flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white px-3 py-2 text-xs font-semibold text-mk-text-secondary shadow-sm',
-          'hover:bg-white hover:text-mk-text',
-          'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue',
-        )}
-      >
-        <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
-        </svg>
-        {backLabel}
-      </button>
-    </div>
-  );
-}
-
-function InlineProjectView({
-  slug,
-  onBack,
-  backLabel,
-}: {
-  slug: string;
-  onBack: () => void;
-  backLabel: string;
-}) {
-  const [post, setPost] = React.useState<Project | null | 'loading'>('loading');
-
-  React.useEffect(() => {
-    let alive = true;
-    findPostBySlug(slug).then((p) => {
-      if (alive) setPost(p ?? null);
-    });
-    return () => {
-      alive = false;
-    };
-  }, [slug]);
-
-  if (post === 'loading') return <InlineSkeleton />;
-  if (!post) return <InlineNotFound onBack={onBack} backLabel={backLabel} />;
-
-  return (
-    <div className="px-px">
-      <PortfolioProjectModal project={post} onClose={onBack} variant="inline" backLabel={backLabel} />
-    </div>
-  );
-}
-
-/** Adapter: HighlightProject → Project, so we can reuse `PortfolioProjectModal` for tool tiles. */
-function highlightAsProject(h: HighlightProject): Project {
-  const yearMatch = /(\d{4})/.exec(h.year ?? '');
-  const yearNum = yearMatch ? yearMatch[1] : '2024';
-  const galleryMedia = (h.gallery ?? []).map((src) => ({ type: 'image' as const, src }));
-  return {
-    id: h.id,
-    slug: h.id,
-    title: h.title,
-    description: h.description,
-    date: `${yearNum}-06-01`,
-    tools: h.tools.map((name) => ({ name })),
-    tags: [h.category, ...(h.tileBadges ?? []).map(String)],
-    type: 'image',
-    // Prefer first gallery still for the modal hero (e.g. course-overview’s thumb was a blurred teaser).
-    thumbnail: h.gallery?.[0] ?? h.thumb,
-    images: h.gallery,
-    gallery: galleryMedia.length > 0 ? galleryMedia : undefined,
-    explanation: `${(h.explanation?.trim() || h.description).trim()}\n\nMy role: ${h.role}`,
-    ctaHref: h.toolExternalUrl,
-    references: h.toolExternalUrl
-      ? [{ url: h.toolExternalUrl, label: h.id === 'agata-journal' ? 'agatajournal.com' : 'Open Tool' }]
-      : undefined,
-  };
-}
-
-function SyntheticProjectView({
-  highlight,
-  onBack,
-  backLabel,
-}: {
-  highlight: HighlightProject;
-  onBack: () => void;
-  backLabel: string;
-}) {
-  const project = React.useMemo(() => highlightAsProject(highlight), [highlight]);
-  return (
-    <div className="px-px">
-      <PortfolioProjectModal project={project} onClose={onBack} variant="inline" backLabel={backLabel} />
-    </div>
-  );
 }
 
 function TileAvailabilityPill({ status }: { status: 'live' | 'test' | 'demo-live' }) {
@@ -428,10 +318,53 @@ function BentoGridCell({
   );
 }
 
+/** Adapter: HighlightProject → Project for tool tiles without a case-study page. */
+function highlightAsProject(h: HighlightProject): Project {
+  const yearMatch = /(\d{4})/.exec(h.year ?? '');
+  const yearNum = yearMatch ? yearMatch[1] : '2024';
+  const galleryMedia = (h.gallery ?? []).map((src) => ({ type: 'image' as const, src }));
+  return {
+    id: h.id,
+    slug: h.id,
+    title: h.title,
+    description: h.description,
+    date: `${yearNum}-06-01`,
+    tools: h.tools.map((name) => ({ name })),
+    tags: [h.category, ...(h.tileBadges ?? []).map(String)],
+    type: 'image',
+    thumbnail: h.gallery?.[0] ?? h.thumb,
+    images: h.gallery,
+    gallery: galleryMedia.length > 0 ? galleryMedia : undefined,
+    explanation: `${(h.explanation?.trim() || h.description).trim()}\n\nMy role: ${h.role}`,
+    ctaHref: h.toolExternalUrl,
+    references: h.toolExternalUrl
+      ? [{ url: h.toolExternalUrl, label: h.id === 'agata-journal' ? 'agatajournal.com' : 'Open Tool' }]
+      : undefined,
+  };
+}
+
+function SyntheticProjectView({
+  highlight,
+  onBack,
+  backLabel,
+}: {
+  highlight: HighlightProject;
+  onBack: () => void;
+  backLabel: string;
+}) {
+  const project = React.useMemo(() => highlightAsProject(highlight), [highlight]);
+  return (
+    <div className="px-px">
+      <PortfolioProjectModal project={project} onClose={onBack} variant="inline" backLabel={backLabel} />
+    </div>
+  );
+}
+
 export function HighlightBentoSection({
   visible = true,
   config = PRODUCTION_HIGHLIGHT_SECTION,
 }: HighlightBentoSectionProps) {
+  const router = useRouter();
   const [activeId, setActiveId] = React.useState<HighlightProjectId | null>(null);
   const reduceMotion = useReducedMotion() ?? false;
   const { limitContinuousEffects, preferStaticTileVideo } = useMobilePerformance();
@@ -444,6 +377,24 @@ export function HighlightBentoSection({
     if (el) tileRefs.current.set(id, el);
     else tileRefs.current.delete(id);
   }, []);
+
+  /** Case-study projects navigate immediately; Skyhaven / tools stay inline. */
+  const onPick = React.useCallback(
+    (id: HighlightProjectId) => {
+      const project = highlightById(id);
+      if (!project) return;
+      if (project.detailMode === 'skyhaven') {
+        setActiveId(id);
+        return;
+      }
+      if (project.projectSlug) {
+        router.push(`/project/${project.projectSlug}`);
+        return;
+      }
+      setActiveId(id);
+    },
+    [router],
+  );
 
   const onClose = React.useCallback(() => {
     const id = activeId;
@@ -551,7 +502,7 @@ export function HighlightBentoSection({
                       <BentoGridCell
                         key={project.id}
                         project={project}
-                        onPick={setActiveId}
+                        onPick={onPick}
                         reduceMotion={reduceMotion}
                         registerTileRef={registerTileRef}
                         tileCellClass={config.tileCellClass}
@@ -580,12 +531,6 @@ export function HighlightBentoSection({
                         backLabel={backLabel}
                       />
                     </div>
-                  ) : activeProject.projectSlug ? (
-                    <InlineProjectView
-                      slug={activeProject.projectSlug}
-                      onBack={onClose}
-                      backLabel={backLabel}
-                    />
                   ) : (
                     <SyntheticProjectView
                       highlight={activeProject}

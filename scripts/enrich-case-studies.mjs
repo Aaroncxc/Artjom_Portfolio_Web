@@ -117,12 +117,9 @@ const enrichments = {
         heading: 'AR interaction stills',
         layout: 'gallery',
         media: [
-          { kind: 'image', src: '/projects/elearning-africa-kigali-2024/Kigali_AR_2.webp', title: 'AR still 1' },
-          { kind: 'image', src: '/projects/elearning-africa-kigali-2024/Kigali_AR_3.webp', title: 'AR still 2' },
-          { kind: 'image', src: '/projects/elearning-africa-kigali-2024/Kigali_AR_4.webp', title: 'AR still 3' },
-          { kind: 'image', src: '/projects/elearning-africa-kigali-2024/Kigali_AR_5.webp', title: 'AR still 4' },
-          { kind: 'image', src: '/projects/elearning-africa-kigali-2024/Kigali_AR_6.webp', title: 'AR still 5' },
-          { kind: 'image', src: '/projects/elearning-africa-kigali-2024/Kigali_AR_7.png', title: 'AR still 6' },
+          { kind: 'image', src: '/projects/elearning-africa-kigali-2024/Kigali_AR_2.webp', title: 'AR still — cables & inverter overlay', caption: 'Visitor places virtual cables while the AR inverter overlay floats above the work surface.' },
+          { kind: 'image', src: '/projects/elearning-africa-kigali-2024/Kigali_AR_5.webp', title: 'AR still — guided steps', caption: 'Guided installation steps during the booth demo.' },
+          { kind: 'image', src: '/projects/elearning-africa-kigali-2024/Kigali_AR_7.png', title: 'AR still — wide view', caption: 'Wider view of the AR training interaction on the fair floor.' },
         ],
       },
       {

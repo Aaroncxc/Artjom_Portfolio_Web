@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import type { ModalAsset } from '@/components/portfolio/ProjectMediaCanvas';
 import { useHorizontalSwipe } from '@/lib/useHorizontalSwipe';
 
@@ -54,6 +54,32 @@ export function MediaGalleryLightbox({
     open && navigableIndices.length > 1,
   );
 
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        step('prev');
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        step('next');
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open, onClose, step]);
+
   const posInGallery =
     activeIndex !== null ? navigableIndices.indexOf(activeIndex) : -1;
   const hasPrev = posInGallery > 0;
@@ -63,18 +89,32 @@ export function MediaGalleryLightbox({
     <AnimatePresence>
       {open && asset && (asset.kind === 'image' || asset.kind === 'video') ? (
         <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-label={alt}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex touch-pan-y flex-col bg-black/92"
+          className="fixed inset-0 z-[200] flex touch-pan-y flex-col bg-black/92"
           onClick={onClose}
           onTouchStart={swipe.onTouchStart}
           onTouchEnd={swipe.onTouchEnd}
         >
-          <div
-            className="relative flex min-h-0 flex-1 items-center justify-center p-3 pt-14 pb-16 sm:p-6"
-            onClick={(e) => e.stopPropagation()}
+          <button
+            type="button"
+            className="absolute right-3 top-3 z-[210] flex h-12 w-12 items-center justify-center rounded-full bg-white/18 text-white shadow-lg backdrop-blur-md transition hover:bg-white/28 sm:right-5 sm:top-5"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            aria-label="Close"
           >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.25}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <div className="relative flex min-h-0 flex-1 items-center justify-center p-3 pt-16 pb-16 sm:p-6">
             {asset.kind === 'image' ? (
               <motion.img
                 key={asset.src}
@@ -83,8 +123,9 @@ export function MediaGalleryLightbox({
                 exit={{ scale: 0.96, opacity: 0 }}
                 src={asset.src}
                 alt={alt}
-                className="max-h-[min(78dvh,900px)] w-auto max-w-full object-contain"
+                className="max-h-[min(78dvh,900px)] w-auto max-w-full cursor-zoom-out object-contain"
                 draggable={false}
+                onClick={onClose}
               />
             ) : (
               <motion.video
@@ -108,7 +149,10 @@ export function MediaGalleryLightbox({
                 <button
                   type="button"
                   disabled={!hasPrev}
-                  onClick={() => step('prev')}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    step('prev');
+                  }}
                   aria-label="Previous"
                   className={clsx(
                     'absolute left-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full',
@@ -123,7 +167,10 @@ export function MediaGalleryLightbox({
                 <button
                   type="button"
                   disabled={!hasNext}
-                  onClick={() => step('next')}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    step('next');
+                  }}
                   aria-label="Next"
                   className={clsx(
                     'absolute right-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full',
@@ -141,20 +188,13 @@ export function MediaGalleryLightbox({
 
           {navigableIndices.length > 1 ? (
             <p className="pointer-events-none absolute bottom-5 left-0 right-0 text-center text-xs text-white/55">
-              Swipe for next · {posInGallery + 1} / {navigableIndices.length}
+              Esc to close · Swipe for next · {posInGallery + 1} / {navigableIndices.length}
             </p>
-          ) : null}
-
-          <button
-            type="button"
-            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-sm transition hover:bg-white/20 sm:right-6 sm:top-6"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          ) : (
+            <p className="pointer-events-none absolute bottom-5 left-0 right-0 text-center text-xs text-white/55">
+              Esc or click outside to close
+            </p>
+          )}
         </motion.div>
       ) : null}
     </AnimatePresence>

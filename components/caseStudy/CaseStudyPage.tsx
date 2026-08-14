@@ -9,6 +9,7 @@ import { buildHireMailto, CONTACT_MAILTO } from '@/lib/contact';
 import { RichParagraphs, RichText, stripBoldMarkers } from '@/lib/formatRichText';
 import {
   formatProjectMonthYear,
+  normalizeMediaKey,
   projectYear,
   resolveCaseSections,
   resolveHeroMedia,
@@ -48,20 +49,29 @@ export function CaseStudyPage({ project, prev, next }: CaseStudyPageProps) {
 
   const lightboxAssets = useMemo<ModalAsset[]>(() => {
     const imgs: ModalAsset[] = [];
+    const seen = new Set<string>();
     const push = (src: string, caption?: string) => {
-      if (!src || imgs.some((a) => a.src === src)) return;
+      if (!src) return;
+      const key = normalizeMediaKey(src);
+      if (seen.has(key)) return;
+      seen.add(key);
       imgs.push({ kind: 'image', src, thumb: src, caption });
     };
-    if (project.thumbnail) push(project.thumbnail);
-    (project.images ?? []).forEach((src) => push(src));
-    (project.gallery ?? []).forEach((g) => {
-      if (g.type === 'image') push(g.src, g.caption);
-    });
+
+    // Curated case studies: lightbox follows section stills only (avoids gallery dumping near-duplicates).
+    const hasCuratedSections = (project.caseSections?.length ?? 0) > 0;
     sections.forEach((s) =>
       (s.media ?? []).forEach((m) => {
         if (m.kind === 'image') push(m.src, m.caption);
       }),
     );
+    if (!hasCuratedSections) {
+      (project.gallery ?? []).forEach((g) => {
+        if (g.type === 'image') push(g.src, g.caption);
+      });
+      (project.images ?? []).forEach((src) => push(src));
+      if (project.thumbnail) push(project.thumbnail);
+    }
     return imgs;
   }, [project, sections]);
 
