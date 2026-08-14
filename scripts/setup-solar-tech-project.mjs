@@ -120,7 +120,7 @@ const post = {
   title: 'DADB Solar Technician Digital Campus',
   description:
     'For the German Academy of Digital Education, an immersive digital campus for the Solar Technician program — lecture rooms, a social hub, training areas, and a gamified solarpark where learners explore photovoltaics, installation, maintenance, and health & safety in a walkable 3D world.',
-  date: '2026-06-01',
+  date: '2025-06-01',
   tags: [
     'video',
     '3D',
@@ -162,7 +162,7 @@ Outcome: a completed digital campus prototype combining virtual classrooms, camp
 
 Especially notable: the blend of digital campus design, learning experience design, vocational training, and gamification — a walkable learning world where technical topics become spatial, interactive, and playful, built across multiple internal teams and external partners.
 
-Timeline: June 2026 — prototype completed.`,
+Timeline: June 2025 — prototype completed.`,
   author: 'AaronCxC',
   gallery: [],
   mediaCaptions: {},

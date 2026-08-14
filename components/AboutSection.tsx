@@ -540,17 +540,6 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                                   <a
                                                     href={toolDeepLink(entry.toolLink.id)}
                                                     className="inline-block py-0.5 font-semibold text-system-blue underline decoration-system-blue/30 underline-offset-2 transition-opacity hover:opacity-80"
-                                                    onClick={(e) => {
-                                                      e.preventDefault();
-                                                      const url = new URL(window.location.href);
-                                                      url.searchParams.set('tool', entry.toolLink!.id);
-                                                      url.hash = 'tools-games';
-                                                      window.history.pushState(null, '', url.toString());
-                                                      document
-                                                        .getElementById('tools-games')
-                                                        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                                      window.dispatchEvent(new PopStateEvent('popstate'));
-                                                    }}
                                                   >
                                                     {entry.toolLink.label}
                                                   </a>

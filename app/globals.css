@@ -49,13 +49,6 @@ html {
   }
 }
 
-/* Hide navigation when project modal is open */
-body[data-modal-open="true"] nav {
-  opacity: 0 !important;
-  pointer-events: none !important;
-  transform: translateY(-20px) translateX(-50%) !important;
-}
-
 body {
   background: var(--color-bg-1);
   color: var(--text-primary);

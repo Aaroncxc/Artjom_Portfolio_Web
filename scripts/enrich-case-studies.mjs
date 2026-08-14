@@ -413,7 +413,7 @@ const enrichments = {
     ],
   },
 
-  // Compact projects
+  // Compact projects — Brief → work → result/media (hero media omitted from sections)
   'rovolto-lost-files': {
     order: 9,
     role: '3D Sculpture & WebGL',
@@ -426,6 +426,33 @@ const enrichments = {
     ],
     explanation:
       '**Rovolto Lost Files** is an interactive sculpture study: form-first modelling brought into a **WebGL** viewer so the piece can be inspected live. The work sits between digital sculpture and product presentation.',
+    caseSections: [
+      {
+        heading: 'Brief',
+        body: 'A form-first sculpture study about **lost digital artifacts**—volume, surface, and silhouette that still read when the piece is inspected live in the browser.',
+        layout: 'text-left',
+      },
+      {
+        heading: 'Sculpture stills',
+        body: 'Renders and lighting passes that lock the look before the interactive viewer.',
+        layout: 'gallery',
+        media: [
+          { kind: 'image', src: '/projects/rovolto-lost-files/rovolto.webp', title: 'Primary still' },
+          { kind: 'image', src: '/projects/rovolto-lost-files/rovolto1.webp', title: 'Alternate angle' },
+          { kind: 'image', src: '/projects/rovolto-lost-files/render-5.png', title: 'Render pass' },
+          { kind: 'image', src: '/projects/rovolto-lost-files/render-7.png', title: 'Detail pass' },
+        ],
+      },
+      {
+        heading: 'Try it live',
+        body: 'Orbit the finished asset in the browser WebGL viewer.',
+        layout: 'live-embed',
+        media: [
+          { kind: 'html', src: '/projects/rovolto-lost-files/index.html', title: 'Live sculpture', caption: 'Interactive browser build.' },
+          { kind: 'model3d', src: '/projects/rovolto-lost-files/model.glb', title: '3D model', caption: 'Orbit the asset in the browser.' },
+        ],
+      },
+    ],
   },
   'mask-sculpture': {
     order: 10,
@@ -438,6 +465,29 @@ const enrichments = {
     ],
     explanation:
       '**Mask Sculpture** continues the interactive sculpture thread: a characterful mask form authored in 3D and exposed through a lightweight browser viewer.',
+    caseSections: [
+      {
+        heading: 'Brief',
+        body: 'A characterful **mask form**—sculpture first, then a lightweight browser viewer so the piece can be explored without a heavy install.',
+        layout: 'text-left',
+      },
+      {
+        heading: 'Form studies',
+        layout: 'gallery',
+        media: [
+          { kind: 'image', src: '/projects/mask-sculpture/look-mask-4.webp', title: 'Hero look' },
+          { kind: 'image', src: '/projects/mask-sculpture/youtube-back-10.webp', title: 'Back / alternate' },
+        ],
+      },
+      {
+        heading: 'Interactive model',
+        layout: 'live-embed',
+        media: [
+          { kind: 'html', src: '/projects/mask-sculpture/index.html', title: 'Live mask', caption: 'Browser orbit of the mask sculpture.' },
+          { kind: 'model3d', src: '/projects/mask-sculpture/model.glb', title: '3D model' },
+        ],
+      },
+    ],
   },
   'ice-gel': {
     order: 11,
@@ -450,6 +500,24 @@ const enrichments = {
     ],
     explanation:
       'A **cosmetics product concept** focused on material read—cool gel, soft packaging language, and stills that sell the object without a physical prototype.',
+    caseSections: [
+      {
+        heading: 'Brief',
+        body: 'Sell a **cosmetic ice-gel** concept without a physical prototype—cool gel read, soft packaging language, and stills that carry the product story.',
+        layout: 'text-left',
+      },
+      {
+        heading: 'Material & composition',
+        body: 'Blender stills focused on translucency, label language, and surreal product staging.',
+        layout: 'gallery',
+        media: [
+          { kind: 'image', src: '/projects/ice-gel/final2.webp', title: 'Final composition' },
+          { kind: 'image', src: '/projects/ice-gel/multikunst-freitag.webp', title: 'Campaign still' },
+          { kind: 'image', src: '/projects/ice-gel/multikunst-freitag23w.webp', title: 'Variant' },
+          { kind: 'image', src: '/projects/ice-gel/test-render-2-taj.webp', title: 'Material test' },
+        ],
+      },
+    ],
   },
   'pocket-multipass': {
     order: 12,
@@ -462,6 +530,30 @@ const enrichments = {
     ],
     explanation:
       '**Pocket Multipass** is a compact hardware concept told through product visualisation—silhouette, interaction affordances, and short motion for a pitch-ready look.',
+    caseSections: [
+      {
+        heading: 'Brief',
+        body: 'A compact **hardware concept**—silhouette, button affordances, and a pitch-ready look that mixes retro gaming cues with a modern multipass device.',
+        layout: 'text-left',
+      },
+      {
+        heading: 'Product angles',
+        layout: 'gallery',
+        media: [
+          { kind: 'image', src: '/projects/pocket-multipass/front_top.webp', title: 'Front / top' },
+          { kind: 'image', src: '/projects/pocket-multipass/front_top_2.webp', title: 'Front alternate' },
+          { kind: 'image', src: '/projects/pocket-multipass/perspective.webp', title: 'Perspective' },
+        ],
+      },
+      {
+        heading: 'Detail motion',
+        body: 'A short detail pass for how the object reads in motion.',
+        layout: 'full-media',
+        media: [
+          { kind: 'video', src: '/projects/pocket-multipass/detail.mp4', title: 'Detail clip' },
+        ],
+      },
+    ],
   },
   'multiconcert': {
     order: 13,
@@ -474,6 +566,23 @@ const enrichments = {
     ],
     explanation:
       '**MultiConcert** explores event-space storytelling under the Multikunst collective—stage volume, audience read, and atmospheric lighting studies.',
+    caseSections: [
+      {
+        heading: 'Brief',
+        body: 'Event-space storytelling for Multikunst—**stage volume**, audience read, and atmospheric lighting that sell a futuristic concert concept.',
+        layout: 'text-left',
+      },
+      {
+        heading: 'Stage & atmosphere',
+        layout: 'gallery',
+        media: [
+          { kind: 'image', src: '/projects/multiconcert/konzuert-5542.webp', title: 'Wide stage' },
+          { kind: 'image', src: '/projects/multiconcert/konzuert161.webp', title: 'Lighting study' },
+          { kind: 'image', src: '/projects/multiconcert/konzuert171.webp', title: 'Audience read' },
+          { kind: 'image', src: '/projects/multiconcert/konzuert181.webp', title: 'Atmospheric pass' },
+        ],
+      },
+    ],
   },
   'multiply': {
     order: 14,
@@ -486,6 +595,21 @@ const enrichments = {
     ],
     explanation:
       '**Multiply** is a motion-led product concept under Multikunst—short, graphic, and built to communicate an idea quickly in a portfolio context.',
+    caseSections: [
+      {
+        heading: 'Brief',
+        body: 'A **fragrance campaign** under Multikunst—industrial precision meets luxury product design, told in a short motion film.',
+        layout: 'text-left',
+      },
+      {
+        heading: 'Campaign still',
+        body: 'Key art that carries the packaging and typography language alongside the trailer.',
+        layout: 'full-media',
+        media: [
+          { kind: 'image', src: '/projects/multiply/poster.png', title: 'Campaign poster' },
+        ],
+      },
+    ],
   },
   'multi-watch': {
     order: 15,
@@ -498,6 +622,13 @@ const enrichments = {
     ],
     explanation:
       '**Multi Watch** is a product-design study: proportions, materials, and a short film pass that presents the watch as a wearable object.',
+    caseSections: [
+      {
+        heading: 'Brief & result',
+        body: 'A Multikunst **watch product study**—proportions, layered dials, and materials presented in a short launch-style film. The hero clip above is the primary deliverable; the piece is meant to read as a wearable object, not a still catalog.',
+        layout: 'text-left',
+      },
+    ],
   },
   'jan-helm': {
     order: 16,
@@ -510,6 +641,22 @@ const enrichments = {
     ],
     explanation:
       '**Jan Helm** is a helmet design visualisation—form language and material studies for a collaborative character / product piece.',
+    caseSections: [
+      {
+        heading: 'Brief',
+        body: 'Helmet design visualisation for a collaboration with **JanMitGun**—form language and material studies for a character / product piece.',
+        layout: 'text-left',
+      },
+      {
+        heading: 'Render studies',
+        layout: 'gallery',
+        media: [
+          { kind: 'image', src: '/projects/jan-helm/helmet1-alt.png', title: 'Primary helmet' },
+          { kind: 'image', src: '/projects/jan-helm/helmet3.png', title: 'Alternate view' },
+          { kind: 'image', src: '/projects/jan-helm/render6.webp', title: 'Detail render' },
+        ],
+      },
+    ],
   },
   'tshirt-jan': {
     order: 17,
@@ -522,6 +669,25 @@ const enrichments = {
     ],
     explanation:
       '**T-Shirt Jan** is a fashion / merch presentation: photography and layout focused on how the graphic sits on the garment.',
+    caseSections: [
+      {
+        heading: 'Brief',
+        body: 'Fashion / merch presentation for **JanMitGun**—how the graphic sits on the garment, outdoors and in nature contexts.',
+        layout: 'text-left',
+      },
+      {
+        heading: 'Outdoor set',
+        layout: 'gallery',
+        media: [
+          { kind: 'image', src: '/projects/tshirt-jan/shirt1.png', title: 'Studio / product' },
+          { kind: 'image', src: '/projects/tshirt-jan/djungle.webp', title: 'Jungle context' },
+          { kind: 'image', src: '/projects/tshirt-jan/outdoor1a.webp', title: 'Outdoor 1' },
+          { kind: 'image', src: '/projects/tshirt-jan/outdoor2.webp', title: 'Outdoor 2' },
+          { kind: 'image', src: '/projects/tshirt-jan/outdoor2a.webp', title: 'Outdoor 3' },
+          { kind: 'image', src: '/projects/tshirt-jan/outdoor3.webp', title: 'Outdoor 4' },
+        ],
+      },
+    ],
   },
   'sticker-box': {
     order: 18,
@@ -534,6 +700,18 @@ const enrichments = {
     ],
     explanation:
       '**Sticker Box** is a small analog branding exercise—print, stickers, and packaging as a tactile counterweight to the digital portfolio.',
+    caseSections: [
+      {
+        heading: 'Brief',
+        body: 'A small **analog branding** exercise—print, stickers, and packaging as a tactile counterweight to the digital portfolio.',
+        layout: 'text-left',
+      },
+      {
+        heading: 'Result',
+        body: 'Handcrafted stickers and print materials collected as a sticker-box piece. The hero image above is the primary presentation still for this study.',
+        layout: 'text-left',
+      },
+    ],
   },
 };
 

@@ -3,9 +3,8 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { GlassPanel } from '@/components/GlassPanel';
-import { PortfolioProjectModal } from '@/components/portfolio/PortfolioProjectModal';
 import {
   chipLearningExperienceClass,
   chipTileImmersionClass,
@@ -18,7 +17,6 @@ import {
   type HighlightProject,
   type HighlightProjectId,
 } from '@/lib/highlightProjects';
-import { SkyhavenHighlightDetail } from '@/components/highlights/SkyhavenHighlightDetail';
 import {
   AI_APP_DEV_HIGHLIGHT_SECTION,
   ARCHITECTURE_HIGHLIGHT_SECTION,
@@ -28,7 +26,6 @@ import {
   SKYHAVEN_HIGHLIGHT_SECTION,
   type HighlightBentoSectionConfig,
 } from '@/lib/highlightSections';
-import type { Project } from '@/lib/types';
 import { useMobilePerformance } from '@/lib/useMobilePerformance';
 import { ViewportAutoplayVideo } from '@/components/ViewportAutoplayVideo';
 
@@ -324,59 +321,16 @@ function BentoGridCell({
   );
 }
 
-/** Adapter: HighlightProject → Project for tool tiles without a case-study page. */
-function highlightAsProject(h: HighlightProject): Project {
-  const yearMatch = /(\d{4})/.exec(h.year ?? '');
-  const yearNum = yearMatch ? yearMatch[1] : '2024';
-  const galleryMedia = (h.gallery ?? []).map((src) => ({ type: 'image' as const, src }));
-  return {
-    id: h.id,
-    slug: h.id,
-    title: h.title,
-    description: h.description,
-    date: `${yearNum}-06-01`,
-    tools: h.tools.map((name) => ({ name })),
-    tags: [h.category, ...(h.tileBadges ?? []).map(String)],
-    type: 'image',
-    thumbnail: h.gallery?.[0] ?? h.thumb,
-    images: h.gallery,
-    gallery: galleryMedia.length > 0 ? galleryMedia : undefined,
-    explanation: `${(h.explanation?.trim() || h.description).trim()}\n\nMy role: ${h.role}`,
-    ctaHref: h.toolExternalUrl,
-    references: h.toolExternalUrl
-      ? [{ url: h.toolExternalUrl, label: h.id === 'agata-journal' ? 'agatajournal.com' : 'Open Tool' }]
-      : undefined,
-  };
-}
-
-function SyntheticProjectView({
-  highlight,
-  onBack,
-  backLabel,
-}: {
-  highlight: HighlightProject;
-  onBack: () => void;
-  backLabel: string;
-}) {
-  const project = React.useMemo(() => highlightAsProject(highlight), [highlight]);
-  return (
-    <div className="px-px">
-      <PortfolioProjectModal project={project} onClose={onBack} variant="inline" backLabel={backLabel} />
-    </div>
-  );
-}
-
+/** All highlight tiles navigate to `/project/[slug]` — no inline modal. */
 export function HighlightBentoSection({
   visible = true,
   config = PRODUCTION_HIGHLIGHT_SECTION,
 }: HighlightBentoSectionProps) {
   const router = useRouter();
-  const [activeId, setActiveId] = React.useState<HighlightProjectId | null>(null);
   const reduceMotion = useReducedMotion() ?? false;
   const { limitContinuousEffects, preferStaticTileVideo } = useMobilePerformance();
   const tileRefs = React.useRef(new Map<HighlightProjectId, HTMLButtonElement>());
   const glow = HIGHLIGHT_GLOW_THEMES[config.glow];
-  const backLabel = config.backLabel ?? 'Back to highlights';
   const useStaticGlow = reduceMotion || limitContinuousEffects;
 
   const registerTileRef = React.useCallback((id: HighlightProjectId, el: HTMLButtonElement | null) => {
@@ -384,54 +338,19 @@ export function HighlightBentoSection({
     else tileRefs.current.delete(id);
   }, []);
 
-  /** Case-study projects navigate immediately; Skyhaven / tools stay inline. */
   const onPick = React.useCallback(
     (id: HighlightProjectId) => {
       const project = highlightById(id);
       if (!project) return;
-      if (project.detailMode === 'skyhaven') {
-        setActiveId(id);
-        return;
-      }
-      if (project.projectSlug) {
-        router.push(`/project/${project.projectSlug}`);
-        return;
-      }
-      setActiveId(id);
+      const slug = project.projectSlug ?? project.id;
+      router.push(`/project/${slug}`);
     },
     [router],
   );
 
-  const onClose = React.useCallback(() => {
-    const id = activeId;
-    setActiveId(null);
-    if (id) {
-      queueMicrotask(() => tileRefs.current.get(id)?.focus());
-    }
-  }, [activeId]);
-
-  React.useEffect(() => {
-    if (activeId === null) return;
-    function onEsc(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
-    }
-    window.addEventListener('keydown', onEsc);
-    return () => window.removeEventListener('keydown', onEsc);
-  }, [activeId, onClose]);
-
-  React.useEffect(() => {
-    if (activeId !== null && !config.projects.some((p) => p.id === activeId)) setActiveId(null);
-  }, [activeId, config.projects]);
-
   const spring = layoutSpring(reduceMotion);
 
   if (!visible) return null;
-
-  const isActive = activeId !== null;
-  const activeProject = activeId ? highlightById(activeId) : undefined;
-  const fade = reduceMotion
-    ? { duration: 0.01 }
-    : { duration: 0.24, ease: [0.25, 0.1, 0.25, 1] as const };
 
   return (
     <section
@@ -456,97 +375,58 @@ export function HighlightBentoSection({
           className="relative z-[1] rounded-[calc(1rem-1px)] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] sm:rounded-[calc(1.5rem-1px)] !p-5 sm:!p-6 lg:!p-8"
         >
           <motion.div layout={!limitContinuousEffects} transition={spring}>
-            <AnimatePresence mode="wait" initial={false}>
-              {!isActive ? (
-                <motion.div
-                  key={`${config.id}-grid`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, transition: { duration: reduceMotion ? 0 : 0.16 } }}
-                  transition={fade}
-                  className="grid gap-6 sm:gap-8 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,2.12fr)] lg:gap-10"
+            <div className="grid gap-6 sm:gap-8 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,2.12fr)] lg:gap-10">
+              <div className="flex flex-col gap-3 sm:gap-4 lg:sticky lg:top-28 lg:self-start">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
+                  {config.eyebrow ?? 'Highlights'}
+                </span>
+                <h2
+                  aria-label={config.sectionTitle}
+                  className="brand-tight max-w-[min(100%,26rem)] text-[clamp(1.35rem,4.2vw,1.72rem)] font-semibold leading-[1] tracking-tight text-mk-text sm:text-[clamp(1.6rem,2.8vw,2rem)] sm:leading-[1.02] md:text-[clamp(2rem,2.4vw,2.35rem)] lg:text-[2.25rem]"
                 >
-                  <div className="flex flex-col gap-3 sm:gap-4 lg:sticky lg:top-28 lg:self-start">
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
-                      {config.eyebrow ?? 'Highlights'}
+                  <span className="block">{config.headlineStairs[0]}</span>
+                  <span className="block pl-[2rem] pt-[0.2em] sm:pl-[2.5rem] md:pl-[3rem] lg:pl-[3.25rem]">
+                    {config.headlineStairs[1]}
+                  </span>
+                  <div className="flex flex-row flex-wrap items-baseline justify-between gap-x-3 gap-y-1 pt-[0.2em] pl-[4rem] sm:pl-[5.25rem] md:pl-[6.25rem] lg:pl-[6.75rem]">
+                    <span className="min-w-0">{config.headlineStairs[2]}</span>
+                    <span className="shrink-0 text-[0.6875rem] font-medium tabular-nums tracking-normal text-mk-text sm:text-[0.8125rem] md:text-sm">
+                      {config.subtitle}
                     </span>
-                    <h2
-                      aria-label={config.sectionTitle}
-                      className="brand-tight max-w-[min(100%,26rem)] text-[clamp(1.35rem,4.2vw,1.72rem)] font-semibold leading-[1] tracking-tight text-mk-text sm:text-[clamp(1.6rem,2.8vw,2rem)] sm:leading-[1.02] md:text-[clamp(2rem,2.4vw,2.35rem)] lg:text-[2.25rem]"
-                    >
-                      <span className="block">{config.headlineStairs[0]}</span>
-                      <span className="block pl-[2rem] pt-[0.2em] sm:pl-[2.5rem] md:pl-[3rem] lg:pl-[3.25rem]">
-                        {config.headlineStairs[1]}
-                      </span>
-                      <div className="flex flex-row flex-wrap items-baseline justify-between gap-x-3 gap-y-1 pt-[0.2em] pl-[4rem] sm:pl-[5.25rem] md:pl-[6.25rem] lg:pl-[6.75rem]">
-                        <span className="min-w-0">{config.headlineStairs[2]}</span>
-                        <span className="shrink-0 text-[0.6875rem] font-medium tabular-nums tracking-normal text-mk-text sm:text-[0.8125rem] md:text-sm">
-                          {config.subtitle}
-                        </span>
-                      </div>
-                    </h2>
-                    <div className="max-w-none space-y-2 text-[0.9375rem] leading-relaxed text-mk-text-secondary sm:max-w-md sm:text-[15px] sm:leading-relaxed lg:text-base">
-                      <p>{config.bodyP1}</p>
-                      <p>{config.bodyP2}</p>
-                      {config.tryBuildLink ? (
-                        <p>
-                          <a
-                            href={config.tryBuildLink.href}
-                            target="_blank"
-                            rel="noreferrer noopener"
-                            className="font-semibold text-system-blue underline decoration-system-blue/35 underline-offset-2 transition-colors hover:text-[#0077ED]"
-                          >
-                            {config.tryBuildLink.label}
-                          </a>
-                        </p>
-                      ) : null}
-                    </div>
                   </div>
+                </h2>
+                <div className="max-w-none space-y-2 text-[0.9375rem] leading-relaxed text-mk-text-secondary sm:max-w-md sm:text-[15px] sm:leading-relaxed lg:text-base">
+                  <p>{config.bodyP1}</p>
+                  <p>{config.bodyP2}</p>
+                  {config.tryBuildLink ? (
+                    <p>
+                      <a
+                        href={config.tryBuildLink.href}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="font-semibold text-system-blue underline decoration-system-blue/35 underline-offset-2 transition-colors hover:text-[#0077ED]"
+                      >
+                        {config.tryBuildLink.label}
+                      </a>
+                    </p>
+                  ) : null}
+                </div>
+              </div>
 
-                  <div className={clsx('grid gap-2.5 sm:gap-3 md:gap-5', config.gridClass)}>
-                    {config.projects.map((project) => (
-                      <BentoGridCell
-                        key={project.id}
-                        project={project}
-                        onPick={onPick}
-                        reduceMotion={reduceMotion}
-                        registerTileRef={registerTileRef}
-                        tileCellClass={config.tileCellClass}
-                        preferStaticTileVideo={preferStaticTileVideo}
-                      />
-                    ))}
-                  </div>
-                </motion.div>
-              ) : activeProject ? (
-                <motion.div
-                  key={`${config.id}-detail-${activeProject.id}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, transition: { duration: reduceMotion ? 0 : 0.16 } }}
-                  transition={fade}
-                  className={clsx(
-                    'rounded-xl bg-white text-left sm:rounded-2xl',
-                    'border border-black/[0.06] shadow-[0_8px_32px_rgba(28,28,28,0.08)] ring-1 ring-black/[0.04]',
-                  )}
-                >
-                  {activeProject.detailMode === 'skyhaven' ? (
-                    <div className="px-px">
-                      <SkyhavenHighlightDetail
-                        highlight={activeProject}
-                        onBack={onClose}
-                        backLabel={backLabel}
-                      />
-                    </div>
-                  ) : (
-                    <SyntheticProjectView
-                      highlight={activeProject}
-                      onBack={onClose}
-                      backLabel={backLabel}
-                    />
-                  )}
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
+              <div className={clsx('grid gap-2.5 sm:gap-3 md:gap-5', config.gridClass)}>
+                {config.projects.map((project) => (
+                  <BentoGridCell
+                    key={project.id}
+                    project={project}
+                    onPick={onPick}
+                    reduceMotion={reduceMotion}
+                    registerTileRef={registerTileRef}
+                    tileCellClass={config.tileCellClass}
+                    preferStaticTileVideo={preferStaticTileVideo}
+                  />
+                ))}
+              </div>
+            </div>
           </motion.div>
         </GlassPanel>
       </div>

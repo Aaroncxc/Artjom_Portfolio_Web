@@ -40,7 +40,7 @@ The trailers shown here represent completed releases across topics including **5
 
 Especially notable: the blend of **digital campus design**, **learning experience design**, **vocational training**, and **gamification** — a walkable learning world where technical topics become **spatial, interactive, and playful**, built across multiple internal teams and external partners.
 
-**Timeline:** June 2026 — prototype completed.`,
+**Timeline:** June 2025 — prototype completed.`,
   },
   'lexsolar-digital-learning-kit': {
     description:
@@ -55,7 +55,7 @@ The physical cases and components were rebuilt as faithfully as possible in **Bl
 
 **Outcome:** a completed **digital prototype** that makes the physical learning system's core experiments tangible online — bridging **haptic education hardware** and a **playable digital learning experience**.
 
-**Timeline:** January–May 2026 — prototype completed.`,
+**Timeline:** January–May 2025 — prototype completed.`,
   },
   'elearning-africa-dakar-senegal-2023': {
     description:

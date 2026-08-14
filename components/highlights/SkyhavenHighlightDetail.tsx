@@ -32,8 +32,10 @@ const TABS: { id: TabId; label: string }[] = [
 
 interface SkyhavenHighlightDetailProps {
   highlight: HighlightProject;
-  onBack: () => void;
-  backLabel: string;
+  /** Inline bento (legacy) — shows back button. Page mode is used on `/project/skyhaven`. */
+  onBack?: () => void;
+  backLabel?: string;
+  variant?: 'inline' | 'page';
 }
 
 function AssetCard({ id, compact = false }: { id: string; compact?: boolean }) {
@@ -157,7 +159,12 @@ function AssetCodex() {
   );
 }
 
-export function SkyhavenHighlightDetail({ highlight, onBack, backLabel }: SkyhavenHighlightDetailProps) {
+export function SkyhavenHighlightDetail({
+  highlight,
+  onBack,
+  backLabel = 'Back',
+  variant = 'inline',
+}: SkyhavenHighlightDetailProps) {
   const backBtnRef = React.useRef<HTMLButtonElement>(null);
   const [activeTab, setActiveTab] = React.useState<TabId>('private');
   const explanation =
@@ -166,33 +173,37 @@ export function SkyhavenHighlightDetail({ highlight, onBack, backLabel }: Skyhav
   const hireHref = buildHireMailto(`Hire me — ${highlight.title}`);
   const heroVideo = highlight.tileVideo ?? SKYHAVEN_TILE_VIDEO;
   const heroStill = highlight.thumb ?? SKYHAVEN_TILE_POSTER;
+  const showBack = variant === 'inline' && typeof onBack === 'function';
 
   React.useEffect(() => {
+    if (!showBack) return;
     const t = window.setTimeout(() => backBtnRef.current?.focus(), 0);
     return () => window.clearTimeout(t);
-  }, []);
+  }, [showBack]);
 
   return (
     <div className="relative mx-auto flex h-full min-h-0 w-full max-w-none flex-col font-sans text-mk-text antialiased">
       <div className="flex flex-col overflow-visible rounded-[20px] border border-black/[0.10] bg-white shadow-[0_4px_24px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04)]">
         <div className="flex flex-wrap items-center gap-2 border-b border-black/[0.08] px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3 md:px-5 md:py-3.5">
-          <button
-            ref={backBtnRef}
-            type="button"
-            onClick={onBack}
-            aria-label={backLabel}
-            className={clsx(
-              'inline-flex shrink-0 items-center gap-1.5 rounded-full border border-black/[0.08] bg-white/92 px-2.5 py-2 text-xs font-semibold text-mk-text-secondary shadow-sm sm:px-3',
-              'transition-colors hover:bg-white hover:text-mk-text',
-              'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue',
-            )}
-          >
-            <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
-            </svg>
-            <span className="max-sm:hidden">{backLabel}</span>
-            <span className="sm:hidden">Back</span>
-          </button>
+          {showBack ? (
+            <button
+              ref={backBtnRef}
+              type="button"
+              onClick={onBack}
+              aria-label={backLabel}
+              className={clsx(
+                'inline-flex shrink-0 items-center gap-1.5 rounded-full border border-black/[0.08] bg-white/92 px-2.5 py-2 text-xs font-semibold text-mk-text-secondary shadow-sm sm:px-3',
+                'transition-colors hover:bg-white hover:text-mk-text',
+                'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue',
+              )}
+            >
+              <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
+              </svg>
+              <span className="max-sm:hidden">{backLabel}</span>
+              <span className="sm:hidden">Back</span>
+            </button>
+          ) : null}
 
           <div
             className="inline-flex shrink-0 rounded-[9px] bg-[rgba(118,118,128,0.12)] p-0.5"

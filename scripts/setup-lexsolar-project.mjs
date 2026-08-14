@@ -29,7 +29,7 @@ const post = {
   title: 'Lexsolar Digital Learning Kit',
   description:
     'Together with Lexsolar, we developed a digital prototype based on their physical solar learning kits. The real kits and components were recreated in Blender and transformed into an interactive browser-based learning experience.',
-  date: '2026-05-15',
+  date: '2025-05-15',
   tags: ['video', '3D', 'education', 'solar', 'prototype', 'partnership', 'project management'],
   type: 'video',
   thumbnail: `/projects/${slug}/ingame-01.webp`,
@@ -57,7 +57,7 @@ The physical cases and components were rebuilt as faithfully as possible in Blen
 
 Outcome: a completed digital prototype that makes the physical learning system's core experiments tangible online — bridging haptic education hardware and a playable digital learning experience.
 
-Timeline: January–May 2026 — prototype completed.`,
+Timeline: January–May 2025 — prototype completed.`,
   author: 'AaronCxC',
   gallery: [],
 };

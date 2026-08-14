@@ -117,6 +117,7 @@ export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
     ],
     toolDeeplinkId: DADB_COURSE_OVERVIEW_TOOL_ID,
     toolExternalUrl: DADB_COURSE_OVERVIEW_TOOL_URL,
+    projectSlug: 'course-overview',
     tileAvailability: 'live',
     tileShowTitle: true,
     tileTitleSize: 'prominent',
@@ -195,6 +196,7 @@ I designed and integrated the full stack myself — concept, UI, 3D pipeline, an
     tileHideFeaturedFade: true,
     tileFeaturedLightTitle: true,
     span: 'featured',
+    projectSlug: 'skyhaven',
     detailMode: 'skyhaven',
   },
 ];
@@ -300,6 +302,7 @@ export const MULTIKUNST_HIGHLIGHT_PROJECTS: HighlightProject[] = [
     ],
     toolDeeplinkId: 'occupied',
     toolExternalUrl: 'https://occupiedvfx-v3-30-01-2026-2c75.vercel.app',
+    projectSlug: 'occupied',
     tileAvailability: 'live',
     tileTags: ['Three.js', 'GLSL'],
     tileBadges: ['Tool', '3D'],
@@ -325,6 +328,7 @@ export const FLASHER_HIGHLIGHT_PROJECT: HighlightProject = {
   ],
   tileTags: ['Swift', 'AI'],
   tileBadges: ['Tool'],
+  projectSlug: 'flasher',
   span: 'normal',
 };
 
@@ -357,6 +361,7 @@ Built under Multikunst with Sahachat Sonnenburg. Native Swift/SwiftUI, TestFligh
   tileThumbAnchor: 'top',
   tileTags: ['Swift', 'OpenRouter'],
   tileBadges: ['Tool'],
+  projectSlug: 'agata-journal',
   span: 'normal',
 };
 
@@ -380,6 +385,7 @@ export const MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT: HighlightProject = {
   ],
   tileTags: ['Cursor', 'LLMs'],
   tileBadges: ['Tool', 'Dashboard'],
+  projectSlug: 'multikunst-automation',
   span: 'normal',
 };
 
