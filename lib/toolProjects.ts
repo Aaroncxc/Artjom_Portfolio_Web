@@ -186,7 +186,7 @@ export const TOOL_PROJECTS: Project[] = [
     tools: [{ name: 'Swift' }, { name: 'SwiftUI' }, { name: 'OpenRouter' }, { name: 'Supabase' }],
     tags: ['Tool', 'iOS', 'AI'],
     type: 'image',
-    thumbnail: '/tools/agata/thumbnail.webp',
+    thumbnail: '/tools/agata/thumbnail.png',
     gallery: [
       { type: 'image', src: '/tools/agata/screen-home.webp' },
       { type: 'image', src: '/tools/agata/screen-hub.webp' },

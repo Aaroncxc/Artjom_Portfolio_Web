@@ -347,7 +347,7 @@ Built under Multikunst with Sahachat Sonnenburg. Native Swift/SwiftUI, TestFligh
   role:
     'Co-created under Multikunst with Sahachat Sonnenburg — product, visual language, and launch of a voice-first private journal (Speak. Reflect. Grow.).',
   tools: ['Swift', 'SwiftUI', 'OpenRouter', 'Supabase'],
-  thumb: '/tools/agata/thumbnail.webp',
+  thumb: '/tools/agata/thumbnail.png',
   gallery: [
     '/tools/agata/screen-home.webp',
     '/tools/agata/screen-hub.webp',
@@ -358,7 +358,6 @@ Built under Multikunst with Sahachat Sonnenburg. Native Swift/SwiftUI, TestFligh
   ],
   toolExternalUrl: 'https://www.agatajournal.com/',
   tileAvailability: 'demo-live',
-  tileThumbAnchor: 'top',
   tileTags: ['Swift', 'OpenRouter'],
   tileBadges: ['Tool'],
   projectSlug: 'agata-journal',
