@@ -59,6 +59,31 @@ function thumbModelPreviewForProject(project: Project): ModalThumbModelPreview |
   };
 }
 
+/** Image paths on the project that can stand in as a video poster/thumb. */
+function collectImageSrcs(project: Project): Set<string> {
+  const srcs = new Set<string>();
+  const thumb = project.thumbnail?.trim();
+  if (thumb && !/\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(thumb)) srcs.add(thumb);
+  for (const src of project.images ?? []) {
+    const trimmed = src.trim();
+    if (trimmed) srcs.add(trimmed);
+  }
+  for (const media of project.gallery ?? []) {
+    if (media.type === 'image') {
+      const trimmed = media.src?.trim();
+      if (trimmed) srcs.add(trimmed);
+    }
+  }
+  return srcs;
+}
+
+/** Sibling `.webp` next to a video, when that still is already in the project media. */
+function matchingPosterSrc(videoSrc: string, imageSrcs: Set<string>): string | undefined {
+  const poster = videoSrc.replace(/\.(webm|mp4|mov|m4v)(\?|#|$)/i, '.webp$2');
+  if (poster !== videoSrc && imageSrcs.has(poster)) return poster;
+  return undefined;
+}
+
 /** First still image for the modal (thumbnail or gallery), never a video file path. */
 function pickFirstImageSrc(project: Project): string | undefined {
   const thumb = project.thumbnail?.trim();
@@ -77,6 +102,7 @@ function pickFirstImageSrc(project: Project): string | undefined {
  */
 export function buildModalAssets(project: Project): ModalAsset[] {
   const fallbackThumb = project.thumbnail ?? '';
+  const imageSrcs = collectImageSrcs(project);
   const assets: ModalAsset[] = [];
   const pushedSrc = new Set<string>();
 
@@ -95,11 +121,12 @@ export function buildModalAssets(project: Project): ModalAsset[] {
 
   // 1. Video first when available (any project type)
   if (primaryVideoUrl) {
+    const poster = matchingPosterSrc(primaryVideoUrl, imageSrcs) ?? fallbackThumb;
     push({
       kind: 'video',
       src: primaryVideoUrl,
-      poster: project.thumbnail,
-      thumb: fallbackThumb,
+      poster,
+      thumb: poster,
       title: project.title,
       caption: resolveAssetCaption(project, primaryVideoUrl),
     });
@@ -197,10 +224,13 @@ export function buildModalAssets(project: Project): ModalAsset[] {
       if (media.type === 'video' && src === primaryVideoUrl) continue;
       if (media.type === 'image' && src === firstImageSrc) continue;
 
+      const videoPoster =
+        media.type === 'video' ? matchingPosterSrc(src, imageSrcs) ?? fallbackThumb : undefined;
       push({
         kind: media.type,
         src,
-        thumb: media.type === 'image' ? src : fallbackThumb,
+        thumb: media.type === 'image' ? src : videoPoster || fallbackThumb,
+        poster: videoPoster,
         title: media.title,
         caption: resolveAssetCaption(project, src, media.caption),
       });

@@ -17,6 +17,7 @@ const NAV_ITEMS = [
   { id: 'highlights', label: 'Highlights' },
   { id: 'highlights-ai-apps', label: 'AI Apps' },
   { id: 'highlights-skyhaven', label: 'Skyhaven' },
+  { id: 'highlights-vfx', label: 'VFX' },
   { id: 'projects', label: 'Projects' },
   { id: 'tools-games', label: 'Tools & Games' },
 ];

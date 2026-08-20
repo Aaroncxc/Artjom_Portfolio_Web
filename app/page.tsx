@@ -11,6 +11,7 @@ import {
   ARCHITECTURE_HIGHLIGHT_SECTION,
   MULTIKUNST_HIGHLIGHT_SECTION,
   SKYHAVEN_HIGHLIGHT_SECTION,
+  VFX_HIGHLIGHT_SECTION,
 } from '@/components/HighlightBentoSection';
 import { ProjectsGrid } from '@/components/ProjectsGrid';
 import { ToolsGamesGrid } from '@/components/ToolsGamesGrid';
@@ -66,6 +67,7 @@ export default function Home() {
       'highlights-ai-apps',
       'highlights-architecture',
       'highlights-skyhaven',
+      'highlights-vfx',
       'highlights-multikunst',
       'projects',
       'tools-games',
@@ -173,6 +175,8 @@ export default function Home() {
         <HighlightBentoSection visible={true} config={ARCHITECTURE_HIGHLIGHT_SECTION} />
 
         <HighlightBentoSection visible={true} config={SKYHAVEN_HIGHLIGHT_SECTION} />
+
+        <HighlightBentoSection visible={true} config={VFX_HIGHLIGHT_SECTION} />
 
         <HighlightBentoSection visible={true} config={MULTIKUNST_HIGHLIGHT_SECTION} />
 

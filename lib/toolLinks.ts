@@ -6,6 +6,11 @@ export const SKYHAVEN_SITE_URL = 'https://coincraft-skyhaven.vercel.app/en/';
 
 export const SKYHAVEN_RELEASES_URL = 'https://github.com/Aaroncxc/Coincraft_Skyhaven/releases';
 
+/** True for absolute http(s) / protocol-relative / mailto links (open in a new tab). */
+export function isExternalHref(href: string): boolean {
+  return /^(https?:)?\/\//i.test(href) || href.startsWith('mailto:');
+}
+
 /** Live URL of the Course Overview Tool. */
 export const DADB_COURSE_OVERVIEW_TOOL_URL = 'https://v0-image-analysis-taupe-beta.vercel.app';
 

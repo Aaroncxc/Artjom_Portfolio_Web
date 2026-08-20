@@ -2,6 +2,7 @@ import {
   HIGHLIGHT_PROJECTS,
   ARCHITECTURE_HIGHLIGHT_PROJECTS,
   MULTIKUNST_HIGHLIGHT_PROJECTS,
+  NINJA_MAGE_HIGHLIGHT_PROJECT,
   SKYHAVEN_HIGHLIGHT_PROJECTS,
   AI_APP_DEV_HIGHLIGHT_PROJECTS,
   type HighlightProject,
@@ -77,7 +78,7 @@ export const AI_APP_DEV_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
   bodyP1:
     'From the start of my production work at DADB, I have pushed AI into how we ship courses — using ElevenLabs, Synthesia, and HeyGen to accelerate voice, presenter, and video pipelines while keeping editorial control in-house.',
   bodyP2:
-    'The same mindset runs through private work: Replit for my first project-manager apps, then GPT and Claude in Cursor for dashboards, games, and creative tools. I genuinely enjoy building this way — Skyhaven, Course Overview, FlashR, Multikunst Automation, and Agata Journal below are representative AI-native or AI-accelerated releases.',
+    'The same mindset runs through private work: Replit for my first project-manager apps, then GPT and Claude in Cursor for dashboards, games, and creative tools. I genuinely enjoy building this way — Skyhaven, Occupied VFX, Skyhaven VFX Studio, Multikunst Automation, and Agata Journal below are representative AI-native or AI-accelerated releases.',
   eyebrow: 'AI · Apps',
   projects: AI_APP_DEV_HIGHLIGHT_PROJECTS,
   glow: 'indigo',
@@ -91,9 +92,9 @@ export const AI_APP_DEV_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
       ].join(' ');
     }
     switch (project.id) {
-      case 'course-overview':
+      case 'multikunst-occupied':
         return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-2 lg:col-start-1 lg:row-start-1 lg:order-none lg:min-h-0';
-      case 'flasher':
+      case 'skyhaven-vfx':
         return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-3 lg:col-start-2 lg:row-start-1 lg:order-none lg:min-h-0';
       case 'multikunst-automation':
         return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-4 lg:col-start-1 lg:row-start-2 lg:order-none lg:min-h-0';
@@ -114,7 +115,7 @@ export const SKYHAVEN_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
   bodyP1:
     'Skyhaven is a compact desktop widget game I build alongside client work: a floating isometric island you keep at the edge of your screen while you focus on real tasks. I own art direction, 3D production, and code end to end.',
   bodyP2:
-    'The pipeline is deliberately AI-native — sketches and visual rules first, then Meshy for 3D iteration, Cursor for gameplay in React, Three.js, and Tauri 2. Every prop, character, and tile starts from my own look-and-feel before it lands in the engine. The build already covers focus sessions, inventory & equipment, farming, custom island building, profile loadouts, and a playable mining combat slice — with more systems on the way. The public site is part of the same project: arena roster, 3D inspector, wiki, and downloads.',
+    'The pipeline is deliberately AI-native — sketches and visual rules first, then Meshy for 3D iteration, Cursor for gameplay in React, Three.js, and Tauri 2. Every prop, character, and tile starts from my own look-and-feel before it lands in the engine. The build already covers focus sessions, inventory & equipment, farming, custom island building, profile loadouts, and a playable mining combat slice — with more systems on the way. Combat VFX are authored in Skyhaven VFX Studio and imported into the game; the public site is the same project: arena roster, 3D inspector, wiki, and downloads.',
   eyebrow: 'Skyhaven',
   projects: SKYHAVEN_HIGHLIGHT_PROJECTS,
   glow: 'emerald',
@@ -124,8 +125,27 @@ export const SKYHAVEN_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
   backLabel: 'Back to Skyhaven',
   tryBuildLinks: [
     { href: SKYHAVEN_SITE_URL, label: 'Open the Skyhaven website' },
+    { href: '/project/skyhaven-vfx', label: 'Skyhaven VFX Studio' },
     { href: SKYHAVEN_RELEASES_URL, label: 'Try v0.2.0 on GitHub Releases' },
   ],
+};
+
+export const VFX_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
+  id: 'highlights-vfx',
+  sectionTitle: 'VFX for games',
+  headlineStairs: ['VFX', 'for games', ''],
+  subtitle: 'Cinematic · 2023',
+  bodyP1:
+    'Readable combat reads — silhouette, timing, and color — whether the shot is pre-rendered or running live in a desktop widget. This section is the cinematic piece; the authoring tool sits with the AI Apps grid.',
+  bodyP2:
+    'Ninja Mage is an Avatar-inspired short: Marvelous cloth, stacked Mixamo clips, and transparent video planes distorted into elemental trails, rendered in Cycles. Skyhaven VFX Studio — a Tauri + React Three Fiber editor bound to game Action IDs — lives under App Development with AI.',
+  eyebrow: 'VFX',
+  projects: [NINJA_MAGE_HIGHLIGHT_PROJECT],
+  glow: 'purple',
+  gridClass: 'grid-cols-1 lg:min-h-[280px]',
+  tileCellClass: () =>
+    'relative min-h-[200px] sm:min-h-[240px] md:min-h-[280px] lg:min-h-[320px]',
+  backLabel: 'Back to VFX',
 };
 
 const MULTIKUNST_TILE_CLASS =

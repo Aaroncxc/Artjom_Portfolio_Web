@@ -12,6 +12,8 @@ interface CaseStudyMediaProps {
   onOpenLightbox?: (src: string) => void;
   /** Tall embed for live HTML / 3D */
   tall?: boolean;
+  /** Hug frames: pin to an edge when beside copy (default centers). */
+  align?: 'center' | 'start' | 'end';
   projectTitle?: string;
   model3dRotationX?: number;
   model3dMaterialColor?: string;
@@ -20,11 +22,18 @@ interface CaseStudyMediaProps {
   model3dAnimationProgress?: number;
 }
 
+function frameBg(frame?: CaseSectionMedia['frame']): string {
+  if (frame === 'dark') return 'bg-[#0b0d12]';
+  if (frame === 'paper') return 'bg-[#F7F5F0]';
+  return 'bg-[#F2F2F7]';
+}
+
 export function CaseStudyMedia({
   media,
   className,
   onOpenLightbox,
   tall,
+  align = 'center',
   projectTitle,
   model3dRotationX,
   model3dMaterialColor,
@@ -33,17 +42,36 @@ export function CaseStudyMedia({
   model3dAnimationProgress,
 }: CaseStudyMediaProps) {
   const [modelMouse, setModelMouse] = useState({ x: 0.5, y: 0.5 });
+  const portrait = Boolean(media.portrait);
+  const fitContain = media.fit === 'contain' || portrait || tall;
+  const hugX = align === 'start' ? 'mr-auto' : align === 'end' ? 'ml-auto' : 'mx-auto';
 
   if (media.kind === 'video') {
+    const ambient = Boolean(media.autoplay || media.loop || media.muted);
+    const hugVideo = portrait || ambient;
     return (
-      <figure className={clsx('overflow-hidden rounded-2xl bg-black ring-1 ring-black/[0.06]', className)}>
+      <figure
+        className={clsx(
+          'overflow-hidden rounded-2xl ring-1 ring-black/[0.06]',
+          hugVideo ? clsx(hugX, 'w-fit max-w-full') : 'w-full',
+          media.frame === 'paper' ? 'bg-[#F7F5F0]' : 'bg-black',
+          className,
+        )}
+      >
         <video
           src={media.src}
-          controls
+          controls={!ambient}
           playsInline
           preload="metadata"
           poster={model3dPoster ?? undefined}
-          className={clsx('w-full object-contain', tall ? 'min-h-[50vh]' : 'max-h-[78vh]')}
+          autoPlay={ambient}
+          muted={ambient || media.muted}
+          loop={ambient || media.loop}
+          className={clsx(
+            'block h-auto max-w-full object-contain',
+            hugVideo ? 'w-auto max-h-[min(78vh,560px)]' : 'mx-auto w-full max-h-[78vh]',
+            tall && !hugVideo && 'min-h-[40vh]',
+          )}
         />
         {(media.caption || media.title) && (
           <figcaption className="border-t border-white/10 bg-black/80 px-4 py-3 text-sm text-white/80">
@@ -110,12 +138,22 @@ export function CaseStudyMedia({
     );
   }
 
-  // image
+  // image — contain/portrait: hug the bitmap so rounded corners wrap the frame (no side gutters)
+  const captionOnDark = media.frame === 'dark';
+  const hugFrame = fitContain || portrait;
+
   return (
-    <figure className={clsx('overflow-hidden rounded-2xl bg-[#F2F2F7] ring-1 ring-black/[0.06]', className)}>
+    <figure
+      className={clsx(
+        'overflow-hidden rounded-2xl ring-1 ring-black/[0.06]',
+        hugFrame ? clsx(hugX, 'w-fit max-w-full') : 'w-full',
+        frameBg(media.frame),
+        className,
+      )}
+    >
       <button
         type="button"
-        className="block w-full cursor-zoom-in text-left"
+        className={clsx('cursor-zoom-in text-left', hugFrame ? 'block max-w-full' : 'block w-full')}
         onClick={() => onOpenLightbox?.(media.src)}
         aria-label={media.title ? `Enlarge ${media.title}` : 'Enlarge image'}
       >
@@ -123,12 +161,23 @@ export function CaseStudyMedia({
         <img
           src={media.src}
           alt={media.title || projectTitle || ''}
-          className={clsx('w-full object-cover', tall ? 'max-h-[85vh] object-contain' : 'max-h-[78vh]')}
+          className={clsx(
+            'block',
+            hugFrame
+              ? 'h-auto w-auto max-h-[min(78vh,820px)] max-w-full'
+              : 'h-auto w-full max-h-[78vh] object-cover',
+            tall && !hugFrame && 'max-h-[85vh] object-contain',
+          )}
           loading="lazy"
         />
       </button>
       {(media.caption || media.title) && (
-        <figcaption className="px-4 py-3 text-sm text-mk-text-secondary">
+        <figcaption
+          className={clsx(
+            'px-4 py-3 text-sm',
+            captionOnDark ? 'border-t border-white/10 bg-black/80 text-white/80' : 'text-mk-text-secondary',
+          )}
+        >
           {media.caption ? <RichText>{media.caption}</RichText> : media.title}
         </figcaption>
       )}

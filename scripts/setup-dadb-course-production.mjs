@@ -1,6 +1,8 @@
 /**
  * DADB Course Production — released course trailers → public/projects + posts.json
  * Run: node scripts/setup-dadb-course-production.mjs
+ * Posters only (no video recompress / posts.json rewrite):
+ *   node scripts/setup-dadb-course-production.mjs --posters-only
  */
 import { execFile } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
@@ -25,6 +27,7 @@ const COURSE_TRAILERS = [
     src: '001-5g-communication-technology.mp4',
     dest: '5g-communication-technology.webm',
     poster: '5g-communication-technology.webp',
+    posterTime: '12',
     title: '5G Communication Technology',
     caption:
       'Final release trailer for the 5G Communication Technology course — produced for DADB’s digital learning platform and partner universities in India.',
@@ -33,6 +36,7 @@ const COURSE_TRAILERS = [
     src: '002-e-mobility.mp4',
     dest: 'e-mobility.webm',
     poster: 'e-mobility.webp',
+    posterTime: '12',
     title: 'E-Mobility',
     caption:
       'Course trailer for E-Mobility — one of the completed DADB productions released during my tenure as Head of Production.',
@@ -41,6 +45,7 @@ const COURSE_TRAILERS = [
     src: '003-hydrogen-technology.mp4',
     dest: 'hydrogen-technology.webm',
     poster: 'hydrogen-technology.webp',
+    posterTime: '15',
     title: 'Hydrogen Technology',
     caption:
       'Final trailer for the Hydrogen Technology course, delivered for platform rollout and university partnerships.',
@@ -49,6 +54,7 @@ const COURSE_TRAILERS = [
     src: '004-internet-of-things.mp4',
     dest: 'internet-of-things.webm',
     poster: 'internet-of-things.webp',
+    posterTime: '21',
     title: 'Internet of Things',
     caption:
       'Release trailer for the Internet of Things course — editorial, 3D, and post-production coordinated through DADB production.',
@@ -57,6 +63,8 @@ const COURSE_TRAILERS = [
     src: '005-solar-electricity-systems.mp4',
     dest: 'solar-electricity-systems.webm',
     poster: 'solar-electricity-systems.webp',
+    // 0:14 in the player is a white flash; the matching "this course includes" layout is at 0:15.
+    posterTime: '15',
     title: 'Solar Electricity Systems',
     caption:
       'Trailer for Solar Electricity Systems — part of the renewable-energy course portfolio shipped to DADB’s learning platform.',
@@ -65,6 +73,7 @@ const COURSE_TRAILERS = [
     src: '006-wind-power.mp4',
     dest: 'wind-power.webm',
     poster: 'wind-power.webp',
+    posterTime: '11',
     title: 'Wind Power',
     caption:
       'Final trailer for the Wind Power course — completed and released alongside other DADB India elective offerings.',
@@ -122,7 +131,7 @@ function fmtMB(bytes) {
   return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
 }
 
-async function extractPoster({ src, dest, title, caption }) {
+async function extractPoster({ src, dest, title, caption, posterTime = '2' }) {
   if (!ffmpegPath) {
     console.error('ffmpeg-static not available');
     process.exit(1);
@@ -133,24 +142,15 @@ async function extractPoster({ src, dest, title, caption }) {
     console.warn('[skip] missing video for poster:', src);
     return;
   }
-  if (existsSync(to) && statSync(to).size > 4096) {
-    console.log(`[skip] poster ${dest} exists`);
-    post.gallery.push({
-      type: 'image',
-      src: `/projects/${slug}/${dest}`,
-      title: `${title} — key frame`,
-      caption,
-    });
-    return;
-  }
   const tmpPng = path.join(destDir, `.tmp-${dest}.png`);
+  // Seek after -i so the timestamp is frame-accurate (pre-input -ss snaps to keyframes).
   await exec(ffmpegPath, [
     '-y',
     '-hide_banner',
-    '-ss',
-    '2',
     '-i',
     from,
+    '-ss',
+    String(posterTime),
     '-frames:v',
     '1',
     '-q:v',
@@ -163,7 +163,7 @@ async function extractPoster({ src, dest, title, caption }) {
     .webp({ quality: 84, effort: 6 })
     .toFile(to);
   rmSync(tmpPng, { force: true });
-  console.log(`[poster] ${dest}`);
+  console.log(`[poster] ${dest} @ ${posterTime}s`);
   post.gallery.push({
     type: 'image',
     src: `/projects/${slug}/${dest}`,
@@ -281,6 +281,7 @@ function updatePostsJson() {
 }
 
 async function main() {
+  const postersOnly = process.argv.includes('--posters-only');
   mkdirSync(destDir, { recursive: true });
   post.gallery = [];
   post.mediaCaptions = {};
@@ -291,7 +292,14 @@ async function main() {
       dest: course.poster,
       title: course.title,
       caption: course.caption,
+      posterTime: course.posterTime,
     });
+  }
+
+  if (postersOnly) {
+    await buildThumbnail();
+    console.log(`\nPosters only. ${COURSE_TRAILERS.length} keyframes → public/projects/${slug}/`);
+    return;
   }
 
   for (const course of COURSE_TRAILERS) {

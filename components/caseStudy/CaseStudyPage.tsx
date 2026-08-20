@@ -14,9 +14,12 @@ import {
   resolveCaseSections,
   resolveHeroMedia,
 } from '@/lib/caseStudy';
+import { isExternalHref } from '@/lib/toolLinks';
 import { MediaGalleryLightbox } from '@/components/projectSlide/LightboxModal';
 import type { ModalAsset } from '@/components/portfolio/ProjectMediaCanvas';
 import LightLeaksBackground from '@/components/LightLeaksBackground';
+import { getCaseStudyBanner } from '@/lib/caseStudyBanners';
+import { CaseStudyBanner } from './CaseStudyBanner';
 import { CaseStudyMedia } from './CaseStudyMedia';
 import { CaseStudySectionBlock } from './CaseStudySection';
 
@@ -41,12 +44,15 @@ function FactRow({ label, children }: { label: string; children: React.ReactNode
 export function CaseStudyPage({ project, prev, next }: CaseStudyPageProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  const banner = getCaseStudyBanner(project.slug);
   const sections = useMemo(() => resolveCaseSections(project), [project]);
   const hero = useMemo(() => resolveHeroMedia(project), [project]);
   const year = projectYear(project.date);
   const monthYear = formatProjectMonthYear(project.date);
   const hireHref = buildHireMailto(`Hire me — ${project.title}`);
   const liveRef = project.references?.find((r) => r.url?.trim());
+  /** Dark banner pages keep video/media in story sections — no duplicate under the title. */
+  const showInlineHero = !banner && Boolean(hero);
 
   const lightboxAssets = useMemo<ModalAsset[]>(() => {
     const imgs: ModalAsset[] = [];
@@ -121,49 +127,52 @@ export function CaseStudyPage({ project, prev, next }: CaseStudyPageProps) {
       </header>
 
       <main className="relative z-[5] pb-24">
-        {/* Hero */}
-        <section className="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 sm:pb-14 sm:pt-12">
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            className="space-y-6"
-          >
-            <div className="flex flex-wrap gap-2">
-              {project.role ? chip(project.role) : null}
-              {project.client ? chip(project.client) : null}
-              {project.timeframe ? chip(project.timeframe) : year ? chip(year) : null}
-            </div>
-
-            <h1 className="brand-tight max-w-4xl text-[clamp(2rem,5.5vw,3.75rem)] font-semibold leading-[1.05] tracking-tight text-mk-text">
-              {project.title}
-            </h1>
-
-            <div className="max-w-3xl text-base leading-relaxed text-mk-text-secondary md:text-lg md:leading-[1.65]">
-              <RichText as="p">{project.description}</RichText>
-            </div>
-          </motion.div>
-
-          {hero ? (
+        {banner ? (
+          <CaseStudyBanner project={project} config={banner} />
+        ) : (
+          <section className="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 sm:pb-14 sm:pt-12">
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-8 sm:mt-10"
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              className="space-y-6"
             >
-              <CaseStudyMedia
-                media={{ ...hero, caption: undefined }}
-                tall
-                onOpenLightbox={openLightbox}
-                projectTitle={project.title}
-                model3dPoster={project.thumbnail}
-              />
+              <div className="flex flex-wrap gap-2">
+                {project.role ? chip(project.role) : null}
+                {project.client ? chip(project.client) : null}
+                {project.timeframe ? chip(project.timeframe) : year ? chip(year) : null}
+              </div>
+
+              <h1 className="brand-tight max-w-4xl text-[clamp(2rem,5.5vw,3.75rem)] font-semibold leading-[1.05] tracking-tight text-mk-text">
+                {project.title}
+              </h1>
+
+              <div className="max-w-3xl text-base leading-relaxed text-mk-text-secondary md:text-lg md:leading-[1.65]">
+                <RichText as="p">{project.description}</RichText>
+              </div>
             </motion.div>
-          ) : null}
-        </section>
+
+            {showInlineHero && hero ? (
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="mt-8 sm:mt-10"
+              >
+                <CaseStudyMedia
+                  media={{ ...hero, caption: undefined }}
+                  tall
+                  onOpenLightbox={openLightbox}
+                  projectTitle={project.title}
+                  model3dPoster={project.thumbnail}
+                />
+              </motion.div>
+            ) : null}
+          </section>
+        )}
 
         {/* Facts + Outcomes */}
-        <section className="mx-auto max-w-7xl px-4 sm:px-6">
+        <section className={clsx('mx-auto max-w-7xl px-4 sm:px-6', banner && 'pt-10 sm:pt-14')}>
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] lg:items-start lg:gap-10">
             <div className="rounded-[20px] border border-black/[0.08] bg-white/85 p-5 shadow-[0_4px_24px_rgba(0,0,0,0.04)] sm:p-7 lg:sticky lg:top-20">
               <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-mk-text-muted">
@@ -203,8 +212,7 @@ export function CaseStudyPage({ project, prev, next }: CaseStudyPageProps) {
                           <li key={r.url}>
                             <a
                               href={r.url}
-                              target="_blank"
-                              rel="noreferrer noopener"
+                              {...(isExternalHref(r.url) ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
                               className="text-system-blue underline-offset-2 hover:underline"
                             >
                               {r.label || r.url}
@@ -274,8 +282,7 @@ export function CaseStudyPage({ project, prev, next }: CaseStudyPageProps) {
               {liveRef ? (
                 <a
                   href={liveRef.url}
-                  target="_blank"
-                  rel="noreferrer noopener"
+                  {...(isExternalHref(liveRef.url) ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
                   className="inline-flex min-h-[48px] items-center rounded-full border border-black/[0.1] bg-white px-6 text-sm font-semibold text-mk-text hover:bg-[#F2F2F7]"
                 >
                   {liveRef.label || 'Open live'}

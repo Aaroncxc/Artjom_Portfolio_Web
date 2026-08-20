@@ -5,6 +5,7 @@ import type {
   ProjectMedia,
 } from '@/lib/types';
 import { getProjectMediaGroupsConfig } from '@/lib/projectMediaGroups';
+import { getCaseStudyBanner } from '@/lib/caseStudyBanners';
 
 /** Year extracted from ISO date for chips / tiles. */
 export function projectYear(date: string): string | null {
@@ -100,26 +101,80 @@ export function resolveHeroMedia(project: Project): CaseSectionMedia | null {
 
 /**
  * Build editorial sections when a project has no explicit `caseSections`.
- * Uses explanation (or description) as intro, then groups gallery media.
+ * Always answers What / Why / How from description + explanation + tools,
+ * then interleaves leftover gallery media.
  */
 export function buildFallbackCaseSections(project: Project): CaseSection[] {
   const sections: CaseSection[] = [];
-  const story = (project.explanation?.trim() || project.description || '').trim();
+  const what = (project.description || '').trim();
+  const whyHow = (project.explanation || '').trim();
+  const toolsLine =
+    project.tools?.length ? `Built with ${project.tools.join(', ')}.` : '';
   const hero = resolveHeroMedia(project);
   const heroKey = hero ? normalizeMediaKey(hero.src) : null;
-
-  if (story) {
-    sections.push({
-      heading: 'The story',
-      body: story,
-      layout: 'text-left',
-    });
-  }
 
   const gallery = project.gallery ?? [];
   const groupsConfig = getProjectMediaGroupsConfig(project.slug);
   const usedKeys = new Set<string>();
   if (heroKey) usedKeys.add(heroKey);
+
+  const pickInline = (count: number): CaseSectionMedia[] => {
+    const picked: CaseSectionMedia[] = [];
+    for (const g of gallery) {
+      if (picked.length >= count) break;
+      const key = normalizeMediaKey(g.src);
+      if (usedKeys.has(key)) continue;
+      usedKeys.add(key);
+      picked.push(mediaFromGalleryItem(g));
+    }
+    return picked;
+  };
+
+  if (what) {
+    sections.push({
+      heading: 'What it is',
+      body: what,
+      layout: 'text-left',
+      media: pickInline(1),
+    });
+  }
+
+  if (whyHow) {
+    // Prefer a clean Why section; put process cues + tools into How.
+    const paragraphs = whyHow.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+    const whyBody = paragraphs[0] ?? whyHow;
+    const howFromStory = paragraphs.slice(1).join('\n\n');
+    sections.push({
+      heading: 'What it is for',
+      body: whyBody,
+      layout: 'text-right',
+      media: pickInline(1),
+    });
+    const howBody = [howFromStory, toolsLine].filter(Boolean).join('\n\n');
+    if (howBody) {
+      sections.push({
+        heading: 'How it was made',
+        body: howBody,
+        layout: 'text-left',
+        media: pickInline(1),
+      });
+    }
+  } else if (toolsLine) {
+    sections.push({
+      heading: 'How it was made',
+      body: toolsLine,
+      layout: 'text-left',
+      media: pickInline(1),
+    });
+  } else if (!what) {
+    // Last resort so empty projects still get a story shell.
+    sections.push({
+      heading: 'What it is',
+      body: project.title,
+      layout: 'text-left',
+      media: pickInline(1),
+    });
+  }
 
   if (groupsConfig?.groups?.length && gallery.length) {
     for (const group of groupsConfig.groups) {
@@ -255,5 +310,8 @@ export function resolveCaseSections(project: Project): CaseSection[] {
   const raw = project.caseSections?.length
     ? project.caseSections
     : buildFallbackCaseSections(project);
-  return dedupeWithinSections(stripHeroFromSections(raw, hero));
+  // Dark banner case studies keep videoUrl / thumb in story sections (no duplicate hero strip).
+  const keepHeroInSections = Boolean(getCaseStudyBanner(project.slug)?.keepHeroInSections);
+  const sections = keepHeroInSections ? raw : stripHeroFromSections(raw, hero);
+  return dedupeWithinSections(sections);
 }

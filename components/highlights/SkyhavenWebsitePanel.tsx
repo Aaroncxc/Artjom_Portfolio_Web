@@ -12,7 +12,7 @@ const SITE_HOST = 'coincraft-skyhaven.vercel.app';
 export function SkyhavenWebsitePanel() {
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6">
-      <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(260px,0.8fr)] lg:gap-12">
+      <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(260px,0.8fr)] lg:gap-12">
         <a
           href={SKYHAVEN_SITE_URL}
           target="_blank"
@@ -43,7 +43,7 @@ export function SkyhavenWebsitePanel() {
           </div>
         </a>
 
-        <div className="space-y-4">
+        <div className="self-start space-y-4">
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-mk-text-muted">
             Official website
           </p>

@@ -29,6 +29,16 @@ export interface CaseSectionMedia {
   kind: 'image' | 'video' | 'html' | 'model3d';
   caption?: string;
   title?: string;
+  /** Prefer contain + max-height for portrait / cutout media (no cover crop). */
+  portrait?: boolean;
+  /** Visual frame behind the asset — dark helps alpha cutouts. */
+  frame?: 'dark' | 'paper';
+  /** Image object-fit; default cover for stills, contain when portrait/fit set. */
+  fit?: 'contain' | 'cover';
+  /** Video: muted autoplay loop (UI loops / ambient product shots). */
+  autoplay?: boolean;
+  loop?: boolean;
+  muted?: boolean;
 }
 
 /**
@@ -40,7 +50,8 @@ export type CaseSectionLayout =
   | 'text-right'
   | 'full-media'
   | 'gallery'
-  | 'live-embed';
+  | 'live-embed'
+  | 'portrait-split';
 
 export interface CaseSection {
   heading?: string;
@@ -83,8 +94,10 @@ export interface Project {
   /** 2–4 outcome bullets for recruiters (belegbare Ergebnisse only). */
   outcomes?: string[];
   /**
-   * Editorial story sections for the dedicated `/project/[slug]` page.
-   * When omitted, the page builds a fallback from explanation + gallery.
+   * Editorial story sections for `/project/[slug]`.
+   * Must answer What / Why / How (see `.cursor/rules/case-study-narrative.mdc`).
+   * Drive posts: prefer `lib/caseStudyNarratives.ts`. When omitted, fallback builds
+   * What / Why / How from description + explanation + gallery.
    */
   caseSections?: CaseSection[];
   model3dPath?: string;

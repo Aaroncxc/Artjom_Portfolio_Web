@@ -2,6 +2,7 @@ import { readFile } from 'fs/promises';
 import path from 'path';
 import type { PostsData, Project } from '@/lib/types';
 import { sortProjectsForPortfolio } from '@/lib/caseStudy';
+import { applyCaseStudyNarrative } from '@/lib/caseStudyNarratives';
 import {
   getSortedToolProjects,
   getToolProjectBySlug,
@@ -14,7 +15,7 @@ export async function loadPostsServer(): Promise<Project[]> {
   const raw = await readFile(filePath, 'utf8');
   const data = JSON.parse(raw) as PostsData | Project[];
   const posts = Array.isArray(data) ? data : data.posts ?? [];
-  return posts;
+  return posts.map(applyCaseStudyNarrative);
 }
 
 /** Portfolio grid posts only (no tools). */

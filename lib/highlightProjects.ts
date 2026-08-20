@@ -18,6 +18,8 @@ export type HighlightProjectId =
   | 'multikunst-multiwatch'
   | 'multikunst-occupied'
   | 'skyhaven'
+  | 'skyhaven-vfx'
+  | 'ninja-mage'
   | 'flasher'
   | 'multikunst-automation'
   | 'agata-journal';
@@ -181,7 +183,7 @@ export const SKYHAVEN_HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2025–2026',
     category: 'Game · Desktop widget',
     description:
-      'Skyhaven is a compact desktop widget game I build alongside client work: a floating isometric island you keep at the edge of your screen while you focus on real tasks. The build already covers focus sessions, inventory & equipment, farming, custom island building, profile loadouts, and a playable mining combat slice. I also designed and shipped the public site — arena roster, 3D inspector, wiki, and downloads.',
+      'Skyhaven is a compact desktop widget game I build alongside client work: a floating isometric island you keep at the edge of your screen while you focus on real tasks. The build already covers focus sessions, inventory & equipment, farming, custom island building, profile loadouts, and a playable mining combat slice. Combat VFX are authored in a dedicated Skyhaven VFX Studio and imported into the game. The public site — arena roster, 3D inspector, wiki, and downloads — is part of the same project.',
     explanation: `Skyhaven is a desktop widget game for Windows and macOS — inspired by the calm of games like Rusty's Retirement, but with clearer action POIs (mine, farm, shrine, tavern) and a stronger sense of place. You run a focus session (30, 60, or 120 minutes) while your character works on the island; when you're done, you collect rewards, materials, and small surprises — without fail-state pressure or click grinding.
 
 Technically it's a Tauri 2 shell around a React 19 UI and a Three.js / React Three Fiber world: data-driven floating islands, day/night lighting, autonomous movement, NPCs, audio (music, ambience, SFX), and persistent local saves.
@@ -191,6 +193,8 @@ Already playable in the prototype: focus timer & status UI, HUD and sidebar, inv
 UI scaffolding, not full gameplay yet: in-game shop listings and the achievements entry (menus exist; economy/trophy logic is still to come).
 
 The public site is part of the same project: a bilingual landing page with the arena roster, an in-browser 3D inspector for real game models, build-mode loop, wiki, FAQ, and Windows / macOS downloads.
+
+Combat VFX are authored in Skyhaven VFX Studio — a separate Tauri + React Three Fiber tool that reads the game catalog (characters, weapons, action IDs) and exports effect packages back into Skyhaven. The public site is marketing and inspection for the same game, not a second product.
 
 I designed and integrated the full stack myself — concept, UI, 3D pipeline, engineering, and the website — using ChatGPT and Cursor as accelerators, with every merge reviewed in Git.`,
     role:
@@ -357,7 +361,8 @@ Built under Multikunst with Sahachat Sonnenburg. Native Swift/SwiftUI, TestFligh
   role:
     'Co-created under Multikunst with Sahachat Sonnenburg — product, visual language, and launch of a voice-first private journal (Speak. Reflect. Grow.).',
   tools: ['Swift', 'SwiftUI', 'OpenRouter', 'Supabase'],
-  thumb: '/tools/agata/thumbnail.png',
+  thumb: '/tools/agata/product-poster.webp',
+  tileVideo: '/tools/agata/tile-preview.mp4',
   gallery: [
     '/tools/agata/screen-home.webp',
     '/tools/agata/screen-hub.webp',
@@ -370,6 +375,8 @@ Built under Multikunst with Sahachat Sonnenburg. Native Swift/SwiftUI, TestFligh
   tileAvailability: 'demo-live',
   tileTags: ['Swift', 'OpenRouter'],
   tileBadges: ['Tool'],
+  tileHideFeaturedFade: true,
+  tileFeaturedLightTitle: true,
   projectSlug: 'agata-journal',
   span: 'normal',
 };
@@ -398,18 +405,66 @@ export const MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT: HighlightProject = {
   span: 'normal',
 };
 
-const courseOverviewForAi = HIGHLIGHT_PROJECTS.find((p) => p.id === 'course-overview')!;
+export const NINJA_MAGE_HIGHLIGHT_PROJECT: HighlightProject = {
+  id: 'ninja-mage',
+  title: 'Ninja Mage',
+  year: '2023',
+  category: 'Cinematic · VFX',
+  description:
+    'Avatar-inspired ninja-mage cinematic — cloth sim, combined Mixamo motion, and transparent video planes warped into elemental trails. Pre-rendered in Cycles; the craft is readable silhouette, timing, and color, not a game engine.',
+  role:
+    'Solo 3D / VFX — Marvelous Designer garments, Mixamo clip stacking, Blender scene, and Cycles render of a short combat piece.',
+  tools: ['Marvelous Designer', 'Mixamo', 'Blender', 'Cycles'],
+  thumb: '/projects/ninja-mage/poster.webp',
+  tileVideo: '/projects/ninja-mage/tile-preview.mp4',
+  gallery: [
+    '/projects/ninja-mage/environment.webp',
+    '/projects/ninja-mage/environment-1.webp',
+    '/projects/ninja-mage/environment-3.webp',
+    '/projects/ninja-mage/render-transparent.webp',
+    '/projects/ninja-mage/blender-viewport.webp',
+    '/projects/ninja-mage/blender-viewport-1.webp',
+  ],
+  tileTags: ['Blender', 'Cycles'],
+  tileBadges: ['3D'],
+  tileHideFeaturedFade: true,
+  tileFeaturedLightTitle: true,
+  tileThumbAnchor: 'top',
+  projectSlug: 'ninja-mage',
+  span: 'featured',
+};
+
+export const SKYHAVEN_VFX_HIGHLIGHT_PROJECT: HighlightProject = {
+  id: 'skyhaven-vfx',
+  title: 'Skyhaven VFX Studio',
+  year: '2026',
+  category: 'Tool · Combat VFX',
+  description:
+    'Custom authoring tool for Skyhaven combat VFX — Tauri 2, React, and React Three Fiber. Reads the game catalog (characters, weapons, action IDs), edits trails and impacts on a combo timeline, then exports JSON packages the game imports. Not a second engine; not Occupied VFX.',
+  role:
+    'Designed the effect language and built the studio — Asset Bridge, presets, six-phase spell plan, quality budgets, and the import path back into Skyhaven.',
+  tools: ['Tauri', 'React', 'Three.js', 'R3F'],
+  thumb: '/projects/skyhaven-vfx/editor.webp',
+  gallery: [
+    '/projects/skyhaven-vfx/start-screen.webp',
+    '/projects/skyhaven-vfx/editor.webp',
+    '/projects/skyhaven-vfx/presets.webp',
+    '/projects/skyhaven-vfx/animations.webp',
+  ],
+  tileTags: ['Tauri', 'R3F'],
+  tileBadges: ['Tool', '3D'],
+  tileShowTitle: true,
+  tileTitleSize: 'prominent',
+  projectSlug: 'skyhaven-vfx',
+  span: 'normal',
+};
+
+const occupiedForAi = MULTIKUNST_HIGHLIGHT_PROJECTS.find((p) => p.id === 'multikunst-occupied')!;
 
 export const AI_APP_DEV_HIGHLIGHT_PROJECTS: HighlightProject[] = [
   SKYHAVEN_HIGHLIGHT_PROJECTS[0],
-  {
-    ...courseOverviewForAi,
-    span: 'normal',
-    description:
-      'Live course-production dashboard — Excel syncs twice daily into KPI views so PMs, stakeholders, and leadership read pipeline health without chasing spreadsheets. Built with AI-assisted iteration in Cursor.',
-    tileTags: ['Cursor', 'GPT', 'Next.js'],
-  },
-  FLASHER_HIGHLIGHT_PROJECT,
+  occupiedForAi,
+  SKYHAVEN_VFX_HIGHLIGHT_PROJECT,
   MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT,
   AGATA_JOURNAL_HIGHLIGHT_PROJECT,
 ];
@@ -422,6 +477,8 @@ export const ALL_HIGHLIGHT_PROJECTS: HighlightProject[] = [
   FLASHER_HIGHLIGHT_PROJECT,
   MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT,
   AGATA_JOURNAL_HIGHLIGHT_PROJECT,
+  NINJA_MAGE_HIGHLIGHT_PROJECT,
+  SKYHAVEN_VFX_HIGHLIGHT_PROJECT,
 ];
 
 export function highlightById(id: HighlightProjectId | null): HighlightProject | undefined {

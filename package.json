@@ -13,8 +13,10 @@
     "audit:public": "node scripts/find-unused-public-files.mjs",
     "compress:occupied": "node scripts/compress-occupied-tool-assets.mjs",
     "compress:skyhaven": "node scripts/compress-skyhaven-assets.mjs",
+    "compress:vfx": "node scripts/compress-vfx-portfolio-assets.mjs",
     "cleanup:skyhaven": "node scripts/cleanup-skyhaven-assets.mjs",
-    "compress:ai-highlights": "node scripts/compress-ai-highlight-assets.mjs"
+    "compress:ai-highlights": "node scripts/compress-ai-highlight-assets.mjs",
+    "compress:agata": "node scripts/compress-agata-videos.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.99.0",

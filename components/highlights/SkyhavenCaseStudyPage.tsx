@@ -1,17 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import { useMemo, useState } from 'react';
 import clsx from 'clsx';
 import type { Project } from '@/lib/types';
 import { buildHireMailto, CONTACT_MAILTO } from '@/lib/contact';
 import { RichText } from '@/lib/formatRichText';
-import { formatProjectMonthYear, projectYear } from '@/lib/caseStudy';
+import { formatProjectMonthYear, normalizeMediaKey, resolveCaseSections } from '@/lib/caseStudy';
 import LightLeaksBackground from '@/components/LightLeaksBackground';
 import { SkyhavenHighlightDetail } from '@/components/highlights/SkyhavenHighlightDetail';
 import { SkyhavenWebsitePanel } from '@/components/highlights/SkyhavenWebsitePanel';
 import { highlightById } from '@/lib/highlightProjects';
-import { SKYHAVEN_LOGO } from '@/lib/skyhavenVideos';
+import { getCaseStudyBanner } from '@/lib/caseStudyBanners';
+import { CaseStudyBanner } from '@/components/caseStudy/CaseStudyBanner';
+import { CaseStudySectionBlock } from '@/components/caseStudy/CaseStudySection';
+import { MediaGalleryLightbox } from '@/components/projectSlide/LightboxModal';
+import type { ModalAsset } from '@/components/portfolio/ProjectMediaCanvas';
+import { isExternalHref } from '@/lib/toolLinks';
 
 interface SkyhavenCaseStudyPageProps {
   project: Project;
@@ -33,18 +38,31 @@ function FactRow({ label, children }: { label: string; children: React.ReactNode
 
 export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudyPageProps) {
   const highlight = highlightById('skyhaven');
-  const year = projectYear(project.date);
+  const banner = getCaseStudyBanner('skyhaven');
   const monthYear = formatProjectMonthYear(project.date);
   const hireHref = buildHireMailto(`Hire me — ${project.title}`);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const sections = useMemo(() => resolveCaseSections(project), [project]);
 
-  const chip = (text: string) => (
-    <span
-      key={text}
-      className="inline-flex items-center rounded-full border border-black/[0.08] bg-white/90 px-3 py-1 text-xs font-semibold text-mk-text shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]"
-    >
-      {text}
-    </span>
-  );
+  const lightboxAssets = useMemo<ModalAsset[]>(() => {
+    const imgs: ModalAsset[] = [];
+    const seen = new Set<string>();
+    sections.forEach((s) =>
+      (s.media ?? []).forEach((m) => {
+        if (m.kind !== 'image' || !m.src) return;
+        const key = normalizeMediaKey(m.src);
+        if (seen.has(key)) return;
+        seen.add(key);
+        imgs.push({ kind: 'image', src: m.src, thumb: m.src, caption: m.caption });
+      }),
+    );
+    return imgs;
+  }, [sections]);
+
+  const openLightbox = (src: string) => {
+    const idx = lightboxAssets.findIndex((a) => a.src === src);
+    if (idx >= 0) setLightboxIndex(idx);
+  };
 
   return (
     <>
@@ -74,31 +92,7 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
       </header>
 
       <main className="relative z-[5] pb-24">
-        <section className="relative overflow-hidden bg-[#0b0d12]">
-          <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_70%_40%,rgba(212,160,64,0.16),transparent_62%)]"
-            aria-hidden
-          />
-          <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 sm:pb-16 sm:pt-12 md:pb-20">
-            <div className="flex flex-wrap gap-2">
-              {project.role ? chip(project.role) : null}
-              {project.client ? chip(project.client) : null}
-              {project.timeframe ? chip(project.timeframe) : year ? chip(year) : null}
-            </div>
-            <h1 className="sr-only">{project.title}</h1>
-            <Image
-              src={SKYHAVEN_LOGO}
-              alt="CoinCraft Skyhaven"
-              width={1776}
-              height={608}
-              priority
-              className="mt-8 h-auto w-full max-w-5xl drop-shadow-[0_18px_40px_rgba(0,0,0,0.45)] sm:mt-10"
-            />
-            <div className="mt-8 max-w-3xl text-base leading-relaxed text-white/75 md:mt-10 md:text-lg md:leading-[1.65]">
-              <RichText as="p">{project.description}</RichText>
-            </div>
-          </div>
-        </section>
+        {banner ? <CaseStudyBanner project={project} config={banner} /> : null}
 
         <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 sm:pt-14">
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] lg:items-start lg:gap-10">
@@ -134,8 +128,7 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
                           <li key={r.url}>
                             <a
                               href={r.url}
-                              target="_blank"
-                              rel="noreferrer noopener"
+                              {...(isExternalHref(r.url) ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
                               className="text-system-blue underline-offset-2 hover:underline"
                             >
                               {r.label || r.url}
@@ -168,6 +161,20 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
           </div>
         </section>
 
+        {sections.length ? (
+          <div className="mt-16 space-y-20 sm:mt-20 sm:space-y-24">
+            {sections.map((section, i) => (
+              <CaseStudySectionBlock
+                key={`${section.heading ?? 'section'}-${i}`}
+                section={section}
+                index={i}
+                project={project}
+                onOpenLightbox={openLightbox}
+              />
+            ))}
+          </div>
+        ) : null}
+
         <div className="mt-12 sm:mt-16">
           <SkyhavenWebsitePanel />
         </div>
@@ -193,8 +200,7 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
                   <a
                     key={r.url}
                     href={r.url}
-                    target="_blank"
-                    rel="noreferrer noopener"
+                    {...(isExternalHref(r.url) ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
                     className="inline-flex min-h-[48px] items-center rounded-full border border-black/[0.1] bg-white px-6 text-sm font-semibold text-mk-text hover:bg-[#F2F2F7]"
                   >
                     {r.label || 'Open live'}
@@ -262,6 +268,14 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
           </div>
         </section>
       </main>
+
+      <MediaGalleryLightbox
+        assets={lightboxAssets}
+        activeIndex={lightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+        onNavigate={(index) => setLightboxIndex(index)}
+        alt={project.title}
+      />
     </>
   );
 }

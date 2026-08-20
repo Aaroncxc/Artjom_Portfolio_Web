@@ -1,0 +1,54 @@
+---
+description: Case-study narrative must answer What / Why / How for every project
+globs: lib/toolProjects.ts,lib/caseStudyNarratives.ts,public/posts.json,lib/caseStudy.ts,lib/types.ts,components/caseStudy/**
+alwaysApply: false
+---
+
+# Case study narrative (required)
+
+Every project case study (`/project/[slug]`) — tools in `lib/toolProjects.ts` **and** Drive posts — must answer three questions in English, evidence-safe copy:
+
+1. **What it is** — product / piece / deliverable in plain language  
+2. **What it is for (why)** — problem, audience, or brief it serves  
+3. **How it was made** — process, tools, role, constraints (behind the scenes)
+
+Drive / `posts.json` narratives live in `lib/caseStudyNarratives.ts` (applied on load) so ingest refreshes do not wipe the story.
+
+## Structure
+
+Prefer this section pattern (headings may vary slightly by project type):
+
+| Order | Heading examples | Layout |
+| --- | --- | --- |
+| 1 | What it is | `text-left` or `text-right` with ≥1 media item when assets exist |
+| 2 | Why / What it is for | opposite text side, media interleaved |
+| 3 | How it was made / How it was built | process + media |
+| Last | More screens / Gallery / Key frames | `gallery` — remaining stills only |
+
+- Weave **at least four images** into the story when the project has that many assets; do not dump everything into one mid-page gallery.
+- Keep a **gallery at the bottom** for leftovers.
+- Dark Skyhaven-style banner projects: keep hero video/media in sections (`keepHeroInSections`), not duplicated under the title.
+- Portrait / tall UI screenshots: `fit: 'contain'` (and `portrait: true` when tall) so the rounded frame hugs the bitmap.
+
+## Layout (no empty columns)
+
+- Text beside media must **top-align** (`items-start`) — never vertically center text against a tall image/video.
+- **Never stack two images under each other** in a text|media split. That leaves a tall empty column next to short copy.
+- Split layouts (`text-left`, `text-right`, `portrait-split`): **one media item** next to the text.
+- If a beat needs two+ images: put text above and images in a **side-by-side** row (or move extras to the bottom gallery) — not a vertical stack in the media column.
+- Text-only sections (no media): use the **same content width** as facts/media (`max-w-7xl`), **left-aligned** — never a narrow centered reading column.
+
+## Evidence gate
+
+- Only claim what is supported by existing description, explanation, outcomes, role, tools, or known repo facts.
+- Do **not** invent Unity, Niagara, team sizes, client quotes, or metrics.
+- Occupied VFX ≠ Skyhaven VFX Studio — keep them separate.
+
+## When uploading / ingesting a new project
+
+Before shipping a new slug:
+
+1. Fill `description`, `role`, `client`, `timeframe`, `tools`, `outcomes` (2–4 bullets).  
+2. Write `caseSections` that answer What / Why / How with media.  
+3. For Drive posts: add/update the slug in `lib/caseStudyNarratives.ts` (preferred) or `posts.json`. For tools: update `lib/toolProjects.ts`.  
+4. Verify `/project/[slug]` reads as an article, not a screenshot dump.

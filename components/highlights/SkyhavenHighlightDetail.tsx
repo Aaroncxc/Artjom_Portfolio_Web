@@ -21,6 +21,7 @@ import { SKYHAVEN_TILE_POSTER, SKYHAVEN_TILE_VIDEO } from '@/lib/skyhavenVideos'
 import { ViewportAutoplayVideo } from '@/components/ViewportAutoplayVideo';
 import { SkyhavenVideosPanel } from '@/components/highlights/SkyhavenVideosPanel';
 import { metaChipClass } from '@/lib/chipClasses';
+import Link from 'next/link';
 
 type TabId = 'private' | 'videos' | 'explanation';
 
@@ -271,6 +272,12 @@ export function SkyhavenHighlightDetail({
                             Open the Skyhaven website
                           </a>
                         ) : null}
+                        <Link
+                          href="/project/skyhaven-vfx"
+                          className="text-sm font-semibold text-system-blue underline decoration-system-blue/35 underline-offset-2 transition-colors hover:text-[#0077ED] md:text-[15px]"
+                        >
+                          Skyhaven VFX Studio
+                        </Link>
                         {highlight.toolExternalUrl ? (
                           <a
                             href={highlight.toolExternalUrl}

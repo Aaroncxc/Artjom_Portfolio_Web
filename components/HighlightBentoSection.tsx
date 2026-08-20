@@ -24,10 +24,12 @@ import {
   MULTIKUNST_HIGHLIGHT_SECTION,
   PRODUCTION_HIGHLIGHT_SECTION,
   SKYHAVEN_HIGHLIGHT_SECTION,
+  VFX_HIGHLIGHT_SECTION,
   type HighlightBentoSectionConfig,
 } from '@/lib/highlightSections';
 import { useMobilePerformance } from '@/lib/useMobilePerformance';
 import { ViewportAutoplayVideo } from '@/components/ViewportAutoplayVideo';
+import { isExternalHref } from '@/lib/toolLinks';
 
 interface HighlightBentoSectionProps {
   visible?: boolean;
@@ -400,17 +402,19 @@ export function HighlightBentoSection({
                   <p>{config.bodyP2}</p>
                   {config.tryBuildLinks?.length ? (
                     <p className="flex flex-wrap gap-x-4 gap-y-1">
-                      {config.tryBuildLinks.map((link) => (
-                        <a
-                          key={link.href}
-                          href={link.href}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          className="font-semibold text-system-blue underline decoration-system-blue/35 underline-offset-2 transition-colors hover:text-[#0077ED]"
-                        >
-                          {link.label}
-                        </a>
-                      ))}
+                      {config.tryBuildLinks.map((link) => {
+                        const external = isExternalHref(link.href);
+                        return (
+                          <a
+                            key={link.href}
+                            href={link.href}
+                            {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
+                            className="font-semibold text-system-blue underline decoration-system-blue/35 underline-offset-2 transition-colors hover:text-[#0077ED]"
+                          >
+                            {link.label}
+                          </a>
+                        );
+                      })}
                     </p>
                   ) : null}
                 </div>
@@ -443,4 +447,5 @@ export {
   MULTIKUNST_HIGHLIGHT_SECTION,
   PRODUCTION_HIGHLIGHT_SECTION,
   SKYHAVEN_HIGHLIGHT_SECTION,
+  VFX_HIGHLIGHT_SECTION,
 };
