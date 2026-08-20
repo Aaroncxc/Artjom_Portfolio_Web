@@ -166,6 +166,22 @@ It started as a personal passion project under Multikunst and shipped as a usabl
         ],
       },
       {
+        heading: 'Live workspace',
+        body: `The loop below is the same preview you see on the portfolio tile — routing sources, stacking effects, and watching the output update live in the browser.`,
+        layout: 'full-media',
+        media: [
+          {
+            kind: 'video',
+            src: '/tools/occupied/tile-preview.mp4',
+            title: 'Occupied VFX · workspace loop',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            caption: 'Workspace loop — muted autoplay.',
+          },
+        ],
+      },
+      {
         heading: 'Why the browser',
         body: `Install friction kills experimentation at a gig or in a workshop. Putting the engine in the browser meant demos, sessions, and sharing a URL instead of an installer — and it forced the stack to stay honest about performance: everything has to run on the GPU path we actually ship.
 

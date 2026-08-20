@@ -103,7 +103,7 @@ function TileTitleWithAvailabilityRow({
               : 'text-mk-text [text-shadow:0_1px_0_rgba(255,255,255,0.9),0_2px_14px_rgba(255,255,255,0.65),0_2px_18px_rgba(0,0,0,0.12)]',
           )}
         >
-          {project.title}
+          {project.tileTitle ?? project.title}
         </p>
         {project.tileAvailability ? (
           <div className={clsx('shrink-0', TILE_FOOTER_BADGE_PADDING)}>
@@ -159,7 +159,7 @@ function TileTitleOverlay({
   project: HighlightProject;
   variant: 'featured' | 'prominent';
 }) {
-  const titleWords = project.title.trim().split(/\s+/);
+  const titleWords = (project.tileTitle ?? project.title).trim().split(/\s+/);
   const [firstWord, ...restWords] = titleWords;
   const isProminent = variant === 'prominent';
 
@@ -220,7 +220,6 @@ function TileFace({
     isFeatured || project.tileTitleSize === 'featured' ? 'featured' : 'prominent';
   const inlineTitleWithAvailability =
     showTileTitle &&
-    isFeatured &&
     project.tileFeaturedLightTitle &&
     Boolean(project.tileAvailability);
 

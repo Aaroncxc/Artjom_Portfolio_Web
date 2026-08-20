@@ -57,6 +57,8 @@ export interface HighlightProject {
   tileTags?: string[];
   /** Bottom-right status on the tile thumbnail (live URL vs try/test build). */
   tileAvailability?: 'live' | 'test' | 'demo-live';
+  /** Short label on the tile footer (defaults to `title`). */
+  tileTitle?: string;
   /** Show stair-step title on the tile (for normal-span tiles without featured layout). */
   tileShowTitle?: boolean;
   /** Title scale on the tile — `prominent` matches standard bento cells; `featured` for hero tiles. */
@@ -377,6 +379,8 @@ Built under Multikunst with Sahachat Sonnenburg. Native Swift/SwiftUI, TestFligh
   tileBadges: ['Tool'],
   tileHideFeaturedFade: true,
   tileFeaturedLightTitle: true,
+  tileShowTitle: true,
+  tileTitle: 'Agata',
   projectSlug: 'agata-journal',
   span: 'normal',
 };
@@ -429,7 +433,6 @@ export const NINJA_MAGE_HIGHLIGHT_PROJECT: HighlightProject = {
   tileBadges: ['3D'],
   tileHideFeaturedFade: true,
   tileFeaturedLightTitle: true,
-  tileThumbAnchor: 'top',
   projectSlug: 'ninja-mage',
   span: 'featured',
 };

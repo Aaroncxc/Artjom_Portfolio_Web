@@ -136,9 +136,9 @@ export const VFX_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
   headlineStairs: ['VFX', 'for games', ''],
   subtitle: 'Cinematic · 2023',
   bodyP1:
-    'Readable combat reads — silhouette, timing, and color — whether the shot is pre-rendered or running live in a desktop widget. This section is the cinematic piece; the authoring tool sits with the AI Apps grid.',
+    'Readable combat reads — silhouette, timing, and color — whether the shot is pre-rendered or running live in a desktop widget. This section is the cinematic piece; the authoring tool sits in the App Development section.',
   bodyP2:
-    'Ninja Mage is an Avatar-inspired short: Marvelous cloth, stacked Mixamo clips, and transparent video planes distorted into elemental trails, rendered in Cycles. Skyhaven VFX Studio — a Tauri + React Three Fiber editor bound to game Action IDs — lives under App Development with AI.',
+    'Ninja Mage is an Avatar-inspired short: Marvelous cloth, stacked Mixamo clips, and transparent video planes distorted into elemental trails, rendered in Cycles. Skyhaven VFX Studio — a Tauri + React Three Fiber editor bound to game Action IDs — lives under App Development.',
   eyebrow: 'VFX',
   projects: [NINJA_MAGE_HIGHLIGHT_PROJECT],
   glow: 'purple',
