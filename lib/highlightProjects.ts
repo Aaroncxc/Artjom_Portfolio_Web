@@ -182,29 +182,27 @@ export const SKYHAVEN_HIGHLIGHT_PROJECTS: HighlightProject[] = [
   {
     id: 'skyhaven',
     title: 'Skyhaven',
-    year: '2025–2026',
+    year: '2026 — ongoing',
     category: 'Game · Desktop widget',
     description:
-      'Skyhaven is a compact desktop widget game I build alongside client work: a floating isometric island you keep at the edge of your screen while you focus on real tasks. The build already covers focus sessions, inventory & equipment, farming, custom island building, profile loadouts, and a playable mining combat slice. Combat VFX are authored in a dedicated Skyhaven VFX Studio and imported into the game. The public site — arena roster, 3D inspector, wiki, and downloads — is part of the same project.',
-    explanation: `Skyhaven is a desktop widget game for Windows and macOS — inspired by the calm of games like Rusty's Retirement, but with clearer action POIs (mine, farm, shrine, tavern) and a stronger sense of place. You run a focus session (30, 60, or 120 minutes) while your character works on the island; when you're done, you collect rewards, materials, and small surprises — without fail-state pressure or click grinding.
+      'Skyhaven started as a focus-widget experiment and grew into an arena brawler and island builder in an own painterly universe — floating islands above a cloud sea, hand-drawn art direction, and a modular 3D tile world. It still ships as a calm desktop widget: your island keeps working while you do. Combat VFX are authored in a dedicated Skyhaven VFX Studio; the bilingual public site (arena roster, 3D inspector, wiki, downloads) is part of the same project.',
+    explanation: `Skyhaven is a desktop game for Windows and macOS that grew from a focus-widget experiment into an arena brawler and survival adventure — an own universe of floating islands above a cloud sea, built on my hand-drawn character art and a warm, painterly, isometric look.
 
-Technically it's a Tauri 2 shell around a React 19 UI and a Three.js / React Three Fiber world: data-driven floating islands, day/night lighting, autonomous movement, NPCs, audio (music, ambience, SFX), and persistent local saves.
+Three modes ship today: Arena (a ladder of four named villains with telegraphed third-person combat), Build (a free island builder on a 1 m modular tile kit — 76 tile types, multi-cell POI footprints), and the original widget companion: a frameless, always-on-top window whose focus sessions run timestamp-based, so the island keeps working while you do.
 
-Already playable in the prototype: focus timer & status UI, HUD and sidebar, inventory & equipment, profile loadout (character preview + slots), daily quests / planner, farming (till, plant, grow, harvest), toolbox build mode on custom home islands (multi-cell footprints, valid/invalid placement), island switching (home, farming, mining layouts), third-person combat on the mining island (enemy robots, telegraphs, block/dodge, hit feedback), character selection, POI interactions, and internal Tile Lab / walk-surface tooling for production.
+Technically it's a Tauri 2 shell around a React 19 UI and a Three.js / React Three Fiber world: 186 GLB models, day/night lighting over a procedural sky, instanced tiles with LOD, a hard asset budget gate, and internal production tooling (DevHub, Tile Lab).
 
-UI scaffolding, not full gameplay yet: in-game shop listings and the achievements entry (menus exist; economy/trophy logic is still to come).
+The visual identity is owned end to end — custom crystal cursor, 15 hand-drawn stone emblems as toolbox icons, ~75 produced thumbnails, and a gold-on-dark-glass CI shared by game and website.
 
-The public site is part of the same project: a bilingual landing page with the arena roster, an in-browser 3D inspector for real game models, build-mode loop, wiki, FAQ, and Windows / macOS downloads.
+One repo ships the ecosystem: the game (v0.3.14), a Windows/macOS launcher with CDN update channels, and a bilingual site with arena roster, in-browser 3D inspector for real game models, wiki, FAQ, and downloads.
 
-Combat VFX are authored in Skyhaven VFX Studio — a separate Tauri + React Three Fiber tool that reads the game catalog (characters, weapons, action IDs) and exports effect packages back into Skyhaven. The public site is marketing and inspection for the same game, not a second product.
-
-I designed and integrated the full stack myself — concept, UI, 3D pipeline, engineering, and the website — using ChatGPT and Cursor as accelerators, with every merge reviewed in Git.`,
+Combat VFX are authored in Skyhaven VFX Studio — a separate Tauri + React Three Fiber tool bound to the game catalog. I designed and integrated the full stack myself — concept, story, UI, 3D pipeline, engineering, and the website — using AI tools as accelerators, with every merge reviewed in Git.`,
     role:
-      'Art direction, 3D production, and code end to end — sketches and visual rules first, then Meshy for 3D iteration, Cursor for gameplay in React, Three.js, and Tauri 2, plus the public Next.js site. Every prop, character, and tile starts from my own look-and-feel before it lands in the engine.',
-    tools: ['Tauri', 'React', 'Three.js', 'Next.js', 'Meshy', 'Cursor'],
+      'Art direction, 3D production, and code end to end — hand-drawn sketches and visual rules first, then Meshy for 3D iteration, Cursor for gameplay in React, Three.js, and Tauri 2, plus the public site. Every prop, character, and tile starts from my own look-and-feel before it lands in the engine.',
+    tools: ['Tauri', 'React', 'Three.js', 'R3F', 'Meshy', 'Cursor'],
     thumb: '/projects/skyhaven/posters/fullfarming.webp',
     tileVideo: '/projects/skyhaven/tile-preview.mp4',
-    tileTags: ['Tauri', 'React', 'Three.js', 'Next.js', 'Meshy', 'Cursor'],
+    tileTags: ['Tauri', 'React', 'Three.js', 'R3F', 'Meshy', 'Cursor'],
     tileBadges: ['Game', '3D'],
     toolExternalUrl: SKYHAVEN_RELEASES_URL,
     siteUrl: SKYHAVEN_SITE_URL,

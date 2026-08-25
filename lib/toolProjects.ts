@@ -534,14 +534,14 @@ The design priority was **modularity**: new node types should land without rewri
     slug: 'skyhaven',
     title: 'Skyhaven',
     description:
-      'A compact desktop widget game — a floating isometric island at the edge of your screen while you focus: focus sessions, inventory, farming, island building, and a playable mining combat slice. Combat VFX are authored in Skyhaven VFX Studio. The public site (arena roster, 3D inspector, wiki, downloads) is part of the same project.',
-    date: '2025-06-01',
+      'Desktop widget game grown from a focus-timer experiment into an arena brawler and island builder — an own painterly universe on floating islands, built solo from hand-drawn art direction to shipped launcher, bilingual website, and v0.3.14.',
+    date: '2026-02-01',
     author: 'Artjom N.',
     tools: [
       { name: 'Tauri' },
       { name: 'React' },
       { name: 'Three.js' },
-      { name: 'Next.js' },
+      { name: 'R3F' },
       { name: 'Meshy' },
       { name: 'Cursor' },
     ],
@@ -551,22 +551,20 @@ The design priority was **modularity**: new node types should land without rewri
     videoUrl: '/projects/skyhaven/tile-preview.mp4',
     order: 6,
     role: 'Art direction, 3D & code end to end',
-    client: 'Personal · side project',
-    timeframe: '2025–2026',
+    client: 'Personal · in active development',
+    timeframe: '2026 — ongoing',
     team: 'Solo',
     outcomes: [
-      'Shipped a Tauri 2 + React + Three.js desktop widget prototype',
-      'Playable focus timer, farming, build mode, and mining combat slice',
-      'Designed and shipped the public Skyhaven site — arena roster, 3D inspector, wiki, and launcher downloads',
-      'Authored combat VFX in a dedicated studio and imported them via vfx:import',
+      'Grew a focus-widget experiment into an arena brawler + island builder — 94 commits from March to August 2026, shipping v0.3.14',
+      'Built a modular environment kit: 76 tile types on a 1 m grid, multi-cell POI footprints, walk-surface calibration, and a hard 420 MB asset budget gate',
+      'Authored the complete visual identity — hand-drawn character art, a custom cursor and icon pipeline, and a gold-on-dark-glass CI shared by game and website',
+      'Shipped the full ecosystem solo: game, Windows/macOS launcher with CDN update channels, and a bilingual site with arena roster, 3D inspector, and wiki',
     ],
-    explanation: `Skyhaven is a desktop widget game for Windows and macOS — inspired by the calm of games like Rusty's Retirement, but with clearer action POIs and a stronger sense of place.
+    explanation: `Skyhaven started in early 2026 as an experiment — how far can one artist-developer get with AI-accelerated tooling? It is now a daily project: an arena brawler and survival adventure in an own painterly universe, still shipping as a calm desktop widget.
 
-Technically it's a Tauri 2 shell around a React 19 UI and a Three.js / React Three Fiber world. Already playable: focus timer, inventory & equipment, farming, toolbox build mode, island switching, and third-person combat on the mining island.
+Technically it's a Tauri 2 shell around a React 19 UI and a Three.js / React Three Fiber world — 186 GLB models, a 1 m modular tile grid, day/night lighting, and internal production tooling (DevHub, Tile Lab).
 
-The public website is part of the same build: bilingual landing page, arena roster with an in-browser 3D inspector for real game models, build-mode loop, wiki, FAQ, and Windows / macOS downloads.
-
-Combat VFX are authored in Skyhaven VFX Studio and imported as JSON packages — the public site is marketing and inspection for the same game, not a separate product.`,
+The same monorepo ships the game, a Windows/macOS launcher with CDN update channels, and a bilingual site with arena roster, in-browser 3D inspector, wiki, and downloads. Combat VFX are authored in Skyhaven VFX Studio against the game's own catalog contract.`,
     references: [
       {
         url: SKYHAVEN_SITE_URL,
@@ -583,18 +581,200 @@ Combat VFX are authored in Skyhaven VFX Studio and imported as JSON packages —
     ],
     caseSections: [
       {
-        heading: 'What it is',
-        body: `Skyhaven is a calm **desktop widget game** for Windows and macOS — a floating isometric island at the edge of your screen while you focus. Focus sessions (30 / 60 / 120 minutes), inventory, farming, custom island building, and a playable mining combat slice.
-
-Inspired by the calm of games like Rusty's Retirement, but with clearer action POIs and a stronger sense of place. No fail-state pressure, no click grinding — when the session ends, you collect rewards and keep going.`,
-        layout: 'text-left',
+        heading: 'From experiment to universe',
+        body: `Skyhaven started in early 2026 as an experiment: how far can one artist-developer get building a real game with AI-accelerated tooling? The honest answer turned into a project I work on every day — an **arena brawler and survival adventure** set on floating islands, with its own story, factions, and hand-drawn visual language, still shipping as a calm desktop widget. Current build: **v0.3.14**.`,
+        layout: 'full-media',
+        media: [
+          {
+            kind: 'video',
+            src: '/projects/skyhaven/videos/cinematic.mp4',
+            title: 'Skyhaven cinematic',
+            caption: 'In-engine cinematic — the island world in motion.',
+          },
+        ],
       },
       {
-        heading: 'How it is built',
-        body: `Technically it is a **Tauri 2** shell around a React UI and a Three.js / React Three Fiber world. Art direction, 3D, and code are owned end to end: sketches and visual rules first, Meshy for 3D iteration, Cursor for gameplay — every merge reviewed in Git.
+        heading: 'An own universe',
+        body: `The world is built on a simple myth: after **“the Break,”** the earth rose into floating fragments above a cloud sea — Skyhaven is a fragment field, not a planet. Coins are minted magic, and factions like **The Mints**, the **Drifters**, the **Grounders**, and the **Ruin-Keepers** disagree about what uncontrolled magic would do to the sky.
 
-Combat VFX are authored in a separate **Skyhaven VFX Studio** and imported as JSON packages. The public site (arena roster, 3D inspector, wiki, downloads) is the same project, not a second case study.`,
+The look came before the tech. Hand-drawn and painted character art — Fighter, Mage, Mining Man — set the visual rules: *isometric, warm, painterly, cozy-fantasy*. Every 3D asset since has to pass that bar. The pipeline is openly hybrid: my art direction and drawings up front, AI and DCC tools as accelerators behind them.`,
         layout: 'text-left',
+        // TODO(Artjom): Scans der Original-Zeichnungen/Gemälde ablegen und einkommentieren —
+        // am stärksten: ein Motiv als Zeichnung + finales 3D-Pendant (Vorher/Nachher).
+        // media: [
+        //   { kind: 'image', src: '/projects/skyhaven/story/artwork-01.webp', title: 'Original concept painting', fit: 'contain', frame: 'paper', caption: 'Hand-drawn origin of the Skyhaven look.' },
+        // ],
+      },
+      {
+        heading: 'What it is today',
+        body: `Three modes ship today. **Arena** — a ladder of four named villains with telegraphed third-person combat. **Build** — a free island builder on a modular tile kit. And the original **widget companion** that started everything, still fully alive. A story mode card already sits in the menu: the universe is written, the mode is next.`,
+        layout: 'text-right',
+        // TODO(Artjom): Mode-Select-Screenshot (Story / Arena / Build) ablegen und einkommentieren.
+        // media: [
+        //   { kind: 'image', src: '/projects/skyhaven/screens/mode-select.webp', title: 'Mode select', caption: 'Story, Arena, and Build — one universe, three entry points.' },
+        // ],
+      },
+      {
+        heading: 'The widget superpower',
+        body: `Skyhaven runs as a frameless, transparent, always-on-top **960×618 Tauri window** at the edge of your screen. Focus sessions (15/30/60/120 minutes, plus a Pomodoro cycle) are timestamp-based — close the app, come back later, and the island has kept working: crops grew, your character mined, rewards wait.
+
+The game respects that you are working. That constraint shaped every system in it.`,
+        layout: 'text-left',
+        media: [
+          {
+            kind: 'video',
+            src: '/projects/skyhaven/videos/widget-highlight.mp4',
+            title: 'Widget overview',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            caption: 'The widget at the edge of the screen — HUD, sidebar, floating island.',
+          },
+        ],
+        // TODO(Artjom): Screenshot vom Widget auf echtem Desktop mit laufender Focus-Clock ablegen:
+        // { kind: 'image', src: '/projects/skyhaven/screens/widget-desktop.webp', title: 'Widget on a real desktop', caption: 'Always-on-top companion while you work.' },
+      },
+      {
+        heading: 'Environment craft: a modular tile world',
+        body: `The world is a **1-meter modular grid**: 76 tile types, stack heights up to five levels, and multi-cell footprints — trees at 3×3, large POIs like the Mask Temple and the tavern at 2×2 to 4×4. Every GLB is normalized onto its footprint, and a dedicated **Tile Lab** calibrates walk surfaces per tile (48 calibrated keys) so characters read the terrain correctly.
+
+Performance is part of the craft: instanced ground tiles, grass LOD that fades at 6 units and culls at 11, gltf-transform optimization passes, and a hard **asset budget gate — 420 MB total, 12 MB per file** — enforced by script before anything ships.`,
+        layout: 'text-right',
+        media: [
+          {
+            kind: 'video',
+            src: '/projects/skyhaven/videos/farming.mp4',
+            title: 'Farming loop',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            caption: 'The tile world in motion — till, plant, grow, harvest.',
+          },
+        ],
+        // TODO(Artjom): Build-Mode-Screenshot mit offenem Baukasten-Panel + Tile-Lab-Shot ablegen:
+        // { kind: 'image', src: '/projects/skyhaven/screens/build-mode.webp', title: 'Build mode', caption: 'Baukasten — 48 buildable tiles with placement validation.' },
+        // { kind: 'image', src: '/projects/skyhaven/screens/tile-lab.webp', title: 'Tile Lab', caption: 'Walk-surface calibration per tile.' },
+      },
+      {
+        heading: 'Light, sky, and mood',
+        body: `A day/night system lerps sun elevation and intensity into night blues under a moonlit sky, over a procedural Preetham sky model. Torches, wells, and the forge scale their point lights up at night.
+
+On a stage this small, lighting *is* the level design — the island has to feel like a place worth returning to after a work session.`,
+        layout: 'text-left',
+        media: [
+          {
+            kind: 'video',
+            src: '/projects/skyhaven/videos/fullfarming.mp4',
+            title: 'Full farming showcase',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            caption: 'Island ambience in one take — light, sky, and place.',
+          },
+        ],
+      },
+      {
+        heading: 'Combat & the arena ladder',
+        body: `Combat is third-person with readable intent: enemies telegraph with wind-ups and an overhead glyph (a separate glyph marks unblockables), and the player answers with **block, dodge-roll i-frames, and three-hit combos** across four weapons — fist, axe, bow, greatsword.
+
+The arena ladder stacks four villains — **Emberforge Reaper, Forest Seeker, Hurt Corp Enforcer, General Mage** — and mask rewards (Iron / Gold / Bone / End) apply real stat modifiers, not cosmetics. Feel is tuned in the details: hitstop, camera trauma, damage numbers, clash sounds. The combat VFX themselves are authored in **Skyhaven VFX Studio**.`,
+        layout: 'text-right',
+        media: [
+          {
+            kind: 'video',
+            src: '/projects/skyhaven/videos/fighting.mp4',
+            title: 'Combat slice',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            caption: 'Telegraphs, block/dodge, and hit feedback on the mining island.',
+          },
+        ],
+        // TODO(Artjom): Arena-Overview-Screenshot mit den 4 Villains ablegen:
+        // { kind: 'image', src: '/projects/skyhaven/screens/arena-overview.webp', title: 'Arena ladder', caption: 'Four villains, mask rewards with real stat modifiers.' },
+      },
+      {
+        heading: 'Characters & voices',
+        body: `Eight playable characters share the rig family, and NPCs carry the world — **Brakka** the miner, **Lux** the fighter trainer, Skully, the Dock Mage — with a narrator voice-over pipeline generating the spoken beats. Character rules live in written docs so behavior stays consistent as content grows.`,
+        layout: 'text-left',
+        media: [
+          {
+            kind: 'image',
+            src: '/projects/skyhaven/models-3d/main-char.webp',
+            title: 'Main character',
+            fit: 'contain',
+            caption: 'Production render — the player character.',
+          },
+        ],
+        // TODO(Artjom): Character-Select-Overlay-Screenshot ablegen:
+        // { kind: 'image', src: '/projects/skyhaven/screens/character-select.webp', title: 'Character select', caption: 'Eight playable characters on one rig family.' },
+      },
+      {
+        heading: 'UI language: cursor, pictograms, thumbnails',
+        body: `The UI is its own crafted layer. A custom **crystal cursor** ships as a real cursor asset (PNG + hotspot JSON, wired through a CSS token), built by the same icon pipeline that trims and compresses **15 hand-drawn stone emblems** into toolbox icons — seven build categories, nine tools. Around **75 produced thumbnails** cover build tiles, equipment, and the website's 3D catalog.
+
+The CI holds it together: dark glass panels with a **gold \`#f0b93a\`** accent shared by game and website, Koulen and Jersey10 for game chrome, Archivo for menus and web.`,
+        layout: 'text-right',
+        // TODO(Artjom): Icon-/Cursor-Collage (oder Sprite-Sheet) + Thumbnail-Grid ablegen:
+        // media: [
+        //   { kind: 'image', src: '/projects/skyhaven/screens/ui-icons-collage.webp', title: 'Cursor & icon system', fit: 'contain', caption: 'Crystal cursor and hand-drawn stone emblems.' },
+        //   { kind: 'image', src: '/projects/skyhaven/screens/thumbnails-grid.webp', title: 'Produced thumbnails', fit: 'contain', caption: '~75 thumbnails across tiles, equipment, and web catalog.' },
+        // ],
+      },
+      {
+        heading: 'Content at scale',
+        body: `**186 GLB models and 52 FBX rigs** ship in the current build — characters, enemies, POIs, props, and tiles, all under one visual rule set. A selection of production renders:`,
+        layout: 'gallery',
+        media: [
+          { kind: 'image', src: '/projects/skyhaven/models-3d/taverne.webp', title: 'Tavern · Social Hub', fit: 'contain' },
+          { kind: 'image', src: '/projects/skyhaven/models-3d/mine.webp', title: 'Mine POI', fit: 'contain' },
+          { kind: 'image', src: '/projects/skyhaven/models-3d/airShipPort.webp', title: 'Airship port', fit: 'contain' },
+          { kind: 'image', src: '/projects/skyhaven/models-3d/enemy-robot.webp', title: 'Enemy robot', fit: 'contain' },
+          { kind: 'image', src: '/projects/skyhaven/models-3d/farm2x2.webp', title: 'Farm · 2×2 multi-cell tile', fit: 'contain' },
+          { kind: 'image', src: '/projects/skyhaven/models-3d/tree.webp', title: 'Tree · 3×3 footprint', fit: 'contain' },
+          { kind: 'image', src: '/projects/skyhaven/models-3d/airship-wing.webp', title: 'Airship wing', fit: 'contain' },
+          { kind: 'image', src: '/projects/skyhaven/models-3d/pathCross.webp', title: 'Path tile', fit: 'contain' },
+          { kind: 'image', src: '/projects/skyhaven/models-3d/prop-axe.webp', title: 'Prop · axe', fit: 'contain' },
+          { kind: 'image', src: '/projects/skyhaven/models-3d/halfGrownCropTile.webp', title: 'Crop tile · growth stage', fit: 'contain' },
+        ],
+        // TODO(Artjom): Optional — ein Spiel-GLB für den interaktiven 3D-Viewer ablegen und als
+        // eigenen Abschnitt einkommentieren (kind: 'model3d'):
+        // { kind: 'model3d', src: '/projects/skyhaven/models-3d/main-char.glb', title: 'Inspect the model' },
+      },
+      {
+        heading: 'Production tooling',
+        body: `Content at this pace needs internal tools. **DevHub** bundles a Visual Lab, Material Lab, lighting and sky controls, a Camera Studio, Character Lab, and a scene composer. **Tile Lab** handles walk-surface calibration. Capture pipelines render portfolio and marketing footage straight from the game.
+
+The tooling is the difference between a demo and a production.`,
+        layout: 'text-left',
+        // TODO(Artjom): DevHub-Screenshot ablegen:
+        // media: [
+        //   { kind: 'image', src: '/projects/skyhaven/screens/devhub.webp', title: 'DevHub', caption: 'Internal production tooling — labs, lighting, camera, scenes.' },
+        // ],
+      },
+      {
+        heading: 'Shipping it',
+        body: `One repo ships the whole ecosystem: the game, a **Windows/macOS launcher** (v0.2.8) with stable/dev update channels on a CDN, and a bilingual marketing site with the arena roster, an in-browser **3D model inspector** for real game assets, a wiki, FAQ, and a waitlist.`,
+        layout: 'text-right',
+        media: [
+          {
+            kind: 'image',
+            src: '/projects/skyhaven/website.webp',
+            title: 'Skyhaven website',
+            caption: 'Arena roster, 3D inspector, wiki, and downloads — same project.',
+          },
+        ],
+      },
+      {
+        heading: 'The numbers, and what is next',
+        body: `**94 commits between March and August 2026**, 3,760 tracked files, current version v0.3.14 — built solo next to client work.
+
+In design and partially shipping already: the **Social Hub** multiplayer tavern (its mesh ships in v0.3.14), the story mode, and a funding track targeting a **Q1 2027** release.`,
+        layout: 'text-left',
+        // TODO(Artjom): Optional — Social-Hub-Taverne-Screenshot ablegen:
+        // media: [
+        //   { kind: 'image', src: '/projects/skyhaven/screens/social-hub.webp', title: 'Social Hub tavern', caption: 'Multiplayer hub — mesh already shipping in v0.3.14.' },
+        // ],
       },
     ],
   },
@@ -718,7 +898,7 @@ Elemental trails did not start as particle systems. They started as **transparen
     slug: 'skyhaven-vfx',
     title: 'Skyhaven VFX Studio',
     description:
-      'Authoring tool for Skyhaven combat VFX — Tauri 2, React, and React Three Fiber. Reads the game catalog, binds trails and impacts to Action IDs, and exports JSON the game imports. Not a second engine, and not Occupied VFX.',
+      'Companion authoring tool for Skyhaven combat VFX — Tauri 2, React, and React Three Fiber. Reads the game catalog read-only, binds effects to catalogued action markers on a combo timeline, and exports hash-validated packages. Not a second engine, and not Occupied VFX.',
     date: '2026-06-01',
     author: 'Artjom N.',
     tools: [{ name: 'Tauri' }, { name: 'React' }, { name: 'Three.js' }, { name: 'R3F' }],
@@ -738,13 +918,14 @@ Elemental trails did not start as particle systems. They started as **transparen
     timeframe: '2026',
     team: 'Solo',
     outcomes: [
-      'Built a read-only Coincraft Asset Bridge so character, animation, and weapon data come from the game checkout',
-      'Bound combo timelines to catalogued Action IDs (Trail On / Impact / Trail Off) instead of free-timed previews',
-      'Exported effect packages (manifest, bindings, composition, JSON) that Skyhaven imports with vfx:import',
+      'Built a read-only Asset Bridge with sha256-hashed assets, so the game checkout stays the single source of truth',
+      'Bound combo timelines to catalogued action markers (Trail On / Impact / Trail Off) with revision hashes that refuse stale packages',
+      'Designed a six-phase spell language with 22 built-in effect recipes, a natural-language recipe builder, and widget/gameplay/cinematic quality budgets',
+      'Proved the contract end to end with the Cracked Mask · Greatsword Combo 3 slice — same action ID, sockets, and timings in studio and arena',
     ],
-    explanation: `Skyhaven combat needs readable VFX on a desktop widget budget. The studio is the authoring side of that problem: data-driven effects, not a second game engine.
+    explanation: `Skyhaven combat needs readable VFX on a desktop widget budget. The studio is the authoring side of that problem: data-driven effects composed from nine layer types, validated against the game's own catalog, and exported as hash-checked packages — not a second game engine.
 
-Occupied VFX is a separate Multikunst browser instrument for live visuals. This studio only talks to Skyhaven.`,
+153 source files, 36 components, 32 unit test suites — built solo. Occupied VFX is a separate Multikunst browser instrument for live visuals; this studio only talks to Skyhaven.`,
     references: [
       { url: '/project/skyhaven', label: 'Skyhaven case study' },
       { url: SKYHAVEN_SITE_URL, label: 'Open the Skyhaven website' },
@@ -752,82 +933,128 @@ Occupied VFX is a separate Multikunst browser instrument for live visuals. This 
     caseSections: [
       {
         heading: 'Studio demo',
-        body: `Skyhaven VFX Studio is the **authoring tool** for Skyhaven combat effects — Tauri 2, React, and React Three Fiber. It reads the game catalog (characters, weapons, action IDs), lets you edit trails and impacts on a combo timeline, then exports JSON packages the game imports with \`vfx:import\`.
+        body: `Skyhaven VFX Studio is the **authoring instrument** for Skyhaven combat effects — a Tauri 2 desktop app built with React 19, React Three Fiber, and Zustand. It reads the game catalog (characters, weapons, action IDs), lets you compose trails, impacts, and spells on a combo timeline, then exports validated packages for the game.
 
-It is not a second game engine, and it is not Occupied VFX. Occupied is a Multikunst live-visuals instrument. This studio only talks to Skyhaven.
-
-The video below is a drop-in placeholder — replace \`studio-demo.mp4\` when your recording is ready.`,
+It is not a second game engine, and it is not Occupied VFX — Occupied is a Multikunst live-visuals instrument. This studio only talks to Skyhaven.`,
         layout: 'full-media',
         media: [
           {
             kind: 'video',
             src: '/projects/skyhaven-vfx/studio-demo.mp4',
             title: 'Skyhaven VFX Studio demo',
-            caption: 'Replace public/projects/skyhaven-vfx/studio-demo.mp4 when the recording is ready.',
+            caption: 'Studio walkthrough — hub, timeline, and live effect preview.',
+            // TODO(Artjom): Aktuelle Studio-Aufnahme unter public/projects/skyhaven-vfx/studio-demo.mp4 ersetzen.
           },
         ],
       },
       {
-        heading: 'Why a studio',
-        body: `Attacks in Skyhaven have to **telegraph, travel, hit, and clear** on a tiny desktop widget as well as in a fight view. Authoring that inside the game editor mixes content with the engine and makes iteration slow.
+        heading: 'Why a studio exists',
+        body: `Attacks in Skyhaven have to **telegraph, travel, hit, and clear** — on a tiny desktop widget as well as in a full fight view. Authoring that inside the game editor mixes content with engine code and slows iteration.
 
-The studio is a dedicated tool with the same catalog, sockets, and Action IDs — then export. Quality budgets (\`widget\` / \`gameplay\` / \`cinematic\`) scale particles, draws, and lights so an effect that reads in a fight still fits the widget shell.`,
+The studio is a dedicated tool speaking the same contract as the game: same catalog, same sockets, same action IDs. Author fast, export safely.`,
         layout: 'text-left',
+      },
+      {
+        heading: 'Hub & Asset Bridge',
+        body: `The hub connects to a Skyhaven checkout through a **read-only Asset Bridge**. Characters, animations, and weapons come from the game's own catalog; every asset is keyed by a **sha256 hash**, and a mismatch tells you to refresh the catalog instead of silently drifting.
+
+Export writers are physically blocked from writing into the game repo — the game stays the single source of truth.`,
+        layout: 'text-right',
         media: [
           {
             kind: 'image',
             src: '/projects/skyhaven-vfx/start-screen.webp',
             title: 'Hub · Asset Bridge',
-            caption: 'Project hub and read-only Coincraft Asset Bridge.',
+            caption: 'Project hub and read-only Asset Bridge into the game checkout.',
           },
         ],
       },
       {
-        heading: 'Hub & Asset Bridge',
-        body: `The start screen is a project hub plus a **read-only Coincraft Asset Bridge**. Character, animation, and weapon files come from the game checkout. The studio does not write those assets back — Skyhaven stays the source of truth for gameplay timing and sockets.`,
+        heading: 'From Mixamo FBX to a calibrated grip',
+        body: `A project starts from a Mixamo-compatible FBX with skin. If a source file moves on disk, a **fingerprint-based repair flow** relinks it instead of breaking the project.
+
+Before any effects exist, the **grip calibration** screen aligns the weapon in the character's hand with move/rotate/scale gizmos. Trail sockets inherit from that transform — so every downstream effect sits correctly on the blade, not floating beside it.`,
+        layout: 'text-left',
+        // TODO(Artjom): Screenshot der Grip-Kalibrierung (Waffe + Gizmos in der Hand) ablegen:
+        // media: [
+        //   { kind: 'image', src: '/projects/skyhaven-vfx/grip-calibration.webp', title: 'Grip calibration', caption: 'Weapon alignment with gizmos — trail sockets inherit from this transform.' },
+        // ],
+      },
+      {
+        heading: 'The combo timeline',
+        body: `The editor is built like an instrument: a multi-track **stage timeline** with animation strips, VFX clips, and audio; markers locked to the catalog contract — **Trail On, Impact, Trail Off**; bezier time and pose curves; and a **Combo Test** mode that replays buffered clicks like real gameplay.
+
+A Clean Preview toggle strips the HUD for portfolio-ready framing.`,
         layout: 'text-right',
         media: [
           {
             kind: 'image',
-            src: '/projects/skyhaven-vfx/editor.webp',
-            title: 'Editor',
-            caption: 'Viewport, inspector, and performance overlay.',
-          },
-        ],
-      },
-      {
-        heading: 'Editor & combo timeline',
-        body: `Viewport, inspector, performance overlay, and a combo timeline locked to catalogued markers — **Trail On**, **Impact**, **Trail Off**. If Skyhaven revises an action hash, import refuses a stale package. That keeps studio and arena on the same contract instead of “it looked fine in preview.”`,
-        layout: 'text-left',
-        media: [
-          {
-            kind: 'image',
             src: '/projects/skyhaven-vfx/animations.webp',
-            title: 'Animation / combo',
+            title: 'Animation / combo timeline',
             fit: 'contain',
             portrait: true,
           },
         ],
+        // TODO(Artjom): Close-up der Timeline mit sichtbaren Trail-On/Impact/Trail-Off-Markern ablegen:
+        // { kind: 'image', src: '/projects/skyhaven-vfx/timeline-markers.webp', title: 'Marker contract', caption: 'Trail On / Impact / Trail Off — locked to the game catalog.' },
       },
       {
-        heading: 'Presets & spell phases',
-        body: `Gameplay categories: **weapon, impact, world, projectile, movement, pickup**. Structured spells use six phases — Anticipation, Inscription, Convergence, Release, Impact, Aftermath — so telegraphing is data, not a polish pass you remember later.
+        heading: 'The effect language',
+        body: `Effects compose from **nine layer types** — particles, mesh particles, ribbons, lightning, procedural abilities, flipbooks, light events, sound events, and camera shake — over a material model with texture blending, UV flow, **erosion, and color ramps**.
 
-The vertical slice is **Cracked Mask · Greatsword Combo 3** — same action ID, sockets, and timings in studio and in the arena.`,
+Twenty-two recipes ship built in, from weapon trails and impact bursts to teleports, healing rituals, and elemental storms.`,
+        layout: 'text-left',
+        // TODO(Artjom): Material-Inspector-Screenshot (Erosion/Color-Ramp-Controls) ablegen:
+        // media: [
+        //   { kind: 'image', src: '/projects/skyhaven-vfx/material-inspector.webp', title: 'Material inspector', caption: 'Texture blending, UV flow, erosion, color ramps.' },
+        // ],
+      },
+      {
+        heading: 'Spell Lab & the six phases',
+        body: `Structured spells run through six phases — **Anticipation, Inscription, Convergence, Release, Impact, Aftermath** — so telegraphing is data, not a polish pass you remember later.
+
+An **Effect Recipe Builder** turns a plain-language prompt (German or English) into a recipe, and the **Spell Lab** aims and casts travel effects live in the viewport.`,
         layout: 'text-right',
         media: [
           {
             kind: 'image',
             src: '/projects/skyhaven-vfx/presets.webp',
-            title: 'Presets',
+            title: 'Presets & recipes',
             fit: 'contain',
             portrait: true,
           },
         ],
+        // TODO(Artjom): Spell-Lab-Screenshot (Zielen/Casten im Viewport) + Recipe-Builder-Prompt ablegen:
+        // { kind: 'image', src: '/projects/skyhaven-vfx/spell-lab.webp', title: 'Spell Lab', caption: 'Aim and cast travel effects live in the viewport.' },
+        // { kind: 'image', src: '/projects/skyhaven-vfx/recipe-builder.webp', title: 'Effect Recipe Builder', caption: 'Plain-language prompt to effect recipe.' },
       },
       {
-        heading: 'How it lands in Skyhaven',
-        body: `Export is a package: manifest, bindings, composition, effect JSON. Skyhaven runs **\`vfx:import\`**. Failed imports write no registry data and never modify source models or animations — so a bad package cannot silently corrupt the game checkout.`,
+        heading: 'Quality budgets',
+        body: `Every effect carries budgets — max particles, draw calls, lights — and three quality tiers scale it: **widget (0.45×), gameplay (1.0×), cinematic (1.35×)**. A live budget state (green / yellow / red) sits in the editor HUD.
+
+An effect that reads in a full fight still has to fit an always-on-top widget window. That constraint is designed in, not patched on.`,
+        layout: 'text-left',
+        media: [
+          {
+            kind: 'image',
+            src: '/projects/skyhaven-vfx/editor.webp',
+            title: 'Editor',
+            caption: 'Viewport, inspector, and live performance overlay.',
+          },
+        ],
+      },
+      {
+        heading: 'The export contract',
+        body: `Export is a package, not a file dump: **manifest, bindings, composition, and effect JSON**, plus validation and performance reports, zipped as a \`.skyhavenvfx\` archive. Action contracts carry **revision hashes** — if the game revises an action, import refuses the stale package instead of silently corrupting timing.
+
+The proven slice is **Cracked Mask · Greatsword Combo 3**: same action ID, sockets, and timings in studio and arena.`,
+        layout: 'text-right',
+      },
+      {
+        heading: 'Built solo, tested',
+        body: `153 source files, 36 React components, and **32 unit test suites** — built solo, in the same universe as the game it serves.
+
+The studio is what tech art looks like on this project: not one effect, but the system that makes a hundred effects consistent.`,
         layout: 'text-left',
       },
     ],
