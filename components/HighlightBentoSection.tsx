@@ -227,6 +227,7 @@ function TileFace({
     <button
       ref={(el) => registerTileRef(project.id, el)}
       type="button"
+      data-nav-key={`project:${project.id}`}
       onClick={() => onPick(project.id)}
       className={clsx(
         'group relative flex h-full min-h-[124px] w-full flex-col overflow-hidden rounded-xl text-left sm:min-h-[140px] sm:rounded-2xl md:min-h-[148px]',
@@ -358,7 +359,10 @@ export function HighlightBentoSection({
       id={config.id}
       className="overflow-x-clip pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pb-10 pt-8 sm:px-6 sm:pb-12 sm:pt-10 md:pt-16"
     >
-      <div className={clsx('relative mx-auto max-w-7xl rounded-2xl p-px sm:rounded-3xl', glow.wrapperShadow)}>
+      <div
+        data-nav-key={config.id}
+        className={clsx('relative mx-auto max-w-7xl rounded-2xl p-px sm:rounded-3xl', glow.wrapperShadow)}
+      >
         {!useStaticGlow ? (
           <div
             aria-hidden

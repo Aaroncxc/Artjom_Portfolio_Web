@@ -21,7 +21,6 @@ import { CONTACT_MAILTO } from '@/lib/contact';
 export default function Home() {
   const [heroDismissed, setHeroDismissed] = useState(false);
   const [introKey, setIntroKey] = useState(0);
-  const [currentSection, setCurrentSection] = useState<string>('');
   /** Sub-`md` viewports get a shorter hero-gate dissolve (faster disconnect of intro canvas after tap). */
   const [narrowViewport, setNarrowViewport] = useState(false);
 
@@ -55,59 +54,6 @@ export default function Home() {
       document.documentElement.classList.remove('hero-locked');
       document.body.classList.remove('hero-locked');
     };
-  }, [heroDismissed]);
-
-  // Scroll-spy via IntersectionObserver — cheaper than scroll listeners on mobile.
-  useEffect(() => {
-    if (!heroDismissed) return;
-
-    const sectionIds = [
-      'about',
-      'highlights',
-      'highlights-ai-apps',
-      'highlights-architecture',
-      'highlights-skyhaven',
-      'highlights-vfx',
-      'highlights-multikunst',
-      'projects',
-      'tools-games',
-    ] as const;
-
-    const elements = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el != null);
-
-    if (elements.length === 0) return;
-
-    const ratios = new Map<string, number>();
-
-    const pickActive = () => {
-      let bestId = 'about';
-      let bestRatio = -1;
-      for (const id of sectionIds) {
-        const ratio = ratios.get(id) ?? 0;
-        if (ratio > bestRatio) {
-          bestRatio = ratio;
-          bestId = id;
-        }
-      }
-      setCurrentSection(bestRatio > 0 ? bestId : 'about');
-    };
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          ratios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
-        }
-        pickActive();
-      },
-      { rootMargin: '-22% 0px -55% 0px', threshold: [0, 0.08, 0.2, 0.35] },
-    );
-
-    elements.forEach((el) => observer.observe(el));
-    pickActive();
-
-    return () => observer.disconnect();
   }, [heroDismissed]);
 
   const openIntro = useCallback(() => {
@@ -144,7 +90,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* Navigation appears as soon as the gate dissolves */}
-      <Navigation visible={heroDismissed} currentSection={currentSection} onLogoClick={openIntro} />
+      <Navigation visible={heroDismissed} onLogoClick={openIntro} />
 
       {/* Main Content - revealed after the gate */}
       <motion.main
@@ -187,7 +133,10 @@ export default function Home() {
         <ToolsGamesGrid visible={true} />
 
         {/* Footer */}
-        <footer className="relative z-10 px-4 pt-8 pb-10 sm:px-6 sm:pt-10 sm:pb-14">
+        <footer
+          data-nav-key="footer"
+          className="relative z-10 px-4 pt-8 pb-10 sm:px-6 sm:pt-10 sm:pb-14"
+        >
           <div className="max-w-7xl mx-auto">
             <div className="glass-panel p-6 sm:p-8">
               <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">

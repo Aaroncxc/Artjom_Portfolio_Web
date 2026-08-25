@@ -208,6 +208,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
   return (
     <div
       id="tools-games"
+      data-nav-key="tools-games"
       className={clsx(
         'relative px-4 sm:px-6',
         isExpanded ? 'pb-8 pt-8' : 'pb-3 pt-3',

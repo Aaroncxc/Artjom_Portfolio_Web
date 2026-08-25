@@ -280,6 +280,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
   return (
     <div
       id="projects"
+      data-nav-key="projects"
       className={clsx(
         'relative scroll-mt-20 px-4 pt-8 sm:scroll-mt-[5.5rem] sm:px-6 sm:pt-10 md:scroll-mt-24 md:pt-12',
         isExpanded ? 'min-h-screen pb-12' : 'pb-3',
