@@ -39,9 +39,9 @@ export const PRODUCTION_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
   headlineStairs: ['Head of', 'Production', 'at DADB'],
   subtitle: '2021–2025',
   bodyP1:
-    'Highlights from leading production at DADB: aligning stakeholders, then guiding 3D, cinematic, XR, and editorial work from brief through release—so narratives stay clear and delivery stays predictable.',
+    'As Head of Production, I led around 35 people across four sites in Germany, India, and Senegal. Six productions ran in parallel across editorial, 2D, 3D, cinematic, post-production, XR, and interactive Unreal content.',
   bodyP2:
-    'A core part of the role was guarding on-time releases while several course productions ran in parallel—sequencing priorities, dependencies, and handoffs so timelines stayed credible even when workloads stacked or briefs leaned into XR installs, booth loops, and motion-led modules. Internal tooling for pipeline health and KPIs helped keep that multi-track pressure legible for leadership; a few representative projects below.',
+    'I built the project-management function from the ground up and owned priorities, staffing, dependencies, risk, quality, and executive reporting. A live production dashboard gave teams, project managers, stakeholders, and leadership one reliable view of capacity, progress, and blockers; representative international projects are shown below.',
   eyebrow: 'Highlights',
   projects: HIGHLIGHT_PROJECTS,
   glow: 'amber',

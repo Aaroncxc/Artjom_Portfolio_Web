@@ -115,7 +115,7 @@ function getResponsivePreset(): ResponsivePresetExt {
 /** Role phrases around the hero name (see heroPrimaryText below). */
 const INTRO_ROLE_LAYERS = [
   {
-    text: 'Project Management',
+    text: 'Production Leadership',
     relativePosition: { x: 0.12, y: 0.16 },
     fontScale: 0.188,
     spacingMul: 2.88,
@@ -126,7 +126,7 @@ const INTRO_ROLE_LAYERS = [
     pointSizeMul: 0.86,
   },
   {
-    text: '3D Generalist',
+    text: 'Project Delivery',
     relativePosition: { x: 0.88, y: 0.15 },
     fontScale: 0.203,
     spacingMul: 2.62,
@@ -137,7 +137,7 @@ const INTRO_ROLE_LAYERS = [
     pointSizeMul: 0.88,
   },
   {
-    text: 'App Developer',
+    text: 'Creative Operations',
     relativePosition: { x: 0.1, y: 0.5 },
     fontScale: 0.196,
     spacingMul: 2.68,
@@ -148,7 +148,7 @@ const INTRO_ROLE_LAYERS = [
     pointSizeMul: 0.84,
   },
   {
-    text: 'Art Director',
+    text: 'Realtime & XR',
     relativePosition: { x: 0.91, y: 0.5 },
     fontScale: 0.202,
     spacingMul: 2.68,
@@ -159,7 +159,7 @@ const INTRO_ROLE_LAYERS = [
     pointSizeMul: 0.88,
   },
   {
-    text: 'Producer',
+    text: 'AI Operations',
     relativePosition: { x: 0.16, y: 0.82 },
     fontScale: 0.222,
     spacingMul: 2.78,
@@ -170,7 +170,7 @@ const INTRO_ROLE_LAYERS = [
     pointSizeMul: 0.9,
   },
   {
-    text: 'Architect',
+    text: 'Team Leadership',
     relativePosition: { x: 0.85, y: 0.82 },
     fontScale: 0.234,
     spacingMul: 2.85,

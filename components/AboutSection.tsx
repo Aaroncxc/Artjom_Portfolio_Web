@@ -13,13 +13,20 @@ import type { Project } from '@/lib/types';
 // ── Artjom profile ────────────────────────────────────────────
 
 const ROLES = [
-  'Project Manager',
-  '3D Generalist',
-  'App Developer',
-  'Art Director',
+  'Production Leadership',
+  'Project Delivery',
+  'Creative Operations',
+  'Realtime · 3D · XR',
 ];
 
-const BIO = `I merge architecture, 3D art, and code into immersive digital experiences. From product visualisations and AR/VR experiments to interactive web installations, I lead concept, design, and engineering end-to-end.`;
+const BIO = `I build the structures that help interdisciplinary teams deliver ambitious digital work reliably. Most recently, I led an international production organisation of around 35 people across four sites, steering six parallel productions spanning editorial, 2D, 3D, post-production, XR and Unreal.`;
+
+const LEADERSHIP_METRICS = [
+  { value: '35', label: 'people led' },
+  { value: '6', label: 'parallel productions' },
+  { value: '4', label: 'sites' },
+  { value: '3', label: 'continents' },
+] as const;
 
 /** Studio portrait. Own aspect so the photo is not stretched with the CV. */
 const PROFILE_PORTRAIT = {
@@ -36,13 +43,13 @@ interface Strength {
   highlight?: boolean;
 }
 const STRENGTHS: Strength[] = [
+  { name: 'Team & Delivery Leadership', highlight: true },
+  { name: 'Resource & Capacity Planning', highlight: true },
+  { name: 'Stakeholder & KPI Reporting', highlight: true },
+  { name: 'AI-enabled Operations', highlight: true },
   { name: 'Blender', icon: '/tool-icons/blender.png' },
   { name: 'Unreal Engine', icon: '/tool-icons/unreal-engine.png' },
-  { name: 'Archicad', icon: '/tool-icons/archicad.png' },
-  // Drop your licensed Figma logo at `/tool-icons/figma.png` and add `icon: '/tool-icons/figma.png'` here.
   { name: 'Figma' },
-  { name: 'Project Management', highlight: true },
-  // Slot reserved for Cursor — drop `/tool-icons/cursor.png` here when the logo is available.
 ];
 
 interface CvEntry {
@@ -76,7 +83,7 @@ const CV: CvEntry[] = [
     period: 'Jan 2024 — Oct 2025',
     location: 'Berlin · On-site',
     description:
-      'As Head of Production at DADB Germany, I oversaw digital education projects end-to-end — coordinating cross-functional teams (3D, post-production, editorial) and keeping course delivery on track for learners worldwide. In this role I also built an internal live-monitoring dashboard for course production so management and stakeholders could follow pipeline status, workloads, and KPIs in real time.',
+      'I led around 35 people across four sites in Germany, India and Senegal, delivering six productions in parallel across seven disciplines. I built the project-management function from the ground up and owned priorities, staffing, capacity, dependencies, risk, quality and executive reporting. I also designed a live production dashboard so teams, project managers and leadership shared one reliable view of workload, progress and blockers.',
     toolLink: {
       id: DADB_COURSE_OVERVIEW_TOOL_ID,
       label: 'Course Overview Tool',
@@ -255,12 +262,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
       className="pt-28 sm:pt-32 md:pt-36 pb-6 sm:pb-8 md:pb-9 px-5 sm:px-8"
     >
       <div className="max-w-7xl w-full mx-auto" data-nav-key="about">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.35, ease: 'easeOut' }}
-        >
+        <div>
           <GlassPanel
             variant="heavy"
             padding="none"
@@ -272,19 +274,31 @@ export function AboutSection({ visible }: AboutSectionProps) {
               <div className="flex flex-col gap-6">
                 <div>
                   <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
-                    About
+                    Production leadership
                   </span>
                   <h3 className="mb-4 text-3xl font-semibold leading-[1.05] tracking-tight text-mk-text sm:text-4xl lg:text-5xl brand-tight">
-                    Hi, I&rsquo;m Artjom.
+                    Senior Production &amp; Project Lead
                   </h3>
                   <p className="text-base leading-relaxed text-mk-text-secondary sm:text-lg">
                     {BIO}
                   </p>
                 </div>
 
+                <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  {LEADERSHIP_METRICS.map((metric) => (
+                    <div
+                      key={metric.label}
+                      className="rounded-2xl border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.64)] px-3 py-3 backdrop-blur-sm"
+                    >
+                      <dt className="text-2xl font-semibold tracking-tight text-mk-text">{metric.value}</dt>
+                      <dd className="mt-0.5 text-[11px] leading-tight text-mk-text-muted">{metric.label}</dd>
+                    </div>
+                  ))}
+                </dl>
+
                 <div>
                   <h4 className="mb-3 text-xs font-medium uppercase tracking-wider text-mk-text-muted">
-                    What I do
+                    Focus
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {ROLES.map((role) => (
@@ -484,7 +498,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
               </div>
             </div>
           </GlassPanel>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

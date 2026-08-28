@@ -143,7 +143,7 @@ export default function Home() {
                 <div>
                   <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Artjom Naninjan</h3>
                   <p className="text-mk-text-secondary text-sm leading-relaxed">
-                    Project Manager, 3D Generalist &amp; App Developer building immersive digital experiences at the intersection of art, design, and technology.
+                    Senior Production &amp; Project Lead for interdisciplinary digital, creative and technical teams.
                   </p>
                 </div>
                 <div>
