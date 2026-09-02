@@ -430,7 +430,7 @@
       "id": "24",
       "slug": "lexsolar-digital-learning-kit",
       "title": "Lexsolar Digital Learning Kit",
-      "description": "Together with **Lexsolar**, we developed a **digital prototype** based on their **physical solar learning kits**. The real kits and components were recreated in **Blender** and transformed into an **interactive browser-based learning experience**.",
+      "description": "Together with **Lexsolar**, we developed a **digital prototype** based on their **physical solar learning kits**. The real kits and components were recreated in **Blender** and transformed into an **interactive **Unity** learning experience**.",
       "date": "2025-05-15",
       "tags": [
         "video",
@@ -454,8 +454,8 @@
           "icon": "/tool-icons/blender.png"
         },
         {
-          "name": "Unreal Engine",
-          "icon": "/tool-icons/unreal-engine.png"
+          "name": "Unity",
+          "icon": "/tool-icons/unity.svg"
         }
       ],
       "tile3dBadge": true,
@@ -463,47 +463,47 @@
         "Partner coordination with Lexsolar",
         "1:1 digital recreation of physical kits",
         "Blender asset production",
-        "Interactive browser prototype",
+        "Unity learning game",
         "Solar energy learning experience"
       ],
-      "explanation": "For the **German Academy of Digital Education**, we collaborated with **Lexsolar** to explore how **physical solar learning kits** could be translated into a **digital environment**. The original kits — **solar modules**, **measuring devices**, **cables**, **plugs**, and **experiment components** — were recreated inhouse as detailed **3D assets in Blender**.\n\n**Goal:** digitally replicate Lexsolar's physical learning case and transfer its **experiment logic** into an **interactive application** so learners could use components virtually and understand core **solar-energy relationships** hands-on.\n\n**My role** focused on **partner communication**, **strategic preparation**, and **project coordination**. I visited Lexsolar in **Dresden** several times to understand the product, production environment, and **didactic logic** behind the kits. Together with Lexsolar, internal departments, experts, and the production team we defined an **implementation strategy** and kept partner, production, and internal teams aligned through delivery.\n\nThe physical cases and components were rebuilt as faithfully as possible in **Blender** — modules, meters, cabling, power supplies, connectors, experiment boards, and related hardware. From these assets we built a fully playable **browser prototype** where users explore and try basic **solar experiments** in a virtual learning space.\n\n**Outcome:** a completed **digital prototype** that makes the physical learning system's core experiments tangible online — bridging **haptic education hardware** and a **playable digital learning experience**.\n\n**Timeline:** January–May 2025 — prototype completed.",
+      "explanation": "For the **German Academy of Digital Education**, we collaborated with **Lexsolar** to explore how **physical solar learning kits** could be translated into a **digital environment**. The original kits — **solar modules**, **measuring devices**, **cables**, **plugs**, and **experiment components** — were recreated inhouse as detailed **3D assets in Blender**.\n\n**Goal:** digitally replicate Lexsolar's physical learning case and transfer its **experiment logic** into an **interactive application** so learners could use components virtually and understand core **solar-energy relationships** hands-on.\n\n**My role** focused on **partner communication**, **strategic preparation**, and **project coordination**. I visited Lexsolar in **Dresden** several times to understand the product, production environment, and **didactic logic** behind the kits. Together with Lexsolar, internal departments, experts, and the production team we defined an **implementation strategy** and kept partner, production, and internal teams aligned through delivery.\n\nThe physical cases and components were rebuilt as faithfully as possible in **Blender** — modules, meters, cabling, power supplies, connectors, experiment boards, and related hardware. From these assets we built a fully playable **Unity prototype** where users explore and try basic **solar experiments** in a virtual learning space.\n\n**Outcome:** a completed **digital prototype** that makes the physical learning system's core experiments tangible online — bridging **haptic education hardware** and a **playable digital learning experience**.\n\n**Timeline:** January–May 2025 — prototype completed.",
       "author": "AaronCxC",
       "gallery": [
         {
           "type": "image",
           "src": "/projects/lexsolar-digital-learning-kit/ingame-01.webp",
           "title": "In-game prototype — view 1",
-          "caption": "Screenshot from the interactive Lexsolar browser prototype showing the digital learning kit in use."
+          "caption": "Screenshot from the interactive Lexsolar Unity prototype showing the digital learning kit in use."
         },
         {
           "type": "image",
           "src": "/projects/lexsolar-digital-learning-kit/ingame-02.webp",
           "title": "In-game prototype — view 2",
-          "caption": "Screenshot from the interactive Lexsolar browser prototype showing the digital learning kit in use."
+          "caption": "Screenshot from the interactive Lexsolar Unity prototype showing the digital learning kit in use."
         },
         {
           "type": "image",
           "src": "/projects/lexsolar-digital-learning-kit/ingame-03.webp",
           "title": "In-game prototype — view 3",
-          "caption": "Screenshot from the interactive Lexsolar browser prototype showing the digital learning kit in use."
+          "caption": "Screenshot from the interactive Lexsolar Unity prototype showing the digital learning kit in use."
         },
         {
           "type": "image",
           "src": "/projects/lexsolar-digital-learning-kit/ingame-04.webp",
           "title": "In-game prototype — view 4",
-          "caption": "Screenshot from the interactive Lexsolar browser prototype showing the digital learning kit in use."
+          "caption": "Screenshot from the interactive Lexsolar Unity prototype showing the digital learning kit in use."
         },
         {
           "type": "image",
           "src": "/projects/lexsolar-digital-learning-kit/ingame-05.webp",
           "title": "In-game prototype — view 5",
-          "caption": "Screenshot from the interactive Lexsolar browser prototype showing the digital learning kit in use."
+          "caption": "Screenshot from the interactive Lexsolar Unity prototype showing the digital learning kit in use."
         },
         {
           "type": "image",
           "src": "/projects/lexsolar-digital-learning-kit/ingame-06.webp",
           "title": "In-game prototype — view 6",
-          "caption": "Screenshot from the interactive Lexsolar browser prototype showing the digital learning kit in use."
+          "caption": "Screenshot from the interactive Lexsolar Unity prototype showing the digital learning kit in use."
         },
         {
           "type": "video",
@@ -532,10 +532,10 @@
       "role": "Head of Production / 3D Lead",
       "client": "DADB × Lexsolar",
       "timeframe": "2024–2025",
-      "team": "Partnership production with Lexsolar + internal 3D / Unreal",
+      "team": "Partnership production with Lexsolar + internal 3D / Unity",
       "outcomes": [
         "Recreated Lexsolar’s physical solar kits as interactive 3D learning assets",
-        "Shipped a browser prototype for virtual solar experiments",
+        "Shipped a Unity prototype for virtual solar experiments",
         "Connected physical kit fidelity with digital exercise UX"
       ],
       "caseSections": [

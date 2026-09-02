@@ -28,7 +28,7 @@ const post = {
   slug,
   title: 'Lexsolar Digital Learning Kit',
   description:
-    'Together with Lexsolar, we developed a digital prototype based on their physical solar learning kits. The real kits and components were recreated in Blender and transformed into an interactive browser-based learning experience.',
+    'Together with Lexsolar, we developed a digital prototype based on their physical solar learning kits. The real kits and components were recreated in Blender and transformed into an interactive Unity learning experience.',
   date: '2025-05-15',
   tags: ['video', '3D', 'education', 'solar', 'prototype', 'partnership', 'project management'],
   type: 'video',
@@ -37,14 +37,14 @@ const post = {
   videoUrl: `/projects/${slug}/whole-exercise-gameplay.webm`,
   tools: [
     { name: 'Blender', icon: '/tool-icons/blender.png' },
-    { name: 'Unreal Engine', icon: '/tool-icons/unreal-engine.png' },
+    { name: 'Unity', icon: '/tool-icons/unity.svg' },
   ],
   tile3dBadge: true,
   highlights: [
     'Partner coordination with Lexsolar',
     '1:1 digital recreation of physical kits',
     'Blender asset production',
-    'Interactive browser prototype',
+    'Unity learning game',
     'Solar energy learning experience',
   ],
   explanation: `For the German Academy of Digital Education, we collaborated with Lexsolar to explore how physical solar learning kits could be translated into a digital environment. The original kits — solar modules, measuring devices, cables, plugs, and experiment components — were recreated inhouse as detailed 3D assets in Blender.
@@ -53,7 +53,7 @@ Goal: digitally replicate Lexsolar's physical learning case and transfer its exp
 
 My role focused on partner communication, strategic preparation, and project coordination. I visited Lexsolar in Dresden several times to understand the product, production environment, and didactic logic behind the kits. Together with Lexsolar, internal departments, experts, and the production team we defined an implementation strategy and kept partner, production, and internal teams aligned through delivery.
 
-The physical cases and components were rebuilt as faithfully as possible in Blender — modules, meters, cabling, power supplies, connectors, experiment boards, and related hardware. From these assets we built a fully playable browser prototype where users explore and try basic solar experiments in a virtual learning space.
+The physical cases and components were rebuilt as faithfully as possible in Blender — modules, meters, cabling, power supplies, connectors, experiment boards, and related hardware. From these assets we built a fully playable Unity prototype where users explore and try basic solar experiments in a virtual learning space.
 
 Outcome: a completed digital prototype that makes the physical learning system's core experiments tangible online — bridging haptic education hardware and a playable digital learning experience.
 

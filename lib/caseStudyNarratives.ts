@@ -116,7 +116,7 @@ Hub-table and solar-park sequences were authored as learning flows: clear POIs, 
   'lexsolar-digital-learning-kit': [
     {
       heading: 'What it is',
-      body: `A **digital prototype** of Lexsolar’s physical solar learning kits — modules, meters, cables, plugs, and experiment parts recreated in **Blender** and turned into an interactive browser / Unreal learning environment for DADB × Lexsolar.`,
+      body: `A **digital prototype** of Lexsolar’s physical solar learning kits — modules, meters, cables, plugs, and experiment parts recreated in **Blender** and turned into an interactive **Unity** learning environment for DADB × Lexsolar.`,
       layout: 'text-left',
       media: [img('/projects/lexsolar-digital-learning-kit/ingame-01.webp', 'In-game')],
     },
@@ -128,7 +128,7 @@ Hub-table and solar-park sequences were authored as learning flows: clear POIs, 
     },
     {
       heading: 'How it was made',
-      body: `I led production and 3D scope: kit recreation in Blender, Unreal workflow hooks, and a browser prototype for stakeholder alignment. The hard part was **matching physical kit logic** to digital exercise UX — cables, measurements, and steps that still feel like the real lab.`,
+      body: `I led production and 3D scope: kit recreation in Blender, then a Unity learning game with a programmer in the distributed team. The hard part was **matching physical kit logic** to digital exercise UX — cables, measurements, and steps that still feel like the real lab.`,
       layout: 'text-left',
       media: [img('/projects/lexsolar-digital-learning-kit/ingame-05.webp', 'Kit in scene')],
     },

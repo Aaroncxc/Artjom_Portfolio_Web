@@ -75,10 +75,10 @@ export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
     year: '2025',
     category: 'Education · XR prototype',
     description:
-      'Digital twin of Lexsolar’s physical solar learning cases — Blender assets, UE workflow hooks, and a browser prototype aligning stakeholders on how hands-on labs could scale digitally.',
+      'Digital twin of Lexsolar’s physical solar learning cases — Blender assets and a Unity learning prototype aligning stakeholders on how hands-on labs could scale digitally.',
     role:
       'Production lead from partner workshops through asset scope, prototyping milestones, and cross-team delivery with editorial and SMEs.',
-    tools: ['Blender', 'Unreal Engine'],
+    tools: ['Blender', 'Unity'],
     thumb: '/projects/lexsolar-digital-learning-kit/ingame-05.webp',
     gallery: [
       '/projects/lexsolar-digital-learning-kit/ingame-01.webp',
@@ -86,7 +86,7 @@ export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
       '/projects/lexsolar-digital-learning-kit/ingame-06.webp',
     ],
     projectSlug: 'lexsolar-digital-learning-kit',
-    tileTags: ['Blender', 'Unreal Engine'],
+    tileTags: ['Blender', 'Unity'],
     tileBadges: ['3D', 'Learning Experience'],
     span: 'normal',
   },
