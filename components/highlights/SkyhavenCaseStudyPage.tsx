@@ -8,6 +8,7 @@ import { buildHireMailto, CONTACT_MAILTO } from '@/lib/contact';
 import { RichText } from '@/lib/formatRichText';
 import { formatProjectMonthYear, normalizeMediaKey, resolveCaseSections } from '@/lib/caseStudy';
 import LightLeaksBackground from '@/components/LightLeaksBackground';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { SkyhavenHighlightDetail } from '@/components/highlights/SkyhavenHighlightDetail';
 import { SkyhavenWebsitePanel } from '@/components/highlights/SkyhavenWebsitePanel';
 import { highlightById } from '@/lib/highlightProjects';
@@ -68,11 +69,11 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
     <>
       <LightLeaksBackground />
 
-      <header className="sticky top-0 z-40 border-b border-black/[0.06] bg-white/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-[color:var(--surface-border)] bg-[color:var(--glass-bg-heavy)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <Link
             href="/?skipHero=1#highlights-skyhaven"
-            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-full border border-black/[0.08] bg-white/90 px-3 py-1.5 text-xs font-semibold text-mk-text-secondary transition-colors hover:text-mk-text"
+            className="theme-card inline-flex min-h-[40px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold text-mk-text-secondary transition-colors hover:text-mk-text"
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
@@ -82,12 +83,15 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
           <Link href="/" className="brand-tight text-sm font-semibold tracking-tight text-mk-text">
             Artjom Naninjan
           </Link>
-          <a
-            href={hireHref}
-            className="inline-flex min-h-[40px] items-center rounded-full bg-system-blue px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[#0077ED]"
-          >
-            Hire Me
-          </a>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <a
+              href={hireHref}
+              className="btn-solid inline-flex min-h-[40px] items-center rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors hover:bg-accent-cyan hover:text-white"
+            >
+              Hire Me
+            </a>
+          </div>
         </div>
       </header>
 
@@ -96,7 +100,7 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
 
         <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 sm:pt-14">
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] lg:items-start lg:gap-10">
-            <div className="rounded-[20px] border border-black/[0.08] bg-white/85 p-5 shadow-[0_4px_24px_rgba(0,0,0,0.04)] sm:p-7 lg:sticky lg:top-20">
+            <div className="theme-card-strong rounded-[20px] border p-5 shadow-[var(--glass-shadow)] sm:p-7 lg:sticky lg:top-20">
               <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-mk-text-muted">
                 Project facts
               </p>
@@ -186,7 +190,7 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
         ) : null}
 
         <section className="mx-auto mt-20 max-w-7xl px-4 sm:mt-28 sm:px-6">
-          <div className="rounded-[24px] border border-black/[0.08] bg-white/90 p-6 text-center shadow-[0_8px_32px_rgba(0,0,0,0.05)] sm:p-10">
+          <div className="theme-card-strong rounded-[24px] border p-6 text-center shadow-[var(--glass-shadow)] sm:p-10">
             <h2 className="brand-tight text-2xl font-semibold tracking-tight text-mk-text sm:text-3xl">
               Want to work together?
             </h2>
@@ -208,7 +212,7 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
                 ))}
               <a
                 href={hireHref}
-                className="inline-flex min-h-[48px] items-center rounded-full bg-system-blue px-6 text-sm font-semibold text-white hover:bg-[#0077ED]"
+                className="btn-solid inline-flex min-h-[48px] items-center rounded-full px-6 text-sm font-semibold hover:bg-accent-cyan hover:text-white"
               >
                 Hire Me
               </a>
@@ -226,7 +230,7 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
               <Link
                 href={`/project/${prev.slug}`}
                 className={clsx(
-                  'group rounded-2xl border border-black/[0.08] bg-white/80 p-5 transition-colors hover:bg-white',
+                  'theme-card group rounded-2xl border p-5 transition-colors hover:bg-[color:var(--surface-card-strong)]',
                   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue',
                 )}
               >
@@ -244,7 +248,7 @@ export function SkyhavenCaseStudyPage({ project, prev, next }: SkyhavenCaseStudy
               <Link
                 href={`/project/${next.slug}`}
                 className={clsx(
-                  'group rounded-2xl border border-black/[0.08] bg-white/80 p-5 text-right transition-colors hover:bg-white',
+                  'theme-card group rounded-2xl border p-5 text-right transition-colors hover:bg-[color:var(--surface-card-strong)]',
                   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue',
                 )}
               >

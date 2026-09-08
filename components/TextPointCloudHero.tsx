@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useThemeOptional } from '@/components/ThemeProvider';
 
 interface TextPointCloudHeroProps {
   onReady?: () => void;
@@ -392,6 +393,10 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
     ...sizePreset
   } = presetOverrides;
 
+  const themeCtx = useThemeOptional();
+  const heroInk =
+    themeCtx?.ready && themeCtx.theme === 'dark' ? '#F2F4F8' : '#1C1C1C';
+
   const heroPrimaryText = stackedHeroName ? 'Artjom\nNaninjan' : 'Artjom Naninjan';
   const mobileHero = stackedHeroName || presetOverrides.fontSize < 72;
   const roleLayers = mobileHero ? INTRO_ROLE_LAYERS.slice(0, 3) : INTRO_ROLE_LAYERS;
@@ -403,7 +408,7 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
     weight: 700,
     spacing: mobileHero ? 11 : 2,
     maxDpr: mobileHero ? 1.25 : 2,
-    color: '#1C1C1C',
+    color: heroInk,
     bg: 'transparent',
     centerMode: 'center',
     drag: 2,

@@ -55,7 +55,7 @@ export function ProjectSlideDefault({ project, isActive }: ProjectSlideDefaultPr
                     </div>
                     <button
                       onClick={toggleAudio}
-                      className="w-16 h-16 rounded-full bg-[rgba(28,28,28,0.08)] border border-[rgba(28,28,28,0.12)] flex items-center justify-center hover:bg-[rgba(28,28,28,0.12)] transition-colors text-[#1C1C1C]"
+                      className="flex h-16 w-16 items-center justify-center rounded-full border border-[color:var(--surface-border)] bg-[color:var(--surface-card)] text-mk-text transition-colors hover:bg-[color:var(--surface-card-strong)]"
                     >
                       {isPlaying ? (
                         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">

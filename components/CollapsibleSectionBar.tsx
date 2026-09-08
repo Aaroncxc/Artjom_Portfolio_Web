@@ -49,9 +49,9 @@ export function CollapsibleSectionBar({
       aria-controls={ariaControls}
       aria-label={isExpanded ? collapseLabel : expandLabel}
       className={clsx(
-        'group w-full rounded-2xl border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.85)] text-left shadow-[0_8px_32px_rgba(28,28,28,0.08)] backdrop-blur-[40px]',
+        'glass-panel-heavy group w-full rounded-2xl text-left',
         'cursor-pointer transition-[box-shadow,border-color,background-color] duration-300',
-        'hover:bg-[rgba(255,255,255,0.92)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue',
+        'hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-system-blue',
         accentRing[accent],
       )}
     >
@@ -76,7 +76,7 @@ export function CollapsibleSectionBar({
           </span>
         </div>
 
-        <div className="min-w-0 flex-1 sm:border-l sm:border-black/[0.06] sm:pl-6 lg:pl-8">
+        <div className="min-w-0 flex-1 sm:border-l sm:border-[color:var(--surface-border)] sm:pl-6 lg:pl-8">
           <p className="text-[0.9375rem] leading-relaxed text-mk-text-secondary sm:text-[15px] lg:text-base">
             <RichText>{description}</RichText>
           </p>
@@ -92,10 +92,10 @@ export function CollapsibleSectionBar({
           </span>
           <span
             className={clsx(
-              'flex h-10 w-10 items-center justify-center rounded-full border border-black/[0.08] bg-white/80 shadow-sm transition-transform duration-300',
+              'theme-card flex h-10 w-10 items-center justify-center rounded-full border shadow-sm transition-transform duration-300',
               isExpanded && 'rotate-180',
               accent === 'purple'
-                ? 'group-hover:border-violet-400/40 group-hover:text-violet-600'
+                ? 'group-hover:border-violet-400/40 group-hover:text-accent-violet'
                 : 'group-hover:border-accent-cyan/40 group-hover:text-accent-cyan',
             )}
           >

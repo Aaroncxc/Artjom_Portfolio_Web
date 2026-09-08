@@ -253,7 +253,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                     className={`min-h-[44px] rounded-full px-3 py-2.5 text-xs font-medium transition-all duration-200 sm:px-4 sm:py-2 sm:text-sm ${
                       selectedType === filter.value
                         ? 'border border-[rgba(99,102,241,0.5)] bg-[rgba(99,102,241,0.15)] text-[rgb(99,102,241)]'
-                        : 'border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.6)] text-mk-text-secondary hover:bg-[rgba(255,255,255,0.9)] hover:text-mk-text'
+                        : 'theme-card border text-mk-text-secondary hover:bg-[color:var(--surface-card-strong)] hover:text-mk-text'
                     }`}
                   >
                     {filter.label}
@@ -363,7 +363,7 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
                           </div>
                         </div>
 
-                        <div className="absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,255,255,0.9)] text-mk-text shadow-lg backdrop-blur-sm md:h-10 md:w-10">
+                        <div className="theme-card absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full border text-mk-text shadow-lg backdrop-blur-sm md:h-10 md:w-10">
                           {typeIcons[item.type]}
                         </div>
 

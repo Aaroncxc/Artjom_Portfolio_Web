@@ -327,7 +327,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                     className={`min-h-[44px] rounded-full px-3 py-2.5 text-xs font-medium transition-all duration-200 sm:px-4 sm:py-2 sm:text-sm ${
                       selectedType === filter.value
                         ? 'border border-accent-cyan bg-[rgba(20,184,166,0.15)] text-accent-cyan'
-                        : 'border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.6)] text-mk-text-secondary hover:bg-[rgba(255,255,255,0.9)] hover:text-mk-text'
+                        : 'theme-card border text-mk-text-secondary hover:bg-[color:var(--surface-card-strong)] hover:text-mk-text'
                     }`}
                   >
                     {filter.label}
@@ -341,8 +341,8 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                     onClick={() => handleTagChange('all')}
                     className={`min-h-[40px] rounded-full px-3 py-2 text-xs font-medium transition-all duration-200 sm:text-sm ${
                       selectedTag === 'all'
-                        ? 'border border-mk-text bg-mk-text text-white'
-                        : 'border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.6)] text-mk-text-secondary hover:bg-[rgba(255,255,255,0.9)]'
+                        ? 'btn-solid border border-transparent'
+                        : 'theme-card border text-mk-text-secondary hover:bg-[color:var(--surface-card-strong)]'
                     }`}
                   >
                     All topics
@@ -355,7 +355,7 @@ export function ProjectsGrid({ visible }: ProjectsGridProps) {
                       className={`min-h-[40px] rounded-full px-3 py-2 text-xs font-medium transition-all duration-200 sm:text-sm ${
                         selectedTag.toLowerCase() === tag.toLowerCase()
                           ? 'border border-accent-cyan bg-[rgba(20,184,166,0.15)] text-accent-cyan'
-                          : 'border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.6)] text-mk-text-secondary hover:bg-[rgba(255,255,255,0.9)]'
+                          : 'theme-card border text-mk-text-secondary hover:bg-[color:var(--surface-card-strong)]'
                       }`}
                     >
                       {tag}

@@ -9,22 +9,70 @@
   --color-bg-3: #ECEBE4;
   --color-surface: #DADDD8;
   --color-dark: #1C1C1C;
-  
-  /* Glass (dark on light) */
-  --glass-bg: rgba(28, 28, 28, 0.04);
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-bg-heavy: rgba(255, 255, 255, 0.85);
+  --glass-bg-subtle: rgba(255, 255, 255, 0.5);
   --glass-border: rgba(28, 28, 28, 0.08);
-  --glass-highlight: rgba(28, 28, 28, 0.12);
-  
-  /* Text (dark) */
+  --glass-shadow: 0 8px 32px rgba(28, 28, 28, 0.08);
+
+  /* Cards / chips */
+  --surface-card: rgba(255, 255, 255, 0.7);
+  --surface-card-strong: rgba(255, 255, 255, 0.85);
+  --surface-border: rgba(28, 28, 28, 0.08);
+  --surface-chip: rgba(255, 255, 255, 0.9);
+
+  /* Text */
   --text-primary: rgba(28, 28, 28, 0.92);
   --text-secondary: rgba(28, 28, 28, 0.65);
   --text-muted: rgba(28, 28, 28, 0.40);
-  
+
+  /* Solid CTA */
+  --btn-solid-bg: #1C1C1C;
+  --btn-solid-fg: #ffffff;
+
   /* Accents */
   --accent-cyan: #14B8A6;
   --accent-violet: #8B5CF6;
   --accent-coral: #F43F5E;
   --brand-letter-spacing: -0.1em;
+
+  color-scheme: light;
+}
+
+html.dark {
+  /* Atelier Noire — warm ink, paper text, metal accent in ambient only */
+  --color-bg-1: #0c0b0a;
+  --color-bg-2: #141210;
+  --color-bg-3: #1c1916;
+  --color-surface: #26221e;
+  --color-dark: #f2ede8;
+
+  --glass-bg: rgba(18, 16, 14, 0.72);
+  --glass-bg-heavy: rgba(18, 16, 14, 0.85);
+  --glass-bg-subtle: rgba(18, 16, 14, 0.55);
+  --glass-border: rgba(242, 237, 232, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  --surface-card: rgba(242, 237, 232, 0.06);
+  --surface-card-strong: rgba(242, 237, 232, 0.09);
+  --surface-border: rgba(242, 237, 232, 0.1);
+  --surface-chip: rgba(242, 237, 232, 0.08);
+
+  --text-primary: rgba(255, 255, 255, 0.96);
+  --text-secondary: rgba(255, 255, 255, 0.78);
+  --text-muted: rgba(255, 255, 255, 0.55);
+
+  --btn-solid-bg: #f2ede8;
+  --btn-solid-fg: #0c0b0a;
+
+  /* Cyan stays UI-only (kickers, links, progress) */
+  --accent-cyan: #2dd4bf;
+  --accent-violet: #a78bfa;
+  --accent-coral: #fb7185;
+
+  color-scheme: dark;
 }
 
 * {
@@ -76,6 +124,109 @@ h5,
 h6,
 .brand-tight {
   letter-spacing: var(--brand-letter-spacing);
+}
+
+.intro-ink {
+  color: var(--text-primary) !important;
+}
+
+.intro-ink-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.intro-ink-muted {
+  color: var(--text-muted) !important;
+}
+
+/*
+ * LinkedIn carousel export (1080×1350). In-feed swipe is ~390px wide,
+ * so sm:/lg: utilities at that canvas width win over [[data-export=1]_&]
+ * variants. Force feed-readable type here.
+ */
+[data-export='1'] [data-intro-shell] {
+  padding: 52px 44px 48px !important;
+  max-width: none !important;
+}
+
+[data-export='1'] [data-intro-shell] header > div:first-child {
+  height: auto !important;
+  min-height: 2rem;
+}
+
+[data-export='1'] [data-intro-shell] header > div:last-child {
+  min-height: 0 !important;
+}
+
+[data-export='1'] [data-intro-shell] header span {
+  font-size: 28px !important;
+  letter-spacing: 0.16em !important;
+}
+
+[data-export='1'] [data-intro-shell] h1 {
+  font-size: 64px !important;
+  line-height: 1.06 !important;
+}
+
+[data-export='1'] [data-intro-shell] p.intro-ink-secondary {
+  margin-top: 1.25rem !important;
+  max-width: none !important;
+  font-size: 36px !important;
+  line-height: 1.28 !important;
+}
+
+[data-export='1'] [data-intro-shell] ul.mt-3 > li {
+  font-size: 34px !important;
+  line-height: 1.22 !important;
+}
+
+[data-export='1'] [data-intro-shell] ul.mt-3 {
+  margin-top: 1.5rem !important;
+}
+
+[data-export='1'] [data-intro-shell] ul.mt-3 > li > span:first-child {
+  width: 14px !important;
+  height: 14px !important;
+  margin-top: 0.7rem !important;
+}
+
+[data-export='1'] [data-intro-shell] .theme-card.intro-ink-secondary,
+[data-export='1'] [data-intro-shell] ul.flex-wrap li span,
+[data-export='1'] [data-intro-shell] ul.flex-wrap li button {
+  font-size: 28px !important;
+}
+
+[data-export='1'] [data-intro-shell] h3.intro-ink-muted {
+  font-size: 24px !important;
+  margin-bottom: 1.1rem !important;
+}
+
+/*
+ * Tailwind sometimes emits baked light-mode rgba for these tokens.
+ * Keep them on CSS variables so html.dark can flip to white text.
+ */
+.text-mk-text {
+  color: var(--text-primary) !important;
+}
+.text-mk-text-secondary {
+  color: var(--text-secondary) !important;
+}
+.text-mk-text-muted {
+  color: var(--text-muted) !important;
+}
+.hover\:text-mk-text:hover {
+  color: var(--text-primary) !important;
+}
+.hover\:text-mk-text-secondary:hover {
+  color: var(--text-secondary) !important;
+}
+.bg-mk-bg-1 {
+  background-color: var(--color-bg-1) !important;
+}
+.bg-mk-bg-2 {
+  background-color: var(--color-bg-2) !important;
+}
+.bg-mk-bg-3 {
+  background-color: var(--color-bg-3) !important;
 }
 
 /* Hero scroll lock — also locks <html> to prevent rubber-banding / pull-to-refresh on iOS */
@@ -154,40 +305,63 @@ a:focus-visible {
 }
 
 @layer components {
-  /* Glass panel base - light theme */
   .glass-panel {
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--glass-bg);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(28, 28, 28, 0.06);
+    border: 1px solid var(--glass-border);
     border-radius: 24px;
-    box-shadow: 0 4px 24px rgba(28, 28, 28, 0.05);
+    box-shadow: var(--glass-shadow);
   }
-  
+
   .glass-panel-heavy {
-    background: rgba(255, 255, 255, 0.85);
+    background: var(--glass-bg-heavy);
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(28, 28, 28, 0.08);
+    border: 1px solid var(--glass-border);
     border-radius: 24px;
-    box-shadow: 0 8px 32px rgba(28, 28, 28, 0.08);
+    box-shadow: var(--glass-shadow);
+  }
+
+  .theme-card {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+  }
+
+  .theme-card-strong {
+    background: var(--surface-card-strong);
+    border: 1px solid var(--surface-border);
+  }
+
+  .theme-chip {
+    background: var(--surface-chip);
+    border: 1px solid var(--surface-border);
+  }
+
+  .btn-solid {
+    background: var(--btn-solid-bg);
+    color: var(--btn-solid-fg);
+  }
+
+  .btn-solid:hover {
+    background: var(--accent-cyan);
+    color: #ffffff;
   }
   
-  /* Glass button - light theme */
+  /* Glass button */
   .glass-button {
     @apply px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-175;
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(28, 28, 28, 0.08);
+    background: var(--surface-card-strong);
+    border: 1px solid var(--surface-border);
     color: var(--text-secondary);
-    box-shadow: 0 2px 8px rgba(28, 28, 28, 0.04);
+    box-shadow: var(--glass-shadow);
     min-height: 44px;
   }
   
   .glass-button:hover {
-    background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(28, 28, 28, 0.12);
+    background: var(--surface-chip);
+    border-color: var(--accent-cyan);
     color: var(--text-primary);
-    box-shadow: 0 4px 12px rgba(28, 28, 28, 0.08);
   }
   
   .glass-button.active {
@@ -329,13 +503,21 @@ audio {
 
 /* ===== LIGHT LEAKS BACKGROUND ===== */
 
-/* Pearl base: super subtil, high-end */
+/* Pearl base: Atelier Noire — warm paper / ink, no neon kit */
 .pearl-base {
   background:
-    radial-gradient(1200px 800px at 20% 10%, rgba(255,255,255,0.95), rgba(255,255,255,0) 60%),
-    radial-gradient(900px 700px at 80% 20%, rgba(244,248,255,0.85), rgba(255,255,255,0) 58%),
-    radial-gradient(900px 800px at 50% 85%, rgba(250,242,255,0.55), rgba(255,255,255,0) 60%),
-    linear-gradient(180deg, #F6F7FB 0%, #F3F5FA 50%, #F6F7FB 100%);
+    radial-gradient(1200px 800px at 20% 10%, rgba(255, 252, 248, 0.95), rgba(255, 255, 255, 0) 60%),
+    radial-gradient(900px 700px at 80% 20%, rgba(248, 242, 234, 0.8), rgba(255, 255, 255, 0) 58%),
+    radial-gradient(900px 800px at 50% 85%, rgba(236, 228, 216, 0.45), rgba(255, 255, 255, 0) 60%),
+    linear-gradient(180deg, #f7f4ef 0%, #f3efe8 50%, #f7f4ef 100%);
+}
+
+html.dark .pearl-base {
+  background:
+    radial-gradient(1000px 700px at 22% 12%, rgba(242, 237, 232, 0.06), transparent 55%),
+    radial-gradient(900px 700px at 78% 22%, rgba(196, 165, 116, 0.05), transparent 58%),
+    radial-gradient(800px 600px at 50% 92%, rgba(184, 149, 106, 0.07), transparent 60%),
+    linear-gradient(180deg, #0c0b0a 0%, #100e0c 50%, #0c0b0a 100%);
 }
 
 /* Light leak blob base */
@@ -347,15 +529,20 @@ audio {
   transform: translate3d(0,0,0);
 }
 
-/* Three different color accents (very restrained) */
+html.dark .leaks-blob {
+  opacity: 0.55;
+  mix-blend-mode: screen;
+}
+
+/* Warm cream / champagne leaks — no teal / violet / coral */
 .leaks-a {
-  background: radial-gradient(circle at 30% 30%, rgba(79,209,197,0.45), rgba(79,209,197,0) 60%);
+  background: radial-gradient(circle at 30% 30%, rgba(236, 228, 216, 0.5), rgba(236, 228, 216, 0) 60%);
 }
 .leaks-b {
-  background: radial-gradient(circle at 40% 40%, rgba(167,139,250,0.38), rgba(167,139,250,0) 62%);
+  background: radial-gradient(circle at 40% 40%, rgba(196, 165, 116, 0.28), rgba(196, 165, 116, 0) 62%);
 }
 .leaks-c {
-  background: radial-gradient(circle at 35% 35%, rgba(251,113,133,0.26), rgba(251,113,133,0) 62%);
+  background: radial-gradient(circle at 35% 35%, rgba(242, 237, 232, 0.32), rgba(242, 237, 232, 0) 62%);
 }
 
 /* Gentle animation (Apple-like slow drift) */
@@ -386,16 +573,178 @@ audio {
   50%     { transform: translate(25px,-30px) scale(1.04); }
 }
 
+/* ===== LAVA LAMP (bottom-up ambient glow) ===== */
+
+.lava-layer {
+  pointer-events: none;
+  overflow: hidden;
+  mask-image: linear-gradient(to top, #000 0%, #000 45%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 45%, transparent 100%);
+}
+
+.tech-net-layer {
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.26;
+  mask-image: linear-gradient(to top, #000 8%, #000 42%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, #000 8%, #000 42%, transparent 100%);
+}
+
+.tech-net-layer canvas,
+.tech-net-layer svg {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+html.dark .tech-net-layer {
+  opacity: 0.58;
+  mix-blend-mode: screen;
+}
+
+.lava-rise {
+  background: linear-gradient(
+    to top,
+    rgba(196, 165, 116, 0.06) 0%,
+    rgba(236, 228, 216, 0.04) 35%,
+    transparent 75%
+  );
+  opacity: 0.5;
+}
+
+html.dark .lava-rise {
+  background: linear-gradient(
+    to top,
+    rgba(184, 149, 106, 0.22) 0%,
+    rgba(196, 165, 116, 0.12) 28%,
+    rgba(242, 237, 232, 0.05) 52%,
+    transparent 80%
+  );
+  opacity: 1;
+}
+
+.lava-orb {
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+html.dark .lava-orb {
+  opacity: 0.48;
+  mix-blend-mode: screen;
+  filter: blur(72px);
+}
+
+.lava-orb-a {
+  background: radial-gradient(circle at 40% 55%, rgba(196, 165, 116, 0.42), transparent 62%);
+}
+.lava-orb-b {
+  background: radial-gradient(circle at 50% 45%, rgba(242, 237, 232, 0.28), transparent 64%);
+}
+.lava-orb-c {
+  background: radial-gradient(circle at 45% 50%, rgba(184, 149, 106, 0.36), transparent 62%);
+}
+
+.leaks-animate .lava-orb-a { animation: lavaDriftA 22s ease-in-out infinite; }
+.leaks-animate .lava-orb-b { animation: lavaDriftB 28s ease-in-out infinite; }
+.leaks-animate .lava-orb-c { animation: lavaDriftC 19s ease-in-out infinite; }
+
+@media (max-width: 767px) {
+  .leaks-animate .lava-orb-a,
+  .leaks-animate .lava-orb-b,
+  .leaks-animate .lava-orb-c {
+    animation: none;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  .lava-orb {
+    opacity: 0.16;
+    filter: blur(70px);
+  }
+
+  html.dark .lava-orb {
+    opacity: 0.38;
+  }
+}
+
+@keyframes lavaDriftA {
+  0%, 100% { transform: translate3d(0, 8%, 0) scale(1); }
+  33%      { transform: translate3d(12%, -10%, 0) scale(1.12); }
+  66%      { transform: translate3d(-8%, -4%, 0) scale(0.94); }
+}
+@keyframes lavaDriftB {
+  0%, 100% { transform: translate3d(0, 4%, 0) scale(1.05); }
+  40%      { transform: translate3d(-14%, -14%, 0) scale(1.18); }
+  70%      { transform: translate3d(10%, -6%, 0) scale(0.92); }
+}
+@keyframes lavaDriftC {
+  0%, 100% { transform: translate3d(0, 10%, 0) scale(0.98); }
+  50%      { transform: translate3d(-10%, -16%, 0) scale(1.14); }
+}
+
 /* Soft vignette to keep focus on content */
 .leaks-vignette {
   background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0) 55%, rgba(15,23,42,0.06) 100%);
   pointer-events: none;
 }
 
+html.dark .leaks-vignette {
+  background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 62%, rgba(0,0,0,0.22) 100%);
+}
+
 /* About section marquee */
 @keyframes marquee-scroll {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+@keyframes intro-preview-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.intro-preview-in {
+  animation: intro-preview-in 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: top center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-preview-in {
+    animation: none;
+  }
+}
+
+/* Partner logo marquee (home) */
+@keyframes client-logo-marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.client-logo-track-forward {
+  animation: client-logo-marquee 55s linear infinite;
+}
+
+.client-logo-track-reverse {
+  animation: client-logo-marquee 65s linear infinite reverse;
+}
+
+.client-logo-track-paused {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .client-logo-track-forward,
+  .client-logo-track-reverse {
+    animation: none;
+  }
 }
 
 /* Subtle scrollbar for project modal copy regions */

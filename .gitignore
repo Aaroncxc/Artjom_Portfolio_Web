@@ -46,3 +46,9 @@ __MACOSX
 .tslintcache
 documents/.portfolio-pdf-cache
 documents/.generate-portfolio-pdf-tmp.cjs
+
+# Intro carousel export artefacts
+/exports/
+# Local Next.js dev output
+/.next-dev
+

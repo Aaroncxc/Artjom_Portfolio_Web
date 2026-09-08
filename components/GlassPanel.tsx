@@ -25,9 +25,10 @@ export function GlassPanel({
   onClick,
 }: GlassPanelProps) {
   const baseStyles = {
-    default: 'bg-[rgba(255,255,255,0.7)] backdrop-blur-[24px] border border-[rgba(28,28,28,0.06)] shadow-[0_4px_24px_rgba(28,28,28,0.05)]',
-    heavy: 'bg-[rgba(255,255,255,0.85)] backdrop-blur-[40px] border border-[rgba(28,28,28,0.08)] shadow-[0_8px_32px_rgba(28,28,28,0.08)]',
-    subtle: 'bg-[rgba(255,255,255,0.5)] backdrop-blur-[16px] border border-[rgba(28,28,28,0.04)] shadow-[0_2px_12px_rgba(28,28,28,0.03)]',
+    default: 'glass-panel',
+    heavy: 'glass-panel-heavy',
+    subtle:
+      'bg-[var(--glass-bg-subtle)] backdrop-blur-[16px] border border-[color:var(--glass-border)] shadow-[var(--glass-shadow)]',
   };
 
   const paddingStyles = {
@@ -46,7 +47,7 @@ export function GlassPanel({
   };
 
   const hoverStyles = hover
-    ? 'transition-all duration-250 hover:bg-[rgba(255,255,255,0.9)] hover:border-[rgba(28,28,28,0.10)] hover:shadow-[0_8px_32px_rgba(28,28,28,0.08)] cursor-pointer'
+    ? 'transition-all duration-250 hover:brightness-105 cursor-pointer'
     : '';
 
   return (
@@ -56,7 +57,7 @@ export function GlassPanel({
         paddingStyles[padding],
         roundedStyles[rounded],
         hoverStyles,
-        className
+        className,
       )}
       onClick={onClick}
     >

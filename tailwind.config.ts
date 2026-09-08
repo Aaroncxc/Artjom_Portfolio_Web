@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,29 +11,28 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // White Elegance palette
-        'mk-bg-1': '#FAFAFF',      // Main background (almost white with blue tint)
-        'mk-bg-2': '#EEF0F2',      // Secondary background
-        'mk-bg-3': '#ECEBE4',      // Tertiary/cream
-        'mk-surface': '#DADDD8',   // Surface/cards
-        'mk-dark': '#1C1C1C',      // Dark text/accents
-        
-        // Glass surfaces (inverted for light theme)
-        'glass': {
-          'bg': 'rgba(28, 28, 28, 0.06)',
-          'border': 'rgba(28, 28, 28, 0.10)',
-          'highlight': 'rgba(28, 28, 28, 0.14)',
+        // Theme tokens — values live in CSS variables (:root / html.dark)
+        'mk-bg-1': 'var(--color-bg-1)',
+        'mk-bg-2': 'var(--color-bg-2)',
+        'mk-bg-3': 'var(--color-bg-3)',
+        'mk-surface': 'var(--color-surface)',
+        'mk-dark': 'var(--color-dark)',
+
+        glass: {
+          bg: 'var(--glass-bg)',
+          border: 'var(--glass-border)',
+          highlight: 'var(--glass-border)',
         },
-        
-        // Text (dark on light)
-        'mk-text': 'rgba(28, 28, 28, 0.92)',
-        'mk-text-secondary': 'rgba(28, 28, 28, 0.65)',
-        'mk-text-muted': 'rgba(28, 28, 28, 0.40)',
-        
-        // Accents (slightly darker for light theme visibility)
-        'accent-cyan': '#14B8A6',
-        'accent-violet': '#8B5CF6',
-        'accent-coral': '#F43F5E',
+
+        // Use color-mix so utilities stay variable-based (not baked to :root rgba).
+        'mk-text': 'color-mix(in srgb, var(--text-primary) 100%, transparent)',
+        'mk-text-secondary':
+          'color-mix(in srgb, var(--text-secondary) 100%, transparent)',
+        'mk-text-muted': 'color-mix(in srgb, var(--text-muted) 100%, transparent)',
+
+        'accent-cyan': 'var(--accent-cyan)',
+        'accent-violet': 'var(--accent-violet)',
+        'accent-coral': 'var(--accent-coral)',
         // Apple-style semantic tokens (HIG-aligned; use for sober system UI chrome)
         'system-blue': '#007AFF',
         'system-blue-pressed': '#0062CC',

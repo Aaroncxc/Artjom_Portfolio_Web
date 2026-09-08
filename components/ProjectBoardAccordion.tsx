@@ -70,9 +70,9 @@ export function ProjectBoardAccordion({ slug }: ProjectBoardAccordionProps) {
       <button
         type="button"
         onClick={handleToggle}
-        className="w-full px-5 py-4 bg-[rgba(255,255,255,0.7)] rounded-2xl border border-[rgba(28,28,28,0.08)] cursor-pointer flex items-center justify-between shadow-[0_2px_12px_rgba(28,28,28,0.04)] hover:bg-[rgba(255,255,255,0.85)] transition-colors"
+        className="theme-card flex w-full cursor-pointer items-center justify-between rounded-2xl border px-5 py-4 shadow-[var(--glass-shadow)] transition-colors hover:bg-[color:var(--surface-card-strong)]"
       >
-        <span className="text-[#1C1C1C] font-medium flex items-center gap-2">
+        <span className="flex items-center gap-2 font-medium text-mk-text">
           <span>📌</span>
           Board / References
         </span>
@@ -81,10 +81,10 @@ export function ProjectBoardAccordion({ slug }: ProjectBoardAccordionProps) {
           <button
             type="button"
             onClick={handleEditClick}
-            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+            className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${
               isEditMode 
                 ? 'bg-accent-cyan text-white shadow-lg shadow-accent-cyan/30' 
-                : 'bg-[rgba(28,28,28,0.05)] text-[rgba(28,28,28,0.4)] hover:bg-[rgba(28,28,28,0.1)]'
+                : 'bg-[color:var(--surface-card)] text-mk-text-muted hover:bg-[color:var(--surface-card-strong)] hover:text-mk-text'
             }`}
             title={isEditMode ? 'Bearbeitung beenden' : 'Bearbeiten (PIN erforderlich)'}
           >
@@ -106,7 +106,7 @@ export function ProjectBoardAccordion({ slug }: ProjectBoardAccordionProps) {
           
           {/* Arrow */}
           <span 
-            className={`text-[rgba(28,28,28,0.5)] text-sm transition-transform duration-200 ${
+            className={`text-sm text-mk-text-muted transition-transform duration-200 ${
               isOpen ? 'rotate-180' : 'rotate-0'
             }`}
           >
@@ -132,20 +132,15 @@ export function ProjectBoardAccordion({ slug }: ProjectBoardAccordionProps) {
             }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
           >
-            <div
-              className="rounded-[20px] border border-[rgba(28,28,28,0.06)] shadow-[0_4px_24px_rgba(28,28,28,0.05)] overflow-hidden"
-              style={{
-                background: 'rgba(255, 255, 255, 0.6)',
-              }}
-            >
+            <div className="theme-card overflow-hidden rounded-[20px] border shadow-[var(--glass-shadow)]">
               {/* Edit mode indicator */}
               {isEditMode && (
-                <div className="px-4 py-2 bg-[rgba(79,209,197,0.1)] border-b border-[rgba(79,209,197,0.2)] flex items-center justify-between">
-                  <span className="text-xs font-medium text-accent-cyan flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
+                <div className="flex items-center justify-between border-b border-[rgba(79,209,197,0.2)] bg-[rgba(79,209,197,0.1)] px-4 py-2">
+                  <span className="flex items-center gap-2 text-xs font-medium text-accent-cyan">
+                    <span className="h-2 w-2 animate-pulse rounded-full bg-accent-cyan" />
                     Bearbeitungsmodus aktiv
                   </span>
-                  <span className="text-xs text-[rgba(28,28,28,0.5)]">
+                  <span className="text-xs text-mk-text-muted">
                     Dateien hierher ziehen • Space + Drag zum Bewegen
                   </span>
                 </div>
@@ -171,13 +166,13 @@ export function ProjectBoardAccordion({ slug }: ProjectBoardAccordionProps) {
           
           {/* Modal */}
           <div 
-            className="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-xs mx-4"
+            className="theme-card-strong relative w-full max-w-xs rounded-2xl border p-6 shadow-2xl mx-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-lg font-semibold text-[#1C1C1C] mb-2 text-center">
+            <h3 className="mb-2 text-center text-lg font-semibold text-mk-text">
               PIN eingeben
             </h3>
-            <p className="text-sm text-[rgba(28,28,28,0.6)] mb-4 text-center">
+            <p className="mb-4 text-center text-sm text-mk-text-secondary">
               Zum Bearbeiten 4-stelligen PIN eingeben
             </p>
             
@@ -192,15 +187,15 @@ export function ProjectBoardAccordion({ slug }: ProjectBoardAccordionProps) {
                 onChange={handlePinInputChange}
                 onKeyDown={handlePinKeyDown}
                 autoFocus
-                className={`w-full text-center text-2xl tracking-[0.5em] py-3 px-4 rounded-xl border-2 transition-colors ${
+                className={`w-full rounded-xl border-2 bg-[color:var(--surface-card)] px-4 py-3 text-center text-2xl tracking-[0.5em] text-mk-text transition-colors outline-none ${
                   pinError 
-                    ? 'border-red-400 bg-red-50' 
-                    : 'border-[rgba(28,28,28,0.15)] focus:border-accent-cyan'
-                } outline-none`}
+                    ? 'border-red-400 bg-red-50 dark:bg-red-950/40' 
+                    : 'border-[color:var(--surface-border)] focus:border-accent-cyan'
+                }`}
                 placeholder="••••"
               />
               {pinError && (
-                <p className="text-red-500 text-xs mt-2 text-center">
+                <p className="mt-2 text-center text-xs text-red-500">
                   Falscher PIN. Bitte erneut versuchen.
                 </p>
               )}
@@ -211,7 +206,7 @@ export function ProjectBoardAccordion({ slug }: ProjectBoardAccordionProps) {
               <button
                 type="button"
                 onClick={() => setShowPinModal(false)}
-                className="flex-1 py-2.5 rounded-xl border border-[rgba(28,28,28,0.15)] text-[rgba(28,28,28,0.7)] hover:bg-[rgba(28,28,28,0.05)] transition-colors"
+                className="theme-card flex-1 rounded-xl border py-2.5 text-mk-text-secondary transition-colors hover:bg-[color:var(--surface-card-strong)] hover:text-mk-text"
               >
                 Abbrechen
               </button>
@@ -219,7 +214,7 @@ export function ProjectBoardAccordion({ slug }: ProjectBoardAccordionProps) {
                 type="button"
                 onClick={handlePinSubmit}
                 disabled={pinInput.length !== 4}
-                className="flex-1 py-2.5 rounded-xl bg-accent-cyan text-white font-medium hover:bg-[#38B2AC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 rounded-xl bg-accent-cyan py-2.5 font-medium text-white transition-colors hover:bg-[#38B2AC] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Bestätigen
               </button>

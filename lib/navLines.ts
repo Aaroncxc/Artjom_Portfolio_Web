@@ -5,6 +5,7 @@ export const DEFAULT_NAV_LINE = 'I build worlds you can ship.';
 
 const SECTION_NAV_LINES: Record<string, string> = {
   about: DEFAULT_NAV_LINE,
+  intro: 'Two minutes. Then the work.',
   highlights: 'I keep productions on time.',
   'highlights-ai-apps': 'I ship apps with AI in the loop.',
   'highlights-architecture': 'Spaces you can walk through.',

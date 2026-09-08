@@ -52,12 +52,12 @@ export function FiltersBar({
               <select
                 value={selectedTag}
                 onChange={(e) => onTagChange(e.target.value)}
-                className="bg-[rgba(255,255,255,0.7)] border border-[rgba(28,28,28,0.1)] rounded-full px-3 py-1.5 text-sm text-mk-text-secondary focus:outline-none focus:border-accent-cyan appearance-none cursor-pointer"
+                className="theme-card appearance-none rounded-full border px-3 py-1.5 text-sm text-mk-text-secondary focus:border-accent-cyan focus:outline-none cursor-pointer"
                 style={{ backgroundImage: 'none' }}
               >
-                <option value="all" className="bg-white">All Tags</option>
+                <option value="all" className="bg-mk-bg-1 text-mk-text">All Tags</option>
                 {tags.map((tag) => (
-                  <option key={tag} value={tag} className="bg-white">{tag}</option>
+                  <option key={tag} value={tag} className="bg-mk-bg-1 text-mk-text">{tag}</option>
                 ))}
               </select>
             )}

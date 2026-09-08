@@ -149,6 +149,7 @@ export default function Home() {
                 <div>
                   <h4 className="text-sm font-medium mb-3 sm:mb-4 text-mk-text-muted uppercase tracking-wider">Navigate</h4>
                   <ul className="space-y-1">
+                    <li><a href="/intro" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Intro</a></li>
                     <li><a href="#about" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">About</a></li>
                     <li><a href="#projects" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Projects</a></li>
                     <li><a href="#tools-games" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Tools &amp; Games</a></li>

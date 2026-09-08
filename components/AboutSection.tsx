@@ -148,7 +148,7 @@ const aboutMedia: string[] = [
 function ProfilePhoto() {
   return (
     <aside className="lg:sticky lg:top-28 lg:row-span-2 lg:self-start">
-      <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.55)] bg-[rgba(255,255,255,0.4)] shadow-[0_10px_30px_rgba(28,28,28,0.14),inset_0_1px_0_rgba(255,255,255,0.45)] backdrop-blur-[10px] sm:aspect-[2/3]">
+      <div className="theme-card relative aspect-[3/4] overflow-hidden rounded-2xl border shadow-[var(--glass-shadow)] backdrop-blur-[10px] sm:aspect-[2/3]">
         <Image
           src={PROFILE_PORTRAIT.src}
           alt={PROFILE_PORTRAIT.alt}
@@ -282,13 +282,23 @@ export function AboutSection({ visible }: AboutSectionProps) {
                   <p className="text-base leading-relaxed text-mk-text-secondary sm:text-lg">
                     {BIO}
                   </p>
+                  <p className="mt-3 text-sm text-mk-text-muted">
+                    Prefer two minutes first?{' '}
+                    <a
+                      href="/intro"
+                      className="font-medium text-accent-cyan underline-offset-2 hover:underline"
+                    >
+                      Open the intro
+                    </a>
+                    .
+                  </p>
                 </div>
 
                 <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                   {LEADERSHIP_METRICS.map((metric) => (
                     <div
                       key={metric.label}
-                      className="rounded-2xl border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.64)] px-3 py-3 backdrop-blur-sm"
+                      className="theme-card rounded-2xl border px-3 py-3 backdrop-blur-sm"
                     >
                       <dt className="text-2xl font-semibold tracking-tight text-mk-text">{metric.value}</dt>
                       <dd className="mt-0.5 text-[11px] leading-tight text-mk-text-muted">{metric.label}</dd>
@@ -304,7 +314,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
                     {ROLES.map((role) => (
                       <span
                         key={role}
-                        className="rounded-full border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.6)] px-3 py-1 text-xs font-medium text-mk-text-secondary backdrop-blur-sm"
+                        className="theme-chip rounded-full border px-3 py-1 text-xs font-medium text-mk-text-secondary backdrop-blur-sm"
                       >
                         {role}
                       </span>
@@ -327,8 +337,8 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                 className={clsx(
                                   'inline-flex max-w-full items-center gap-2 rounded-full px-3 py-1.5',
                                   s.highlight
-                                    ? 'border border-[rgba(20,184,166,0.38)] bg-[linear-gradient(135deg,rgba(20,184,166,0.1)_0%,rgba(167,139,250,0.07)_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_0_0_1px_rgba(20,184,166,0.08)]'
-                                    : 'border border-[rgba(28,28,28,0.08)] bg-[rgba(255,255,255,0.85)] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]'
+                                    ? 'border border-[rgba(20,184,166,0.38)] bg-[linear-gradient(135deg,rgba(20,184,166,0.1)_0%,rgba(167,139,250,0.07)_100%)] shadow-[0_0_0_1px_rgba(20,184,166,0.08)]'
+                                    : 'theme-chip border'
                                 )}
                               >
                                 {s.icon ? (
@@ -361,7 +371,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
                           <h4 className="mb-3 text-xs font-medium uppercase tracking-wider text-mk-text-muted">
                             Career
                           </h4>
-                          <ol className="relative space-y-5 border-l border-[rgba(28,28,28,0.12)] pl-5">
+                          <ol className="relative space-y-5 border-l border-[color:var(--surface-border)] pl-5">
                             {CV.map((entry) => {
                               const cvKey = `${entry.role}-${entry.period}`;
                               const hasToggle = Boolean(entry.description || entry.pdfPath);
@@ -442,8 +452,8 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                             </p>
                                           ) : null}
                                           {entry.pdfPath ? (
-                                            <div className="overflow-hidden rounded-lg border border-[rgba(28,28,28,0.1)] bg-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-                                              <div className="flex items-center justify-between gap-3 border-b border-[rgba(28,28,28,0.08)] bg-white/80 px-3 py-2">
+                                            <div className="theme-card overflow-hidden rounded-lg border shadow-[var(--glass-shadow)]">
+                                              <div className="theme-card-strong flex items-center justify-between gap-3 border-b border-[color:var(--surface-border)] px-3 py-2">
                                                 <span className="text-[11px] font-semibold uppercase tracking-wider text-mk-text-muted">
                                                   IHK certificate (PDF)
                                                 </span>
@@ -459,7 +469,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
                                               <iframe
                                                 src={`${entry.pdfPath}#view=FitH&toolbar=0`}
                                                 title={`${entry.role} — Certificate`}
-                                                className="block h-[300px] w-full border-0 bg-white sm:h-[420px]"
+                                                className="block h-[300px] w-full border-0 bg-mk-bg-2 sm:h-[420px]"
                                               />
                                             </div>
                                           ) : null}
