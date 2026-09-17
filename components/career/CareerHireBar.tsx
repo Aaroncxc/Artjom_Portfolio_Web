@@ -9,15 +9,10 @@ export function CareerHireBar() {
   const [pastHero, setPastHero] = useState(false);
 
   useEffect(() => {
-    const hero = document.querySelector('.career-hero');
-    if (!hero) return undefined;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setPastHero(!entry.isIntersecting),
-      { threshold: 0, rootMargin: '-1px 0px 0px 0px' },
-    );
-    observer.observe(hero);
-    return () => observer.disconnect();
+    const onScroll = () => setPastHero(window.scrollY > 360);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
