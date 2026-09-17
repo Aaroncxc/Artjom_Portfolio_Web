@@ -1,44 +1,47 @@
-import { CAREER_SELECTED_WORK } from '@/lib/careerContent';
+'use client';
+
+import { useCareerTrack } from './CareerTrackContext';
+import { CareerTrackFilter } from './CareerTrackFilter';
 import { CareerWorkCard } from './CareerWorkCard';
 
 export function CareerSelectedWork() {
+  const { filteredGroups, track } = useCareerTrack();
+
   return (
     <section id="work" className="career-section">
       <div className="career-container">
-        <p className="career-eyebrow mb-[var(--space-3)]">Selected work</p>
-        <h2 className="career-heading mb-[var(--space-12)]">Proof of delivery</h2>
-
-        <div className="flex flex-col gap-[var(--space-16)]">
-          {CAREER_SELECTED_WORK.map((group) => (
-            <div key={group.id}>
-              <div className="mb-[var(--space-6)] max-w-2xl">
-                <h3
-                  className="mb-[var(--space-2)] text-xl font-semibold md:text-2xl"
-                  style={{ letterSpacing: 'var(--tracking-tight)', color: 'var(--fg)' }}
-                >
-                  {group.title}
-                </h3>
-                {group.summary && (
-                  <p
-                    style={{
-                      fontSize: 'var(--text-base)',
-                      lineHeight: 'var(--leading-body)',
-                      color: 'var(--fg-muted)',
-                    }}
-                  >
-                    {group.summary}
-                  </p>
-                )}
-              </div>
-
-              <div className="grid gap-[var(--space-4)] sm:grid-cols-2 lg:grid-cols-3">
-                {group.items.map((item) => (
-                  <CareerWorkCard key={`${group.id}-${item.title}`} item={item} />
-                ))}
-              </div>
-            </div>
-          ))}
+        <div className="mb-[var(--space-8)] flex flex-col gap-[var(--space-4)] md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="career-eyebrow mb-[var(--space-2)]">Selected work</p>
+            <h2 className="career-heading">Projects that ship</h2>
+          </div>
+          <CareerTrackFilter />
         </div>
+
+        {filteredGroups.length === 0 ? (
+          <p className="career-body" style={{ color: 'var(--fg-muted)' }}>
+            No projects match this track — try All or another filter.
+          </p>
+        ) : (
+          <div className="flex flex-col gap-[var(--space-12)] md:gap-[var(--space-16)]">
+            {filteredGroups.map((group) => (
+              <div key={group.id}>
+                <div className="mb-[var(--space-6)] max-w-2xl">
+                  <h3 className="career-group-title">{group.title}</h3>
+                  {group.summary && track === 'all' && (
+                    <p className="career-body mt-[var(--space-2)]">{group.summary}</p>
+                  )}
+                </div>
+
+                <div className="career-work-grid">
+                  {group.items.map((item) => (
+                    <CareerWorkCard key={item.id} item={item} />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

@@ -5,11 +5,21 @@ import {
   SKYHAVEN_SITE_URL,
 } from '@/lib/toolLinks';
 
+export type CareerTrackId = 'elearning' | 'creative' | 'gaming';
+export type CareerTrackFilter = 'all' | CareerTrackId;
+
+export const CAREER_TRACK_IDS: CareerTrackId[] = ['elearning', 'creative', 'gaming'];
+
+export function parseTrackParam(value: string | null): CareerTrackFilter {
+  if (value === 'elearning' || value === 'creative' || value === 'gaming') return value;
+  return 'all';
+}
+
 export const CAREER_HERO = {
   eyebrow: 'Production · AI Learning · Realtime',
   title: 'Production & AI Learning Lead',
   lead:
-    'I build the production systems that help interdisciplinary teams ship ambitious learning and digital work — from pipeline and staffing to launch. I also prototype the AI tooling myself. Most recently I led ~35 people across four sites and six parallel productions spanning editorial, 2D, 3D, post-production, XR and Unreal.',
+    'I build production systems for interdisciplinary teams — pipeline, staffing, launch — and prototype the AI tooling myself. Recently ~35 people, four sites, six parallel productions.',
   secondary: 'Open to eLearning, creative production, and gaming leadership roles.',
   metrics: [
     { value: '~35', label: 'people' },
@@ -19,38 +29,103 @@ export const CAREER_HERO = {
   ],
 } as const;
 
-export interface CareerTrack {
-  id: string;
+export interface CareerStarterPath {
+  id: CareerTrackId;
   title: string;
   description: string;
-  tags: string[];
+  mailtoSubject: string;
 }
 
-export const CAREER_TRACKS: CareerTrack[] = [
+export const CAREER_STARTER_PATHS: CareerStarterPath[] = [
   {
     id: 'elearning',
-    title: 'eLearning',
+    title: 'Learning / AI Portfolio Lead',
     description:
-      'Course and learning production end-to-end — AI content pipelines, portfolio and roadmap ownership, team leadership, and platform launch.',
-    tags: ['Production', 'AI pipeline', 'Launch'],
+      'Course production E2E, AI content pipelines, portfolio roadmap, team leadership, and platform launch.',
+    mailtoSubject: 'StackFuel / AI Learning — Artjom',
   },
   {
     id: 'creative',
-    title: 'Creative',
+    title: 'Video / Creative Production PM',
     description:
-      'Creative operations and 3D / AR / video production leadership — stakeholder delivery, capacity planning, and quality across disciplines.',
-    tags: ['Creative ops', '3D · AR · Video', 'Delivery'],
+      'Creative ops across editorial, 2D, 3D, post, and XR — stakeholder delivery, capacity, and KPI reporting.',
+    mailtoSubject: 'Production PM — Artjom',
   },
   {
     id: 'gaming',
-    title: 'Gaming',
+    title: 'Realtime / Gaming systems',
     description:
-      'Realtime and Unreal product builds as systems proof — desktop games, authoring tools, and AI-native pipelines, not hobby marketing.',
-    tags: ['Unreal', 'Realtime', 'Product builds'],
+      'Unreal and product builds as systems proof — games, authoring tools, and AI-native pipelines.',
+    mailtoSubject: 'Realtime / Gaming — Artjom',
   },
 ];
 
+export interface CareerLiveDemo {
+  label: string;
+  href: string;
+  external?: boolean;
+  tag?: string;
+}
+
+export const CAREER_LIVE_DEMOS: CareerLiveDemo[] = [
+  {
+    label: 'Course Overview',
+    href: DADB_COURSE_OVERVIEW_TOOL_URL,
+    external: true,
+    tag: 'Live dashboard',
+  },
+  {
+    label: 'Occupied VFX',
+    href: 'https://occupiedvfx-v3-30-01-2026-2c75.vercel.app',
+    external: true,
+    tag: 'Try in browser',
+  },
+  {
+    label: 'Skyhaven',
+    href: SKYHAVEN_SITE_URL,
+    external: true,
+    tag: 'Site · Demo',
+  },
+  {
+    label: 'Releases',
+    href: SKYHAVEN_RELEASES_URL,
+    external: true,
+    tag: 'GitHub',
+  },
+  {
+    label: 'Agata Journal',
+    href: 'https://www.agatajournal.com/',
+    external: true,
+    tag: 'Product site',
+  },
+];
+
+export const CAREER_FEATURED_CASE = {
+  id: 'dadb-ops',
+  eyebrow: 'Featured · DADB production ops',
+  title: 'Weekly KPI reporting & Course Overview Tool',
+  outcome:
+    'As Head of Production I built weekly reporting so CEO and management see chapters, modules, minutes, and blockers across Editorial, 2D, 3D, and Unreal — Excel data synced twice daily into an AI-assisted Course Overview dashboard.',
+  metrics: ['Weekly CEO reports', 'Excel → automated KPIs', '4 departments coordinated'],
+  href: '/project/course-overview',
+  liveHref: DADB_COURSE_OVERVIEW_TOOL_URL,
+  images: [
+    {
+      src: '/career/dadb-ops/course-overview-snapshot.png',
+      alt: 'Course Overview Tool — live pipeline snapshot for DADB courses',
+      caption: 'Course Overview Tool — live pipeline snapshot',
+    },
+    {
+      src: '/career/dadb-ops/kpi-report.jpg',
+      alt: 'Weekly Highlights KPI report for Editorial, Production, Interactives',
+      caption: 'Weekly Highlights — management KPI deck',
+    },
+  ],
+  tags: ['KPI reporting', 'Course Overview', 'Editorial · 2D · 3D · Unreal'],
+} as const;
+
 export interface CareerWorkItem {
+  id: string;
   title: string;
   outcome: string;
   tags: string[];
@@ -58,12 +133,18 @@ export interface CareerWorkItem {
   href?: string;
   external?: boolean;
   thumb?: string;
+  /** Larger hero image when set; falls back to thumb */
+  image?: string;
+  tracks: CareerTrackId[];
+  /** Full-width card in the work grid */
+  span?: 'normal' | 'wide';
 }
 
 export interface CareerWorkGroup {
   id: string;
   title: string;
   summary?: string;
+  tracks: CareerTrackId[];
   items: CareerWorkItem[];
 }
 
@@ -73,9 +154,11 @@ export const CAREER_SELECTED_WORK: CareerWorkGroup[] = [
     id: 'dadb',
     title: 'DADB — Head of Production',
     summary:
-      'Built the project-management function from the ground up and owned priorities, staffing, capacity, dependencies, risk, quality, and executive reporting across international delivery.',
+      'Built the project-management function from the ground up — priorities, staffing, capacity, dependencies, risk, quality, and executive reporting across international delivery.',
+    tracks: ['elearning', 'creative'],
     items: [
       {
+        id: 'dadb-leadership',
         title: 'Production leadership at scale',
         outcome:
           'Led ~35 people across Germany, India, and Senegal with six parallel productions spanning editorial, 2D, 3D, cinematic, post-production, XR, and Unreal.',
@@ -83,22 +166,30 @@ export const CAREER_SELECTED_WORK: CareerWorkGroup[] = [
         metric: '35 people · 6 productions · 4 sites',
         href: '/project/dadb-course-production-trailers',
         thumb: '/projects/dadb-course-production-trailers/e-mobility.webp',
+        image: '/projects/dadb-course-production-trailers/hydrogen-technology.webp',
+        tracks: ['elearning', 'creative'],
+        span: 'wide',
       },
       {
-        title: 'Course Overview Tool',
-        outcome:
-          'Live production dashboard syncing Excel status sheets twice daily — one reliable view of pipeline health for teams, PMs, and leadership.',
-        tags: ['Dashboard', 'KPI', 'Ops'],
-        href: '/project/course-overview',
-        thumb: '/tools/dadb-course-overview/thumbnail.jpg',
-      },
-      {
+        id: 'dadb-campus',
         title: 'Solar Technician Digital Campus',
         outcome:
-          'Immersive walkable campus from Archicad planning through Unreal — lecture rooms, hub, and gamified solarpark for stakeholder walkthroughs.',
+          'Immersive walkable campus from Archicad through Unreal — lecture rooms, hub, and gamified solarpark for stakeholder walkthroughs.',
         tags: ['Archicad', 'Unreal', 'Learning'],
         href: '/project/dadb-solar-technician-digital-campus',
         thumb: '/projects/dadb-solar-technician-digital-campus/thumbnail.webp',
+        image: '/projects/dadb-solar-technician-digital-campus/campus-hero.webp',
+        tracks: ['elearning', 'creative'],
+      },
+      {
+        id: 'dadb-trailers',
+        title: 'Course release trailers',
+        outcome:
+          'Final release trailers for 5G, e-mobility, hydrogen, IoT, solar, and wind — Blender → Unreal pipeline with parallel-track sign-off.',
+        tags: ['Blender', 'Unreal', 'Release'],
+        href: '/project/dadb-course-production-trailers',
+        thumb: '/projects/dadb-course-production-trailers/solar-electricity-systems.webp',
+        tracks: ['elearning', 'creative'],
       },
     ],
   },
@@ -106,32 +197,30 @@ export const CAREER_SELECTED_WORK: CareerWorkGroup[] = [
     id: 'ai-learning',
     title: 'KI / Learning pipeline',
     summary:
-      'Pushed AI into how courses ship — ElevenLabs, Synthesia, and HeyGen for voice, presenter, and video pipelines while keeping editorial control in-house.',
+      'ElevenLabs, Synthesia, and HeyGen in DADB workflows — voice, presenter, and video pipelines with editorial control in-house.',
+    tracks: ['elearning'],
     items: [
       {
+        id: 'ai-course-pipeline',
         title: 'AI-accelerated course production',
         outcome:
-          'Integrated ElevenLabs, Synthesia, and HeyGen into DADB workflows to accelerate voice, presenter, and video pipelines without losing editorial sign-off.',
+          'Integrated ElevenLabs, Synthesia, and HeyGen to accelerate voice, presenter, and video pipelines without losing editorial sign-off.',
         tags: ['ElevenLabs', 'Synthesia', 'HeyGen'],
         href: '/project/dadb-course-production-trailers',
-        thumb: '/projects/dadb-course-production-trailers/hydrogen-technology.webp',
+        thumb: '/projects/dadb-course-production-trailers/internet-of-things.webp',
+        image: '/projects/dadb-course-production-trailers/wind-power.webp',
+        tracks: ['elearning'],
+        span: 'wide',
       },
       {
-        title: 'Course Overview Tool',
-        outcome:
-          'AI-assisted dashboard design and iteration — built with Cursor and Next.js for daily production visibility.',
-        tags: ['Cursor', 'Next.js', 'Internal ops'],
-        href: DADB_COURSE_OVERVIEW_TOOL_URL,
-        external: true,
-        thumb: '/tools/dadb-course-overview/course-1.jpg',
-      },
-      {
+        id: 'ai-flasher',
         title: 'FlashR',
         outcome:
-          'Swift flashcard app with AI-assisted card generation — personal proof of learning-product thinking outside client work.',
+          'Swift flashcard app with AI-assisted card generation — learning-product thinking outside client work.',
         tags: ['Swift', 'AI', 'Learning app'],
         href: '/project/flasher',
         thumb: '/tools/flasher/thumbnail.webp',
+        tracks: ['elearning'],
       },
     ],
   },
@@ -139,39 +228,53 @@ export const CAREER_SELECTED_WORK: CareerWorkGroup[] = [
     id: 'craft',
     title: '3D / Realtime craft',
     summary:
-      'Blender → Unreal pipeline across DADB course work, trade-fair XR, and architecture-realtime hybrids — Archicad ↔ Unreal sync for late design changes.',
+      'Blender → Unreal across course work, trade-fair XR, and architecture-realtime — Archicad ↔ Unreal sync for late design changes.',
+    tracks: ['creative', 'elearning'],
     items: [
       {
-        title: 'Lexsolar Digital Learning Kit',
-        outcome:
-          'Digital twin of physical solar learning cases — Blender assets and Unity prototype aligning SMEs on scalable hands-on labs.',
-        tags: ['Blender', 'Unity', 'Prototype'],
-        href: '/project/lexsolar-digital-learning-kit',
-        thumb: '/projects/lexsolar-digital-learning-kit/ingame-05.webp',
-      },
-      {
+        id: 'craft-kigali',
         title: 'E-Learning Africa Kigali 2024',
         outcome:
-          'AR inverter-installation demo for convention floor — booth narrative, build coordination, and live operator support.',
+          'AR inverter-installation demo for convention floor — booth narrative, build coordination, and live operator support with SMA.',
         tags: ['AR', 'Unreal', 'Trade fair'],
         href: '/project/elearning-africa-kigali-2024',
         thumb: '/projects/elearning-africa-kigali-2024/Kigali_Gameplay_Thumbnail.jpg',
+        image: '/projects/elearning-africa-kigali-2024/Kigali_AR_2.webp',
+        tracks: ['creative', 'elearning'],
+        span: 'wide',
       },
       {
+        id: 'craft-lexsolar',
+        title: 'Lexsolar Digital Learning Kit',
+        outcome:
+          'Digital twin of physical solar learning cases — Blender assets and Unity prototype for scalable hands-on labs.',
+        tags: ['Blender', 'Unity', 'Prototype'],
+        href: '/project/lexsolar-digital-learning-kit',
+        thumb: '/projects/lexsolar-digital-learning-kit/ingame-05.webp',
+        image: '/projects/lexsolar-digital-learning-kit/ingame-01.webp',
+        tracks: ['elearning', 'creative'],
+      },
+      {
+        id: 'craft-dakar',
         title: 'E-Learning Africa Dakar 2023',
         outcome:
-          'VR pavilion experience with guided training tasks — Mixed Reality Lead aligning Archicad, Blender, and Unreal under fair deadline.',
+          'VR pavilion with guided training tasks — Archicad, Blender, and Unreal aligned under trade-fair deadline.',
         tags: ['VR', 'Unreal', 'XR'],
         href: '/project/elearning-africa-dakar-senegal-2023',
         thumb: '/projects/elearning-africa-dakar-senegal-2023/vr-scene-07-thumb.jpg',
+        image: '/projects/elearning-africa-dakar-senegal-2023/vr-scene-00.webp',
+        tracks: ['creative', 'elearning'],
       },
       {
+        id: 'craft-house',
         title: 'The House',
         outcome:
-          'Residential architecture in Archicad refined in Unreal — cinematic staging with live 3D viewer for spatial reads.',
+          'Residential architecture in Archicad refined in Unreal — cinematic staging with live 3D viewer.',
         tags: ['Archicad', 'Unreal', 'Architecture'],
         href: '/project/the-house',
         thumb: '/projects/the-house/The_House_Thumbnail.png',
+        image: '/projects/the-house/architecture-enhanced-01.webp',
+        tracks: ['creative'],
       },
     ],
   },
@@ -179,63 +282,91 @@ export const CAREER_SELECTED_WORK: CareerWorkGroup[] = [
     id: 'builds',
     title: 'Build proofs',
     summary:
-      'AI-native and AI-accelerated products — games, tools, and creative releases that prove end-to-end delivery beyond client production.',
+      'AI-native products — games, tools, and creative releases proving end-to-end delivery beyond client production.',
+    tracks: ['gaming', 'creative', 'elearning'],
     items: [
       {
-        title: 'Multikunst collective',
-        outcome:
-          'Creative collective for visual experiments, product concepts, and interactive tools — separate site, linked quietly.',
-        tags: ['Collective', 'Creative'],
-        href: 'https://multikunst.vercel.app',
-        external: true,
-        thumb: '/projects/multiply/Thumbnail.png',
-      },
-      {
+        id: 'build-skyhaven',
         title: 'Skyhaven',
         outcome:
-          'Desktop widget game — Tauri 2, React, Three.js, 186 GLB models, focus sessions, arena combat, and island builder.',
+          'Desktop widget game — Tauri 2, React, Three.js, 186 GLB models, focus sessions, arena combat, and island builder. Systems proof, not hobby.',
         tags: ['Game', 'Tauri', 'Three.js'],
         href: SKYHAVEN_SITE_URL,
         external: true,
         thumb: '/projects/skyhaven/posters/fullfarming.webp',
+        image: '/projects/skyhaven/posters/fullfarming.webp',
+        tracks: ['gaming'],
+        span: 'wide',
       },
       {
+        id: 'build-occupied',
         title: 'Occupied VFX',
         outcome:
-          'Browser-based realtime VFX engine — WebGL2 routing video, audio, and 3D through modular GPU effects for live visuals.',
+          'Browser-based realtime VFX engine — WebGL2 routing video, audio, and 3D through modular GPU effects.',
         tags: ['WebGL', 'Tool', 'VFX'],
         href: 'https://occupiedvfx-v3-30-01-2026-2c75.vercel.app',
         external: true,
         thumb: '/tools/occupied/thumbnail.webp',
+        image: '/tools/occupied/workspace.webp',
+        tracks: ['creative', 'gaming'],
       },
       {
+        id: 'build-vfx-studio',
+        title: 'Skyhaven VFX Studio',
+        outcome:
+          'Combat VFX authoring bound to the game catalog — combo timeline, presets, validated JSON export.',
+        tags: ['Tauri', 'R3F', 'Tool'],
+        href: '/project/skyhaven-vfx',
+        thumb: '/projects/skyhaven-vfx/editor.webp',
+        tracks: ['gaming'],
+      },
+      {
+        id: 'build-agata',
         title: 'Agata Journal',
         outcome:
-          'Voice-first private AI journal for iOS — local-first capture with OpenRouter reflections and TestFlight beta.',
+          'Voice-first private AI journal for iOS — local-first capture with OpenRouter reflections, TestFlight beta.',
         tags: ['iOS', 'AI', 'Product'],
         href: 'https://www.agatajournal.com/',
         external: true,
         thumb: '/tools/agata/product-poster.webp',
+        tracks: ['elearning', 'creative'],
       },
       {
+        id: 'build-automation',
         title: 'Multikunst Automation',
         outcome:
-          'Node-based workflow OS — connect scripts, APIs, and LLM steps with visual graph editor and run inspection.',
+          'Node-based workflow OS — scripts, APIs, and LLM steps with visual graph editor and run inspection.',
         tags: ['Automation', 'LLMs', 'Dashboard'],
         href: '/project/multikunst-automation',
         thumb: '/tools/multikunst-automation/thumbnail.webp',
+        tracks: ['elearning', 'creative', 'gaming'],
       },
       {
-        title: 'Skyhaven VFX Studio',
-        outcome:
-          'Combat VFX authoring tool bound to the game catalog — combo timeline, presets, and validated JSON export.',
-        tags: ['Tauri', 'R3F', 'Tool'],
-        href: '/project/skyhaven-vfx',
-        thumb: '/projects/skyhaven-vfx/editor.webp',
+        id: 'build-multikunst',
+        title: 'Multikunst collective',
+        outcome: 'Creative collective — visual experiments, product concepts, interactive tools. Separate site.',
+        tags: ['Collective', 'Creative'],
+        href: 'https://multikunst.vercel.app',
+        external: true,
+        thumb: '/projects/multiply/Thumbnail.png',
+        tracks: ['creative'],
       },
     ],
   },
 ];
+
+export function filterWorkGroups(
+  groups: CareerWorkGroup[],
+  track: CareerTrackFilter,
+): CareerWorkGroup[] {
+  if (track === 'all') return groups;
+  return groups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => item.tracks.includes(track)),
+    }))
+    .filter((group) => group.items.length > 0);
+}
 
 export interface CareerTimelineEntry {
   role: string;
@@ -308,7 +439,7 @@ export const CAREER_STRENGTHS: CareerStrength[] = [
 
 export const CAREER_NAV = [
   { label: 'Work', href: '#work' },
-  { label: 'Tracks', href: '#tracks' },
+  { label: 'Demos', href: '#demos' },
   { label: 'About', href: '#about' },
   { label: 'Contact', href: '#contact' },
 ] as const;
@@ -321,3 +452,19 @@ export const CAREER_FOOTER = {
   linkedin: 'https://www.linkedin.com/in/artjom-naninjan-5136b1203',
   skyhavenReleases: SKYHAVEN_RELEASES_URL,
 } as const;
+
+/** Top cases for printable one-pager */
+export const CAREER_ONE_PAGER_CASES = [
+  {
+    title: 'DADB Head of Production',
+    outcome: '~35 people · 6 parallel productions · 4 sites · weekly CEO KPI reporting',
+  },
+  {
+    title: 'Course Overview Tool',
+    outcome: 'Excel → live dashboard · AI-assisted · Editorial / 2D / 3D / Unreal coordination',
+  },
+  {
+    title: 'Skyhaven',
+    outcome: 'Tauri desktop game · 186 GLB models · VFX Studio · bilingual public site',
+  },
+] as const;

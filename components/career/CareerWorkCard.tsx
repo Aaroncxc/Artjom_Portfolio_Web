@@ -6,55 +6,45 @@ interface CareerWorkCardProps {
 }
 
 export function CareerWorkCard({ item }: CareerWorkCardProps) {
-  const content = (
+  const imageSrc = item.image ?? item.thumb;
+  const wide = item.span === 'wide';
+
+  const body = (
     <>
-      {item.thumb && (
-        <div
-          className="relative mb-[var(--space-4)] aspect-[16/10] overflow-hidden rounded-[var(--radius)]"
-          style={{ background: 'var(--bg-subtle)' }}
-        >
+      {imageSrc && (
+        <div className={`career-work-card__media${wide ? ' career-work-card__media--wide' : ''}`}>
           <Image
-            src={item.thumb}
+            src={imageSrc}
             alt=""
             fill
             className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes={
+              wide
+                ? '(max-width: 768px) 100vw, 72rem'
+                : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+            }
           />
         </div>
       )}
 
-      <h4
-        className="mb-[var(--space-2)] font-medium"
-        style={{ fontSize: 'var(--text-base)', color: 'var(--fg)' }}
-      >
-        {item.title}
-      </h4>
+      <div className="career-work-card__body">
+        <h4 className="career-work-card__title">{item.title}</h4>
+        <p className="career-body-sm mb-[var(--space-3)]">{item.outcome}</p>
 
-      <p
-        className="mb-[var(--space-3)]"
-        style={{ fontSize: 'var(--text-sm)', lineHeight: 'var(--leading-body)', color: 'var(--fg-muted)' }}
-      >
-        {item.outcome}
-      </p>
+        {item.metric && <p className="career-work-card__metric">{item.metric}</p>}
 
-      {item.metric && (
-        <p
-          className="career-eyebrow mb-[var(--space-3)] normal-case"
-          style={{ letterSpacing: '0.04em', color: 'var(--accent)' }}
-        >
-          {item.metric}
-        </p>
-      )}
-
-      <ul className="flex flex-wrap gap-[var(--space-2)]">
-        {item.tags.map((tag) => (
-          <li key={tag} className="career-chip">
-            {tag}
-          </li>
-        ))}
-      </ul>
+        <ul className="flex flex-wrap gap-[var(--space-2)]">
+          {item.tags.map((tag) => (
+            <li key={tag} className="career-chip">
+              {tag}
+            </li>
+          ))}
+        </ul>
+      </div>
     </>
   );
+
+  const className = `career-work-card career-card${wide ? ' career-work-card--wide' : ''}`;
 
   if (item.href) {
     return (
@@ -62,13 +52,13 @@ export function CareerWorkCard({ item }: CareerWorkCardProps) {
         href={item.href}
         target={item.external ? '_blank' : undefined}
         rel={item.external ? 'noopener noreferrer' : undefined}
-        className="career-card block p-[var(--space-5)] no-underline"
+        className={`${className} no-underline`}
         style={{ color: 'inherit' }}
       >
-        {content}
+        {body}
       </a>
     );
   }
 
-  return <article className="career-card p-[var(--space-5)]">{content}</article>;
+  return <article className={className}>{body}</article>;
 }

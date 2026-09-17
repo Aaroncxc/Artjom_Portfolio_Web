@@ -76,6 +76,11 @@ export function CareerFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/career/one-pager" className="career-link inline-flex min-h-[44px] items-center text-sm">
+                  One-pager
+                </Link>
+              </li>
+              <li>
                 <Link href="/" className="career-link inline-flex min-h-[44px] items-center text-sm">
                   Main portfolio
                 </Link>
