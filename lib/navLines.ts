@@ -34,6 +34,8 @@ const PROJECT_NAV_LINES: Record<HighlightProjectId, string> = {
   flasher: 'Flashcards you can actually finish.',
   'multikunst-automation': 'Pipelines you can reopen tomorrow.',
   'agata-journal': 'A journal you speak, not type.',
+  lernwerk: 'Courses you author locally, then certify.',
+  sokra: 'AI in the classroom, paths to schools.',
 };
 
 export function navLineForKey(key: string | undefined): string | undefined {

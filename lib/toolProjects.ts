@@ -1,5 +1,12 @@
 import type { Project } from '@/lib/types';
-import { DADB_COURSE_OVERVIEW_TOOL_URL, SKYHAVEN_RELEASES_URL, SKYHAVEN_SITE_URL } from '@/lib/toolLinks';
+import {
+  DADB_COURSE_OVERVIEW_TOOL_URL,
+  LERNWERK_APP_URL,
+  LERNWERK_CASE_URL,
+  SKYHAVEN_RELEASES_URL,
+  SKYHAVEN_SITE_URL,
+  SOKRA_SITE_URL,
+} from '@/lib/toolLinks';
 
 /**
  * Tool / game case studies that are not part of `posts.json` (Drive ingest).
@@ -443,6 +450,267 @@ That local-first rule is intentional. The AI companion should talk about your da
           { kind: 'image', src: '/tools/agata/post-joiniosbeta.png', title: 'iOS beta invite', fit: 'contain' },
           { kind: 'image', src: '/tools/agata/hub-widgets.png', title: 'Hub widgets', fit: 'contain' },
           { kind: 'image', src: '/tools/agata/thumbnail.png', title: 'Beta campaign', fit: 'contain', frame: 'paper' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'lernwerk',
+    slug: 'lernwerk',
+    title: 'Lernwerk',
+    description:
+      'Local-first AI authoring studio for complete interactive courses, SCORM packages and verifiable certificates — no user account.',
+    date: '2026-09-01',
+    author: 'Artjom N.',
+    tools: [{ name: 'OpenRouter' }, { name: 'SCORM' }, { name: 'React' }, { name: 'local-first' }],
+    tags: ['Tool', 'Learning', 'AI', 'SCORM'],
+    type: 'image',
+    thumbnail: '/tools/lernwerk/editor.webp',
+    images: [
+      '/tools/lernwerk/hero.webp',
+      '/tools/lernwerk/overview.webp',
+      '/tools/lernwerk/editor.webp',
+      '/tools/lernwerk/course-preview.webp',
+    ],
+    gallery: [
+      { type: 'image', src: '/tools/lernwerk/hero.webp' },
+      { type: 'image', src: '/tools/lernwerk/overview.webp' },
+      { type: 'image', src: '/tools/lernwerk/model-selection.webp' },
+      { type: 'image', src: '/tools/lernwerk/editor.webp' },
+      { type: 'image', src: '/tools/lernwerk/course-preview.webp' },
+      { type: 'image', src: '/tools/lernwerk/my-learning.webp' },
+      { type: 'image', src: '/tools/lernwerk/certificate.webp' },
+      { type: 'image', src: '/tools/lernwerk/certificate-check.webp' },
+    ],
+    order: 4,
+    role: 'Learning product & delivery',
+    client: 'With Sahachat Sonnenburg',
+    timeframe: '2026 — active',
+    team: 'Sahachat Sonnenburg (product design & engineering) · Artjom (learning product, authoring flow, delivery)',
+    outcomes: [
+      'Working product: 15+ interactive module formats, SCORM export, local library, signed certificates',
+      'Live studio without an account — generate from a brief, edit on a canvas, verify credentials on-device',
+    ],
+    explanation:
+      'Local-first AI authoring: brief → generated course → visual edit → SCORM and a signed certificate. I work on it with Sahachat Sonnenburg; he designed and engineered the studio.',
+    references: [
+      { url: LERNWERK_APP_URL, label: 'Open Lernwerk' },
+      { url: LERNWERK_CASE_URL, label: 'Case on sahachat-sonnenburg.com' },
+    ],
+    caseSections: [
+      {
+        heading: 'What it is',
+        body: `Lernwerk is a **local-first authoring studio**. You set a learning goal, audience, duration, language and source material, generate a complete course with an OpenRouter model, then keep every module editable. No user account. The public entry is the product itself — a working course preview and a path into the studio.
+
+I work on this with **Sahachat Sonnenburg**. He designed and built the studio. I work the learning-product side: how a brief becomes a course, which formats authors actually need, and the path out to SCORM and a credential.`,
+        layout: 'text-left',
+        media: [
+          {
+            kind: 'image',
+            src: '/tools/lernwerk/hero.webp',
+            title: 'Landing',
+            caption: 'Product entry — a course preview, not an AI dashboard.',
+          },
+        ],
+      },
+      {
+        heading: 'Why one studio',
+        body: `Course production usually means hopping between research, writing, design, authoring, media, assessments, LMS packaging and QA. Generic AI drafts move text faster and still leave you without a controllable, exportable course.
+
+Lernwerk keeps **generation, editing and delivery in one place**. A new project starts from an instructional brief, not an empty prompt. Recent work stays in one workspace.`,
+        layout: 'text-right',
+        media: [
+          {
+            kind: 'image',
+            src: '/tools/lernwerk/overview.webp',
+            title: 'Studio',
+            caption: 'Studio overview — recent courses and a new project.',
+          },
+        ],
+      },
+      {
+        heading: 'Model without lock-in',
+        body: `Authors connect their **own OpenRouter key**, pick a recommended model or paste a model address. Live availability and context size stay visible. An automatic route exists when you do not want to choose.
+
+The product is not welded to one vendor — that matters if you are building a learning portfolio that has to survive model churn.`,
+        layout: 'text-left',
+        media: [
+          {
+            kind: 'image',
+            src: '/tools/lernwerk/model-selection.webp',
+            title: 'Models',
+            caption: 'OpenRouter connection and model choice.',
+          },
+        ],
+      },
+      {
+        heading: 'Every module stays editable',
+        body: `Generation is a start, not a sealed export. The editor puts **structure, canvas and settings** in one view: text, objectives, activities, images, presentation styles. Global design actions keep the whole course consistent.
+
+Editor, learner preview and the exported package share the same visual rules — crops, contrast, interactions, branding.`,
+        layout: 'text-right',
+        media: [
+          {
+            kind: 'image',
+            src: '/tools/lernwerk/editor.webp',
+            title: 'Editor',
+            caption: 'Visual authoring — structure, canvas, module settings.',
+          },
+        ],
+      },
+      {
+        heading: 'It has to behave like a course',
+        body: `Learners get navigation, progress and interactive formats: hotspots, flashcards, matching, sorting, knowledge checks. Fifteen-plus module types. The result is a **learning product**, not a long generated document.`,
+        layout: 'text-left',
+        media: [
+          {
+            kind: 'image',
+            src: '/tools/lernwerk/course-preview.webp',
+            title: 'Preview',
+            caption: 'Interactive preview — hotspots and course chrome.',
+          },
+        ],
+      },
+      {
+        heading: 'Local library, then a credential',
+        body: `**My Learning** holds created and imported SCORM courses, with local progress and resumable sessions. Completion produces a designed certificate — name, course, score, date, issuer, ID, signature, QR.
+
+Verification runs **on-device**: QR image, camera or pasted text. The signature check flags changes to name, result, course or completion data. Personal details for the certificate stay on the machine.`,
+        layout: 'text-right',
+        media: [
+          {
+            kind: 'image',
+            src: '/tools/lernwerk/certificate.webp',
+            title: 'Certificate',
+            caption: 'Signed completion certificate with verification QR.',
+          },
+        ],
+      },
+      {
+        heading: 'More of the system',
+        body: 'Library, learner details before a certificate course, and the offline verification workspace.',
+        layout: 'gallery',
+        media: [
+          { kind: 'image', src: '/tools/lernwerk/my-learning.webp', title: 'My Learning', fit: 'contain' },
+          { kind: 'image', src: '/tools/lernwerk/learner-details.webp', title: 'Learner details', fit: 'contain' },
+          { kind: 'image', src: '/tools/lernwerk/certificate-check.webp', title: 'Verify certificate', fit: 'contain' },
+          { kind: 'image', src: '/tools/lernwerk/brand.webp', title: 'System overview', fit: 'contain' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'sokra',
+    slug: 'sokra',
+    title: 'Sokra',
+    description:
+      'Three months at a Berlin e-learning company for schools — internal AI processes and communication paths to public and private classrooms.',
+    date: '2026-03-01',
+    author: 'Artjom N.',
+    tools: [{ name: 'AI processes' }, { name: 'School communication' }],
+    tags: ['Learning', 'AI', 'Schools'],
+    type: 'image',
+    thumbnail: '/tools/sokra/tile-poster.webp',
+    images: [
+      '/tools/sokra/og.webp',
+      '/tools/sokra/chat.webp',
+      '/tools/sokra/class-feedback.webp',
+      '/tools/sokra/canvas.webp',
+    ],
+    gallery: [
+      { type: 'image', src: '/tools/sokra/og.webp' },
+      { type: 'image', src: '/tools/sokra/chat.webp' },
+      { type: 'image', src: '/tools/sokra/class-feedback.webp' },
+      { type: 'image', src: '/tools/sokra/canvas.webp' },
+      { type: 'image', src: '/tools/sokra/student-feedback.webp' },
+      { type: 'image', src: '/tools/sokra/follow-up.webp' },
+      { type: 'image', src: '/tools/sokra/upload.webp' },
+      { type: 'image', src: '/tools/sokra/create.webp' },
+    ],
+    order: 3,
+    role: 'Internal AI processes & school communication',
+    client: 'Sokra · Berlin',
+    timeframe: 'March–May 2026',
+    team: 'Sokra — three-month engagement',
+    outcomes: [
+      'Tightened internal processes with AI so work did not live in one-off chats',
+      'Built communication paths to individual schools, public and private',
+    ],
+    explanation:
+      'Sokra builds personalized AI learning for classrooms. I spent three months in Berlin on internal AI processes and school communication. I did not found the company and I did not build the product.',
+    references: [{ url: SOKRA_SITE_URL, label: 'sokra.io' }],
+    caseSections: [
+      {
+        heading: 'What it is',
+        body: `Sokra is a Berlin company building **personalized AI learning for classrooms**. Teachers set a topic and level. Learners practice with explanations and feedback. Staff see who is moving, who is stuck, and what to do next.
+
+I was there from **March to May 2026**. Not as founder. Not as the person who designed or engineered the product. The screens here are Sokra's product — the classroom context I was working toward.`,
+        layout: 'text-left',
+        media: [
+          {
+            kind: 'image',
+            src: '/tools/sokra/og.webp',
+            title: 'Sokra',
+            fit: 'contain',
+            caption: 'Sokra — personalized learning for every class.',
+          },
+        ],
+      },
+      {
+        heading: 'What it is for',
+        body: `Schools, public and private. Teachers who need differentiation without another evening of admin. Learners who can ask questions at their own pace and still stay on the curriculum.
+
+The product covers worksheets, lesson plans, parent letters, live class progress, and follow-up activities. That is the offer I was helping the company reach schools with.`,
+        layout: 'text-right',
+        media: [
+          {
+            kind: 'image',
+            src: '/tools/sokra/chat.webp',
+            title: 'Teacher start',
+            fit: 'contain',
+            caption: 'Teacher workspace — worksheets, plans, mail, quizzes.',
+          },
+        ],
+      },
+      {
+        heading: 'How I worked there',
+        body: `My work sat **next to the product**, not inside the UI. I tightened internal processes with AI so teams were not stuck in one-off chats and ad-hoc loops. I built **communication paths to individual schools**, public and private.
+
+Three months. Berlin. That is the engagement.`,
+        layout: 'text-left',
+        media: [
+          {
+            kind: 'image',
+            src: '/tools/sokra/class-feedback.webp',
+            title: 'Class feedback',
+            fit: 'contain',
+            caption: 'Class feedback — where a group stands after a task.',
+          },
+        ],
+      },
+      {
+        heading: 'The classroom product',
+        body: `Authors can generate a worksheet from a brief, keep it editable, and send follow-up work from what the class actually did. I show this because it is the product Sokra sells to schools — not because I shipped these screens.`,
+        layout: 'text-right',
+        media: [
+          {
+            kind: 'image',
+            src: '/tools/sokra/canvas.webp',
+            title: 'Worksheet',
+            fit: 'contain',
+            caption: 'Worksheet canvas — brief, draft, and edit in one place.',
+          },
+        ],
+      },
+      {
+        heading: 'More of the product',
+        body: 'Learner feedback, follow-up tasks, material upload, and grading rubrics — Sokra marketing screens from sokra.io.',
+        layout: 'gallery',
+        media: [
+          { kind: 'image', src: '/tools/sokra/student-feedback.webp', title: 'Learner feedback', fit: 'contain' },
+          { kind: 'image', src: '/tools/sokra/follow-up.webp', title: 'Follow-up', fit: 'contain' },
+          { kind: 'image', src: '/tools/sokra/upload.webp', title: 'Upload materials', fit: 'contain' },
+          { kind: 'image', src: '/tools/sokra/create.webp', title: 'Rubrics', fit: 'contain' },
         ],
       },
     ],

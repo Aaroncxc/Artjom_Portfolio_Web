@@ -10,6 +10,7 @@ import {
   AI_APP_DEV_HIGHLIGHT_SECTION,
   ARCHITECTURE_HIGHLIGHT_SECTION,
   MULTIKUNST_HIGHLIGHT_SECTION,
+  PRODUCTION_HIGHLIGHT_SECTION,
   SKYHAVEN_HIGHLIGHT_SECTION,
   VFX_HIGHLIGHT_SECTION,
 } from '@/components/HighlightBentoSection';
@@ -114,9 +115,9 @@ export default function Home() {
         {/* About Section - first content the visitor sees */}
         <AboutSection visible={true} />
 
-        <HighlightBentoSection visible={true} />
-
         <HighlightBentoSection visible={true} config={AI_APP_DEV_HIGHLIGHT_SECTION} />
+
+        <HighlightBentoSection visible={true} config={PRODUCTION_HIGHLIGHT_SECTION} />
 
         <HighlightBentoSection visible={true} config={ARCHITECTURE_HIGHLIGHT_SECTION} />
 

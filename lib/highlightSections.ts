@@ -78,28 +78,25 @@ export const AI_APP_DEV_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
   bodyP1:
     'From the start of my production work at DADB, I have pushed AI into how we ship courses — using ElevenLabs, Synthesia, and HeyGen to accelerate voice, presenter, and video pipelines while keeping editorial control in-house.',
   bodyP2:
-    'The same mindset runs through private work: Replit for my first project-manager apps, then GPT and Claude in Cursor for dashboards, games, and creative tools. I genuinely enjoy building this way — Skyhaven, Occupied VFX, Skyhaven VFX Studio, Multikunst Automation, and Agata Journal below are representative AI-native or AI-accelerated releases.',
+    'The same mindset runs through private work: Replit for my first project-manager apps, then GPT and Claude in Cursor for dashboards, games, and creative tools. Current work below: Lernwerk (local-first AI course authoring with Sahachat Sonnenburg), Occupied VFX, three months at Sokra for schools, and Agata Journal.',
   eyebrow: 'AI · Apps',
   projects: AI_APP_DEV_HIGHLIGHT_PROJECTS,
   glow: 'indigo',
-  gridClass: 'grid-cols-2 lg:min-h-[560px] lg:grid-cols-3 lg:grid-rows-2 lg:gap-5',
+  gridClass: 'grid-cols-2 lg:min-h-[520px] lg:grid-cols-3 lg:grid-rows-[minmax(200px,1.15fr)_minmax(160px,1fr)] lg:gap-5',
   tileCellClass(project) {
-    if (project.span === 'featured') {
+    if (project.id === 'lernwerk') {
       return [
-        'relative min-h-[176px]',
-        'col-span-2 row-span-1 order-first sm:min-h-[200px]',
-        'lg:col-span-1 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:min-h-0 lg:order-none',
+        'relative min-h-[168px] col-span-2 order-first sm:min-h-[196px]',
+        'lg:col-span-3 lg:col-start-1 lg:row-start-1 lg:min-h-0 lg:order-none',
       ].join(' ');
     }
     switch (project.id) {
       case 'multikunst-occupied':
-        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-2 lg:col-start-1 lg:row-start-1 lg:order-none lg:min-h-0';
-      case 'skyhaven-vfx':
-        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-3 lg:col-start-2 lg:row-start-1 lg:order-none lg:min-h-0';
-      case 'multikunst-automation':
-        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-4 lg:col-start-1 lg:row-start-2 lg:order-none lg:min-h-0';
+        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-2 lg:col-start-1 lg:row-start-2 lg:order-none lg:min-h-0';
+      case 'sokra':
+        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-3 lg:col-start-2 lg:row-start-2 lg:order-none lg:min-h-0';
       case 'agata-journal':
-        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-5 lg:col-start-2 lg:row-start-2 lg:order-none lg:min-h-0';
+        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-4 lg:col-start-3 lg:row-start-2 lg:order-none lg:min-h-0';
       default:
         return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px]';
     }

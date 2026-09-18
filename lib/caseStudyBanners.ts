@@ -51,6 +51,16 @@ export const CASE_STUDY_BANNERS: Record<string, CaseStudyBannerConfig> = {
     mark: { kind: 'agata-wordmark' },
     keepHeroInSections: true,
   },
+  lernwerk: {
+    glow: 'emerald',
+    mark: titleMark(),
+    keepHeroInSections: true,
+  },
+  sokra: {
+    glow: 'blue',
+    mark: titleMark(),
+    keepHeroInSections: true,
+  },
   'ninja-mage': {
     glow: 'violet',
     mark: titleMark(),

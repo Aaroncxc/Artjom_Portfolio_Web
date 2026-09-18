@@ -22,7 +22,9 @@ export type HighlightProjectId =
   | 'ninja-mage'
   | 'flasher'
   | 'multikunst-automation'
-  | 'agata-journal';
+  | 'agata-journal'
+  | 'lernwerk'
+  | 'sokra';
 
 export interface HighlightProject {
   id: HighlightProjectId;
@@ -71,11 +73,11 @@ export interface HighlightProject {
 export const HIGHLIGHT_PROJECTS: HighlightProject[] = [
   {
     id: 'lexsolar',
-    title: 'Lexsolar Digital Learning Kit',
+    title: 'leXsolar Digital Learning Kit',
     year: '2025',
     category: 'Education · XR prototype',
     description:
-      'Digital twin of Lexsolar’s physical solar learning cases — Blender assets and a Unity learning prototype aligning stakeholders on how hands-on labs could scale digitally.',
+      'Digital twin of leXsolar’s physical solar learning cases — Blender assets and a Unity learning game aligning stakeholders on how hands-on labs could scale digitally.',
     role:
       'Production lead from partner workshops through asset scope, prototyping milestones, and cross-team delivery with editorial and SMEs.',
     tools: ['Blender', 'Unity'],
@@ -383,6 +385,72 @@ Built under Multikunst with Sahachat Sonnenburg. Native Swift/SwiftUI, TestFligh
   span: 'normal',
 };
 
+export const LERNWERK_HIGHLIGHT_PROJECT: HighlightProject = {
+  id: 'lernwerk',
+  title: 'Lernwerk',
+  year: '2026 — active',
+  category: 'Learning · AI authoring',
+  description:
+    'Local-first AI authoring studio — generate, edit and deliver complete interactive courses, SCORM packages and verifiable certificates, without a user account.',
+  explanation: `Lernwerk is a local-first web studio: you set a learning goal, audience, duration, language and source material, generate a full course through an OpenRouter model, then keep every module editable on a visual canvas. Editor, learner preview and SCORM export share the same visual rules. Learners finish in a local library and get a signed certificate that can be checked on-device.
+
+I work on it with Sahachat Sonnenburg. He designed and engineered the product; I work the learning-product side — authoring flow, course formats, and the path from brief to package and credential. Live studio at lernwerk-flame.vercel.app.`,
+  role:
+    'Learning product and delivery with Sahachat Sonnenburg — authoring flow, course formats, SCORM path and certificate loop. Product design and engineering by Sahachat.',
+  tools: ['OpenRouter', 'SCORM', 'React', 'local-first'],
+  thumb: '/tools/lernwerk/hero.webp',
+  gallery: [
+    '/tools/lernwerk/overview.webp',
+    '/tools/lernwerk/editor.webp',
+    '/tools/lernwerk/model-selection.webp',
+    '/tools/lernwerk/course-preview.webp',
+    '/tools/lernwerk/my-learning.webp',
+    '/tools/lernwerk/certificate.webp',
+  ],
+  toolExternalUrl: 'https://lernwerk-flame.vercel.app/',
+  tileAvailability: 'live',
+  tileTags: ['OpenRouter', 'SCORM'],
+  tileBadges: ['Learning Experience', 'Tool'],
+  tileHideFeaturedFade: true,
+  tileFeaturedLightTitle: true,
+  tileShowTitle: false,
+  projectSlug: 'lernwerk',
+  span: 'normal',
+};
+
+export const SOKRA_HIGHLIGHT_PROJECT: HighlightProject = {
+  id: 'sokra',
+  title: 'Sokra',
+  year: 'Mar–May 2026',
+  category: 'Learning · Schools',
+  description:
+    'Berlin e-learning for classrooms — personalized AI activities, live progress, and follow-up. Three months on internal AI processes and communication paths to public and private schools.',
+  explanation: `Sokra is a Berlin company building personalized AI learning for classrooms. Teachers set a topic and level; learners practice with explanations and feedback; staff see who is stuck and what to do next.
+
+I was there from March to May 2026. I tightened internal processes with AI and built communication paths to individual schools — public and private. I did not found the company and I did not build the product UI. The screens in this case study are Sokra's product, the classroom context I was working toward.`,
+  role:
+    'Three months in Berlin: internal AI processes and communication paths to public and private schools. Not a founder or product-engineering claim.',
+  tools: ['AI processes', 'School communication'],
+  thumb: '/tools/sokra/tile-poster.webp',
+  tileVideo: '/tools/sokra/tile-preview.mp4',
+  gallery: [
+    '/tools/sokra/og.webp',
+    '/tools/sokra/chat.webp',
+    '/tools/sokra/class-feedback.webp',
+    '/tools/sokra/canvas.webp',
+  ],
+  toolExternalUrl: 'https://sokra.io/de',
+  tileTags: ['Schools', 'AI'],
+  tileBadges: ['Learning Experience'],
+  tileHideFeaturedFade: true,
+  tileFeaturedLightTitle: false,
+  tileShowTitle: true,
+  tileTitle: 'sokra',
+  tileTitleSize: 'prominent',
+  projectSlug: 'sokra',
+  span: 'normal',
+};
+
 export const MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT: HighlightProject = {
   id: 'multikunst-automation',
   title: 'Multikunst Automation',
@@ -463,10 +531,9 @@ export const SKYHAVEN_VFX_HIGHLIGHT_PROJECT: HighlightProject = {
 const occupiedForAi = MULTIKUNST_HIGHLIGHT_PROJECTS.find((p) => p.id === 'multikunst-occupied')!;
 
 export const AI_APP_DEV_HIGHLIGHT_PROJECTS: HighlightProject[] = [
-  SKYHAVEN_HIGHLIGHT_PROJECTS[0],
+  LERNWERK_HIGHLIGHT_PROJECT,
   occupiedForAi,
-  SKYHAVEN_VFX_HIGHLIGHT_PROJECT,
-  MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT,
+  SOKRA_HIGHLIGHT_PROJECT,
   AGATA_JOURNAL_HIGHLIGHT_PROJECT,
 ];
 
@@ -478,6 +545,8 @@ export const ALL_HIGHLIGHT_PROJECTS: HighlightProject[] = [
   FLASHER_HIGHLIGHT_PROJECT,
   MULTIKUNST_AUTOMATION_HIGHLIGHT_PROJECT,
   AGATA_JOURNAL_HIGHLIGHT_PROJECT,
+  LERNWERK_HIGHLIGHT_PROJECT,
+  SOKRA_HIGHLIGHT_PROJECT,
   NINJA_MAGE_HIGHLIGHT_PROJECT,
   SKYHAVEN_VFX_HIGHLIGHT_PROJECT,
 ];

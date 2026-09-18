@@ -100,7 +100,7 @@ function TileTitleWithAvailabilityRow({
               : 'text-[1.25rem] sm:text-2xl md:text-3xl xl:text-[2.1rem]',
             project.tileFeaturedLightTitle
               ? 'text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_14px_rgba(0,0,0,0.75)]'
-              : 'text-mk-text [text-shadow:0_1px_0_rgba(255,255,255,0.9),0_2px_14px_rgba(255,255,255,0.65),0_2px_18px_rgba(0,0,0,0.12)]',
+              : 'text-black',
           )}
         >
           {project.tileTitle ?? project.title}
@@ -178,7 +178,7 @@ function TileTitleOverlay({
             : 'max-w-[18rem] text-[1.25rem] sm:text-2xl md:text-3xl xl:text-[2.1rem]',
           project.tileFeaturedLightTitle
             ? 'text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_14px_rgba(0,0,0,0.75)]'
-            : 'text-mk-text [text-shadow:0_1px_0_rgba(255,255,255,0.9),0_2px_14px_rgba(255,255,255,0.65),0_2px_18px_rgba(0,0,0,0.12)]',
+            : 'text-black',
         )}
       >
         <span className="block">{firstWord}</span>
@@ -381,7 +381,7 @@ export function HighlightBentoSection({
         >
           <motion.div layout={!limitContinuousEffects} transition={spring}>
             <div className="grid gap-6 sm:gap-8 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,2.12fr)] lg:gap-10">
-              <div className="flex flex-col gap-3 sm:gap-4 lg:sticky lg:top-28 lg:self-start">
+              <div className="flex min-w-0 flex-col gap-3 sm:gap-4 lg:sticky lg:top-28 lg:self-start">
                 <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
                   {config.eyebrow ?? 'Highlights'}
                 </span>
@@ -393,12 +393,18 @@ export function HighlightBentoSection({
                   <span className="block pl-[2rem] pt-[0.2em] sm:pl-[2.5rem] md:pl-[3rem] lg:pl-[3.25rem]">
                     {config.headlineStairs[1]}
                   </span>
-                  <div className="flex flex-row flex-wrap items-baseline justify-between gap-x-3 gap-y-1 pt-[0.2em] pl-[4rem] sm:pl-[5.25rem] md:pl-[6.25rem] lg:pl-[6.75rem]">
-                    <span className="min-w-0">{config.headlineStairs[2]}</span>
-                    <span className="shrink-0 text-[0.6875rem] font-medium tabular-nums tracking-normal text-mk-text sm:text-[0.8125rem] md:text-sm">
+                  {config.headlineStairs[2] ? (
+                    <div className="flex flex-row flex-wrap items-baseline justify-between gap-x-3 gap-y-1 pt-[0.2em] pl-[4rem] sm:pl-[5.25rem] md:pl-[6.25rem] lg:pl-[6.75rem]">
+                      <span className="min-w-0">{config.headlineStairs[2]}</span>
+                      <span className="min-w-0 text-pretty text-[0.6875rem] font-medium tabular-nums tracking-normal text-mk-text sm:text-[0.8125rem] md:text-sm">
+                        {config.subtitle}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="mt-[0.45em] block max-w-full text-pretty text-[0.6875rem] font-medium tracking-normal text-mk-text sm:text-[0.8125rem] md:text-sm">
                       {config.subtitle}
                     </span>
-                  </div>
+                  )}
                 </h2>
                 <div className="max-w-none space-y-2 text-[0.9375rem] leading-relaxed text-mk-text-secondary sm:max-w-md sm:text-[15px] sm:leading-relaxed lg:text-base">
                   <p>{config.bodyP1}</p>

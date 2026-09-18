@@ -14,6 +14,15 @@ export function isExternalHref(href: string): boolean {
 /** Live URL of the Course Overview Tool. */
 export const DADB_COURSE_OVERVIEW_TOOL_URL = 'https://v0-image-analysis-taupe-beta.vercel.app';
 
+/** Live Lernwerk studio (local-first AI authoring). */
+export const LERNWERK_APP_URL = 'https://lernwerk-flame.vercel.app/';
+
+/** Public case write-up on Sahachat Sonnenburg’s site. */
+export const LERNWERK_CASE_URL = 'https://www.sahachat-sonnenburg.com/work/lernwerk';
+
+/** Sokra — personalized AI learning for classrooms (Berlin). */
+export const SOKRA_SITE_URL = 'https://sokra.io/de';
+
 /** Case-study route for the Course Overview Tool. */
 export const DADB_COURSE_OVERVIEW_CASE_PATH = '/project/course-overview';
 
