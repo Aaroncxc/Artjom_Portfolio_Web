@@ -1,0 +1,130 @@
+.career-one-pager {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--fg);
+}
+
+.career-one-pager__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.career-one-pager__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  margin-bottom: 0.5rem;
+}
+
+.career-one-pager__title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.2;
+}
+
+.career-one-pager__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.career-one-pager__contact a {
+  color: var(--fg-muted);
+  text-decoration: none;
+}
+
+.career-one-pager__section {
+  margin-bottom: 1.5rem;
+}
+
+.career-one-pager__section h2 {
+  font-size: 0.6875rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  margin-bottom: 0.5rem;
+}
+
+.career-one-pager__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  margin-top: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.career-one-pager__cases {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.career-one-pager__cases li + li {
+  margin-top: 0.5rem;
+}
+
+.career-one-pager__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8125rem;
+  color: var(--fg-faint);
+}
+
+.career-one-pager__back {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.career-one-pager__print {
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--fg);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .career-one-pager {
+    padding: 0;
+    max-width: none;
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  .career-one-pager__section h2,
+  .career-one-pager__eyebrow,
+  .career-one-pager__footer {
+    color: #444 !important;
+  }
+
+  .career-one-pager a {
+    color: #111 !important;
+  }
+}
