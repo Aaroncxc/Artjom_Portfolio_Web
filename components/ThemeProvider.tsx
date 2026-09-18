@@ -31,8 +31,10 @@ function applyDomTheme(theme: ThemeMode) {
 function getInitialTheme(): ThemeMode {
   if (typeof window === 'undefined') return 'light';
   try {
+    if (document.documentElement.classList.contains('dark')) return 'dark';
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === 'dark' || stored === 'light') return stored;
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
   } catch {
     /* ignore */
   }
