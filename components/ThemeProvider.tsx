@@ -21,7 +21,7 @@ type ThemeContextValue = {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-const STORAGE_KEY = 'artjom-theme-v2';
+const STORAGE_KEY = 'artjom-theme';
 
 function applyDomTheme(theme: ThemeMode) {
   document.documentElement.classList.toggle('dark', theme === 'dark');

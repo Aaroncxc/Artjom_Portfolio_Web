@@ -34,7 +34,7 @@ export const viewport: Viewport = {
   themeColor: '#FAFAFF',
 };
 
-const themeBootScript = `(function(){try{var t=localStorage.getItem('artjom-theme-v2');if(t==='dark'){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}else{document.documentElement.classList.remove('dark');document.documentElement.style.colorScheme='light';}}catch(e){}})();`;
+const themeBootScript = `(function(){try{var k='artjom-theme';var t=localStorage.getItem(k);if(t==='dark'){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}else{document.documentElement.classList.remove('dark');document.documentElement.style.colorScheme='light';}}catch(e){}})();`;
 
 export default function RootLayout({
   children,
