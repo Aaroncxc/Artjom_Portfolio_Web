@@ -468,6 +468,9 @@ export function TextPointCloudHero({ onReady, onActivate }: TextPointCloudHeroPr
                 transition={{ duration: 0.4, delay: 0.4 }}
                 className="flex max-w-[min(100%,20rem)] flex-col items-center gap-2 text-center"
               >
+                <p className="text-[11px] font-medium leading-snug tracking-[0.08em] text-mk-text-secondary sm:text-xs">
+                  AI Portfolio Lead · Learning Content &amp; Production
+                </p>
                 <motion.span
                   className="text-[10px] leading-snug text-mk-text-muted tracking-[0.22em] sm:text-xs sm:tracking-[0.3em]"
                   animate={{ opacity: [0.45, 1, 0.45] }}

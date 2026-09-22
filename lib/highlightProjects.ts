@@ -391,10 +391,14 @@ export const LERNWERK_HIGHLIGHT_PROJECT: HighlightProject = {
   year: '2026 — active',
   category: 'Learning · AI authoring',
   description:
-    'Local-first AI authoring studio — generate, edit and deliver complete interactive courses, SCORM packages and verifiable certificates, without a user account.',
-  explanation: `Lernwerk is a local-first web studio: you set a learning goal, audience, duration, language and source material, generate a full course through an OpenRouter model, then keep every module editable on a visual canvas. Editor, learner preview and SCORM export share the same visual rules. Learners finish in a local library and get a signed certificate that can be checked on-device.
+    'Problem → brief-led OpenRouter generation → visual canvas editing → SCORM export and on-device certificates — local-first, no user account.',
+  explanation: `Problem: instructional teams lose weeks when AI generation, module editing, learner preview, and SCORM packaging live in separate tools — and when every step needs accounts or cloud setup.
 
-I work on it with Sahachat Sonnenburg. He designed and engineered the product; I work the learning-product side — authoring flow, course formats, and the path from brief to package and credential. Live studio at lernwerk-flame.vercel.app.`,
+Authoring pipeline: Lernwerk starts from a learning brief — goal, audience, duration, language, and source material — not a blank prompt. OpenRouter generates a full course; every module stays editable on a visual canvas with Sahachat Sonnenburg on product design and engineering while I shape the learning-product side.
+
+SCORM & delivery: editor, learner preview, and SCORM export share the same visual rules. Learners finish in a local library and receive a signed certificate verifiable on-device.
+
+Launch: live studio at lernwerk-flame.vercel.app — local-first, no user account required.`,
   role:
     'Learning product and delivery with Sahachat Sonnenburg — authoring flow, course formats, SCORM path and certificate loop. Product design and engineering by Sahachat.',
   tools: ['OpenRouter', 'SCORM', 'React', 'local-first'],
@@ -532,9 +536,9 @@ const occupiedForAi = MULTIKUNST_HIGHLIGHT_PROJECTS.find((p) => p.id === 'multik
 
 export const AI_APP_DEV_HIGHLIGHT_PROJECTS: HighlightProject[] = [
   LERNWERK_HIGHLIGHT_PROJECT,
-  occupiedForAi,
   SOKRA_HIGHLIGHT_PROJECT,
   AGATA_JOURNAL_HIGHLIGHT_PROJECT,
+  occupiedForAi,
 ];
 
 export const ALL_HIGHLIGHT_PROJECTS: HighlightProject[] = [
