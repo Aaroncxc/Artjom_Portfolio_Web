@@ -14,6 +14,9 @@ import type { Project } from '@/lib/types';
 
 const ROLES = [
   'Production Leadership',
+  'Learning Content',
+  'AI Pipeline',
+  'Portfolio Roadmap',
   'Project Delivery',
   'Creative Operations',
   'Realtime · 3D · XR',
@@ -276,9 +279,12 @@ export function AboutSection({ visible }: AboutSectionProps) {
                   <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
                     Production leadership
                   </span>
-                  <h3 className="mb-4 text-3xl font-semibold leading-[1.05] tracking-tight text-mk-text sm:text-4xl lg:text-5xl brand-tight">
+                  <h3 className="mb-2 text-3xl font-semibold leading-[1.05] tracking-tight text-mk-text sm:text-4xl lg:text-5xl brand-tight">
                     Senior Production &amp; Project Lead
                   </h3>
+                  <p className="mb-4 text-base font-medium leading-snug text-mk-text-secondary sm:text-lg">
+                    AI Portfolio Lead · Learning Content &amp; Production
+                  </p>
                   <p className="text-base leading-relaxed text-mk-text-secondary sm:text-lg">
                     {BIO}
                   </p>

@@ -7,7 +7,7 @@ const SECTION_NAV_LINES: Record<string, string> = {
   about: DEFAULT_NAV_LINE,
   intro: 'Two minutes. Then the work.',
   highlights: 'I keep productions on time.',
-  'highlights-ai-apps': 'I ship apps with AI in the loop.',
+  'highlights-ai-apps': 'Learning content, authored with AI in the loop.',
   'highlights-architecture': 'Spaces you can walk through.',
   'highlights-skyhaven': 'A game that lives on your desktop.',
   'highlights-vfx': 'Combat you can read in a frame.',

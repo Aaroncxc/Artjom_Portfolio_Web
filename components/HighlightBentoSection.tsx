@@ -409,6 +409,16 @@ export function HighlightBentoSection({
                 <div className="max-w-none space-y-2 text-[0.9375rem] leading-relaxed text-mk-text-secondary sm:max-w-md sm:text-[15px] sm:leading-relaxed lg:text-base">
                   <p>{config.bodyP1}</p>
                   <p>{config.bodyP2}</p>
+                  {config.caseBlock ? (
+                    <div className="theme-card rounded-xl border px-3.5 py-3 sm:px-4 sm:py-3.5">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-mk-text-muted">
+                        {config.caseBlock.title}
+                      </p>
+                      <p className="mt-2 text-[0.875rem] leading-relaxed text-mk-text-secondary sm:text-[15px]">
+                        {config.caseBlock.body}
+                      </p>
+                    </div>
+                  ) : null}
                   {config.tryBuildLinks?.length ? (
                     <p className="flex flex-wrap gap-x-4 gap-y-1">
                       {config.tryBuildLinks.map((link) => {

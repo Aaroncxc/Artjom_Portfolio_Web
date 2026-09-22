@@ -28,6 +28,8 @@ export interface HighlightBentoSectionConfig {
   backLabel?: string;
   /** Optional compact outbound links shown inline after body copy (keeps layout height flat). */
   tryBuildLinks?: { href: string; label: string }[];
+  /** Optional compact case block (Problem → pipeline → launch) shown after body copy. */
+  caseBlock?: { title: string; body: string };
 }
 
 const ARCHITECTURE_TILE_CLASS =
@@ -72,14 +74,19 @@ export const PRODUCTION_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
 
 export const AI_APP_DEV_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
   id: 'highlights-ai-apps',
-  sectionTitle: 'App Development with AI',
-  headlineStairs: ['App Development', 'with AI', ''],
-  subtitle: 'DADB production · Personal builds',
+  sectionTitle: 'Learning Content & AI Authoring',
+  headlineStairs: ['Learning Content', '& AI', 'Authoring'],
+  subtitle: 'DADB production · Lernwerk · Sokra',
   bodyP1:
-    'From the start of my production work at DADB, I have pushed AI into how we ship courses — using ElevenLabs, Synthesia, and HeyGen to accelerate voice, presenter, and video pipelines while keeping editorial control in-house.',
+    'At DADB I pushed AI into how we ship courses — ElevenLabs, Synthesia, and HeyGen for voice, presenter, and video pipelines — while keeping editorial control in-house. That same production mindset now runs through learning-content tooling I build and shape with partners.',
   bodyP2:
-    'The same mindset runs through private work: Replit for my first project-manager apps, then GPT and Claude in Cursor for dashboards, games, and creative tools. Current work below: Lernwerk (local-first AI course authoring with Sahachat Sonnenburg), Occupied VFX, three months at Sokra for schools, and Agata Journal.',
-  eyebrow: 'AI · Apps',
+    'Lernwerk is the lead story below: a local-first AI authoring studio with Sahachat Sonnenburg. Sokra is a short schools engagement; Agata and Occupied sit further down the rail as lighter personal builds.',
+  caseBlock: {
+    title: 'Lernwerk — brief to package',
+    body:
+      'Problem: teams lose weeks moving from an instructional brief to editable modules, learner preview, and a shippable package when generation, editing, and SCORM export live in different tools. Pipeline: set goal, audience, duration, language, and source material — OpenRouter generates a full course you keep editable on a visual canvas. Delivery: editor, preview, and SCORM export share the same visual rules; learners finish in a local library with on-device verifiable certificates. Launch: live studio at lernwerk-flame.vercel.app — no user account.',
+  },
+  eyebrow: 'Learning · AI',
   projects: AI_APP_DEV_HIGHLIGHT_PROJECTS,
   glow: 'indigo',
   gridClass: 'grid-cols-2 lg:min-h-[520px] lg:grid-cols-3 lg:grid-rows-[minmax(200px,1.15fr)_minmax(160px,1fr)] lg:gap-5',
@@ -91,11 +98,11 @@ export const AI_APP_DEV_HIGHLIGHT_SECTION: HighlightBentoSectionConfig = {
       ].join(' ');
     }
     switch (project.id) {
-      case 'multikunst-occupied':
-        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-2 lg:col-start-1 lg:row-start-2 lg:order-none lg:min-h-0';
       case 'sokra':
-        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-3 lg:col-start-2 lg:row-start-2 lg:order-none lg:min-h-0';
+        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-2 lg:col-start-1 lg:row-start-2 lg:order-none lg:min-h-0';
       case 'agata-journal':
+        return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-3 lg:col-start-2 lg:row-start-2 lg:order-none lg:min-h-0';
+      case 'multikunst-occupied':
         return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px] order-4 lg:col-start-3 lg:row-start-2 lg:order-none lg:min-h-0';
       default:
         return 'relative min-h-[118px] sm:min-h-[132px] md:min-h-[148px]';
