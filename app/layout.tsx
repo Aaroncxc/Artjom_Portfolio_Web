@@ -4,25 +4,26 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://artjomnaninjan.vercel.app'),
-  title: 'Artjom Naninjan | Senior Production & Project Lead',
+  title: 'Artjom Naninjan | Game Producer · Technical Producer',
   description:
-    'Senior production and project lead for digital, creative and technical productions — 35 people, six parallel productions, four sites and three continents.',
+    'Game Producer portfolio — Skyhaven (Arena → Coins → Build), tooling with ship:ingame, and DADB Head of Production (~30–35, multi-site).',
   keywords: [
     'Artjom Naninjan',
-    'Senior Production Lead',
-    'Technical Project Manager',
-    'Creative Operations',
-    'Delivery Lead',
-    'Realtime 3D',
-    'XR Production',
-    'AI Operations',
+    'Game Producer',
+    'Associate Producer',
+    'Technical Producer',
+    'Production Lead',
+    'Skyhaven',
+    'CoinCraft',
+    'Tauri',
+    'VFX Studio',
     'Portfolio',
   ],
   authors: [{ name: 'Artjom Naninjan' }],
   openGraph: {
-    title: 'Artjom Naninjan | Senior Production & Project Lead',
+    title: 'Artjom Naninjan | Game Producer · Technical Producer',
     description:
-      'Production leadership for interdisciplinary digital teams: 35 people, six parallel productions, four sites and three continents.',
+      'Producer — scope locks, playable systems, and the tools that keep them shipping. Skyhaven + DADB production leadership.',
     type: 'website',
     locale: 'en_US',
   },
