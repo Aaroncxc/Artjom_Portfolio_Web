@@ -11,7 +11,7 @@ export function pick(copy: Localized, lang: IntroLang): string {
   return copy[lang];
 }
 
-export const INTRO_WORK_HREF = '/?skipHero=true';
+export const INTRO_WORK_HREF = '/';
 export const INTRO_LINKEDIN =
   'https://www.linkedin.com/in/artjom-naninjan-5136b1203';
 

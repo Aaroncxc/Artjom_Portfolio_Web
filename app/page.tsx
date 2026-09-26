@@ -1,180 +1,125 @@
-'use client';
+import Link from 'next/link';
+import { ProducerShell } from '@/components/producer/ProducerShell';
+import { ProofChips } from '@/components/producer/CaseBlocks';
+import { WorkCard } from '@/components/producer/WorkCard';
+import { buildHireMailto } from '@/lib/contact';
+import { HOME, MAILTO_SUBJECTS, MEDIA, SKYHAVEN_LANDING } from '@/lib/producer/constants';
 
-import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import LightLeaksBackground from '@/components/LightLeaksBackground';
-import { Navigation } from '@/components/Navigation';
-import { AboutSection } from '@/components/AboutSection';
-import {
-  HighlightBentoSection,
-  AI_APP_DEV_HIGHLIGHT_SECTION,
-  ARCHITECTURE_HIGHLIGHT_SECTION,
-  MULTIKUNST_HIGHLIGHT_SECTION,
-  PRODUCTION_HIGHLIGHT_SECTION,
-  SKYHAVEN_HIGHLIGHT_SECTION,
-  VFX_HIGHLIGHT_SECTION,
-} from '@/components/HighlightBentoSection';
-import { ProjectsGrid } from '@/components/ProjectsGrid';
-import { ToolsGamesGrid } from '@/components/ToolsGamesGrid';
-import { TextPointCloudHero } from '@/components/TextPointCloudHero';
-import { CONTACT_MAILTO } from '@/lib/contact';
-
-export default function Home() {
-  const [heroDismissed, setHeroDismissed] = useState(false);
-  const [introKey, setIntroKey] = useState(0);
-  /** Sub-`md` viewports get a shorter hero-gate dissolve (faster disconnect of intro canvas after tap). */
-  const [narrowViewport, setNarrowViewport] = useState(false);
-
-  // Allow skipping the cinematic intro via ?skipHero=true or hash deep-link (#projects, #about, …).
-  // Useful on mobile where the canvas sometimes swallows the first tap, and for direct deep links.
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const url = new URL(window.location.href);
-    const skipParam = url.searchParams.get('skipHero');
-    const hasHashTarget = /^#\w/.test(window.location.hash || '');
-    if (skipParam === 'true' || skipParam === '1' || hasHashTarget) {
-      setHeroDismissed(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return;
-    const mq = window.matchMedia('(max-width: 767px)');
-    const sync = () => setNarrowViewport(mq.matches);
-    sync();
-    mq.addEventListener?.('change', sync);
-    return () => mq.removeEventListener?.('change', sync);
-  }, []);
-
-  // Lock scroll while the intro hero is up — also blocks touch scroll on iOS/Android
-  useEffect(() => {
-    if (heroDismissed) return undefined;
-    document.documentElement.classList.add('hero-locked');
-    document.body.classList.add('hero-locked');
-    return () => {
-      document.documentElement.classList.remove('hero-locked');
-      document.body.classList.remove('hero-locked');
-    };
-  }, [heroDismissed]);
-
-  const openIntro = useCallback(() => {
-    window.scrollTo(0, 0);
-    setIntroKey((k) => k + 1);
-    setHeroDismissed(false);
-  }, []);
-
+export default function ProducerHomePage() {
   return (
-    <>
-      {/* Light Leaks Background - pearl gradient with subtle color blobs */}
-      <LightLeaksBackground />
-
-      {/* Cinematic intro gate */}
-      <AnimatePresence>
-        {!heroDismissed && (
-          <motion.div
-            key="hero-gate"
-            initial={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-            animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-            exit={{
-              opacity: 0,
-              y: 80,
-              scale: 1.04,
-              filter: 'blur(10px)',
-            }}
-            transition={{ duration: narrowViewport ? 0.55 : 0.95, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-[100]"
-            style={{ willChange: 'opacity, transform, filter' }}
-          >
-            <TextPointCloudHero key={introKey} onActivate={() => setHeroDismissed(true)} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Navigation appears as soon as the gate dissolves */}
-      <Navigation visible={heroDismissed} onLogoClick={openIntro} />
-
-      {/* Main Content - revealed after the gate */}
-      <motion.main
-        className="relative z-[5]"
-        initial={false}
-        animate={{
-          opacity: heroDismissed ? 1 : 0,
-          y: heroDismissed ? 0 : -40,
-          scale: heroDismissed ? 1 : 0.97,
-        }}
-        transition={{
-          duration: 0.9,
-          ease: [0.22, 1, 0.36, 1],
-          delay: heroDismissed ? 0.2 : 0,
-        }}
-        style={{
-          pointerEvents: heroDismissed ? 'auto' : 'none',
-        }}
-        aria-hidden={!heroDismissed}
-      >
-        {/* About Section - first content the visitor sees */}
-        <AboutSection visible={true} />
-
-        <HighlightBentoSection visible={true} config={AI_APP_DEV_HIGHLIGHT_SECTION} />
-
-        <HighlightBentoSection visible={true} config={PRODUCTION_HIGHLIGHT_SECTION} />
-
-        <HighlightBentoSection visible={true} config={ARCHITECTURE_HIGHLIGHT_SECTION} />
-
-        <HighlightBentoSection visible={true} config={SKYHAVEN_HIGHLIGHT_SECTION} />
-
-        <HighlightBentoSection visible={true} config={VFX_HIGHLIGHT_SECTION} />
-
-        <HighlightBentoSection visible={true} config={MULTIKUNST_HIGHLIGHT_SECTION} />
-
-        {/* Projects Section - Instagram-style Grid */}
-        <ProjectsGrid visible={true} />
-
-        {/* Tools & Games Section */}
-        <ToolsGamesGrid visible={true} />
-
-        {/* Footer */}
-        <footer
-          data-nav-key="footer"
-          className="relative z-10 px-4 pt-8 pb-10 sm:px-6 sm:pt-10 sm:pb-14"
-        >
-          <div className="max-w-7xl mx-auto">
-            <div className="glass-panel p-6 sm:p-8">
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
-                <div>
-                  <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Artjom Naninjan</h3>
-                  <p className="text-mk-text-secondary text-sm leading-relaxed">
-                    Senior Production &amp; Project Lead for interdisciplinary digital, creative and technical teams.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium mb-3 sm:mb-4 text-mk-text-muted uppercase tracking-wider">Navigate</h4>
-                  <ul className="space-y-1">
-                    <li><a href="/intro" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Intro</a></li>
-                    <li><a href="#about" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">About</a></li>
-                    <li><a href="#projects" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Projects</a></li>
-                    <li><a href="#tools-games" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Tools &amp; Games</a></li>
-                    <li><a href={CONTACT_MAILTO} className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Contact</a></li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium mb-3 sm:mb-4 text-mk-text-muted uppercase tracking-wider">Connect</h4>
-                  <ul className="space-y-1">
-                    <li><a href="https://www.linkedin.com/in/artjom-naninjan-5136b1203" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">LinkedIn</a></li>
-                    <li><a href="https://multikunst.vercel.app" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Multikunst</a></li>
-                    <li><a href={CONTACT_MAILTO} className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Email</a></li>
-                  </ul>
-                </div>
-              </div>
-              <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-[rgba(28,28,28,0.08)] text-center">
-                <p className="text-xs sm:text-sm text-mk-text-muted">
-                  © {new Date().getFullYear()} Artjom Naninjan. All rights reserved.
-                </p>
-              </div>
+    <ProducerShell>
+      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-cyan">
+              Game Producer · Technical Producer
+            </p>
+            <h1 className="mt-4 text-3xl font-semibold leading-[1.12] tracking-tight text-mk-text sm:text-4xl md:text-[2.65rem]">
+              {HOME.headline}
+            </h1>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-mk-text-secondary">{HOME.oneLiner}</p>
+            <ProofChips chips={HOME.proofChips} className="mt-6" />
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/work/skyhaven" className="btn-solid inline-flex min-h-[44px] items-center rounded-full px-5 py-2.5 text-sm font-semibold">
+                View Skyhaven case
+              </Link>
+              <a
+                href={SKYHAVEN_LANDING}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-button inline-flex min-h-[44px] items-center rounded-full px-5"
+              >
+                Play / landing
+              </a>
+              <a
+                href={buildHireMailto(MAILTO_SUBJECTS.producer)}
+                className="glass-button inline-flex min-h-[44px] items-center rounded-full px-5"
+              >
+                Contact
+              </a>
             </div>
+            <p className="mt-4 text-xs text-mk-text-muted">
+              2-page PDF one-pager — same copy as the site; export in progress (redacted KPI frames pending).
+            </p>
           </div>
-        </footer>
-      </motion.main>
-    </>
+
+          <div>
+            <div className="overflow-hidden rounded-2xl border border-[color:var(--surface-border)] bg-black shadow-[var(--glass-shadow)]">
+              <video
+                className="aspect-video w-full object-cover"
+                controls
+                playsInline
+                preload="metadata"
+                poster={MEDIA.skyhaven.hub}
+              >
+                <source src={MEDIA.trailerPreview} type="video/mp4" />
+              </video>
+            </div>
+            <p className="mt-3 text-xs leading-relaxed text-mk-text-muted">{HOME.trailerCaption}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-[color:var(--surface-border)] bg-[color:var(--surface-card)]/30 py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-mk-text-muted">Selected work</h2>
+          <div className="mt-8 grid gap-6 md:grid-cols-3">
+            <WorkCard
+              href="/work/skyhaven"
+              title="Skyhaven / CoinCraft"
+              roleLine="Producer / Creative Lead"
+              statusLine="Playable Arena + Build Companion"
+              imageSrc={MEDIA.skyhaven.arenaDash}
+              imageAlt="Skyhaven arena combat — dash and melee"
+              tags={['Tauri', 'Arena → Build', 'NOW lock']}
+            />
+            <WorkCard
+              href="/work/dadb-production"
+              title="DADB Production"
+              roleLine="Head of Production"
+              statusLine="~30–35 people · KPI system · XR showcases"
+              imageSrc={MEDIA.dadb.kigali}
+              imageAlt="DADB XR showcase — Kigali trade show"
+              tags={['Multi-site', 'IHK 88/100', 'Reporting']}
+            />
+            <WorkCard
+              href="/tools"
+              title="Tools"
+              roleLine="Built from game / org need"
+              statusLine="VFX Studio · Dev Hub · Production Dashboard"
+              imageSrc={MEDIA.skyhaven.vfxStudio}
+              imageAlt="Skyhaven VFX Instrument Studio UI"
+              tags={['ship:ingame', 'Meshy→GLB', 'KPI']}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14">
+        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
+          <h2 className="text-xl font-semibold text-mk-text">Tools nest under the need.</h2>
+          <p className="mt-3 text-sm leading-relaxed text-mk-text-secondary">
+            Combat needed shippable VFX → VFX Studio. Build needed calibrated assets → Dev Hub Building Lab.
+            Multi-track org needed weekly clarity → Production Dashboard at DADB.
+          </p>
+        </div>
+      </section>
+
+      <section className="border-t border-[color:var(--surface-border)] py-12">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-4 px-4 sm:px-6">
+          <a
+            href={SKYHAVEN_LANDING}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="glass-button rounded-full px-5"
+          >
+            Skyhaven landing
+          </a>
+          <Link href="/contact" className="glass-button rounded-full px-5">
+            Email · LinkedIn
+          </Link>
+        </div>
+      </section>
+    </ProducerShell>
   );
 }
