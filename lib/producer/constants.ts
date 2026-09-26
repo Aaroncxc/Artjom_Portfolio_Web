@@ -36,12 +36,12 @@ export const MAILTO_SUBJECTS = {
 export const MEDIA = {
   trailerPreview: '/producer/trailer/skyhaven-preview-v4-20s.mp4',
   skyhaven: {
-    hub: '/producer/skyhaven/hero-hub.webp',
-    arenaDash: '/producer/skyhaven/hero-arena-dash.webp',
-    bow: '/producer/skyhaven/hero-bow.webp',
-    buildJump: '/producer/skyhaven/build-jump.webp',
-    vfxStudio: '/producer/skyhaven/vfx-studio-ui.webp',
-    arenaShop: '/producer/skyhaven/arena-shop.jpg',
+    hub: '/producer/skyhaven/hero_hub.jpg',
+    arenaDash: '/producer/skyhaven/hero_arena_dash.jpg',
+    bow: '/producer/skyhaven/hero_bow.jpg',
+    buildJump: '/producer/skyhaven/build_jump.jpg',
+    vfxStudio: '/producer/skyhaven/vfx_studio_ui.jpg',
+    arenaShop: '/producer/skyhaven/arena_shop.jpg',
   },
   dadb: {
     kigali: '/producer/dadb-xr-kigali.jpg',

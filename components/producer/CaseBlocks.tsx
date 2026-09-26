@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import type { ReactNode } from 'react';
+import { MEDIA } from '@/lib/producer/constants';
 
 export function ProofChips({ chips, className }: { chips: readonly string[]; className?: string }) {
   return (
@@ -92,7 +93,7 @@ export function VfxToGameShowcase() {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_minmax(0,1.1fr)]">
       <MediaFigure
-        src="/producer/skyhaven/vfx-studio-ui.webp"
+        src={MEDIA.skyhaven.vfxStudio}
         alt="Skyhaven VFX Instrument Studio — timeline, combat parameters, and Ins Game control"
         caption="VFX Instrument Studio — Cracked Mask + Greatsword Combo 3 slice; action registry + ship:ingame path in repo."
       />
