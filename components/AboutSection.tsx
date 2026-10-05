@@ -15,7 +15,7 @@ import type { Project } from '@/lib/types';
 const ROLES = [
   'Learning Content',
   'Content Production',
-  'AI Portfolio · PM',
+  'Content Production · PM',
   'Production Leadership',
   'Project Delivery',
 ];
@@ -278,7 +278,7 @@ export function AboutSection({ visible }: AboutSectionProps) {
                     Learning &amp; content production
                   </span>
                   <h3 className="mb-4 text-3xl font-semibold leading-[1.05] tracking-tight text-mk-text sm:text-4xl lg:text-5xl brand-tight">
-                    AI Portfolio Lead · Production PM for Learning
+                    Content Production Lead · Production PM for Learning
                   </h3>
                   <p className="text-base leading-relaxed text-mk-text-secondary sm:text-lg">
                     {BIO}
