@@ -217,8 +217,8 @@ export function ToolsGamesGrid({ visible }: ToolsGamesGridProps) {
       <div className={clsx('mx-auto max-w-7xl', isExpanded ? 'mb-6 sm:mb-8' : 'mb-0')}>
         <CollapsibleSectionBar
           eyebrow="Playground"
-          headlineStairs={['Tools', '& Games', 'Live builds']}
-          description="**Interactive web tools** and **games** I've built and shipped — **playable demos**, **dashboards**, and **realtime experiments**."
+          headlineStairs={['Tools', '& Games', 'Side builds']}
+          description="**Experiments and demos** — games, dashboards, and realtime tools. Collapsed by default; learning content above is the main story."
           meta={
             toolsGamesForOwner.length > 0
               ? `${toolsGamesForOwner.length} item${toolsGamesForOwner.length === 1 ? '' : 's'} · tap to ${isExpanded ? 'collapse' : 'explore the playground'}`

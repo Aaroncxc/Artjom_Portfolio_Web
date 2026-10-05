@@ -528,12 +528,12 @@ export const SKYHAVEN_VFX_HIGHLIGHT_PROJECT: HighlightProject = {
   span: 'normal',
 };
 
-const occupiedForAi = MULTIKUNST_HIGHLIGHT_PROJECTS.find((p) => p.id === 'multikunst-occupied')!;
+const courseOverviewForLearning = HIGHLIGHT_PROJECTS.find((p) => p.id === 'course-overview')!;
 
 export const AI_APP_DEV_HIGHLIGHT_PROJECTS: HighlightProject[] = [
   LERNWERK_HIGHLIGHT_PROJECT,
-  occupiedForAi,
   SOKRA_HIGHLIGHT_PROJECT,
+  courseOverviewForLearning,
   AGATA_JOURNAL_HIGHLIGHT_PROJECT,
 ];
 

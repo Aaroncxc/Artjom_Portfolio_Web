@@ -13,17 +13,18 @@ import type { Project } from '@/lib/types';
 // ── Artjom profile ────────────────────────────────────────────
 
 const ROLES = [
+  'Learning Content',
+  'Content Production',
+  'AI Portfolio · PM',
   'Production Leadership',
   'Project Delivery',
-  'Creative Operations',
-  'Realtime · 3D · XR',
 ];
 
-const BIO = `I build the structures that help interdisciplinary teams deliver ambitious digital work reliably. Most recently, I led an international production organisation of around 35 people across four sites, steering six parallel productions spanning editorial, 2D, 3D, post-production, XR and Unreal.`;
+const BIO = `I build the structures that help interdisciplinary teams ship learning content and digital courses reliably. As Head of Production at DADB, I led around 35 people across four sites, steering six parallel course productions from editorial through 2D, 3D, cinematic, and XR — with AI pipelines (ElevenLabs, Synthesia, HeyGen) embedded in how we delivered.`;
 
 const LEADERSHIP_METRICS = [
   { value: '35', label: 'people led' },
-  { value: '6', label: 'parallel productions' },
+  { value: '6', label: 'parallel course productions' },
   { value: '4', label: 'sites' },
   { value: '3', label: 'continents' },
 ] as const;
@@ -46,7 +47,7 @@ const STRENGTHS: Strength[] = [
   { name: 'Team & Delivery Leadership', highlight: true },
   { name: 'Resource & Capacity Planning', highlight: true },
   { name: 'Stakeholder & KPI Reporting', highlight: true },
-  { name: 'AI-enabled Operations', highlight: true },
+  { name: 'Learning Content & AI Pipeline', highlight: true },
   { name: 'Blender', icon: '/tool-icons/blender.png' },
   { name: 'Unreal Engine', icon: '/tool-icons/unreal-engine.png' },
   { name: 'Figma' },
@@ -274,10 +275,10 @@ export function AboutSection({ visible }: AboutSectionProps) {
               <div className="flex flex-col gap-6">
                 <div>
                   <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
-                    Production leadership
+                    Learning &amp; content production
                   </span>
                   <h3 className="mb-4 text-3xl font-semibold leading-[1.05] tracking-tight text-mk-text sm:text-4xl lg:text-5xl brand-tight">
-                    Senior Production &amp; Project Lead
+                    AI Portfolio Lead · Production PM for Learning
                   </h3>
                   <p className="text-base leading-relaxed text-mk-text-secondary sm:text-lg">
                     {BIO}
