@@ -13,17 +13,18 @@ import type { Project } from '@/lib/types';
 // ── Artjom profile ────────────────────────────────────────────
 
 const ROLES = [
+  'Learning Content',
+  'Content Production',
+  'Production PM',
   'Production Leadership',
   'Project Delivery',
-  'Creative Operations',
-  'Realtime · 3D · XR',
 ];
 
-const BIO = `I build the structures that help interdisciplinary teams deliver ambitious digital work reliably. Most recently, I led an international production organisation of around 35 people across four sites, steering six parallel productions spanning editorial, 2D, 3D, post-production, XR and Unreal.`;
+const BIO = `I work as a production PM for learning content and content production — building the structures, staffing, and reporting that help interdisciplinary teams ship courses reliably. At DADB I led around 35 people across four sites, steering six parallel productions from editorial through 2D, 3D, cinematic, and XR.`;
 
 const LEADERSHIP_METRICS = [
   { value: '35', label: 'people led' },
-  { value: '6', label: 'parallel productions' },
+  { value: '6', label: 'parallel course productions' },
   { value: '4', label: 'sites' },
   { value: '3', label: 'continents' },
 ] as const;
@@ -46,7 +47,7 @@ const STRENGTHS: Strength[] = [
   { name: 'Team & Delivery Leadership', highlight: true },
   { name: 'Resource & Capacity Planning', highlight: true },
   { name: 'Stakeholder & KPI Reporting', highlight: true },
-  { name: 'AI-enabled Operations', highlight: true },
+  { name: 'Learning Content & AI Pipeline', highlight: true },
   { name: 'Blender', icon: '/tool-icons/blender.png' },
   { name: 'Unreal Engine', icon: '/tool-icons/unreal-engine.png' },
   { name: 'Figma' },

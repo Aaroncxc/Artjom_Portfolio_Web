@@ -4,25 +4,25 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://artjomnaninjan.vercel.app'),
-  title: 'Artjom Naninjan | Senior Production & Project Lead',
+  title: 'Artjom Naninjan | Senior Production & Project Lead · Learning Content',
   description:
-    'Senior production and project lead for digital, creative and technical productions — 35 people, six parallel productions, four sites and three continents.',
+    'Senior production and project lead — learning content, content production, and production PM for course delivery. Led ~35 people, six parallel productions, four sites at DADB.',
   keywords: [
     'Artjom Naninjan',
     'Senior Production Lead',
+    'Learning Content',
+    'Content Production',
+    'Production PM',
     'Technical Project Manager',
-    'Creative Operations',
     'Delivery Lead',
-    'Realtime 3D',
-    'XR Production',
-    'AI Operations',
+    'Course Production',
     'Portfolio',
   ],
   authors: [{ name: 'Artjom Naninjan' }],
   openGraph: {
-    title: 'Artjom Naninjan | Senior Production & Project Lead',
+    title: 'Artjom Naninjan | Senior Production & Project Lead · Learning Content',
     description:
-      'Production leadership for interdisciplinary digital teams: 35 people, six parallel productions, four sites and three continents.',
+      'Learning content and content production at scale — production PM for ~35 people, six parallel productions, four sites.',
     type: 'website',
     locale: 'en_US',
   },
@@ -37,7 +37,7 @@ export const viewport: Viewport = {
   ],
 };
 
-const themeBootScript = `(function(){try{var k='artjom-theme';var t=localStorage.getItem(k);var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}else{document.documentElement.style.colorScheme='light';}}catch(e){}})();`;
+const themeBootScript = `(function(){try{var t=localStorage.getItem('artjom-theme');if(t==='dark'){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}else{document.documentElement.style.colorScheme='light';}}catch(e){}})();`;
 
 export default function RootLayout({
   children,

@@ -194,7 +194,7 @@ export const INTRO_SLIDES: IntroSlideDef[] = [
     },
     heroChips: [
       { en: 'Berlin', de: 'Berlin' },
-      { en: 'Production & Project Lead', de: 'Production & Project Lead' },
+      { en: 'Learning Content · Production PM', de: 'Learning Content · Production PM' },
       { en: 'Available now', de: 'Sofort verfügbar' },
     ],
     bullets: [
