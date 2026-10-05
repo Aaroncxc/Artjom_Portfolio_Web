@@ -144,7 +144,7 @@ export default function Home() {
                 <div>
                   <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Artjom Naninjan</h3>
                   <p className="text-mk-text-secondary text-sm leading-relaxed">
-                    Content Production Lead and Production PM for learning content — course production, AI authoring, and delivery at scale.
+                    Senior Production &amp; Project Lead — learning content, content production, and production PM for course delivery at scale.
                   </p>
                 </div>
                 <div>

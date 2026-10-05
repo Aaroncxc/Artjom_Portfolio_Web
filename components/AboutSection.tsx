@@ -15,12 +15,12 @@ import type { Project } from '@/lib/types';
 const ROLES = [
   'Learning Content',
   'Content Production',
-  'Content Production · PM',
+  'Production PM',
   'Production Leadership',
   'Project Delivery',
 ];
 
-const BIO = `I build the structures that help interdisciplinary teams ship learning content and digital courses reliably. As Head of Production at DADB, I led around 35 people across four sites, steering six parallel course productions from editorial through 2D, 3D, cinematic, and XR — with AI pipelines (ElevenLabs, Synthesia, HeyGen) embedded in how we delivered.`;
+const BIO = `I work as a production PM for learning content and content production — building the structures, staffing, and reporting that help interdisciplinary teams ship courses reliably. At DADB I led around 35 people across four sites, steering six parallel productions from editorial through 2D, 3D, cinematic, and XR.`;
 
 const LEADERSHIP_METRICS = [
   { value: '35', label: 'people led' },
@@ -275,10 +275,10 @@ export function AboutSection({ visible }: AboutSectionProps) {
               <div className="flex flex-col gap-6">
                 <div>
                   <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-[0.28em] text-mk-text-muted">
-                    Learning &amp; content production
+                    Production leadership
                   </span>
                   <h3 className="mb-4 text-3xl font-semibold leading-[1.05] tracking-tight text-mk-text sm:text-4xl lg:text-5xl brand-tight">
-                    Content Production Lead · Production PM for Learning
+                    Senior Production &amp; Project Lead
                   </h3>
                   <p className="text-base leading-relaxed text-mk-text-secondary sm:text-lg">
                     {BIO}
