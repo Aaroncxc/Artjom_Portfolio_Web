@@ -82,9 +82,8 @@ const en: PortfolioContent = {
   },
   hero: {
     eyebrow: 'E-Learning · Production & Product Management',
-    headline:
-      'I build course productions that deliver: a team of 23, six 30-hour courses per year, and €380,000 saved annually through AI avatars.',
-    sub: 'Head of Production in e-learning — built the department from scratch, led 23 direct reports, and held the KPI for six full courses per year.',
+    headline: 'I build e-learning productions that deliver.',
+    sub: 'Head of Production — 23 direct reports, six 30-hour courses per year, €380k saved annually through AI avatars.',
     roles: ['Head of Production', 'Senior Project Manager'],
     ctaPrimary: 'Get in touch',
     ctaSecondary: 'See the work',
@@ -345,9 +344,8 @@ const de: PortfolioContent = {
   },
   hero: {
     eyebrow: 'E-Learning · Produktion & Produktmanagement',
-    headline:
-      'Ich baue Kursproduktionen, die liefern: 23 Leute, sechs 30-Stunden-Kurse pro Jahr, 380.000 € jährlich durch KI-Avatare eingespart.',
-    sub: 'Head of Production im E-Learning — Abteilung von null aufgebaut, 23 direct reports, KPI von sechs Vollkursen pro Jahr gehalten.',
+    headline: 'Ich baue E-Learning-Produktionen, die liefern.',
+    sub: 'Head of Production — 23 direct reports, sechs 30-Stunden-Kurse pro Jahr, 380.000 € jährlich durch KI-Avatare eingespart.',
     roles: ['Head of Production', 'Senior Projektmanager'],
     ctaPrimary: 'Kontakt',
     ctaSecondary: 'Arbeit ansehen',

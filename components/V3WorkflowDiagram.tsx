@@ -15,37 +15,60 @@ const STEPS: Record<Variant, { en: string[]; de: string[] }> = {
   },
 };
 
+function StepCircle({ n }: { n: number }) {
+  return (
+    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-neutral-900 bg-white text-xs font-semibold text-neutral-900 md:h-10 md:w-10">
+      {n}
+    </div>
+  );
+}
+
+function ConnectorHorizontal() {
+  return <div className="h-px min-w-[0.75rem] flex-1 bg-neutral-300" aria-hidden />;
+}
+
 export function V3WorkflowDiagram({ variant, locale }: { variant: Variant; locale: 'en' | 'de' }) {
   const steps = STEPS[variant][locale];
+
   return (
     <div
-      className="aspect-video w-full rounded-lg border border-neutral-200 bg-gradient-to-br from-neutral-50 to-neutral-100 p-4 sm:p-6"
+      className="w-full rounded-lg border border-neutral-200 bg-gradient-to-br from-neutral-50 to-neutral-100 px-4 py-5 sm:px-6 sm:py-6"
       aria-hidden
     >
-      <div className="flex h-full flex-col justify-center">
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-0">
+      {/* Desktop: equal-width columns, circle row + labels below */}
+      <div className="hidden md:block">
+        <div className="grid gap-0" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
           {steps.map((label, i) => (
-            <div key={label} className="flex items-center">
-              <div className="flex min-w-[4.5rem] max-w-[7rem] flex-col items-center sm:min-w-[5.5rem]">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-neutral-900 bg-white text-xs font-semibold text-neutral-900 sm:h-10 sm:w-10">
-                  {i + 1}
-                </div>
-                <p className="mt-2 text-center text-[10px] font-medium leading-tight text-neutral-700 sm:text-xs">{label}</p>
+            <div key={`${label}-col`} className="flex min-w-0 flex-col items-center px-1">
+              <div className="flex w-full items-center">
+                {i > 0 ? <ConnectorHorizontal /> : <div className="flex-1" aria-hidden />}
+                <StepCircle n={i + 1} />
+                {i < steps.length - 1 ? <ConnectorHorizontal /> : <div className="flex-1" aria-hidden />}
               </div>
-              {i < steps.length - 1 && (
-                <svg className="mx-1 hidden h-2 w-6 shrink-0 text-neutral-400 sm:mx-2 sm:block sm:w-8" viewBox="0 0 32 8" fill="none" aria-hidden>
-                  <path d="M0 4h24M24 4l-4-4M24 4l-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              )}
+              <p className="mt-3 w-full text-center text-xs font-medium leading-snug text-neutral-700">{label}</p>
             </div>
           ))}
         </div>
-        {variant === 'heygen' && (
-          <p className="mt-4 text-center text-xs font-medium text-neutral-500">
-            {locale === 'de' ? 'Workflow · Narrator → KI-Avatar' : 'Workflow · narrator → AI avatar'}
-          </p>
-        )}
       </div>
+
+      {/* Mobile: vertical list */}
+      <ol className="space-y-0 md:hidden">
+        {steps.map((label, i) => (
+          <li key={label} className="flex gap-3">
+            <div className="flex flex-col items-center">
+              <StepCircle n={i + 1} />
+              {i < steps.length - 1 && <div className="my-1 w-px flex-1 min-h-[1.25rem] bg-neutral-300" aria-hidden />}
+            </div>
+            <p className="pb-4 pt-1.5 text-sm font-medium leading-snug text-neutral-800">{label}</p>
+          </li>
+        ))}
+      </ol>
+
+      {variant === 'heygen' && (
+        <p className="mt-4 text-center text-xs font-medium text-neutral-500">
+          {locale === 'de' ? 'Workflow · Sprecher → KI-Avatar' : 'Workflow · narrator → AI avatar'}
+        </p>
+      )}
     </div>
   );
 }

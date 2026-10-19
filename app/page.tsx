@@ -94,7 +94,7 @@ function Case({ c, big, ui, locale }: { c: CaseStudy; big?: boolean; ui: Portfol
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         {c.media.map((m, i) => (
-          <div key={i} className={i === 0 ? 'sm:col-span-2' : ''}>
+          <div key={i} className={i === 0 || m.kind === 'workflow' ? 'sm:col-span-2' : ''}>
             <MediaItem m={m} locale={locale} />
           </div>
         ))}
@@ -159,8 +159,8 @@ export default function Page() {
 
       <section className="mx-auto max-w-6xl px-6 pb-16 pt-24">
         <p className="font-mono text-xs uppercase tracking-wider text-neutral-400">{hero.eyebrow}</p>
-        <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl lg:text-6xl">{hero.headline}</h1>
-        <p className="mt-6 max-w-2xl text-lg text-neutral-600">{hero.sub}</p>
+        <h1 className="mt-4 max-w-2xl text-3xl font-medium tracking-tight text-neutral-900 md:text-4xl">{hero.headline}</h1>
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-neutral-500 md:text-lg">{hero.sub}</p>
         <div className="mt-6 flex flex-wrap gap-2">
           {hero.roles.map((r) => (
             <span key={r} className="rounded-full border border-neutral-300 px-3 py-1 text-sm">
@@ -176,7 +176,7 @@ export default function Page() {
             {hero.ctaSecondary}
           </a>
         </div>
-        <div className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-neutral-200 bg-neutral-200 md:grid-cols-4">
+        <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-neutral-200 bg-neutral-200 md:grid-cols-4">
           {stats.map((s) => (
             <div key={s.label} className="bg-white p-5">
               <div className="text-2xl font-semibold">{s.value}</div>
