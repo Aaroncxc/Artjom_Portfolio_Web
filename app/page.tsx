@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { V3BlueprintStats } from '@/components/V3BlueprintStats';
 import { V3WorkflowDiagram } from '@/components/V3WorkflowDiagram';
 import { getV3Content, type CaseStudy, type Locale, type Media, type PortfolioContent } from '@/lib/v3Content';
 
 const LOCALE_KEY = 'portfolio-v3-locale';
+const PAGE = 'mx-auto w-full max-w-7xl px-8 sm:px-10 lg:px-12';
 
 function readInitialLocale(): Locale {
   if (typeof window === 'undefined') return 'de';
@@ -126,9 +128,9 @@ export default function Page() {
   const { contact, hero, stats, ui, featured, cases, strengths, more } = content;
 
   return (
-    <main className="min-h-screen bg-white font-sans text-neutral-900 antialiased">
-      <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/80 backdrop-blur">
-        <nav className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-6 py-4 text-sm">
+    <main className="min-h-screen bg-white font-sans text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100">
+      <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/80 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/80">
+        <nav className={`flex flex-wrap items-center justify-between gap-3 py-4 text-sm ${PAGE}`}>
           <span className="font-semibold">{contact.name}</span>
           <div className="flex flex-wrap items-center gap-4 text-neutral-500 sm:gap-6">
             <a href="#work">{ui.work}</a>
@@ -157,10 +159,14 @@ export default function Page() {
         </nav>
       </header>
 
-      <section className="mx-auto max-w-6xl px-6 pb-16 pt-24">
-        <p className="font-mono text-xs uppercase tracking-wider text-neutral-400">{hero.eyebrow}</p>
-        <h1 className="mt-4 max-w-2xl text-3xl font-medium tracking-tight text-neutral-900 md:text-4xl">{hero.headline}</h1>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-neutral-500 md:text-lg">{hero.sub}</p>
+      <section className={`pb-16 pt-24 ${PAGE}`}>
+        <p className="font-mono text-xs uppercase tracking-wider text-neutral-400 dark:text-neutral-500">{hero.eyebrow}</p>
+        <h1 className="mt-4 max-w-4xl text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50 md:text-4xl">
+          {hero.headline}
+        </h1>
+        <p className="mt-4 max-w-3xl text-base leading-relaxed text-neutral-500 dark:text-neutral-400 md:max-w-4xl md:text-lg">
+          {hero.sub}
+        </p>
         <div className="mt-6 flex flex-wrap gap-2">
           {hero.roles.map((r) => (
             <span key={r} className="rounded-full border border-neutral-300 px-3 py-1 text-sm">
@@ -176,31 +182,24 @@ export default function Page() {
             {hero.ctaSecondary}
           </a>
         </div>
-        <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-neutral-200 bg-neutral-200 md:grid-cols-4">
-          {stats.map((s) => (
-            <div key={s.label} className="bg-white p-5">
-              <div className="text-2xl font-semibold">{s.value}</div>
-              <div className="mt-1 text-xs text-neutral-500">{s.label}</div>
-            </div>
-          ))}
-        </div>
+        <V3BlueprintStats stats={stats} />
       </section>
 
-      <section id="work" className="mx-auto max-w-6xl px-6">
+      <section id="work" className={PAGE}>
         <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.selectedWork}</h2>
         {featured.map((c) => (
           <Case key={c.id} c={c} big ui={ui} locale={locale} />
         ))}
       </section>
 
-      <section id="cases" className="mx-auto max-w-6xl px-6 pt-10">
+      <section id="cases" className={`pt-10 ${PAGE}`}>
         <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.casesHeading}</h2>
         {cases.map((c) => (
           <Case key={c.id} c={c} ui={ui} locale={locale} />
         ))}
       </section>
 
-      <section id="about" className="mx-auto grid max-w-6xl gap-10 border-t border-neutral-200 px-6 py-16 md:grid-cols-2">
+      <section id="about" className={`grid gap-10 border-t border-neutral-200 py-16 dark:border-neutral-800 md:grid-cols-2 ${PAGE}`}>
         <div>
           <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.howIWork}</h2>
           <ul className="mt-4 space-y-3 text-neutral-700">
@@ -237,8 +236,8 @@ export default function Page() {
         </div>
       </section>
 
-      <footer id="contact" className="border-t border-neutral-200 bg-neutral-50">
-        <div className="mx-auto max-w-6xl px-6 py-16">
+      <footer id="contact" className="border-t border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900/50">
+        <div className={`py-16 ${PAGE}`}>
           <h2 className="text-3xl font-semibold tracking-tight">{ui.footerHeadline}</h2>
           <div className="mt-6 flex flex-wrap gap-6 text-neutral-700">
             <a href={contact.phoneHref}>{contact.phone}</a>
