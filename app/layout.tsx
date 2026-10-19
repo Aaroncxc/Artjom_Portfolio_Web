@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://artjomnaninjan.vercel.app'),
   title: 'Artjom Naninjan | E-Learning Production & Product Lead',
   description:
-    'Building good products for learners. Head of Production with 23 direct reports, six 30-hour courses per year, AI-driven course production.',
+    'Course production that delivers: 23 direct reports, six 30-hour courses per year, €380k saved annually through AI avatars. Head of Production in e-learning.',
   keywords: [
     'Artjom Naninjan',
     'Senior Production Lead',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Artjom Naninjan | E-Learning Production & Product Lead',
     description:
-      'E-learning management and products for learners — Head of Production, 23 direct reports, six 30-hour courses per year.',
+      'Head of Production in e-learning — team of 23, six 30-hour courses per year, AI avatar workflow saving €380k annually.',
     type: 'website',
     locale: 'en_US',
   },
