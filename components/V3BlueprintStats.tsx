@@ -26,9 +26,9 @@ function StatCell({ value, label }: { value: string; label: string }) {
   );
 }
 
-export function V3BlueprintStats({ stats }: { stats: { value: string; label: string }[] }) {
+export function V3BlueprintStats({ stats, className = 'mt-12' }: { stats: { value: string; label: string }[]; className?: string }) {
   return (
-    <div className="mt-12 grid w-full grid-cols-2 md:grid-cols-4">
+    <div className={`grid w-full grid-cols-2 md:grid-cols-4 ${className}`}>
       {stats.map((s) => (
         <StatCell key={s.label} value={s.value} label={s.label} />
       ))}

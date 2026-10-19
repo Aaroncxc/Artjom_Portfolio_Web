@@ -1,10 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { V3BlueprintStats } from '@/components/V3BlueprintStats';
+import { V3CaseCard } from '@/components/V3CaseCard';
+import { V3Hero } from '@/components/V3Hero';
 import { V3ProjectTimeline } from '@/components/V3ProjectTimeline';
-import { V3WorkflowDiagram } from '@/components/V3WorkflowDiagram';
-import { getV3Content, type CaseStudy, type Locale, type Media, type PortfolioContent } from '@/lib/v3Content';
+import { getV3Content, type Locale } from '@/lib/v3Content';
 import { V3_PAGE } from '@/lib/v3Layout';
 import { buildTimelineCases, groupCasesByYear, periodGroupYear } from '@/lib/v3Timeline';
 
@@ -19,121 +19,6 @@ function readInitialLocale(): Locale {
     /* ignore */
   }
   return typeof navigator !== 'undefined' && navigator.language.toLowerCase().startsWith('de') ? 'de' : 'en';
-}
-
-function MediaItem({ m, locale }: { m: Media; locale: Locale }) {
-  if (m.kind === 'workflow') return <V3WorkflowDiagram variant={m.variant} locale={locale} />;
-  if (m.kind === 'video')
-    return (
-      <video
-        className="aspect-video w-full rounded-lg border border-neutral-200 object-cover"
-        src={m.src}
-        poster={m.poster}
-        muted
-        loop
-        playsInline
-        autoPlay
-        aria-label={m.alt}
-      />
-    );
-  // eslint-disable-next-line @next/next/no-img-element
-  return (
-    <img
-      className="aspect-video w-full rounded-lg border border-neutral-200 object-cover"
-      src={m.src}
-      alt={m.alt}
-      loading="lazy"
-    />
-  );
-}
-
-function Case({
-  c,
-  big,
-  ui,
-  locale,
-  periodLabel,
-}: {
-  c: CaseStudy;
-  big?: boolean;
-  ui: PortfolioContent['ui'];
-  locale: Locale;
-  periodLabel: string;
-}) {
-  const tbd = periodLabel === 'TBD' || periodLabel.includes('– TBD');
-  return (
-    <article
-      id={c.id}
-      className="scroll-mt-28 grid gap-8 border-t border-neutral-200 py-14 dark:border-neutral-800 lg:grid-cols-12 lg:gap-x-10 xl:gap-x-14"
-    >
-      <div className="max-w-[65ch] lg:col-span-5 lg:max-w-[65ch]">
-        <p className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
-          {c.index} · {c.kicker}
-        </p>
-        <p
-          className={`mt-1 font-mono text-xs ${
-            tbd
-              ? 'inline-block rounded border border-dashed border-amber-400/80 px-1.5 py-0.5 text-amber-700 dark:border-amber-600 dark:text-amber-400'
-              : 'text-neutral-500 dark:text-neutral-400'
-          }`}
-        >
-          {periodLabel}
-        </p>
-        <h3 className={`mt-3 font-semibold tracking-tight text-neutral-900 dark:text-neutral-50 ${big ? 'text-3xl' : 'text-2xl'}`}>
-          {c.title}
-        </h3>
-        <p className="mt-4 text-neutral-600 dark:text-neutral-400">{c.summary}</p>
-        <dl className="mt-6 space-y-4 text-sm">
-          <div>
-            <dt className="font-mono text-xs uppercase text-neutral-400">{ui.whatIDid}</dt>
-            <dd>
-              <ul className="mt-1 list-disc space-y-1 pl-4 text-neutral-700">
-                {c.action.map((a) => (
-                  <li key={a}>{a}</li>
-                ))}
-              </ul>
-            </dd>
-          </div>
-          <div>
-            <dt className="font-mono text-xs uppercase text-neutral-400">{ui.result}</dt>
-            <dd>
-              <ul className="mt-1 list-disc space-y-1 pl-4 text-neutral-900">
-                {c.result.map((a) => (
-                  <li key={a}>{a}</li>
-                ))}
-              </ul>
-            </dd>
-          </div>
-        </dl>
-        <div className="mt-5 flex flex-wrap gap-2">
-          {c.tools.map((t) => (
-            <span key={t} className="rounded border border-neutral-200 px-2 py-0.5 font-mono text-xs text-neutral-500">
-              {t}
-            </span>
-          ))}
-        </div>
-        {c.links && (
-          <div className="mt-5 flex gap-4 text-sm">
-            {c.links.map((l) => (
-              <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="text-neutral-900 underline underline-offset-4">
-                {l.label} ↗
-              </a>
-            ))}
-          </div>
-        )}
-        {c.note && <p className="mt-4 text-xs text-neutral-400">{c.note}</p>}
-      </div>
-      <div className="min-w-0 lg:col-span-7">
-        <div className="grid gap-3 sm:grid-cols-2">
-        {c.media.map((m, i) => (
-          <div key={i} className={i === 0 || m.kind === 'workflow' ? 'sm:col-span-2' : ''}>
-            <MediaItem m={m} locale={locale} />
-          </div>
-        ))}
-        </div>
-      </div>
-    </article>
-  );
 }
 
 export default function Page() {
@@ -212,21 +97,21 @@ export default function Page() {
             <a href="#work">{ui.work}</a>
             <a href="#work">{ui.cases}</a>
             <a href="#about">{ui.about}</a>
-            <a href="#contact" className="text-neutral-900">
+            <a href="#contact" className="text-neutral-900 dark:text-neutral-100">
               {ui.contact}
             </a>
-            <div className="flex rounded-md border border-neutral-200 p-0.5 text-xs font-medium" role="group" aria-label="Language">
+            <div className="flex rounded-md border border-neutral-200 p-0.5 text-xs font-medium dark:border-neutral-700" role="group" aria-label="Language">
               <button
                 type="button"
                 onClick={() => setLocale('en')}
-                className={`rounded px-2 py-1 ${locale === 'en' ? 'bg-neutral-900 text-white' : 'text-neutral-600 hover:text-neutral-900'}`}
+                className={`rounded px-2 py-1 ${locale === 'en' ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900' : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400'}`}
               >
                 {ui.langEn}
               </button>
               <button
                 type="button"
                 onClick={() => setLocale('de')}
-                className={`rounded px-2 py-1 ${locale === 'de' ? 'bg-neutral-900 text-white' : 'text-neutral-600 hover:text-neutral-900'}`}
+                className={`rounded px-2 py-1 ${locale === 'de' ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900' : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400'}`}
               >
                 {ui.langDe}
               </button>
@@ -235,31 +120,7 @@ export default function Page() {
         </nav>
       </header>
 
-      <section className={`pb-16 pt-24 ${V3_PAGE}`}>
-        <p className="font-mono text-xs uppercase tracking-wider text-neutral-400 dark:text-neutral-500">{hero.eyebrow}</p>
-        <h1 className="mt-4 max-w-[48rem] text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50 md:text-4xl xl:max-w-[56rem]">
-          {hero.headline}
-        </h1>
-        <p className="mt-4 max-w-[65ch] text-base leading-relaxed text-neutral-500 dark:text-neutral-400 md:text-lg">
-          {hero.sub}
-        </p>
-        <div className="mt-6 flex flex-wrap gap-2">
-          {hero.roles.map((r) => (
-            <span key={r} className="rounded-full border border-neutral-300 px-3 py-1 text-sm">
-              {r}
-            </span>
-          ))}
-        </div>
-        <div className="mt-8 flex gap-3 text-sm">
-          <a href="#contact" className="rounded-md bg-neutral-900 px-4 py-2 text-white">
-            {hero.ctaPrimary}
-          </a>
-          <a href="#work" className="rounded-md border border-neutral-300 px-4 py-2">
-            {hero.ctaSecondary}
-          </a>
-        </div>
-        <V3BlueprintStats stats={stats} />
-      </section>
+      <V3Hero locale={locale} hero={hero} stats={stats} />
 
       <section id="work" className={`pt-4 ${V3_PAGE}`}>
         <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400 dark:text-neutral-500">{ui.casesHeading}</h2>
@@ -278,13 +139,13 @@ export default function Page() {
                   {group.label}
                 </h3>
                 {group.cases.map((c) => (
-                  <Case
+                  <V3CaseCard
                     key={c.id}
                     c={c}
                     big={featuredIds.has(c.id)}
-                    ui={ui}
                     locale={locale}
                     periodLabel={c.periodLabel}
+                    allMedia={c.media}
                   />
                 ))}
               </div>
@@ -296,7 +157,7 @@ export default function Page() {
       <section id="about" className={`grid gap-10 border-t border-neutral-200 py-16 dark:border-neutral-800 md:grid-cols-2 ${V3_PAGE}`}>
         <div className="max-w-[65ch]">
           <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.howIWork}</h2>
-          <ul className="mt-4 space-y-3 text-neutral-700">
+          <ul className="mt-4 space-y-3 text-neutral-700 dark:text-neutral-300">
             {strengths.map((s) => (
               <li key={s}>— {s}</li>
             ))}
@@ -304,17 +165,17 @@ export default function Page() {
         </div>
         <div className="max-w-[65ch]">
           <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.background}</h2>
-          <ul className="mt-4 space-y-2 text-neutral-700">
+          <ul className="mt-4 space-y-2 text-neutral-700 dark:text-neutral-300">
             <li>{contact.education}</li>
             <li>{contact.cert}</li>
             <li>{contact.languages}</li>
             <li>{contact.toolsLine}</li>
           </ul>
           <h2 className="mt-8 font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.alsoBuilding}</h2>
-          <ul className="mt-4 space-y-2 text-sm text-neutral-600">
+          <ul className="mt-4 space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
             {more.map((m) => (
               <li key={m.title}>
-                <span className="font-medium text-neutral-900">
+                <span className="font-medium text-neutral-900 dark:text-neutral-100">
                   {m.href ? (
                     <a href={m.href} className="underline underline-offset-4" target="_blank" rel="noreferrer">
                       {m.title}
@@ -333,7 +194,7 @@ export default function Page() {
       <footer id="contact" className="border-t border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900/50">
         <div className={`py-16 ${V3_PAGE}`}>
           <h2 className="text-3xl font-semibold tracking-tight">{ui.footerHeadline}</h2>
-          <div className="mt-6 flex flex-wrap gap-6 text-neutral-700">
+          <div className="mt-6 flex flex-wrap gap-6 text-neutral-700 dark:text-neutral-300">
             <a href={contact.phoneHref}>{contact.phone}</a>
             <a href={`mailto:${contact.email}`}>{contact.email}</a>
             <span>{contact.location}</span>
