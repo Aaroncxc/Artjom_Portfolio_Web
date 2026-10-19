@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { V3BlueprintStats } from '@/components/V3BlueprintStats';
+import { V3ProjectTimeline } from '@/components/V3ProjectTimeline';
 import { V3WorkflowDiagram } from '@/components/V3WorkflowDiagram';
 import { getV3Content, type CaseStudy, type Locale, type Media, type PortfolioContent } from '@/lib/v3Content';
+import { buildTimelineCases, groupCasesByYear, periodGroupYear } from '@/lib/v3Timeline';
 
 const LOCALE_KEY = 'portfolio-v3-locale';
 const PAGE = 'mx-auto w-full max-w-7xl px-8 sm:px-10 lg:px-12';
@@ -45,12 +47,37 @@ function MediaItem({ m, locale }: { m: Media; locale: Locale }) {
   );
 }
 
-function Case({ c, big, ui, locale }: { c: CaseStudy; big?: boolean; ui: PortfolioContent['ui']; locale: Locale }) {
+function Case({
+  c,
+  big,
+  ui,
+  locale,
+  periodLabel,
+}: {
+  c: CaseStudy;
+  big?: boolean;
+  ui: PortfolioContent['ui'];
+  locale: Locale;
+  periodLabel: string;
+}) {
+  const tbd = periodLabel === 'TBD' || periodLabel.includes('– TBD');
   return (
-    <article id={c.id} className="grid gap-8 border-t border-neutral-200 py-14 md:grid-cols-[1fr_1.2fr]">
+    <article
+      id={c.id}
+      className="scroll-mt-28 grid gap-8 border-t border-neutral-200 py-14 dark:border-neutral-800 md:grid-cols-[1fr_1.2fr]"
+    >
       <div>
-        <p className="font-mono text-xs text-neutral-400">
+        <p className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
           {c.index} · {c.kicker}
+        </p>
+        <p
+          className={`mt-1 font-mono text-xs ${
+            tbd
+              ? 'inline-block rounded border border-dashed border-amber-400/80 px-1.5 py-0.5 text-amber-700 dark:border-amber-600 dark:text-amber-400'
+              : 'text-neutral-500 dark:text-neutral-400'
+          }`}
+        >
+          {periodLabel}
         </p>
         <h3 className={`mt-3 font-semibold tracking-tight text-neutral-900 ${big ? 'text-3xl' : 'text-2xl'}`}>{c.title}</h3>
         <p className="mt-4 text-neutral-600">{c.summary}</p>
@@ -127,6 +154,51 @@ export default function Page() {
   const content = getV3Content(locale);
   const { contact, hero, stats, ui, featured, cases, strengths, more } = content;
 
+  const timelineCases = useMemo(() => buildTimelineCases(featured, cases, locale), [locale]);
+  const yearGroups = useMemo(() => groupCasesByYear(timelineCases, locale), [timelineCases, locale]);
+  const featuredIds = useMemo(() => new Set(featured.map((c) => c.id)), [featured]);
+
+  const timelineNav = useMemo(
+    () =>
+      timelineCases.map((c) => ({
+        id: c.id,
+        periodLabel: c.periodLabel,
+        year: periodGroupYear(c.period),
+      })),
+    [timelineCases],
+  );
+
+  const [activeId, setActiveId] = useState<string | null>(timelineCases[0]?.id ?? null);
+
+  useEffect(() => {
+    const nodes = timelineCases.map((c) => document.getElementById(c.id)).filter(Boolean) as HTMLElement[];
+    if (!nodes.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const hit = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (hit?.target.id) setActiveId(hit.target.id);
+      },
+      { rootMargin: '-15% 0px -50% 0px', threshold: [0, 0.15, 0.4, 0.7] },
+    );
+
+    nodes.forEach((n) => observer.observe(n));
+    return () => observer.disconnect();
+  }, [timelineCases]);
+
+  const progress = useMemo(() => {
+    if (!activeId || timelineNav.length < 2) return 0;
+    const idx = timelineNav.findIndex((i) => i.id === activeId);
+    return idx <= 0 ? 0 : idx / (timelineNav.length - 1);
+  }, [activeId, timelineNav]);
+
+  const jumpToCase = useCallback((id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setActiveId(id);
+  }, []);
+
   return (
     <main className="min-h-screen bg-white font-sans text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100">
       <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/80 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/80">
@@ -134,7 +206,7 @@ export default function Page() {
           <span className="font-semibold">{contact.name}</span>
           <div className="flex flex-wrap items-center gap-4 text-neutral-500 sm:gap-6">
             <a href="#work">{ui.work}</a>
-            <a href="#cases">{ui.cases}</a>
+            <a href="#work">{ui.cases}</a>
             <a href="#about">{ui.about}</a>
             <a href="#contact" className="text-neutral-900">
               {ui.contact}
@@ -185,18 +257,36 @@ export default function Page() {
         <V3BlueprintStats stats={stats} />
       </section>
 
-      <section id="work" className={PAGE}>
-        <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.selectedWork}</h2>
-        {featured.map((c) => (
-          <Case key={c.id} c={c} big ui={ui} locale={locale} />
-        ))}
-      </section>
-
-      <section id="cases" className={`pt-10 ${PAGE}`}>
-        <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.casesHeading}</h2>
-        {cases.map((c) => (
-          <Case key={c.id} c={c} ui={ui} locale={locale} />
-        ))}
+      <section id="work" className={`pt-4 ${PAGE}`}>
+        <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400 dark:text-neutral-500">{ui.casesHeading}</h2>
+        <div className="mt-6 lg:grid lg:grid-cols-[10.5rem_minmax(0,1fr)] lg:gap-x-12 xl:grid-cols-[11rem_minmax(0,1fr)]">
+          <V3ProjectTimeline
+            items={timelineNav}
+            activeId={activeId}
+            progress={progress}
+            locale={locale}
+            onJump={jumpToCase}
+          />
+          <div id="work-timeline" className="min-w-0">
+            {yearGroups.map((group) => (
+              <div key={group.label} className="mb-4">
+                <h3 className="sticky top-[3.25rem] z-[8] -mx-1 mb-2 border-b border-neutral-100 bg-white/90 py-3 font-mono text-sm font-medium tracking-tight text-neutral-900 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/90 dark:text-neutral-100 lg:top-28 lg:static lg:border-0 lg:bg-transparent lg:py-0 lg:text-xs lg:uppercase lg:tracking-wider lg:text-neutral-400">
+                  {group.label}
+                </h3>
+                {group.cases.map((c) => (
+                  <Case
+                    key={c.id}
+                    c={c}
+                    big={featuredIds.has(c.id)}
+                    ui={ui}
+                    locale={locale}
+                    periodLabel={c.periodLabel}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       <section id="about" className={`grid gap-10 border-t border-neutral-200 py-16 dark:border-neutral-800 md:grid-cols-2 ${PAGE}`}>
