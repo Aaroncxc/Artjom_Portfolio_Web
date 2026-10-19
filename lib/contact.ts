@@ -4,7 +4,7 @@
  * "Hire Me" CTAs in the project modal in sync.
  */
 
-export const CONTACT_EMAIL = 'hello@artjom-naninjan.com';
+export const CONTACT_EMAIL = 'a.naninjan@googlemail.com';
 
 export const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}`;
 
