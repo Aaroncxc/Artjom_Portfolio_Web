@@ -198,7 +198,7 @@ const en: PortfolioContent = {
       summary:
         'Built an AI department and pushed for everyone to train quickly in AI and to create and improve courses directly with AI.',
       action: [
-        'Introduced AI tools such as HeyGen, Synthesia and ElevenLabs into voice, presenter and video pipelines while keeping editorial control in-house.',
+        'Introduced HeyGen, Synthesia and ElevenLabs for voice and presenter pipelines; used AI to strengthen script work and editorial feedback loops — editorial control stayed in-house.',
       ],
       result: ['Courses created and improved directly with AI across the production.'],
       tools: ['HeyGen', 'Synthesia', 'ElevenLabs'],
@@ -460,7 +460,7 @@ const de: PortfolioContent = {
       summary:
         'KI-Abteilung aufgebaut und darauf gedrängt, dass alle schnell in KI trainieren und Kurse direkt mit KI erstellen und verbessern.',
       action: [
-        'KI-Tools wie HeyGen, Synthesia und ElevenLabs in Sprecher-, Presenter- und Video-Pipelines eingeführt — redaktionelle Kontrolle blieb in-house.',
+        'HeyGen, Synthesia und ElevenLabs für Sprecher- und Presenter-Pipelines; Skriptarbeit und Feedbackschleifen mit der Redaktion KI-gestützt verbessert — redaktionelle Kontrolle blieb in-house.',
       ],
       result: ['Kurse in der gesamten Produktion direkt mit KI erstellt und verbessert.'],
       tools: ['HeyGen', 'Synthesia', 'ElevenLabs'],

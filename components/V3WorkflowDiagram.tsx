@@ -1,10 +1,17 @@
 type Variant = 'heygen' | 'ai-department' | 'virtual-production';
 
+type StepChip = string | { en: string; de: string };
+
 type WorkflowStep = {
   titleEn: string;
   titleDe: string;
-  chips?: string[];
+  chips?: StepChip[];
 };
+
+function resolveChips(chips: StepChip[] | undefined, isDe: boolean): string[] {
+  if (!chips) return [];
+  return chips.map((c) => (typeof c === 'string' ? c : isDe ? c.de : c.en));
+}
 
 type PipelineDef = {
   steps: WorkflowStep[];
@@ -22,10 +29,18 @@ const PIPELINES: Record<Variant, PipelineDef> = {
   },
   'ai-department': {
     steps: [
-      { titleEn: 'Script & editorial (in-house)', titleDe: 'Skript & Redaktion (in-house)' },
+      {
+        titleEn: 'Script & editorial (in-house)',
+        titleDe: 'Skript & Redaktion (in-house)',
+        chips: [{ en: 'AI-assisted', de: 'KI-gestützt' }],
+      },
       { titleEn: 'Voice', titleDe: 'Stimme', chips: ['ElevenLabs'] },
       { titleEn: 'Avatar / presenter', titleDe: 'Avatar / Presenter', chips: ['HeyGen', 'Synthesia'] },
-      { titleEn: 'Editorial review (in-house)', titleDe: 'Review durch die Redaktion (in-house)' },
+      {
+        titleEn: 'Feedback loops with editorial',
+        titleDe: 'Feedbackschleifen mit Redaktion',
+        chips: [{ en: 'AI-assisted', de: 'KI-gestützt' }],
+      },
       { titleEn: 'Finished course video', titleDe: 'Fertiges Kursvideo' },
     ],
     footnote: {
@@ -98,7 +113,7 @@ export function V3WorkflowDiagram({ variant, locale }: { variant: Variant; local
                   <StepCircle n={i + 1} />
                   {i < steps.length - 1 ? <ConnectorHorizontal /> : <div className="flex-1" aria-hidden />}
                 </div>
-                <StepLabel title={title} chips={step.chips} />
+                <StepLabel title={title} chips={resolveChips(step.chips, isDe)} />
               </div>
             );
           })}
@@ -116,9 +131,9 @@ export function V3WorkflowDiagram({ variant, locale }: { variant: Variant; local
               </div>
               <div className="pb-4 pt-1">
                 <p className="text-sm font-medium leading-snug text-neutral-800">{title}</p>
-                {step.chips && step.chips.length > 0 && (
+                {resolveChips(step.chips, isDe).length > 0 && (
                   <div className="mt-1.5 flex flex-wrap gap-1">
-                    {step.chips.map((c) => (
+                    {resolveChips(step.chips, isDe).map((c) => (
                       <ToolChip key={c} label={c} />
                     ))}
                   </div>
