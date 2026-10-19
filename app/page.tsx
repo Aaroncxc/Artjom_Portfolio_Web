@@ -5,10 +5,10 @@ import { V3BlueprintStats } from '@/components/V3BlueprintStats';
 import { V3ProjectTimeline } from '@/components/V3ProjectTimeline';
 import { V3WorkflowDiagram } from '@/components/V3WorkflowDiagram';
 import { getV3Content, type CaseStudy, type Locale, type Media, type PortfolioContent } from '@/lib/v3Content';
+import { V3_PAGE } from '@/lib/v3Layout';
 import { buildTimelineCases, groupCasesByYear, periodGroupYear } from '@/lib/v3Timeline';
 
 const LOCALE_KEY = 'portfolio-v3-locale';
-const PAGE = 'mx-auto w-full max-w-7xl px-8 sm:px-10 lg:px-12';
 
 function readInitialLocale(): Locale {
   if (typeof window === 'undefined') return 'de';
@@ -64,9 +64,9 @@ function Case({
   return (
     <article
       id={c.id}
-      className="scroll-mt-28 grid gap-8 border-t border-neutral-200 py-14 dark:border-neutral-800 md:grid-cols-[1fr_1.2fr]"
+      className="scroll-mt-28 grid gap-8 border-t border-neutral-200 py-14 dark:border-neutral-800 lg:grid-cols-12 lg:gap-x-10 xl:gap-x-14"
     >
-      <div>
+      <div className="max-w-[65ch] lg:col-span-5 lg:max-w-[65ch]">
         <p className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
           {c.index} · {c.kicker}
         </p>
@@ -79,8 +79,10 @@ function Case({
         >
           {periodLabel}
         </p>
-        <h3 className={`mt-3 font-semibold tracking-tight text-neutral-900 ${big ? 'text-3xl' : 'text-2xl'}`}>{c.title}</h3>
-        <p className="mt-4 text-neutral-600">{c.summary}</p>
+        <h3 className={`mt-3 font-semibold tracking-tight text-neutral-900 dark:text-neutral-50 ${big ? 'text-3xl' : 'text-2xl'}`}>
+          {c.title}
+        </h3>
+        <p className="mt-4 text-neutral-600 dark:text-neutral-400">{c.summary}</p>
         <dl className="mt-6 space-y-4 text-sm">
           <div>
             <dt className="font-mono text-xs uppercase text-neutral-400">{ui.whatIDid}</dt>
@@ -121,12 +123,14 @@ function Case({
         )}
         {c.note && <p className="mt-4 text-xs text-neutral-400">{c.note}</p>}
       </div>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="min-w-0 lg:col-span-7">
+        <div className="grid gap-3 sm:grid-cols-2">
         {c.media.map((m, i) => (
           <div key={i} className={i === 0 || m.kind === 'workflow' ? 'sm:col-span-2' : ''}>
             <MediaItem m={m} locale={locale} />
           </div>
         ))}
+        </div>
       </div>
     </article>
   );
@@ -202,7 +206,7 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-white font-sans text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100">
       <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/80 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/80">
-        <nav className={`flex flex-wrap items-center justify-between gap-3 py-4 text-sm ${PAGE}`}>
+        <nav className={`flex flex-wrap items-center justify-between gap-3 py-4 text-sm ${V3_PAGE}`}>
           <span className="font-semibold">{contact.name}</span>
           <div className="flex flex-wrap items-center gap-4 text-neutral-500 sm:gap-6">
             <a href="#work">{ui.work}</a>
@@ -231,12 +235,12 @@ export default function Page() {
         </nav>
       </header>
 
-      <section className={`pb-16 pt-24 ${PAGE}`}>
+      <section className={`pb-16 pt-24 ${V3_PAGE}`}>
         <p className="font-mono text-xs uppercase tracking-wider text-neutral-400 dark:text-neutral-500">{hero.eyebrow}</p>
-        <h1 className="mt-4 max-w-4xl text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50 md:text-4xl">
+        <h1 className="mt-4 max-w-[48rem] text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50 md:text-4xl xl:max-w-[56rem]">
           {hero.headline}
         </h1>
-        <p className="mt-4 max-w-3xl text-base leading-relaxed text-neutral-500 dark:text-neutral-400 md:max-w-4xl md:text-lg">
+        <p className="mt-4 max-w-[65ch] text-base leading-relaxed text-neutral-500 dark:text-neutral-400 md:text-lg">
           {hero.sub}
         </p>
         <div className="mt-6 flex flex-wrap gap-2">
@@ -257,9 +261,9 @@ export default function Page() {
         <V3BlueprintStats stats={stats} />
       </section>
 
-      <section id="work" className={`pt-4 ${PAGE}`}>
+      <section id="work" className={`pt-4 ${V3_PAGE}`}>
         <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400 dark:text-neutral-500">{ui.casesHeading}</h2>
-        <div className="mt-6 lg:grid lg:grid-cols-[10.5rem_minmax(0,1fr)] lg:gap-x-12 xl:grid-cols-[11rem_minmax(0,1fr)]">
+        <div className="mt-6 lg:grid lg:grid-cols-[11.25rem_minmax(0,1fr)] lg:gap-x-8 xl:grid-cols-[12.5rem_minmax(0,1fr)] xl:gap-x-10">
           <V3ProjectTimeline
             items={timelineNav}
             activeId={activeId}
@@ -289,8 +293,8 @@ export default function Page() {
         </div>
       </section>
 
-      <section id="about" className={`grid gap-10 border-t border-neutral-200 py-16 dark:border-neutral-800 md:grid-cols-2 ${PAGE}`}>
-        <div>
+      <section id="about" className={`grid gap-10 border-t border-neutral-200 py-16 dark:border-neutral-800 md:grid-cols-2 ${V3_PAGE}`}>
+        <div className="max-w-[65ch]">
           <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.howIWork}</h2>
           <ul className="mt-4 space-y-3 text-neutral-700">
             {strengths.map((s) => (
@@ -298,7 +302,7 @@ export default function Page() {
             ))}
           </ul>
         </div>
-        <div>
+        <div className="max-w-[65ch]">
           <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.background}</h2>
           <ul className="mt-4 space-y-2 text-neutral-700">
             <li>{contact.education}</li>
@@ -327,7 +331,7 @@ export default function Page() {
       </section>
 
       <footer id="contact" className="border-t border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900/50">
-        <div className={`py-16 ${PAGE}`}>
+        <div className={`py-16 ${V3_PAGE}`}>
           <h2 className="text-3xl font-semibold tracking-tight">{ui.footerHeadline}</h2>
           <div className="mt-6 flex flex-wrap gap-6 text-neutral-700">
             <a href={contact.phoneHref}>{contact.phone}</a>

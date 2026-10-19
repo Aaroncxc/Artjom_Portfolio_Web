@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { Locale } from '@/lib/v3Content';
+import { V3_PAGE_BLEED } from '@/lib/v3Layout';
 
 export type TimelineNavItem = {
   id: string;
@@ -29,7 +30,9 @@ export function V3ProjectTimeline({ items, activeId, progress, locale, onJump }:
   return (
     <>
       {/* Mobile: horizontal date strip */}
-      <div className="sticky top-[3.25rem] z-[9] -mx-8 border-b border-neutral-200 bg-white/95 px-8 py-2 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/95 sm:-mx-10 sm:px-10 lg:hidden">
+      <div
+        className={`sticky top-[3.25rem] z-[9] border-b border-neutral-200 bg-white/95 py-2 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/95 lg:hidden ${V3_PAGE_BLEED}`}
+      >
         <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {items.map((item) => {
             const active = item.id === activeId;
