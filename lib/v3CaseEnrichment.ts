@@ -1,11 +1,13 @@
 import { africaChallengeCopy } from '@/lib/v3AfricaPartners';
+import { dadbProductionEnrichment } from '@/lib/v3DadbProductionStory';
 import { CASE_STUDY_NARRATIVES } from '@/lib/caseStudyNarratives';
-import { PRODUCTION_HIGHLIGHT_SECTION, AI_APP_DEV_HIGHLIGHT_SECTION } from '@/lib/highlightSections';
+import { AI_APP_DEV_HIGHLIGHT_SECTION } from '@/lib/highlightSections';
 import { TOOL_PROJECTS } from '@/lib/toolProjects';
 import type { CaseStudy, Locale } from '@/lib/v3Content';
 import type { CaseSlideKind } from '@/lib/v3CaseSlides';
 
 export type SlideEnrichment = {
+  arcLabel?: string;
   headline?: string;
   bullets?: string[];
   sources: string[];
@@ -63,6 +65,9 @@ export function enrichSlide(
   const base = (): SlideEnrichment => ({ sources });
 
   if (locale === 'de') {
+    if (caseId === 'production' && (kind === 'challenge' || kind === 'role' || kind === 'approach' || kind === 'result')) {
+      return dadbProductionEnrichment(kind, 'de');
+    }
     if (kind === 'challenge' && (caseId === 'digital-campus' || caseId === 'kigali' || caseId === 'elearning-africa')) {
       const a = africaChallengeCopy('de');
       return { headline: a.headline, bullets: a.bullets, sources: ['Artjom briefing', 'lib/v3Content.ts'] };
@@ -83,27 +88,8 @@ export function enrichSlide(
 
   switch (caseId) {
     case 'production': {
-      if (kind === 'challenge') {
-        sources.push('lib/highlightSections.ts (PRODUCTION_HIGHLIGHT_SECTION.bodyP1)');
-        return {
-          headline: 'Six parallel course productions across four sites.',
-          bullets: sentences(PRODUCTION_HIGHLIGHT_SECTION.bodyP1!, 3),
-          sources,
-        };
-      }
-      if (kind === 'role') {
-        sources.push('lib/highlightSections.ts');
-        return {
-          headline: 'Head of Production · DADB Learning',
-          bullets: sentences(PRODUCTION_HIGHLIGHT_SECTION.bodyP2!, 3),
-          sources,
-        };
-      }
-      if (kind === 'approach') {
-        return { headline: 'Built PM function and live pipeline visibility', bullets: c.action, sources: ['lib/v3Content.ts'] };
-      }
-      if (kind === 'result') {
-        return { headline: c.result[0], bullets: c.result, sources: ['lib/v3Content.ts'] };
+      if (kind === 'challenge' || kind === 'role' || kind === 'approach' || kind === 'result') {
+        return dadbProductionEnrichment(kind, 'en');
       }
       break;
     }

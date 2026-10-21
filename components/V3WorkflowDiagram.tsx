@@ -1,4 +1,9 @@
-type Variant = 'heygen' | 'ai-department' | 'virtual-production';
+type Variant =
+  | 'heygen'
+  | 'ai-department'
+  | 'virtual-production'
+  | 'dadb-mission'
+  | 'production-delivery';
 
 type StepChip = string | { en: string; de: string };
 
@@ -55,6 +60,58 @@ const PIPELINES: Record<Variant, PipelineDef> = {
       { titleEn: 'Post (AE)', titleDe: 'Post (AE)' },
       { titleEn: 'Learning clip', titleDe: 'Lernclip' },
     ],
+  },
+  'dadb-mission': {
+    steps: [
+      {
+        titleEn: 'Schools in India',
+        titleDe: 'Schulen in Indien',
+        chips: [{ en: 'Awareness', de: 'Awareness' }],
+      },
+      {
+        titleEn: 'Excite for renewables',
+        titleDe: 'Begeisterung Erneuerbare',
+        chips: [{ en: 'Sector', de: 'Sektor' }],
+      },
+      {
+        titleEn: 'Practice-ready courses',
+        titleDe: 'Praxisnahe Kurse',
+        chips: [{ en: 'Qualify', de: 'Qualifizieren' }],
+      },
+      {
+        titleEn: 'Bridge to employers',
+        titleDe: 'Brücke Arbeitgeber',
+        chips: [{ en: 'Job-ready', de: 'Jobready' }],
+      },
+    ],
+    footnote: {
+      en: 'Mission thread · DADB course production (Artjom briefing)',
+      de: 'Mission · DADB-Kursproduktion (Artjom-Briefing)',
+    },
+  },
+  'production-delivery': {
+    steps: [
+      { titleEn: 'Team & sites', titleDe: 'Team & Standorte', chips: [{ en: 'India PMs', de: 'PMs Indien' }] },
+      {
+        titleEn: 'Script & editorial',
+        titleDe: 'Skript & Redaktion',
+        chips: [{ en: 'AI-assisted', de: 'KI-gestützt' }],
+      },
+      {
+        titleEn: 'Pipeline visibility',
+        titleDe: 'Pipeline-Sicht',
+        chips: [{ en: 'Course Overview Tool', de: 'Course Overview Tool' }],
+      },
+      {
+        titleEn: 'Parallel course delivery',
+        titleDe: 'Parallele Kursauslieferung',
+        chips: [{ en: '6 × ~30 h / yr', de: '6 × ~30 h / J.' }],
+      },
+    ],
+    footnote: {
+      en: 'Sources: lib/v3Content.ts · lib/highlightSections.ts',
+      de: 'Quellen: lib/v3Content.ts · lib/highlightSections.ts',
+    },
   },
 };
 

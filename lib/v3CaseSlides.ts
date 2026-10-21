@@ -8,11 +8,12 @@ export type CaseSlide = {
   kind: CaseSlideKind;
   title: string;
   step: string;
+  arcLabel?: string;
   headline?: string;
   bullets?: string[];
   paragraph?: string;
   tools?: string[];
-  workflowVariant?: 'heygen' | 'ai-department' | 'virtual-production';
+  workflowVariant?: 'heygen' | 'ai-department' | 'virtual-production' | 'dadb-mission' | 'production-delivery';
   emphasizeNumbers?: boolean;
   sources?: string[];
 };
@@ -51,8 +52,10 @@ export function buildCaseSlides(c: CaseStudy, locale: Locale): CaseSlide[] {
   if (hasChallenge) {
     const e = enrichSlide(c.id, 'challenge', c, locale);
     push('challenge', {
+      arcLabel: e.arcLabel,
       headline: e.headline,
       bullets: dedupe(e.bullets ?? (c.problem ? [c.problem] : [c.summary])),
+      workflowVariant: c.id === 'production' ? 'dadb-mission' : undefined,
       sources: e.sources,
     });
   }
@@ -67,6 +70,7 @@ export function buildCaseSlides(c: CaseStudy, locale: Locale): CaseSlide[] {
   if (c.kicker?.trim()) {
     const e = enrichSlide(c.id, 'role', c, locale);
     push('role', {
+      arcLabel: e.arcLabel,
       headline: e.headline ?? c.kicker,
       bullets: e.bullets,
       paragraph: e.bullets?.length ? undefined : c.kicker,
@@ -76,11 +80,16 @@ export function buildCaseSlides(c: CaseStudy, locale: Locale): CaseSlide[] {
 
   if (c.action.length > 0) {
     const e = enrichSlide(c.id, 'approach', c, locale);
+    const workflow =
+      c.id === 'production'
+        ? ('production-delivery' as const)
+        : workflowFromMedia(c.media);
     push('approach', {
+      arcLabel: e.arcLabel,
       headline: e.headline,
-      bullets: dedupe([...(e.bullets ?? []), ...c.action]),
-      tools: c.tools,
-      workflowVariant: workflowFromMedia(c.media),
+      bullets: dedupe(e.bullets ?? c.action),
+      tools: c.id === 'production' ? [...c.tools, 'HeyGen', 'Synthesia', 'ElevenLabs', 'Cursor'] : c.tools,
+      workflowVariant: workflow,
       sources: e.sources,
     });
   }
@@ -88,9 +97,11 @@ export function buildCaseSlides(c: CaseStudy, locale: Locale): CaseSlide[] {
   if (c.result.length > 0) {
     const e = enrichSlide(c.id, 'result', c, locale);
     push('result', {
+      arcLabel: e.arcLabel,
       headline: e.headline,
       bullets: dedupe(e.bullets ?? c.result),
       emphasizeNumbers: true,
+      workflowVariant: c.id === 'production' ? 'dadb-mission' : undefined,
       sources: e.sources,
     });
   }
@@ -108,9 +119,10 @@ export function visualMediaForCase(media: Media[]): Media[] {
 export function mediaIndexForSlide(slideIndex: number, slideKind: CaseSlideKind, visualCount: number): number {
   if (visualCount <= 0) return 0;
   if (slideKind === 'partners') return Math.min(1, visualCount - 1);
-  if (slideKind === 'result') return visualCount - 1;
-  if (slideKind === 'approach' && visualCount > 1) return Math.min(1, visualCount - 1);
-  if (slideKind === 'role' && visualCount > 2) return Math.min(1, visualCount - 1);
+  if (slideKind === 'challenge') return 0;
+  if (slideKind === 'role') return Math.min(1, visualCount - 1);
+  if (slideKind === 'approach') return Math.min(2, visualCount - 1);
+  if (slideKind === 'result') return Math.min(1, visualCount - 1);
   return Math.min(slideIndex, visualCount - 1);
 }
 

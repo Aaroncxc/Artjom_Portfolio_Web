@@ -40,8 +40,13 @@ function SlidePanel({ slide, total, locale }: { slide: CaseSlide; total: number;
             {slide.step}/{String(total).padStart(2, '0')}
           </span>
         </div>
+        {slide.arcLabel && (
+          <p className="mt-3 font-mono text-[11px] font-medium uppercase tracking-wide text-amber-800 dark:text-amber-400">
+            {slide.arcLabel}
+          </p>
+        )}
         {slide.headline && (
-          <h4 className="mt-3 text-lg font-semibold leading-snug tracking-tight text-neutral-900 dark:text-neutral-50 md:text-xl">
+          <h4 className={`text-lg font-semibold leading-snug tracking-tight text-neutral-900 dark:text-neutral-50 md:text-xl ${slide.arcLabel ? 'mt-2' : 'mt-3'}`}>
             {slide.headline}
           </h4>
         )}
@@ -62,8 +67,13 @@ function SlidePanel({ slide, total, locale }: { slide: CaseSlide; total: number;
           {slide.step}/{String(total).padStart(2, '0')}
         </span>
       </div>
+      {slide.arcLabel && (
+        <p className="mt-3 font-mono text-[11px] font-medium uppercase tracking-wide text-amber-800 dark:text-amber-400">
+          {slide.arcLabel}
+        </p>
+      )}
       {slide.headline && (
-        <h4 className="mt-3 text-lg font-semibold leading-snug tracking-tight text-neutral-900 dark:text-neutral-50 md:text-xl">
+        <h4 className={`text-lg font-semibold leading-snug tracking-tight text-neutral-900 dark:text-neutral-50 md:text-xl ${slide.arcLabel ? 'mt-2' : 'mt-3'}`}>
           {slide.headline}
         </h4>
       )}
@@ -255,14 +265,15 @@ export function V3CaseCard({ c, locale, big, periodLabel, allMedia }: Props) {
             </div>
 
             <div className="min-w-0 lg:col-span-7">
-              {current?.kind === 'approach' && current.workflowVariant && (
-                <div className="mb-3 hidden lg:block">
-                  <V3WorkflowDiagram variant={current.workflowVariant} locale={locale} />
-                </div>
-              )}
+              {current?.workflowVariant &&
+                (current.kind === 'approach' || current.kind === 'challenge' || current.kind === 'result') && (
+                  <div className={visual.length > 0 ? 'mb-3' : ''}>
+                    <V3WorkflowDiagram variant={current.workflowVariant} locale={locale} />
+                  </div>
+                )}
               {visual.length > 0 ? (
                 <V3CaseMediaBento media={visual} locale={locale} focusIndex={vIdx} />
-              ) : workflowVariant?.kind === 'workflow' ? (
+              ) : !current?.workflowVariant && workflowVariant?.kind === 'workflow' ? (
                 <V3WorkflowDiagram variant={workflowVariant.variant} locale={locale} />
               ) : null}
             </div>

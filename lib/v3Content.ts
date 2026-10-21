@@ -6,7 +6,7 @@ export type Locale = 'en' | 'de';
 export type Media =
   | { kind: 'image'; src: string; alt: string }
   | { kind: 'video'; src: string; poster?: string; alt: string }
-  | { kind: 'workflow'; variant: 'heygen' | 'ai-department' | 'virtual-production' };
+  | { kind: 'workflow'; variant: 'heygen' | 'ai-department' | 'virtual-production' | 'dadb-mission' | 'production-delivery' };
 
 export interface CaseStudy {
   id: string;
@@ -114,10 +114,10 @@ const en: PortfolioContent = {
     {
       id: 'production',
       index: '01',
-      title: 'Building a course production from zero',
-      kicker: 'Head of Production · role & results',
+      title: 'DADB — course production for India’s school-to-job path',
+      kicker: 'Head of Production · awareness → job-ready → employers',
       summary:
-        'Built the production department from the ground up — starting with film-based course production — and led it as Head of Production.',
+        'At DADB the through-line was India: go into schools, make young people aware of renewables, qualify them in practice, and help them become job-ready for the sector — including companies that build solar parks and similar projects.',
       action: [
         'Hired and structured the team: 3 After Effects, 6 editors, 6 2D, 6 3D artists, plus 2 project managers in India — 23 direct reports.',
         'Assigned teams per course, set roadmap and outlook, owned staffing and the production budget calculation.',
@@ -126,8 +126,12 @@ const en: PortfolioContent = {
       ],
       result: ['KPI of six courses per year met and held — from 2025, six courses of ~30 hours each.'],
       tools: ['Production planning', 'Team leadership', 'Budgeting'],
-      media: [{ kind: 'image', src: '/tools/dadb-course-overview/team-1.jpg', alt: 'Production team' }],
-      note: 'No course content shown — only own material.',
+      media: [
+        { kind: 'image', src: '/about/ProductRoadshow_India_2024.jpg', alt: 'Product roadshow India — no course footage' },
+        { kind: 'image', src: '/tools/dadb-course-overview/team-1.jpg', alt: 'Production team' },
+        { kind: 'image', src: '/tools/dadb-course-overview/team-2.jpg', alt: 'Production team' },
+      ],
+      note: 'No course content shown — process diagrams and own photos only.',
     },
     {
       id: 'heygen',
@@ -373,10 +377,10 @@ const de: PortfolioContent = {
     {
       id: 'production',
       index: '01',
-      title: 'Kursproduktion von null aufgebaut',
-      kicker: 'Head of Production · Rolle & Ergebnisse',
+      title: 'DADB — Kursproduktion für den Schul-zum-Job-Weg in Indien',
+      kicker: 'Head of Production · Awareness → Jobready → Arbeitgeber',
       summary:
-        'Produktionsabteilung von Grund auf aufgebaut — beginnend mit filmischer Kursproduktion — und als Head of Production geführt.',
+        'Bei DADB lief der rote Faden über Indien: in Schulen gehen, junge Menschen für Erneuerbare sensibilisieren, praxisnah qualifizieren und jobready machen — für den Sektor, auch bei Unternehmen, die Solarparks oder vergleichbare Projekte aufbauen.',
       action: [
         'Team aufgebaut und strukturiert: 3 After Effects, 6 Cutter, 6 2D-, 6 3D-Artists plus 2 Projektmanager in Indien — 23 direct reports.',
         'Teams pro Kurs zugewiesen, Roadmap und Ausblick gesetzt, Personalplanung und Produktionsbudget-Kalkulation verantwortet.',
@@ -385,8 +389,12 @@ const de: PortfolioContent = {
       ],
       result: ['KPI von sechs Kursen pro Jahr erreicht und gehalten — ab 2025 sechs Kurse à ca. 30 Stunden.'],
       tools: ['Produktionsplanung', 'Teamführung', 'Budgetierung'],
-      media: [{ kind: 'image', src: '/tools/dadb-course-overview/team-1.jpg', alt: 'Produktionsteam' }],
-      note: 'Kein Kursinhalt gezeigt — nur eigenes Material.',
+      media: [
+        { kind: 'image', src: '/about/ProductRoadshow_India_2024.jpg', alt: 'Product Roadshow Indien — kein Kursmaterial' },
+        { kind: 'image', src: '/tools/dadb-course-overview/team-1.jpg', alt: 'Produktionsteam' },
+        { kind: 'image', src: '/tools/dadb-course-overview/team-2.jpg', alt: 'Produktionsteam' },
+      ],
+      note: 'Kein Kursinhalt — nur Prozessdiagramme und eigene Fotos.',
     },
     {
       id: 'heygen',
