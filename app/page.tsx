@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { V3CaseCard } from '@/components/V3CaseCard';
+import { V3IndiaExchangeBridge } from '@/components/V3IndiaExchangeBridge';
 import { V3IndiaJourneyChapter } from '@/components/V3IndiaJourneyChapter';
 import { V3Hero } from '@/components/V3Hero';
 import { V3ProjectTimeline } from '@/components/V3ProjectTimeline';
@@ -148,7 +149,12 @@ export default function Page() {
                       periodLabel={c.periodLabel}
                       allMedia={c.media}
                     />
-                    {c.id === 'production' && <V3IndiaJourneyChapter locale={locale} />}
+                    {c.id === 'production' && (
+                      <>
+                        <V3IndiaJourneyChapter locale={locale} />
+                        <V3IndiaExchangeBridge locale={locale} />
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
