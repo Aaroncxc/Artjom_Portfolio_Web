@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { V3CaseCard } from '@/components/V3CaseCard';
+import { V3IndiaJourneyChapter } from '@/components/V3IndiaJourneyChapter';
 import { V3Hero } from '@/components/V3Hero';
 import { V3ProjectTimeline } from '@/components/V3ProjectTimeline';
 import { getV3Content, type Locale } from '@/lib/v3Content';
@@ -139,14 +140,16 @@ export default function Page() {
                   {group.label}
                 </h3>
                 {group.cases.map((c) => (
-                  <V3CaseCard
-                    key={c.id}
-                    c={c}
-                    big={featuredIds.has(c.id)}
-                    locale={locale}
-                    periodLabel={c.periodLabel}
-                    allMedia={c.media}
-                  />
+                  <div key={c.id}>
+                    <V3CaseCard
+                      c={c}
+                      big={featuredIds.has(c.id)}
+                      locale={locale}
+                      periodLabel={c.periodLabel}
+                      allMedia={c.media}
+                    />
+                    {c.id === 'production' && <V3IndiaJourneyChapter locale={locale} />}
+                  </div>
                 ))}
               </div>
             ))}
