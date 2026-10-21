@@ -4,9 +4,9 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://artjomnaninjan.vercel.app'),
-  title: 'Artjom Naninjan | Senior Production & Project Lead · Learning Content',
+  title: 'Artjom Naninjan | E-Learning Production & Product Lead',
   description:
-    'Senior production and project lead — learning content, content production, and production PM for course delivery. Led ~35 people, six parallel productions, four sites at DADB.',
+    'Course production that delivers: 23 direct reports, six 30-hour courses per year, €380k saved annually through AI avatars. Head of Production in e-learning.',
   keywords: [
     'Artjom Naninjan',
     'Senior Production Lead',
@@ -20,9 +20,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Artjom Naninjan' }],
   openGraph: {
-    title: 'Artjom Naninjan | Senior Production & Project Lead · Learning Content',
+    title: 'Artjom Naninjan | E-Learning Production & Product Lead',
     description:
-      'Learning content and content production at scale — production PM for ~35 people, six parallel productions, four sites.',
+      'Head of Production in e-learning — team of 23, six 30-hour courses per year, AI avatar workflow saving €380k annually.',
     type: 'website',
     locale: 'en_US',
   },

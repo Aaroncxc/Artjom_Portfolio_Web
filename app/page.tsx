@@ -1,180 +1,206 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import LightLeaksBackground from '@/components/LightLeaksBackground';
-import { Navigation } from '@/components/Navigation';
-import { AboutSection } from '@/components/AboutSection';
-import {
-  HighlightBentoSection,
-  AI_APP_DEV_HIGHLIGHT_SECTION,
-  ARCHITECTURE_HIGHLIGHT_SECTION,
-  MULTIKUNST_HIGHLIGHT_SECTION,
-  PRODUCTION_HIGHLIGHT_SECTION,
-  SKYHAVEN_HIGHLIGHT_SECTION,
-  VFX_HIGHLIGHT_SECTION,
-} from '@/components/HighlightBentoSection';
-import { ProjectsGrid } from '@/components/ProjectsGrid';
-import { ToolsGamesGrid } from '@/components/ToolsGamesGrid';
-import { TextPointCloudHero } from '@/components/TextPointCloudHero';
-import { CONTACT_MAILTO } from '@/lib/contact';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { V3CaseCard } from '@/components/V3CaseCard';
+import { V3Hero } from '@/components/V3Hero';
+import { V3ProjectTimeline } from '@/components/V3ProjectTimeline';
+import { getV3Content, type Locale } from '@/lib/v3Content';
+import { V3_PAGE } from '@/lib/v3Layout';
+import { buildTimelineCases, groupCasesByYear, periodGroupYear } from '@/lib/v3Timeline';
 
-export default function Home() {
-  const [heroDismissed, setHeroDismissed] = useState(false);
-  const [introKey, setIntroKey] = useState(0);
-  /** Sub-`md` viewports get a shorter hero-gate dissolve (faster disconnect of intro canvas after tap). */
-  const [narrowViewport, setNarrowViewport] = useState(false);
+const LOCALE_KEY = 'portfolio-v3-locale';
 
-  // Allow skipping the cinematic intro via ?skipHero=true or hash deep-link (#projects, #about, …).
-  // Useful on mobile where the canvas sometimes swallows the first tap, and for direct deep links.
+function readInitialLocale(): Locale {
+  if (typeof window === 'undefined') return 'de';
+  try {
+    const stored = localStorage.getItem(LOCALE_KEY);
+    if (stored === 'en' || stored === 'de') return stored;
+  } catch {
+    /* ignore */
+  }
+  return typeof navigator !== 'undefined' && navigator.language.toLowerCase().startsWith('de') ? 'de' : 'en';
+}
+
+export default function Page() {
+  const [locale, setLocale] = useState<Locale>('de');
+  const [ready, setReady] = useState(false);
+
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const url = new URL(window.location.href);
-    const skipParam = url.searchParams.get('skipHero');
-    const hasHashTarget = /^#\w/.test(window.location.hash || '');
-    if (skipParam === 'true' || skipParam === '1' || hasHashTarget) {
-      setHeroDismissed(true);
+    setLocale(readInitialLocale());
+    setReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    try {
+      localStorage.setItem(LOCALE_KEY, locale);
+    } catch {
+      /* ignore */
     }
-  }, []);
+    document.documentElement.lang = locale;
+  }, [locale, ready]);
+
+  const content = getV3Content(locale);
+  const { contact, hero, stats, ui, featured, cases, strengths, more } = content;
+
+  const timelineCases = useMemo(() => buildTimelineCases(featured, cases, locale), [locale]);
+  const yearGroups = useMemo(() => groupCasesByYear(timelineCases, locale), [timelineCases, locale]);
+  const featuredIds = useMemo(() => new Set(featured.map((c) => c.id)), [featured]);
+
+  const timelineNav = useMemo(
+    () =>
+      timelineCases.map((c) => ({
+        id: c.id,
+        periodLabel: c.periodLabel,
+        year: periodGroupYear(c.period),
+      })),
+    [timelineCases],
+  );
+
+  const [activeId, setActiveId] = useState<string | null>(timelineCases[0]?.id ?? null);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return;
-    const mq = window.matchMedia('(max-width: 767px)');
-    const sync = () => setNarrowViewport(mq.matches);
-    sync();
-    mq.addEventListener?.('change', sync);
-    return () => mq.removeEventListener?.('change', sync);
-  }, []);
+    const nodes = timelineCases.map((c) => document.getElementById(c.id)).filter(Boolean) as HTMLElement[];
+    if (!nodes.length) return;
 
-  // Lock scroll while the intro hero is up — also blocks touch scroll on iOS/Android
-  useEffect(() => {
-    if (heroDismissed) return undefined;
-    document.documentElement.classList.add('hero-locked');
-    document.body.classList.add('hero-locked');
-    return () => {
-      document.documentElement.classList.remove('hero-locked');
-      document.body.classList.remove('hero-locked');
-    };
-  }, [heroDismissed]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const hit = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (hit?.target.id) setActiveId(hit.target.id);
+      },
+      { rootMargin: '-15% 0px -50% 0px', threshold: [0, 0.15, 0.4, 0.7] },
+    );
 
-  const openIntro = useCallback(() => {
-    window.scrollTo(0, 0);
-    setIntroKey((k) => k + 1);
-    setHeroDismissed(false);
+    nodes.forEach((n) => observer.observe(n));
+    return () => observer.disconnect();
+  }, [timelineCases]);
+
+  const progress = useMemo(() => {
+    if (!activeId || timelineNav.length < 2) return 0;
+    const idx = timelineNav.findIndex((i) => i.id === activeId);
+    return idx <= 0 ? 0 : idx / (timelineNav.length - 1);
+  }, [activeId, timelineNav]);
+
+  const jumpToCase = useCallback((id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setActiveId(id);
   }, []);
 
   return (
-    <>
-      {/* Light Leaks Background - pearl gradient with subtle color blobs */}
-      <LightLeaksBackground />
-
-      {/* Cinematic intro gate */}
-      <AnimatePresence>
-        {!heroDismissed && (
-          <motion.div
-            key="hero-gate"
-            initial={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-            animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-            exit={{
-              opacity: 0,
-              y: 80,
-              scale: 1.04,
-              filter: 'blur(10px)',
-            }}
-            transition={{ duration: narrowViewport ? 0.55 : 0.95, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-[100]"
-            style={{ willChange: 'opacity, transform, filter' }}
-          >
-            <TextPointCloudHero key={introKey} onActivate={() => setHeroDismissed(true)} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Navigation appears as soon as the gate dissolves */}
-      <Navigation visible={heroDismissed} onLogoClick={openIntro} />
-
-      {/* Main Content - revealed after the gate */}
-      <motion.main
-        className="relative z-[5]"
-        initial={false}
-        animate={{
-          opacity: heroDismissed ? 1 : 0,
-          y: heroDismissed ? 0 : -40,
-          scale: heroDismissed ? 1 : 0.97,
-        }}
-        transition={{
-          duration: 0.9,
-          ease: [0.22, 1, 0.36, 1],
-          delay: heroDismissed ? 0.2 : 0,
-        }}
-        style={{
-          pointerEvents: heroDismissed ? 'auto' : 'none',
-        }}
-        aria-hidden={!heroDismissed}
-      >
-        {/* About Section - first content the visitor sees */}
-        <AboutSection visible={true} />
-
-        <HighlightBentoSection visible={true} config={AI_APP_DEV_HIGHLIGHT_SECTION} />
-
-        <HighlightBentoSection visible={true} config={PRODUCTION_HIGHLIGHT_SECTION} />
-
-        <HighlightBentoSection visible={true} config={ARCHITECTURE_HIGHLIGHT_SECTION} />
-
-        {/* Projects Section - Instagram-style Grid */}
-        <ProjectsGrid visible={true} />
-
-        <HighlightBentoSection visible={true} config={MULTIKUNST_HIGHLIGHT_SECTION} />
-
-        <HighlightBentoSection visible={true} config={VFX_HIGHLIGHT_SECTION} />
-
-        <HighlightBentoSection visible={true} config={SKYHAVEN_HIGHLIGHT_SECTION} />
-
-        {/* Tools & Games Section */}
-        <ToolsGamesGrid visible={true} />
-
-        {/* Footer */}
-        <footer
-          data-nav-key="footer"
-          className="relative z-10 px-4 pt-8 pb-10 sm:px-6 sm:pt-10 sm:pb-14"
-        >
-          <div className="max-w-7xl mx-auto">
-            <div className="glass-panel p-6 sm:p-8">
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
-                <div>
-                  <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Artjom Naninjan</h3>
-                  <p className="text-mk-text-secondary text-sm leading-relaxed">
-                    Senior Production &amp; Project Lead — learning content, content production, and production PM for course delivery at scale.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium mb-3 sm:mb-4 text-mk-text-muted uppercase tracking-wider">Navigate</h4>
-                  <ul className="space-y-1">
-                    <li><a href="/intro" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Intro</a></li>
-                    <li><a href="#about" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">About</a></li>
-                    <li><a href="#projects" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Projects</a></li>
-                    <li><a href="#tools-games" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Tools &amp; Games</a></li>
-                    <li><a href={CONTACT_MAILTO} className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Contact</a></li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium mb-3 sm:mb-4 text-mk-text-muted uppercase tracking-wider">Connect</h4>
-                  <ul className="space-y-1">
-                    <li><a href="https://www.linkedin.com/in/artjom-naninjan-5136b1203" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">LinkedIn</a></li>
-                    <li><a href="https://multikunst.vercel.app" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Multikunst</a></li>
-                    <li><a href={CONTACT_MAILTO} className="inline-flex min-h-[44px] items-center text-sm text-mk-text-secondary transition-colors hover:text-accent-cyan">Email</a></li>
-                  </ul>
-                </div>
-              </div>
-              <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-[rgba(28,28,28,0.08)] text-center">
-                <p className="text-xs sm:text-sm text-mk-text-muted">
-                  © {new Date().getFullYear()} Artjom Naninjan. All rights reserved.
-                </p>
-              </div>
+    <main className="min-h-screen bg-white font-sans text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100">
+      <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/80 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/80">
+        <nav className={`flex flex-wrap items-center justify-between gap-3 py-4 text-sm ${V3_PAGE}`}>
+          <span className="font-semibold">{contact.name}</span>
+          <div className="flex flex-wrap items-center gap-4 text-neutral-500 sm:gap-6">
+            <a href="#work">{ui.work}</a>
+            <a href="#work">{ui.cases}</a>
+            <a href="#about">{ui.about}</a>
+            <a href="#contact" className="text-neutral-900 dark:text-neutral-100">
+              {ui.contact}
+            </a>
+            <div className="flex rounded-md border border-neutral-200 p-0.5 text-xs font-medium dark:border-neutral-700" role="group" aria-label="Language">
+              <button
+                type="button"
+                onClick={() => setLocale('en')}
+                className={`rounded px-2 py-1 ${locale === 'en' ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900' : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400'}`}
+              >
+                {ui.langEn}
+              </button>
+              <button
+                type="button"
+                onClick={() => setLocale('de')}
+                className={`rounded px-2 py-1 ${locale === 'de' ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900' : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400'}`}
+              >
+                {ui.langDe}
+              </button>
             </div>
           </div>
-        </footer>
-      </motion.main>
-    </>
+        </nav>
+      </header>
+
+      <V3Hero locale={locale} hero={hero} stats={stats} />
+
+      <section id="work" className={`pt-4 ${V3_PAGE}`}>
+        <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400 dark:text-neutral-500">{ui.casesHeading}</h2>
+        <div className="mt-6 lg:grid lg:grid-cols-[11.25rem_minmax(0,1fr)] lg:gap-x-8 xl:grid-cols-[12.5rem_minmax(0,1fr)] xl:gap-x-10">
+          <V3ProjectTimeline
+            items={timelineNav}
+            activeId={activeId}
+            progress={progress}
+            locale={locale}
+            onJump={jumpToCase}
+          />
+          <div id="work-timeline" className="min-w-0">
+            {yearGroups.map((group) => (
+              <div key={group.label} className="mb-4">
+                <h3 className="sticky top-[3.25rem] z-[8] -mx-1 mb-2 border-b border-neutral-100 bg-white/90 py-3 font-mono text-sm font-medium tracking-tight text-neutral-900 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/90 dark:text-neutral-100 lg:top-28 lg:static lg:border-0 lg:bg-transparent lg:py-0 lg:text-xs lg:uppercase lg:tracking-wider lg:text-neutral-400">
+                  {group.label}
+                </h3>
+                {group.cases.map((c) => (
+                  <V3CaseCard
+                    key={c.id}
+                    c={c}
+                    big={featuredIds.has(c.id)}
+                    locale={locale}
+                    periodLabel={c.periodLabel}
+                    allMedia={c.media}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="about" className={`grid gap-10 border-t border-neutral-200 py-16 dark:border-neutral-800 md:grid-cols-2 ${V3_PAGE}`}>
+        <div className="max-w-[65ch]">
+          <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.howIWork}</h2>
+          <ul className="mt-4 space-y-3 text-neutral-700 dark:text-neutral-300">
+            {strengths.map((s) => (
+              <li key={s}>— {s}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="max-w-[65ch]">
+          <h2 className="font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.background}</h2>
+          <ul className="mt-4 space-y-2 text-neutral-700 dark:text-neutral-300">
+            <li>{contact.education}</li>
+            <li>{contact.cert}</li>
+            <li>{contact.languages}</li>
+            <li>{contact.toolsLine}</li>
+          </ul>
+          <h2 className="mt-8 font-mono text-xs uppercase tracking-wider text-neutral-400">{ui.alsoBuilding}</h2>
+          <ul className="mt-4 space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
+            {more.map((m) => (
+              <li key={m.title}>
+                <span className="font-medium text-neutral-900 dark:text-neutral-100">
+                  {m.href ? (
+                    <a href={m.href} className="underline underline-offset-4" target="_blank" rel="noreferrer">
+                      {m.title}
+                    </a>
+                  ) : (
+                    m.title
+                  )}
+                </span>{' '}
+                — {m.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <footer id="contact" className="border-t border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900/50">
+        <div className={`py-16 ${V3_PAGE}`}>
+          <h2 className="text-3xl font-semibold tracking-tight">{ui.footerHeadline}</h2>
+          <div className="mt-6 flex flex-wrap gap-6 text-neutral-700 dark:text-neutral-300">
+            <a href={contact.phoneHref}>{contact.phone}</a>
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+            <span>{contact.location}</span>
+          </div>
+        </div>
+      </footer>
+    </main>
   );
 }
