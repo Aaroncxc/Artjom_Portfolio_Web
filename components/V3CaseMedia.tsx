@@ -20,11 +20,13 @@ export function V3CaseMedia({ m, locale }: { m: Media; locale: Locale }) {
     );
   // eslint-disable-next-line @next/next/no-img-element
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       className="aspect-video w-full rounded-lg border border-neutral-200 object-cover dark:border-neutral-700"
       src={m.src}
       alt={m.alt}
       loading="lazy"
+      draggable={false}
     />
   );
 }

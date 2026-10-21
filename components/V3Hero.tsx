@@ -2,29 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { V3BlueprintStats } from '@/components/V3BlueprintStats';
+import { V3HeroMotionGrid } from '@/components/V3HeroMotionGrid';
 import type { Locale, PortfolioContent } from '@/lib/v3Content';
 import { V3_PAGE } from '@/lib/v3Layout';
-
-function BlueprintBackdrop() {
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.35] dark:opacity-[0.2]" aria-hidden>
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgb(163 163 163 / 0.25) 1px, transparent 1px),
-            linear-gradient(to bottom, rgb(163 163 163 / 0.25) 1px, transparent 1px)
-          `,
-          backgroundSize: '48px 48px',
-        }}
-      />
-      <div className="absolute left-[12%] top-[18%] text-neutral-300 dark:text-neutral-600">+</div>
-      <div className="absolute right-[15%] top-[28%] text-neutral-300 dark:text-neutral-600">+</div>
-      <div className="absolute left-[22%] bottom-[32%] text-neutral-300 dark:text-neutral-600">+</div>
-      <div className="absolute right-[28%] bottom-[22%] text-neutral-300 dark:text-neutral-600">+</div>
-    </div>
-  );
-}
 
 function AnimatedHeadline({ text, reduceMotion }: { text: string; reduceMotion: boolean }) {
   const words = useMemo(() => text.split(/\s+/), [text]);
@@ -80,7 +60,7 @@ export function V3Hero({ locale, hero, stats }: Props) {
 
   return (
     <section className={`relative flex min-h-[90svh] flex-col pb-8 pt-20 md:pt-24 ${V3_PAGE}`}>
-      <BlueprintBackdrop />
+      <V3HeroMotionGrid />
       <div className="relative z-[1] flex flex-1 flex-col justify-center">
         <p className="font-mono text-xs uppercase tracking-wider text-neutral-400 dark:text-neutral-500">{hero.eyebrow}</p>
         <div className="mt-6">

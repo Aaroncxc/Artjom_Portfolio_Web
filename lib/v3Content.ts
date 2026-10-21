@@ -228,7 +228,7 @@ const en: PortfolioContent = {
       title: 'Digital Campus & leXsolar — learning in 3D',
       kicker: 'Learning design · Solar Technician · passion project inside the company',
       summary:
-        'A walkable digital campus where learners build and mount solar panels and learn the basics of electrical engineering — plus a digital twin of leXsolar’s physical solar learning kits.',
+        'Vocational training in Africa needs solar technicians at scale — a course was built with Hochschule Offenburg as the German partner. Delivery layers: walkable digital campus plus leXsolar’s training kit, visualised and mirrored digitally.',
       action: [
         'Visualised the campus in Blender and Archicad, built it in Unreal.',
         'leXsolar: Blender assets and a Unity learning game, from partner workshops to prototype milestones with editorial and SMEs.',
@@ -260,10 +260,7 @@ const en: PortfolioContent = {
       ],
       result: ['Own Unreal and 3D work that can be shown without course content.'],
       tools: ['Unreal Engine', 'Blender', 'After Effects', 'Premiere'],
-      media: [
-        { kind: 'image', src: '/projects/rekuperation-education/rekuperation-edu-video.webp', alt: 'E-mobility explainer' },
-        { kind: 'workflow', variant: 'virtual-production' },
-      ],
+      media: [{ kind: 'workflow', variant: 'virtual-production' }],
     },
     {
       id: 'kigali',
@@ -271,7 +268,7 @@ const en: PortfolioContent = {
       title: 'Kigali — interactive inverter exercise at eLearning Africa',
       kicker: 'Learning experience · eLearning Africa 2024, German Pavilion',
       summary:
-        'An interactive VR/AR exercise on mounting an inverter, shown on our own stand at eLearning Africa in Kigali — real footage from the floor.',
+        'Same solar-technician training line for Africa’s vocational market — live at eLearning Africa Kigali: interactive inverter exercise on the German Pavilion stand (floor footage).',
       action: [
         'Owned the booth narrative and stakeholder timelines from rehearsal to live floor.',
         'Coordinated the XR build with third-party developers and freelancers.',
@@ -295,7 +292,7 @@ const en: PortfolioContent = {
       title: 'VR & AR at eLearning Africa — Dakar 2023 and Kigali 2024',
       kicker: 'Learning experience · German Pavilion, own stand',
       summary:
-        'Two appearances with interactive exercises. In Dakar I built the VR exercise myself; in Kigali an interactive VR exercise on mounting an inverter was built with third parties and freelancers.',
+        'Solar technician course context — two German Pavilion booths (Dakar 2023, Kigali 2024) with hands-on VR/AR exercises that make the training tangible on the fair floor.',
       action: [
         'Dakar: scene choreography, onboarding flow, Unreal deployment and live operator support.',
         'Kigali: booth narrative, XR coordination, rollout on the floor.',
@@ -490,7 +487,7 @@ const de: PortfolioContent = {
       title: 'Digital Campus & leXsolar — Lernen in 3D',
       kicker: 'Learning Design · Solar Technician · Passion Project im Unternehmen',
       summary:
-        'Begehbarer digitaler Campus, in dem Lernende Solarpanels bauen und montieren und Grundlagen der Elektrotechnik lernen — plus digitaler Zwilling von leXsolars physischen Solar-Lernkits.',
+        'Berufsausbildung in Afrika braucht Solarteure — Kurs mit Hochschule Offenburg als deutschem Partner. Umsetzung: begehbarer Digital Campus plus leXsolar-Koffer, visualisiert und digital gespiegelt.',
       action: [
         'Campus in Blender und Archicad visualisiert, in Unreal umgesetzt.',
         'leXsolar: Blender-Assets und Unity-Lernspiel, von Partner-Workshops bis Prototyp-Meilensteine mit Redaktion und SMEs.',
@@ -522,10 +519,7 @@ const de: PortfolioContent = {
       ],
       result: ['Eigenes Unreal- und 3D-Material ohne Kursinhalte zeigbar.'],
       tools: ['Unreal Engine', 'Blender', 'After Effects', 'Premiere'],
-      media: [
-        { kind: 'image', src: '/projects/rekuperation-education/rekuperation-edu-video.webp', alt: 'E-Mobility Erklärvideo' },
-        { kind: 'workflow', variant: 'virtual-production' },
-      ],
+      media: [{ kind: 'workflow', variant: 'virtual-production' }],
     },
     {
       id: 'kigali',
@@ -533,7 +527,7 @@ const de: PortfolioContent = {
       title: 'Kigali — interaktive Wechselrichter-Übung auf der eLearning Africa',
       kicker: 'Learning Experience · eLearning Africa 2024, Deutscher Pavillon',
       summary:
-        'Interaktive VR/AR-Übung zum Montieren eines Wechselrichters auf dem eigenen Stand auf der eLearning Africa in Kigali — echtes Material vom Messeboden.',
+        'Solarteur-Ausbildungslinie für den afrikanischen Berufsbildungsmarkt — live auf der eLearning Africa in Kigali: interaktive Wechselrichter-Übung im Deutschen Pavillon (Messeboden).',
       action: [
         'Stand-Narrative und Stakeholder-Timelines von Probe bis Live-Betrieb verantwortet.',
         'XR-Umsetzung mit externen Entwicklern und Freelancern koordiniert.',
@@ -557,7 +551,7 @@ const de: PortfolioContent = {
       title: 'VR & AR auf der eLearning Africa — Dakar 2023 und Kigali 2024',
       kicker: 'Learning Experience · Deutscher Pavillon, eigener Stand',
       summary:
-        'Zwei Auftritte mit interaktiven Übungen. In Dakar habe ich die VR-Übung selbst gebaut; in Kigali eine interaktive VR-Übung zum Wechselrichter-Montieren mit Dritten und Freelancern.',
+        'Solarteur-Kurs-Kontext — zwei Messestände im Deutschen Pavillon (Dakar 2023, Kigali 2024) mit Hands-on-VR/AR-Übungen, die die Ausbildung auf der Messe erlebbar machen.',
       action: [
         'Dakar: Szenen-Choreografie, Onboarding-Flow, Unreal-Deployment und Live-Support.',
         'Kigali: Stand-Narrative, XR-Koordination, Rollout auf der Messe.',
