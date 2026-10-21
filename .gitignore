@@ -16,11 +16,10 @@ pnpm-lock.yaml
 # Generated
 next-env.d.ts
 
-# Environment
-.env
-.env.local
-.env.*.local
-.env.*.txt
+# Environment (keep .env.example tracked)
+.env*
+!.env.example
+!ingest/.env.example
 
 # IDE
 .vscode
