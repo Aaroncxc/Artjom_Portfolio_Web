@@ -217,8 +217,8 @@ const en: PortfolioContent = {
       result: ['Used by everyone, running on large screens in the office. Still online (names changed).'],
       tools: ['Next.js', 'React', 'Tailwind', 'Cursor'],
       media: [
-        { kind: 'image', src: '/tools/dadb-course-overview/thumbnail.jpg', alt: 'Course Overview Tool' },
         { kind: 'image', src: '/tools/dadb-course-overview/course-1.jpg', alt: 'Overview' },
+        { kind: 'image', src: '/tools/dadb-course-overview/course-5.jpg', alt: 'KPI dashboard' },
       ],
       links: [{ href: 'https://v0-image-analysis-taupe-beta.vercel.app', label: 'Open the tool' }],
     },
@@ -479,8 +479,8 @@ const de: PortfolioContent = {
       result: ['Von allen genutzt, auf großen Screens im Büro. Noch online (Namen geändert).'],
       tools: ['Next.js', 'React', 'Tailwind', 'Cursor'],
       media: [
-        { kind: 'image', src: '/tools/dadb-course-overview/thumbnail.jpg', alt: 'Course Overview Tool' },
         { kind: 'image', src: '/tools/dadb-course-overview/course-1.jpg', alt: 'Übersicht' },
+        { kind: 'image', src: '/tools/dadb-course-overview/course-5.jpg', alt: 'KPI-Dashboard' },
       ],
       links: [{ href: 'https://v0-image-analysis-taupe-beta.vercel.app', label: 'Tool öffnen' }],
     },
