@@ -1,4 +1,5 @@
 import { africaPartnerSlideHeadline, isAfricaPartnerCase } from '@/lib/v3AfricaPartners';
+import { applyCaseStandards } from '@/lib/v3CaseStandards';
 import type { CaseStudy, Locale, Media } from '@/lib/v3Content';
 import { enrichSlide } from '@/lib/v3CaseEnrichment';
 
@@ -106,10 +107,12 @@ export function buildCaseSlides(c: CaseStudy, locale: Locale): CaseSlide[] {
     });
   }
 
-  return slides.map((s, i) => ({
+  const numbered = slides.map((s, i) => ({
     ...s,
     step: String(i + 1).padStart(2, '0'),
   }));
+
+  return applyCaseStandards(c, numbered, locale);
 }
 
 export function visualMediaForCase(media: Media[]): Media[] {

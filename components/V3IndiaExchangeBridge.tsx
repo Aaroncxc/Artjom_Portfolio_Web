@@ -43,8 +43,6 @@ export function V3IndiaExchangeBridge({ locale }: Props) {
   const c = INDIA_EXCHANGE_COPY;
   const arc = exchangeList(locale, c.arc);
   const bullets = exchangeList(locale, c.bullets);
-  const entitiesTodo = exchangeT(locale, c.entitiesTodo);
-
   return (
     <section
       id={INDIA_EXCHANGE_ID}
@@ -76,8 +74,7 @@ export function V3IndiaExchangeBridge({ locale }: Props) {
           <PartnerLogo />
           <EntityChip label={exchangeT(locale, EXCHANGE_ENTITY_LABELS.germany)} />
         </div>
-        <p className="mt-3 text-center font-mono text-[10px] uppercase leading-snug text-amber-700 dark:text-amber-400">{entitiesTodo}</p>
-        <p className="mt-2 text-center text-xs text-neutral-600 dark:text-neutral-400">{exchangeT(locale, c.partnerOffenburgRole)}</p>
+        <p className="mt-3 text-center text-xs text-neutral-600 dark:text-neutral-400">{exchangeT(locale, c.partnerOffenburgRole)}</p>
 
         <ul className="mt-8 max-w-[65ch] list-disc space-y-2 pl-4 text-sm text-neutral-700 dark:text-neutral-300">
           {bullets.map((b) => (

@@ -8,7 +8,6 @@ export type ExchangeCopy = {
   summary: { en: string; de: string };
   arc: { en: string[]; de: string[] };
   bullets: { en: string[]; de: string[] };
-  entitiesTodo: { en: string; de: string };
   roleTodo: { en: string; de: string };
   photoTodo: { en: string; de: string };
   partnerOffenburgRole: { en: string; de: string };
@@ -50,10 +49,6 @@ export const INDIA_EXCHANGE_COPY: ExchangeCopy = {
       'Sie lernten die Professoren kennen, die an den Kursen mitgewirkt haben, konnten reden, Informationen holen, netzwerken und Unterricht erleben.',
       'Keine Teilnehmerzahlen, Uni-Namen oder Jahre — im Repo nicht belegt.',
     ],
-  },
-  entitiesTodo: {
-    en: 'TODO · confirm legal names: DADB India / DADB Germany (spoken as DRDB on phone)',
-    de: 'TODO · Schreibweise bestätigen: DADB India / DADB Germany (telefonisch DRDB)',
   },
   roleTodo: {
     en: 'TODO · Artjom’s role in the exchange program — not documented in repo',

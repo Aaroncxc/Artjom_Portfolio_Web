@@ -72,18 +72,6 @@ export function enrichSlide(
       const a = africaChallengeCopy('de');
       return { headline: a.headline, bullets: a.bullets, sources: ['Artjom briefing', 'lib/v3Content.ts'] };
     }
-    switch (kind) {
-      case 'challenge':
-        return { headline: firstSentence(c.summary), bullets: c.summary ? [c.summary] : undefined, sources: ['lib/v3Content.ts'] };
-      case 'role':
-        return { headline: c.kicker, sources: ['lib/v3Content.ts'] };
-      case 'approach':
-        return { headline: c.action[0] ? firstSentence(c.action[0]) : undefined, bullets: c.action, sources: ['lib/v3Content.ts'] };
-      case 'result':
-        return { headline: c.result[0], bullets: c.result, sources: ['lib/v3Content.ts'] };
-      default:
-        return base();
-    }
   }
 
   switch (caseId) {
@@ -95,18 +83,35 @@ export function enrichSlide(
     }
     case 'heygen': {
       if (kind === 'challenge') {
-        return { headline: firstSentence(c.summary), bullets: [c.summary], sources: ['lib/v3Content.ts'] };
+        sources.push('lib/highlightSections.ts (AI_APP_DEV_HIGHLIGHT_SECTION.bodyP1)');
+        return {
+          headline: locale === 'de' ? 'Sprecherkosten pro Kurs — skalierbarer Avatar-Workflow nötig' : 'Per-course narrator cost — need a scalable avatar pipeline',
+          bullets: [c.summary, ...sentences(AI_APP_DEV_HIGHLIGHT_SECTION.bodyP1!, 2)].slice(0, 4),
+          sources,
+        };
       }
       if (kind === 'role') {
         sources.push('lib/highlightSections.ts (AI_APP_DEV_HIGHLIGHT_SECTION.bodyP1)');
-        const b = sentences(AI_APP_DEV_HIGHLIGHT_SECTION.bodyP1!, 2);
-        return { headline: c.kicker, bullets: b, sources };
+        const b = sentences(AI_APP_DEV_HIGHLIGHT_SECTION.bodyP1!, 3);
+        return {
+          headline: locale === 'de' ? 'Workflow mit dem Produktionsteam — Redaktion behält Freigabe' : 'Workflow with production — editorial keeps sign-off',
+          bullets: [c.kicker, ...b],
+          sources,
+        };
       }
       if (kind === 'approach') {
-        return { headline: 'HeyGen avatar workflow with the production team', bullets: c.action, sources: ['lib/v3Content.ts'] };
+        return {
+          headline: locale === 'de' ? 'HeyGen-Avatare in der VP-Pipeline' : 'HeyGen avatars inside the VP pipeline',
+          bullets: c.action,
+          sources: ['lib/v3Content.ts'],
+        };
       }
       if (kind === 'result') {
-        return { headline: c.result[0], bullets: c.result, sources: ['lib/v3Content.ts'] };
+        return {
+          headline: locale === 'de' ? '€380.000 pro Jahr eingespart' : '€380,000 saved per year',
+          bullets: c.result,
+          sources: ['lib/v3Content.ts'],
+        };
       }
       break;
     }
@@ -154,14 +159,26 @@ export function enrichSlide(
     }
     case 'ai-department': {
       if (kind === 'challenge') {
-        return { headline: firstSentence(c.summary), bullets: [c.summary], sources: ['lib/v3Content.ts'] };
+        return {
+          headline: locale === 'de' ? 'KI in der Kursproduktion — schnell lernen, kontrolliert liefern' : 'AI in course production — learn fast, ship with control',
+          bullets: [c.summary, ...sentences(AI_APP_DEV_HIGHLIGHT_SECTION.bodyP1!, 2)].slice(0, 4),
+          sources: ['lib/v3Content.ts', 'lib/highlightSections.ts'],
+        };
       }
       if (kind === 'role') {
         sources.push('lib/highlightSections.ts (AI_APP_DEV_HIGHLIGHT_SECTION.bodyP1)');
-        return { headline: c.kicker, bullets: sentences(AI_APP_DEV_HIGHLIGHT_SECTION.bodyP1!, 3), sources };
+        return {
+          headline: locale === 'de' ? 'KI-Abteilung aufgebaut — Change in der Produktion' : 'Built the AI department — change across production',
+          bullets: [c.kicker, ...sentences(AI_APP_DEV_HIGHLIGHT_SECTION.bodyP1!, 2)],
+          sources,
+        };
       }
       if (kind === 'approach') {
-        return { headline: 'AI tooling with editorial control in-house', bullets: c.action, sources: ['lib/v3Content.ts'] };
+        return {
+          headline: locale === 'de' ? 'Tools + Feedbackschleifen mit Redaktion' : 'Tools + feedback loops with editorial',
+          bullets: c.action,
+          sources: ['lib/v3Content.ts'],
+        };
       }
       if (kind === 'result') {
         return { headline: c.result[0], bullets: c.result, sources: ['lib/v3Content.ts'] };

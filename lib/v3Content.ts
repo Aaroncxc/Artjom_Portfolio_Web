@@ -117,7 +117,7 @@ const en: PortfolioContent = {
       title: 'DADB — course production for India’s school-to-job path',
       kicker: 'Head of Production · awareness → job-ready → employers',
       summary:
-        'At DADB the through-line was India: go into schools, make young people aware of renewables, qualify them in practice, and help them become job-ready for the sector — including companies that build solar parks and similar projects.',
+        'At the German Academy of Digital Education (DADB), the through-line was India: go into schools, make young people aware of renewables, qualify them in practice, and help them become job-ready for the sector — including companies that build solar parks and similar projects.',
       action: [
         'Hired and structured the team: 3 After Effects, 6 editors, 6 2D, 6 3D artists, plus 2 project managers in India — 23 direct reports.',
         'Assigned teams per course, set roadmap and outlook, owned staffing and the production budget calculation.',
@@ -221,8 +221,9 @@ const en: PortfolioContent = {
       result: ['Used by everyone, running on large screens in the office. Still online (names changed).'],
       tools: ['Next.js', 'React', 'Tailwind', 'Cursor'],
       media: [
-        { kind: 'image', src: '/tools/dadb-course-overview/course-1.jpg', alt: 'Overview' },
+        { kind: 'image', src: '/tools/dadb-course-overview/course-1.jpg', alt: 'Pipeline overview UI' },
         { kind: 'image', src: '/tools/dadb-course-overview/course-5.jpg', alt: 'KPI dashboard' },
+        { kind: 'image', src: '/tools/dadb-course-overview/course-2.jpg', alt: 'Course progress view' },
       ],
       links: [{ href: 'https://v0-image-analysis-taupe-beta.vercel.app', label: 'Open the tool' }],
     },
@@ -380,7 +381,7 @@ const de: PortfolioContent = {
       title: 'DADB — Kursproduktion für den Schul-zum-Job-Weg in Indien',
       kicker: 'Head of Production · Awareness → Jobready → Arbeitgeber',
       summary:
-        'Bei DADB lief der rote Faden über Indien: in Schulen gehen, junge Menschen für Erneuerbare sensibilisieren, praxisnah qualifizieren und jobready machen — für den Sektor, auch bei Unternehmen, die Solarparks oder vergleichbare Projekte aufbauen.',
+        'Bei der Deutschen Akademie für Digitale Bildung (DADB) lief der rote Faden über Indien: in Schulen gehen, junge Menschen für Erneuerbare sensibilisieren, praxisnah qualifizieren und jobready machen — für den Sektor, auch bei Unternehmen, die Solarparks oder vergleichbare Projekte aufbauen.',
       action: [
         'Team aufgebaut und strukturiert: 3 After Effects, 6 Cutter, 6 2D-, 6 3D-Artists plus 2 Projektmanager in Indien — 23 direct reports.',
         'Teams pro Kurs zugewiesen, Roadmap und Ausblick gesetzt, Personalplanung und Produktionsbudget-Kalkulation verantwortet.',
@@ -484,8 +485,9 @@ const de: PortfolioContent = {
       result: ['Von allen genutzt, auf großen Screens im Büro. Noch online (Namen geändert).'],
       tools: ['Next.js', 'React', 'Tailwind', 'Cursor'],
       media: [
-        { kind: 'image', src: '/tools/dadb-course-overview/course-1.jpg', alt: 'Übersicht' },
+        { kind: 'image', src: '/tools/dadb-course-overview/course-1.jpg', alt: 'Pipeline-Übersicht' },
         { kind: 'image', src: '/tools/dadb-course-overview/course-5.jpg', alt: 'KPI-Dashboard' },
+        { kind: 'image', src: '/tools/dadb-course-overview/course-2.jpg', alt: 'Kursfortschritt' },
       ],
       links: [{ href: 'https://v0-image-analysis-taupe-beta.vercel.app', label: 'Tool öffnen' }],
     },

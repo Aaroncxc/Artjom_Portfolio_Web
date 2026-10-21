@@ -44,8 +44,8 @@ export const INDIA_JOURNEY_COPY: JourneyCopy = {
     de: 'Uni zu Uni — zuhören, bevor Kurse skaliert werden',
   },
   intro: {
-    en: 'I travelled through India with the CEO and a shareholder — as the media expert who conceived and built the courses. The trip was not a photo tour: it was about seeing where learning lands, and what students actually need.',
-    de: 'Ich bin mit dem CEO und einem Shareholder durch Indien gereist — als Media-Experte, der die Kurse konzipiert und aufgebaut hat. Die Reise war keine Fototour: Es ging darum zu sehen, wo Lernen ankommt und was Studierende wirklich brauchen.',
+    en: 'For the German Academy of Digital Education (DADB), I travelled through India with the CEO and a shareholder — as the media expert who conceived and built the courses. The trip was not a photo tour: it was about seeing where learning lands, and what students actually need.',
+    de: 'Für die Deutsche Akademie für Digitale Bildung (DADB) bin ich mit dem CEO und einem Shareholder durch Indien gereist — als Media-Experte, der die Kurse konzipiert und aufgebaut hat. Die Reise war keine Fototour: Es ging darum zu sehen, wo Lernen ankommt und was Studierende wirklich brauchen.',
   },
   roleLine: {
     en: 'Four stops only: Bangalore, Mumbai, Pune, Kerala.',
@@ -60,12 +60,12 @@ export const INDIA_JOURNEY_COPY: JourneyCopy = {
     de: 'Indien · Eindrücke von der Reise',
   },
   indiaGalleryNote: {
-    en: 'Trip-wide gallery — photos are not assigned to individual cities.',
-    de: 'Galerie der gesamten Reise — Fotos sind keiner einzelnen Stadt zugeordnet.',
+    en: 'Trip-wide gallery — city assignment open (see TODO below).',
+    de: 'Galerie der gesamten Reise — Stadt-Zuordnung offen (siehe TODO).',
   },
   cityPhotoTodo: {
-    en: 'TODO: city-specific photos when Artjom supplies them',
-    de: 'TODO: stadtspezifische Fotos, sobald Artjom sie liefert',
+    en: 'TODO · City assignment by Artjom (photos are not mapped to Bangalore / Mumbai / Pune / Kerala yet)',
+    de: 'TODO · Stadt-Zuordnung durch Artjom (Fotos noch keiner Stadt zugeordnet)',
   },
   elaBridge: {
     title: { en: 'From campuses to the convention floor', de: 'Von den Campuses zur Messe' },
@@ -142,6 +142,9 @@ export const INDIA_JOURNEY_STATIONS: JourneyStation[] = [
     quoteTodo: true,
   },
 ];
+
+/** City ↔ photo mapping intentionally open until Artjom assigns. */
+export const INDIA_PHOTO_CITY_ASSIGNMENT_OPEN = true;
 
 /** Chapter gallery — not mapped to cities (Artjom, 2026). */
 export const INDIA_JOURNEY_PHOTOS: JourneyPhoto[] = [
